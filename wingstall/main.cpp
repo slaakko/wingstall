@@ -41,15 +41,29 @@ enum class Command
     none, createPackage, installPackage, makeSetup, installPackageFromVector, setCompression, setContent
 };
 
+std::string WingstallVersionStr()
+{
+    return "1.0.0";
+}
+
 void PrintHelp()
 {
-    // todo
+    std::cout << "wingstall installer creator application version " << WingstallVersionStr() << std::endl;
+    std::cout << "usage: wingstall OPTIONS" << std::endl;
+    std::cout << "OPTIONS:" << std::endl;
+    std::cout << "--verbose (-v)" << std::endl;
+    std::cout << "  Be verbose." << std::endl;
+    std::cout << "--help (-h)" << std::endl;
+    std::cout << "  Print help and exit." << std::endl;
+    std::cout << "--create-package (-c) PACKAGE.xml" << std::endl;
+    std::cout << "  Create binary package PACKAGE.bin, package info file PACKAGE.info.xml and package index PACKAGE.index.xml from package description file PACKAGE.xml." << std::endl;
+    std::cout << "--make-setup (-m) PACKAGE.bin" << std::endl;
+    std::cout << "  Create Visual C++ setup program from PACKAGE.bin and package info file PACKAGE.info.xml." << std::endl;
 }
 
 int main(int argc, const char** argv)
 {
     InitDone initDone;
-    std::u32string s = ToUpper(U"öhköMöMMö");
     try
     {
         Command command = Command::none;
@@ -306,7 +320,7 @@ int main(int argc, const char** argv)
             }
             if (verbose)
             {
-                std::cout << "setup for '" << packageBinFilePath << "' created" << std::endl;
+                std::cout << "setup for package '" << packageBinFilePath << "' created" << std::endl;
             }
         }
     }

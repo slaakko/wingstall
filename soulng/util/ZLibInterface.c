@@ -4,7 +4,11 @@
 #include <string.h>
 #include <stdlib.h>
 
+#ifdef NDEBUG
 #pragma comment(lib, "zlibstat.lib")
+#else 
+#pragma comment(lib, "zlibstatd.lib")
+#endif 
 
 #define COMPRESS    0
 #define DECOMPRESS  1

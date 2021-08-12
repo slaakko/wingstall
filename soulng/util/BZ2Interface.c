@@ -9,7 +9,11 @@
 #include <string.h>
 #include <stdlib.h>
 
+#ifdef NDEBUG
 #pragma comment(lib, "libbz2.lib")
+#else 
+#pragma comment(lib, "libbz2d.lib")
+#endif
 
 #define COMPRESS    0
 #define DECOMPRESS  1

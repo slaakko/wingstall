@@ -16,11 +16,6 @@
 
 namespace soulng { namespace unicode {
 
-std::string WingstallVersionStr()
-{
-    return "1.0.0";
-}
-
 std::string WingstallRoot()
 {
     std::string wingstallRoot;

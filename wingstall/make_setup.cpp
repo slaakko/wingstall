@@ -4,6 +4,7 @@
 // =================================
 
 #include <wingstall/make_setup.hpp>
+#include <wingpackage/package.hpp>
 #include <sngxml/dom/Element.hpp>
 #include <sngxml/dom/Parser.hpp>
 #include <sngxml/dom/CharacterData.hpp>
@@ -29,7 +30,7 @@ namespace wingstall {
 using namespace soulng::util;
 using namespace soulng::unicode;
 
-std::string GetWingstallRootDir()
+std::string WingstallRootDir()
 {
     char* env = std::getenv("WINGSTALL_ROOT");
     if (!env || !*env)
@@ -39,15 +40,108 @@ std::string GetWingstallRootDir()
     return GetFullPath(env);
 }
 
+std::string WingstallConfigDir()
+{
+    std::string configDir = Path::Combine(WingstallRootDir(), "config");
+    boost::filesystem::create_directories(configDir);
+    return configDir;
+}
+
+std::string defaultBoostIncludeDir = "C:\\boost\\include\\boost-1_74";
+std::string defaultBoostLibDir = "C:\\boost\\lib";
+
+std::string ConfigFilePath()
+{
+    return Path::Combine(WingstallConfigDir(), "configuration.xml");
+}
+
+std::unique_ptr<sngxml::dom::Document> ConfigurationDocument()
+{
+    std::string operation;
+    try
+    {
+        std::unique_ptr<sngxml::dom::Document> configDoc;
+        if (boost::filesystem::exists(ConfigFilePath()))
+        {
+            operation = "read";
+            configDoc = sngxml::dom::ReadDocument(ConfigFilePath());
+        }
+        else
+        {
+            operation = "write";
+            configDoc.reset(new sngxml::dom::Document());
+            sngxml::dom::Element* rootElement = new sngxml::dom::Element(U"configuration");
+            configDoc->AppendChild(std::unique_ptr<sngxml::dom::Node>(rootElement));
+            rootElement->SetAttribute(U"boostIncludeDir", ToUtf32(defaultBoostIncludeDir));
+            rootElement->SetAttribute(U"boostLibDir", ToUtf32(defaultBoostLibDir));
+            std::ofstream configFile(ConfigFilePath());
+            CodeFormatter formatter(configFile);
+            configDoc->Write(formatter);
+        }
+        return configDoc;
+    }
+    catch (const std::exception& ex)
+    {
+        std::cerr << "could not " << operation << " configuration document '" + ConfigFilePath() + "': " + ex.what() << std::endl;;
+    }
+    return std::unique_ptr<sngxml::dom::Document>();
+}
+
+std::string BoostIncludeDir()
+{
+    try
+    {
+        std::unique_ptr<sngxml::dom::Document> configDoc = ConfigurationDocument();
+        if (configDoc)
+        {
+            sngxml::dom::Element* rootElement = configDoc->DocumentElement();
+            std::u32string boostIncludeDirAttr = rootElement->GetAttribute(U"boostIncludeDir");
+            if (!boostIncludeDirAttr.empty())
+            {
+                return ToUtf8(boostIncludeDirAttr);
+            }
+            throw std::runtime_error("'boostIncludeDir' attribute is empty or does not exist");
+        }
+    }
+    catch (const std::exception& ex)
+    {
+        std::cerr << "could not access configuration document '" + ConfigFilePath() + "': " + ex.what() << std::endl;
+    }
+    return defaultBoostIncludeDir;
+}
+
+std::string BoostLibDir()
+{
+    try
+    {
+        std::unique_ptr<sngxml::dom::Document> configDoc = ConfigurationDocument();
+        if (configDoc)
+        {
+            sngxml::dom::Element* rootElement = configDoc->DocumentElement();
+            std::u32string boosLibDirAttr = rootElement->GetAttribute(U"boostLibDir");
+            if (!boosLibDirAttr.empty())
+            {
+                return ToUtf8(boosLibDirAttr);
+            }
+            throw std::runtime_error("'boostLibDir' attribute is empty or does not exist");
+        }
+    }
+    catch (const std::exception& ex)
+    {
+        std::cerr << "could not access configuration document '" + ConfigFilePath() + "': " + ex.what() << std::endl;
+    }
+    return defaultBoostLibDir;
+}
+
 std::string SetupIconResourceName()
 {
     return "setup_icon";
 }
 
-void MakeMainFile(const std::string& packageBinFilePath, const std::string& appName, const std::string& appVersion, const std::string& compression, const std::string& defaultContainingDirPath,
-    const std::string& installDirName, bool verbose);
+void MakeMainFile(const std::string& packageBinFilePath, bool verbose);
 
-void MakeDataFile(const std::string& packageBinFilePath, int64_t uncompressedPackageSize, bool verbose);
+void MakeDataFile(const std::string& packageBinFilePath, const std::string& appName, const std::string& appVersion, const std::string& compression, const std::string& defaultContainingDirPath,
+    const std::string& installDirName, int64_t uncompressedPackageSize, bool verbose);
 
 void MakeProjectFile(const std::string& packageBinFilePath, bool verbose);
 
@@ -108,8 +202,8 @@ void MakeSetup(const std::string& packageBinFilePath, bool verbose)
                         throw std::runtime_error("root element has no 'uncompressedPackageSize' attribute in package info document '" + packageInfoFilePath + "'");
                     }
                     int64_t uncompressedPackageSize = boost::lexical_cast<int64_t>(ToUtf8(uncompressedPackageSizeAttr));
-                    MakeDataFile(packageBinFilePath, uncompressedPackageSize, verbose);
-                    MakeMainFile(packageBinFilePath, appName, appVersion, compression, defaultContainingDirPath, installDirName, verbose);
+                    MakeDataFile(packageBinFilePath, appName, appVersion, compression, defaultContainingDirPath, installDirName, uncompressedPackageSize, verbose);
+                    MakeMainFile(packageBinFilePath, verbose);
                     MakeProjectFile(packageBinFilePath, verbose);
                 }
             }
@@ -121,8 +215,7 @@ void MakeSetup(const std::string& packageBinFilePath, bool verbose)
     }
 }
 
-void MakeMainFile(const std::string& packageBinFilePath, const std::string& appName, const std::string& appVersion, const std::string& compression, const std::string& defaultContainingDirPath, 
-    const std::string& installDirName, bool verbose)
+void MakeMainFile(const std::string& packageBinFilePath, bool verbose)
 {
     std::string mainFileBasePath = GetFullPath(Path::Combine(Path::Combine(Path::GetDirectoryName(GetFullPath(packageBinFilePath)), "program"), "main"));
     std::string directoryPath = Path::GetDirectoryName(mainFileBasePath);
@@ -185,11 +278,11 @@ void MakeMainFile(const std::string& packageBinFilePath, const std::string& appN
     sourceFormatter.WriteLine("BinaryResourcePtr unicodeDBResource(currentExecutableName, UnicodeDBResourceName());");
     sourceFormatter.WriteLine("CharacterTable::Instance().SetDeflateData(unicodeDBResource.Data(), unicodeDBResource.Size(), UncompressedUnicodeDBSize());");
     sourceFormatter.WriteLine("BinaryResourcePtr packageResource(currentExecutableName, PackageResourceName());");
-    sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::appName, new StringItem(\"" + appName + "\"));");
-    sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::appVersion, new StringItem(\"" + appVersion + "\"));");
-    sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::installDirName, new StringItem(\"" + installDirName + "\"));");
-    sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::defaultContainingDirPath, new StringItem(\"" + defaultContainingDirPath + "\"));");
-    sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::compression, new IntegerItem(static_cast<int64_t>(Compression::" + compression + ")));");
+    sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::appName, new StringItem(AppName()));");
+    sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::appVersion, new StringItem(AppVersion()));");
+    sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::installDirName, new StringItem(InstallDirName()));");
+    sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::defaultContainingDirPath, new StringItem(DefaultContainingDirPath()));");
+    sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::compression, new IntegerItem(static_cast<int64_t>(Compression()));");
     sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::dataSource, new IntegerItem(static_cast<int64_t>(DataSource::memory)));");
     sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::packageDataAddress, new IntegerItem(reinterpret_cast<int64_t>(packageResource.Data())));"); 
     sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::compressedPackageSize, new IntegerItem(packageResource.Size()));");
@@ -221,9 +314,10 @@ void MakeMainFile(const std::string& packageBinFilePath, const std::string& appN
     }
 }
 
-void MakeDataFile(const std::string& packageBinFilePath, int64_t uncompressedPackageSize, bool verbose)
+void MakeDataFile(const std::string& packageBinFilePath, const std::string& appName, const std::string& appVersion, const std::string& compression, const std::string& defaultContainingDirPath, 
+    const std::string& installDirName, int64_t uncompressedPackageSize, bool verbose)
 {
-    std::string wingstallRootDir = GetWingstallRootDir();
+    std::string wingstallRootDir = WingstallRootDir();
     std::string compressedUnicodeDBFilePath = soulng::unicode::CharacterTable::Instance().DeflateFilePath();
     std::string setupIconFilePath = GetFullPath(Path::Combine(Path::Combine(wingstallRootDir, "icon"), "setup.ico"));
     std::string packageResourceName = Path::GetFileNameWithoutExtension(packageBinFilePath) + "_package";
@@ -272,6 +366,16 @@ void MakeDataFile(const std::string& packageBinFilePath, int64_t uncompressedPac
     headerFormatter.WriteLine();
     headerFormatter.WriteLine("std::string SetupIconResourceName();");
     headerFormatter.WriteLine();
+    headerFormatter.WriteLine("std::string AppName();");
+    headerFormatter.WriteLine();
+    headerFormatter.WriteLine("std::string AppVersion();");
+    headerFormatter.WriteLine();
+    headerFormatter.WriteLine("int Compression();");
+    headerFormatter.WriteLine();
+    headerFormatter.WriteLine("std::string DefaultContainingDirPath();");
+    headerFormatter.WriteLine();
+    headerFormatter.WriteLine("std::string InstallDirName();");
+    headerFormatter.WriteLine();
     headerFormatter.WriteLine("#endif // DATA_H");
 
     sourceFormatter.WriteLine("#include \"" + headerFileName + "\"");
@@ -311,6 +415,41 @@ void MakeDataFile(const std::string& packageBinFilePath, int64_t uncompressedPac
     sourceFormatter.DecIndent();
     sourceFormatter.WriteLine("}");
     sourceFormatter.WriteLine();
+    sourceFormatter.WriteLine("std::string AppName()");
+    sourceFormatter.WriteLine("{");
+    sourceFormatter.IncIndent();
+    sourceFormatter.WriteLine("return \"" + appName + "\";");
+    sourceFormatter.DecIndent();
+    sourceFormatter.WriteLine("}");
+    sourceFormatter.WriteLine();
+    sourceFormatter.WriteLine("std::string AppVersion()");
+    sourceFormatter.WriteLine("{");
+    sourceFormatter.IncIndent();
+    sourceFormatter.WriteLine("return \"" + appVersion + "\";");
+    sourceFormatter.DecIndent();
+    sourceFormatter.WriteLine("}");
+    sourceFormatter.WriteLine();
+    sourceFormatter.WriteLine("int Compression()");
+    sourceFormatter.WriteLine("{");
+    sourceFormatter.IncIndent();
+    sourceFormatter.WriteLine("return " + std::to_string(static_cast<int>(wingstall::wingpackage::ParseCompressionStr(compression))) + "; // " + compression);
+    sourceFormatter.DecIndent();
+    sourceFormatter.WriteLine("}");
+    sourceFormatter.WriteLine();
+    sourceFormatter.WriteLine("std::string DefaultContainingDirPath()");
+    sourceFormatter.WriteLine("{");
+    sourceFormatter.IncIndent();
+    sourceFormatter.WriteLine("return \"" + defaultContainingDirPath + "\";");
+    sourceFormatter.DecIndent();
+    sourceFormatter.WriteLine("}");
+    sourceFormatter.WriteLine();
+    sourceFormatter.WriteLine("std::string InstallDirName()");
+    sourceFormatter.WriteLine("{");
+    sourceFormatter.IncIndent();
+    sourceFormatter.WriteLine("return \"" + installDirName + "\";");
+    sourceFormatter.DecIndent();
+    sourceFormatter.WriteLine("}");
+    sourceFormatter.WriteLine();
 
     if (verbose)
     {
@@ -324,7 +463,7 @@ void MakeProjectFile(const std::string& packageBinFilePath, bool verbose)
     boost::uuids::uuid projectGuid = boost::uuids::random_generator()();
     std::string projectGuidStr = "{" + boost::lexical_cast<std::string>(projectGuid) + "}";
 
-    std::string wingstallRootDir = GetWingstallRootDir();
+    std::string wingstallRootDir = WingstallRootDir();
     std::string wingstallIncludeDir = wingstallRootDir;
     std::string wingstallLibDir = Path::Combine(wingstallRootDir, "lib");
     std::string projectFilePath = GetFullPath(Path::Combine(Path::Combine(Path::GetDirectoryName(GetFullPath(packageBinFilePath)), "program"), "setup.vcxproj"));
@@ -562,7 +701,7 @@ void MakeProjectFile(const std::string& packageBinFilePath, bool verbose)
 
     sngxml::dom::Element* debugX64IncludeElement = new sngxml::dom::Element(U"AdditionalIncludeDirectories");
     debugX64CompileElement->AppendChild(std::unique_ptr<sngxml::dom::Node>(debugX64IncludeElement));
-    sngxml::dom::Text* debugX64IncludeText = new sngxml::dom::Text(U"..;" + ToUtf32(wingstallIncludeDir) + U";C:\\boost\\include\\boost-1_74;C:\\work\\cmajorm;C:\\work\\cmajorm\\cmajor");
+    sngxml::dom::Text* debugX64IncludeText = new sngxml::dom::Text(U"..;" + ToUtf32(wingstallIncludeDir) + U";" + ToUtf32(BoostIncludeDir()));
     debugX64IncludeElement->AppendChild(std::unique_ptr<sngxml::dom::Node>(debugX64IncludeText));
 
     sngxml::dom::Element* debugX64FormatElement = new sngxml::dom::Element(U"DebugInformationFormat");
@@ -590,7 +729,7 @@ void MakeProjectFile(const std::string& packageBinFilePath, bool verbose)
 
     sngxml::dom::Element* debugX64LibraryDirsElement = new sngxml::dom::Element(U"AdditionalLibraryDirectories");
     debugX64LinkElement->AppendChild(std::unique_ptr<sngxml::dom::Node>(debugX64LibraryDirsElement));
-    sngxml::dom::Text* debugX64LibraryDirsText = new sngxml::dom::Text(U"$(OutDir);" + ToUtf32(wingstallLibDir) + U";C:\\work\\cmajorm\\cmajor\\lib;C:\\boost\\lib");
+    sngxml::dom::Text* debugX64LibraryDirsText = new sngxml::dom::Text(U"$(OutDir);" + ToUtf32(wingstallLibDir) + U";" + ToUtf32(BoostLibDir()));
     debugX64LibraryDirsElement->AppendChild(std::unique_ptr<sngxml::dom::Node>(debugX64LibraryDirsText));
 
     sngxml::dom::Element* debugX64UACElement = new sngxml::dom::Element(U"UACExecutionLevel");
@@ -639,7 +778,7 @@ void MakeProjectFile(const std::string& packageBinFilePath, bool verbose)
 
     sngxml::dom::Element* releaseX64IncludeElement = new sngxml::dom::Element(U"AdditionalIncludeDirectories");
     releaseX64CompileElement->AppendChild(std::unique_ptr<sngxml::dom::Node>(releaseX64IncludeElement));
-    sngxml::dom::Text* releaseX64IncludeText = new sngxml::dom::Text(U"..;" + ToUtf32(wingstallIncludeDir) + U";C:\\boost\\include\\boost-1_74;C:\\work\\cmajorm;C:\\work\\cmajorm\\cmajor");
+    sngxml::dom::Text* releaseX64IncludeText = new sngxml::dom::Text(U"..;" + ToUtf32(wingstallIncludeDir) + U";" + ToUtf32(BoostIncludeDir()));
     releaseX64IncludeElement->AppendChild(std::unique_ptr<sngxml::dom::Node>(releaseX64IncludeText));
 
     sngxml::dom::Element* releaseX64WarningsElement = new sngxml::dom::Element(U"DisableSpecificWarnings");
@@ -672,7 +811,7 @@ void MakeProjectFile(const std::string& packageBinFilePath, bool verbose)
 
     sngxml::dom::Element* releaseX64LibraryDirsElement = new sngxml::dom::Element(U"AdditionalLibraryDirectories");
     releaseX64LinkElement->AppendChild(std::unique_ptr<sngxml::dom::Node>(releaseX64LibraryDirsElement));
-    sngxml::dom::Text* releaseX64LibraryDirsText = new sngxml::dom::Text(U"$(OutDir);" + ToUtf32(wingstallLibDir) + U";C:\\work\\cmajorm\\cmajor\\lib;C:\\boost\\lib");
+    sngxml::dom::Text* releaseX64LibraryDirsText = new sngxml::dom::Text(U"$(OutDir);" + ToUtf32(wingstallLibDir) + U";" + ToUtf32(BoostLibDir()));
     releaseX64LibraryDirsElement->AppendChild(std::unique_ptr<sngxml::dom::Node>(releaseX64LibraryDirsText));
 
     sngxml::dom::Element* releaseX64UACElement = new sngxml::dom::Element(U"UACExecutionLevel");

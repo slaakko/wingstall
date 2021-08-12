@@ -19,8 +19,6 @@ namespace soulng { namespace unicode {
 
 using namespace soulng::util;
 
-std::string WingstallVersionStr();
-
 class UnicodeException : public std::runtime_error
 {
 public:
