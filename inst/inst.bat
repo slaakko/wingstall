@@ -1,5 +1,6 @@
 @echo off
-cminst -v ..\x64\Debug\*.exe ..\bin
-cminst -v ..\x64\Release\*.exe ..\bin
-cminst -v ..\x64\Debug\*.lib ..\lib
-cminst -v ..\x64\Release\*.lib ..\lib
+xcopy  ..\x64\Release\wnginst.exe .
+wnginst -v ..\x64\Debug\*.exe ..\bin
+wnginst -v ..\x64\Release\*.exe ..\bin
+wnginst -v ..\x64\Debug\*.lib ..\lib
+wnginst -v ..\x64\Release\*.lib ..\lib
