@@ -275,19 +275,19 @@ void MakeMainFile(const std::string& packageBinFilePath, bool verbose)
     sourceFormatter.WriteLine("{");
     sourceFormatter.IncIndent();
     sourceFormatter.WriteLine("std::string currentExecutableName = Path::GetFileName(GetFullPath(GetPathToExecutable()));");
-    sourceFormatter.WriteLine("BinaryResourcePtr unicodeDBResource(currentExecutableName, UnicodeDBResourceName());");
-    sourceFormatter.WriteLine("CharacterTable::Instance().SetDeflateData(unicodeDBResource.Data(), unicodeDBResource.Size(), UncompressedUnicodeDBSize());");
-    sourceFormatter.WriteLine("BinaryResourcePtr packageResource(currentExecutableName, PackageResourceName());");
-    sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::appName, new StringItem(AppName()));");
-    sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::appVersion, new StringItem(AppVersion()));");
-    sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::installDirName, new StringItem(InstallDirName()));");
-    sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::defaultContainingDirPath, new StringItem(DefaultContainingDirPath()));");
-    sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::compression, new IntegerItem(static_cast<int64_t>(Compression()));");
+    sourceFormatter.WriteLine("BinaryResourcePtr unicodeDBResource(currentExecutableName, setup::UnicodeDBResourceName());");
+    sourceFormatter.WriteLine("CharacterTable::Instance().SetDeflateData(unicodeDBResource.Data(), unicodeDBResource.Size(), setup::UncompressedUnicodeDBSize());");
+    sourceFormatter.WriteLine("BinaryResourcePtr packageResource(currentExecutableName, setup::PackageResourceName());");
+    sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::appName, new StringItem(setup::AppName()));");
+    sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::appVersion, new StringItem(setup::AppVersion()));");
+    sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::installDirName, new StringItem(setup::InstallDirName()));");
+    sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::defaultContainingDirPath, new StringItem(setup::DefaultContainingDirPath()));");
+    sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::compression, new IntegerItem(static_cast<int64_t>(setup::Compression())));");
     sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::dataSource, new IntegerItem(static_cast<int64_t>(DataSource::memory)));");
     sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::packageDataAddress, new IntegerItem(reinterpret_cast<int64_t>(packageResource.Data())));"); 
     sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::compressedPackageSize, new IntegerItem(packageResource.Size()));");
-    sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::uncompressedPackageSize, new IntegerItem(UncompressedPackageSize()));");
-    sourceFormatter.WriteLine("Icon& setupIcon = Application::GetResourceManager().GetIcon(SetupIconResourceName());");
+    sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::uncompressedPackageSize, new IntegerItem(setup::UncompressedPackageSize()));");
+    sourceFormatter.WriteLine("Icon& setupIcon = Application::GetResourceManager().GetIcon(setup::SetupIconResourceName());");
     sourceFormatter.WriteLine("Package package;");
     sourceFormatter.WriteLine("InstallWindow installWindow;");
     sourceFormatter.WriteLine("installWindow.SetPackage(&package);");
@@ -356,6 +356,8 @@ void MakeDataFile(const std::string& packageBinFilePath, const std::string& appN
     headerFormatter.WriteLine("#define DATA_H");
     headerFormatter.WriteLine("#include <string>");
     headerFormatter.WriteLine();
+    headerFormatter.WriteLine("namespace setup {");
+    headerFormatter.WriteLine();
     headerFormatter.WriteLine("std::string PackageResourceName();");
     headerFormatter.WriteLine();
     headerFormatter.WriteLine("int64_t UncompressedPackageSize();");
@@ -376,9 +378,13 @@ void MakeDataFile(const std::string& packageBinFilePath, const std::string& appN
     headerFormatter.WriteLine();
     headerFormatter.WriteLine("std::string InstallDirName();");
     headerFormatter.WriteLine();
+    headerFormatter.WriteLine("} // setup");
+    headerFormatter.WriteLine();
     headerFormatter.WriteLine("#endif // DATA_H");
 
     sourceFormatter.WriteLine("#include \"" + headerFileName + "\"");
+    sourceFormatter.WriteLine();
+    sourceFormatter.WriteLine("namespace setup {");
     sourceFormatter.WriteLine();
     sourceFormatter.WriteLine("std::string PackageResourceName()");
     sourceFormatter.WriteLine("{");
@@ -449,6 +455,9 @@ void MakeDataFile(const std::string& packageBinFilePath, const std::string& appN
     sourceFormatter.WriteLine("return \"" + installDirName + "\";");
     sourceFormatter.DecIndent();
     sourceFormatter.WriteLine("}");
+    sourceFormatter.WriteLine();
+    sourceFormatter.WriteLine();
+    sourceFormatter.WriteLine("} // setup");
     sourceFormatter.WriteLine();
 
     if (verbose)

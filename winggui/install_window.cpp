@@ -498,7 +498,7 @@ void InstallWindow::RunInstallation(const std::string& installationDir)
                     std::string packageFilePath = GetPackageFilePath();
                     if (!packageFilePath.empty())
                     {
-                        package->Install(compression, packageFilePath, Content::all);
+                        package->Install(compression, DataSource::file, packageFilePath, nullptr, 0, Content::all);
                     }
                 }
                 else if (dataSource == DataSource::memory)
@@ -508,7 +508,7 @@ void InstallWindow::RunInstallation(const std::string& installationDir)
                     {
                         uint8_t* data = static_cast<uint8_t*>(reinterpret_cast<void*>(address));
                         int64_t size = GetCompressedPackageSize();
-                        package->Install(compression, data, size, Content::all);
+                        package->Install(compression, DataSource::memory, std::string(), data, size, Content::all);
                     }
                 }
                 installationRunning = false;

@@ -267,7 +267,7 @@ int main(int argc, const char** argv)
                 std::cout << "installing package '" << packageBinFilePath << "'..." << std::endl;
             }
             std::unique_ptr<Package> package(new Package());
-            package->Install(compression, packageBinFilePath, content);
+            package->Install(compression, DataSource::file, packageBinFilePath, nullptr, 0, content);
             std::string xmlIndexFilePath = Path::ChangeExtension(packageBinFilePath, ".read.index.xml");
             package->WriteIndexToXmlFile(xmlIndexFilePath);
             if (verbose)
@@ -296,7 +296,7 @@ int main(int argc, const char** argv)
                 uint8_t x = reader.ReadByte();
                 vec.push_back(x);
             }
-            package->Install(compression, vec.data(), vec.size(), content);
+            package->Install(compression, DataSource::memory, std::string(), vec.data(), vec.size(), content);
             std::string xmlIndexFilePath = Path::ChangeExtension(packageBinFilePath, ".read.index.xml");
             package->WriteIndexToXmlFile(xmlIndexFilePath);
             if (verbose)

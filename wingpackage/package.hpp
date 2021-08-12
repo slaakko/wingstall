@@ -150,8 +150,7 @@ public:
     void Create(const std::string& filePath, Content content);
     int64_t Size() const { return size; }
     std::string ExpandPath(const std::string& str) const;
-    void Install(Compression comp, const std::string& filePath, Content content);
-    void Install(Compression comp, uint8_t* data, int64_t size, Content content);
+    void Install(Compression comp, DataSource dataSource, const std::string& filePath, uint8_t* data, int64_t size, Content content);
     void Uninstall();
     void Rollback();
     void ResetAction();
@@ -161,6 +160,7 @@ public:
     void SetAction(Action action_);
     void LogError(const std::string& error);
 private:
+    Streams GetStreams(Compression comp, DataSource dataSource, const std::string& filePath, uint8_t* data, int64_t size);
     void NotifyStatusChanged();
     void NotifyComponentChanged();
     void NotifyFileChanged();

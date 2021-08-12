@@ -557,125 +557,14 @@ std::string Package::ExpandPath(const std::string& path) const
     return variables.ExpandPath(path);
 }
 
-void Package::Install(Compression comp, const std::string& filePath, Content content)
+void Package::Install(Compression comp, DataSource dataSource, const std::string& filePath, uint8_t* data, int64_t size, Content content)
 {
     ResetAction();
     try
     {
         if (content != Content::none)
         {
-            Streams streams;
-            switch (comp)
-            {
-                case Compression::none:
-                {
-                    streams.Add(new FileStream(filePath, OpenMode::read | OpenMode::binary));
-                    streams.Add(new BufferedStream(*streams.Get(0)));
-                    break;
-                }
-                case Compression::deflate:
-                {
-                    streams.Add(new FileStream(filePath, OpenMode::read | OpenMode::binary));
-                    streams.Add(new BufferedStream(*streams.Get(0)));
-                    streams.Add(new DeflateStream(CompressionMode::decompress, *streams.Get(1)));
-                    streams.Add(new BufferedStream(*streams.Get(2)));
-                    break;
-                }
-                case Compression::bzip2:
-                {
-                    streams.Add(new FileStream(filePath, OpenMode::read | OpenMode::binary));
-                    streams.Add(new BufferedStream(*streams.Get(0)));
-                    streams.Add(new BZip2Stream(CompressionMode::decompress, *streams.Get(1)));
-                    streams.Add(new BufferedStream(*streams.Get(2)));
-                    break;
-                }
-            }
-            if (streams.Count() > 0)
-            {
-                stream = streams.Get(streams.Count() - 1);
-                stream->AddObserver(&streamObserver);
-                BinaryStreamReader reader(*stream);
-                if ((content & Content::index) != Content::none)
-                {
-                    SetStatus(Status::running, "reading package index...", std::string());
-                    ReadIndex(reader);
-                }
-                if ((content & Content::data) != Content::none)
-                {
-                    SetStatus(Status::running, "copying files...", std::string());
-                    ReadData(reader);
-                }
-                if (environment)
-                {
-                    SetStatus(Status::running, "creating environment variables...", std::string());
-                    environment->Install();
-                }
-                if (links)
-                {
-                    SetStatus(Status::running, "creating links...", std::string());
-                    links->Install();
-                }
-                SetComponent(nullptr);
-                SetFile(nullptr);
-                SetStatus(Status::succeeded, "installation succeeded", std::string());
-                stream->RemoveObserver(&streamObserver);
-            }
-        }
-    }
-    catch (const AbortException&)
-    {
-        SetStatus(Status::aborted, "installation aborted", std::string());
-    }
-    catch (const RollbackException&)
-    {
-        try
-        {
-            Rollback();
-            SetComponent(nullptr);
-            SetFile(nullptr);
-            SetStatus(Status::rollbacked, "installation rollbacked", std::string());
-        }
-        catch (const std::exception& innerEx)
-        {
-            SetStatus(Status::failed, "rollback failed", std::string(innerEx.what()));
-        }
-    }
-    catch (const std::exception& ex)
-    {
-        SetStatus(Status::failed, "installation failed", ex.what());
-    }
-}
-
-void Package::Install(Compression comp, uint8_t* data, int64_t size, Content content)
-{
-    ResetAction();
-    try
-    {
-        if (content != Content::none)
-        {
-            Streams streams;
-            switch (comp)
-            {
-                case Compression::none:
-                {
-                    streams.Add(new MemoryStream(data, size));
-                    break;
-                }
-                case Compression::deflate:
-                {
-                    streams.Add(new MemoryStream(data, size));
-                    streams.Add(new DeflateStream(CompressionMode::decompress, *streams.Get(0)));
-                    streams.Add(new BufferedStream(*streams.Get(1)));
-                    break;
-                }
-                case Compression::bzip2:
-                {
-                    streams.Add(new MemoryStream(data, size));
-                    streams.Add(new BZip2Stream(CompressionMode::decompress, *streams.Get(0)));
-                    streams.Add(new BufferedStream(*streams.Get(1)));
-                    break;
-                }
-            }
+            Streams streams = GetStreams(comp, dataSource, filePath, data, size);
             if (streams.Count() > 0)
             {
                 stream = streams.Get(streams.Count() - 1);
@@ -770,6 +659,65 @@ void Package::LogError(const std::string& error)
     {
         observer->LogError(this, error);
     }
+}
+
+Streams Package::GetStreams(Compression comp, DataSource dataSource, const std::string& filePath, uint8_t* data, int64_t size)
+{
+    Streams streams;
+    if (dataSource == DataSource::memory)
+    {
+        switch (comp)
+        {
+            case Compression::none:
+            {
+                streams.Add(new MemoryStream(data, size));
+                break;
+            }
+            case Compression::deflate:
+            {
+                streams.Add(new MemoryStream(data, size));
+                streams.Add(new DeflateStream(CompressionMode::decompress, *streams.Get(0)));
+                streams.Add(new BufferedStream(*streams.Get(1)));
+                break;
+            }
+            case Compression::bzip2:
+            {
+                streams.Add(new MemoryStream(data, size));
+                streams.Add(new BZip2Stream(CompressionMode::decompress, *streams.Get(0)));
+                streams.Add(new BufferedStream(*streams.Get(1)));
+                break;
+            }
+        }
+    }
+    else if (dataSource == DataSource::file)
+    {
+        switch (comp)
+        {
+            case Compression::none:
+            {
+                streams.Add(new FileStream(filePath, OpenMode::read | OpenMode::binary));
+                streams.Add(new BufferedStream(*streams.Get(0)));
+                break;
+            }
+            case Compression::deflate:
+            {
+                streams.Add(new FileStream(filePath, OpenMode::read | OpenMode::binary));
+                streams.Add(new BufferedStream(*streams.Get(0)));
+                streams.Add(new DeflateStream(CompressionMode::decompress, *streams.Get(1)));
+                streams.Add(new BufferedStream(*streams.Get(2)));
+                break;
+            }
+            case Compression::bzip2:
+            {
+                streams.Add(new FileStream(filePath, OpenMode::read | OpenMode::binary));
+                streams.Add(new BufferedStream(*streams.Get(0)));
+                streams.Add(new BZip2Stream(CompressionMode::decompress, *streams.Get(1)));
+                streams.Add(new BufferedStream(*streams.Get(2)));
+                break;
+            }
+        }
+    }
+    return streams;
 }
 
 void Package::ResetAction()
