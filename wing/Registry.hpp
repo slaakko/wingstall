@@ -30,10 +30,10 @@ public:
     void SetIntegerValue(const std::string& name, int value);
     int GetIntegerValue(const std::string& name) const;
     std::string GetSubkeyName(int index) const;
-    void Delete();
     static RegistryKey CurrentUser(REGSAM access);
     static RegistryKey Open(HKEY predefinedKey, const std::string& subKey, REGSAM access);
     static RegistryKey Create(HKEY predefinedKey, const std::string& subKey);
+    static void Detele(HKEY predefinedKey, const std::string& subKey);
     static bool Exists(HKEY predefinedKey, const std::string& subKey, REGSAM access);
 private:
     HKEY key;

@@ -51,8 +51,7 @@ RegistryKey OpenOrCreateRegistryKeyForSoftwareKey(const std::string& softwareKey
 void DeleteRegistryKeyForSoftwareKey(const std::string& softwareKey)
 {
     std::string subKey = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\" + softwareKey;
-    RegistryKey key = RegistryKey::Open(HKEY_LOCAL_MACHINE, subKey, KEY_ALL_ACCESS);
-    key.Delete();
+    RegistryKey::Detele(HKEY_LOCAL_MACHINE, subKey);
 }
 
 } // wing

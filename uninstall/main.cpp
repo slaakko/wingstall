@@ -9,6 +9,7 @@
 #include <sngxml/xpath/InitDone.hpp>
 #include <soulng/util/InitDone.hpp>
 #include <soulng/util/Path.hpp>
+#include <soulng/util/System.hpp>
 #include <stdexcept>
 
 using namespace wing;
@@ -38,7 +39,8 @@ int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR cmdLine, int cmdSh
     InitDone initDone(instance);
     try
     {
-        std::string uninstallPackageFilePath = GetFullPath("uninstall.bin");
+        std::string currentExecutablePath = GetFullPath(GetPathToExecutable());
+        std::string uninstallPackageFilePath = Path::Combine(Path::GetDirectoryName(currentExecutablePath), "uninstall.bin");
         std::string commandLine(cmdLine);
         if (!commandLine.empty())
         {

@@ -68,32 +68,38 @@ public:
     {
         read, write
     };
-    PackageFileContentPositionObserver(Kind kind_);
+    PackageFileContentPositionObserver(Kind kind_, bool verbose_);
     void StatusChanged(Package* package) override;
     void LogError(Package* package, const std::string& error) override;
     void FileContentPositionChanged(Package* package) override;
 private:
     Kind kind;
+    bool verbose;
     bool firstFileContent;
     bool inFileContent;
     int numBackspaces;
     int prevPercent;
 };
 
-PackageFileContentPositionObserver::PackageFileContentPositionObserver(Kind kind_) : kind(kind_), numBackspaces(0), prevPercent(-1), firstFileContent(true), inFileContent(false)
+PackageFileContentPositionObserver::PackageFileContentPositionObserver(Kind kind_, bool verbose_) : 
+    kind(kind_), verbose(verbose_), numBackspaces(0), prevPercent(-1), firstFileContent(true), inFileContent(false)
 {
 }
 
 void PackageFileContentPositionObserver::StatusChanged(Package* package)
 {
-    if (inFileContent)
+    if (verbose)
     {
-        std::cout << std::endl;
-    }
-    std::cout << package->GetStatusStr() << std::endl;
-    if (package->GetStatus() == Status::failed)
-    {
-        std::cout << package->GetErrorMessage() << std::endl;
+        if (inFileContent)
+        {
+            inFileContent = false;
+            std::cout << std::endl;
+        }
+        std::cout << package->GetStatusStr() << std::endl;
+        if (package->GetStatus() == Status::failed)
+        {
+            std::cout << package->GetErrorMessage() << std::endl;
+        }
     }
 }
 
@@ -104,25 +110,28 @@ void PackageFileContentPositionObserver::LogError(Package* package, const std::s
 
 void PackageFileContentPositionObserver::FileContentPositionChanged(Package* package)
 {
-    if (firstFileContent)
+    if (verbose)
     {
-        firstFileContent = false;
-        if (kind == Kind::write)
+        if (firstFileContent)
         {
-            std::cout << "writing files ";
+            firstFileContent = false;
+            if (kind == Kind::write)
+            {
+                std::cout << "writing files ";
+            }
+            else if (kind == Kind::read)
+            {
+                std::cout << "reading files ";
+            }
         }
-        else if (kind == Kind::read)
+        int percent = static_cast<int>((100.0f * package->FileContentPosition()) / package->FileContentSize());
+        if (percent != prevPercent)
         {
-            std::cout << "reading files ";
+            WritePercent(std::cout, percent, numBackspaces);
+            prevPercent = percent;
         }
+        inFileContent = true;
     }
-    int percent = static_cast<int>((100.0f * package->FileContentPosition()) / package->FileContentSize());
-    if (percent != prevPercent)
-    {
-        WritePercent(std::cout, percent, numBackspaces);
-        prevPercent = percent;
-    }
-    inFileContent = true;
 }
 
 int main(int argc, const char** argv)
@@ -296,7 +305,7 @@ int main(int argc, const char** argv)
             }
             std::string packageBinFilePath = Path::ChangeExtension(packageXmlFilePath, ".bin");
             {
-                PackageFileContentPositionObserver observer(PackageFileContentPositionObserver::Kind::write);
+                PackageFileContentPositionObserver observer(PackageFileContentPositionObserver::Kind::write, verbose);
                 package->AddObserver(&observer);
                 package->Create(packageBinFilePath, content);
                 package->RemoveObserver(&observer);
@@ -320,7 +329,7 @@ int main(int argc, const char** argv)
             }
             std::unique_ptr<Package> package(new Package());
             {
-                PackageFileContentPositionObserver observer(PackageFileContentPositionObserver::Kind::read);
+                PackageFileContentPositionObserver observer(PackageFileContentPositionObserver::Kind::read, verbose);
                 package->AddObserver(&observer);
                 package->Install(DataSource::file, packageBinFilePath, nullptr, 0, content);
                 package->RemoveObserver(&observer);

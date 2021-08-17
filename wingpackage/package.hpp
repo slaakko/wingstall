@@ -136,6 +136,8 @@ public:
     void SetAppName(const std::string& appName_) { appName = appName_; }
     const std::string& Publisher() const { return publisher; }
     void SetPublisher(const std::string& publisher_) { publisher = publisher_; }
+    const std::string& IconFilePath() const { return iconFilePath; }
+    void SetIconFilePath(const std::string& iconFilePath_) { iconFilePath = iconFilePath_; }
     const boost::uuids::uuid& Id() const { return id; }
     void SetId(const boost::uuids::uuid& id_);
     std::string UninstallString() const;
@@ -206,6 +208,7 @@ private:
     std::string version;
     std::string appName;
     std::string publisher;
+    std::string iconFilePath;
     bool includeUninstaller;
     boost::uuids::uuid id;
     std::vector<std::string> uninstallCommands;

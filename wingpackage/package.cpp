@@ -147,6 +147,11 @@ Package::Package(PathMatcher& pathMatcher, sngxml::dom::Document* doc) :
                     {
                         SetPublisher(ToUtf8(publisherAttr));
                     }
+                    std::u32string iconFilePathAttr = element->GetAttribute(U"iconFilePath");
+                    if (!iconFilePathAttr.empty())
+                    {
+                        SetIconFilePath(ToUtf8(iconFilePathAttr));
+                    }
                     std::u32string compressionAttr = element->GetAttribute(U"compression");
                     if (!compressionAttr.empty())
                     {
@@ -572,6 +577,7 @@ void Package::WriteIndex(BinaryStreamWriter& writer)
     writer.Write(version);
     writer.Write(appName);
     writer.Write(publisher);
+    writer.Write(iconFilePath);
     writer.Write(id);
     writer.Write(includeUninstaller);
     int32_t numComponents = components.size();
@@ -616,6 +622,7 @@ void Package::ReadIndex(BinaryStreamReader& reader)
     version = reader.ReadUtf8String();
     appName = reader.ReadUtf8String();
     publisher = reader.ReadUtf8String();
+    iconFilePath = reader.ReadUtf8String();
     reader.ReadUuid(id);
     includeUninstaller = reader.ReadBool();
     int32_t numComponents = reader.ReadInt();
@@ -669,6 +676,7 @@ sngxml::dom::Element* Package::ToXml() const
     element->SetAttribute(U"name", ToUtf32(Name()));
     element->SetAttribute(U"appName", ToUtf32(appName));
     element->SetAttribute(U"publisher", ToUtf32(publisher));
+    element->SetAttribute(U"iconFilePath", ToUtf32(iconFilePath));
     element->SetAttribute(U"sourceRootDir", ToUtf32(sourceRootDir));
     element->SetAttribute(U"targetRootDir", ToUtf32(targetRootDir));
     element->SetAttribute(U"compression", ToUtf32(CompressionStr(compression)));
@@ -717,6 +725,7 @@ std::unique_ptr<sngxml::dom::Document> Package::InfoDoc() const
     rootElement->SetAttribute(U"appName", ToUtf32(appName));
     rootElement->SetAttribute(U"appVersion", ToUtf32(version));
     rootElement->SetAttribute(U"publisher", ToUtf32(publisher));
+    rootElement->SetAttribute(U"iconFilePath", ToUtf32(iconFilePath));
     rootElement->SetAttribute(U"compression", ToUtf32(CompressionStr(compression)));
     std::string installDirName = Path::GetFileName(targetRootDir);
     rootElement->SetAttribute(U"installDirName", ToUtf32(installDirName));

@@ -171,9 +171,10 @@ RegistryKey RegistryKey::Create(HKEY predefinedKey, const std::string& subKey)
     }
 }
 
-void RegistryKey::Delete()
+void RegistryKey::Detele(HKEY predefinedKey, const std::string& subKey)
 {
-    LSTATUS status = RegDeleteKeyW(key, nullptr);
+    std::u16string subKeyStr = ToUtf16(subKey);
+    LSTATUS status = RegDeleteKeyW(predefinedKey, (LPCWSTR)subKeyStr.c_str());
     if (status != ERROR_SUCCESS)
     {
         throw WindowsException(status);

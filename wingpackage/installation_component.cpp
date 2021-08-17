@@ -34,6 +34,10 @@ void InstallationComponent::CreateInstallationInfo()
             {
                 key.SetValue("Publisher", package->Publisher(), RegistryValueKind::regSz);
             }
+            if (!package->IconFilePath().empty())
+            {
+                key.SetValue("DisplayIcon", package->ExpandPath(package->IconFilePath()), RegistryValueKind::regSz);
+            }
             int majorVersion = package->MajorVersion();
             if (majorVersion != -1)
             {

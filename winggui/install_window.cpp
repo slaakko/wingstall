@@ -614,7 +614,7 @@ void InstallWindow::InstallationDirTextBoxTextChanged()
 
 void InstallWindow::SelectContainingDirButtonClick()
 {
-    std::string location = SelectDirectory(Handle(), Path::MakeCanonical(containingDirTextBox->Text()));
+    std::string location = SelectDirectory(nullptr, Path::MakeCanonical(containingDirTextBox->Text()));
     if (!location.empty())
     {
         containingDirTextBox->SetText(location);

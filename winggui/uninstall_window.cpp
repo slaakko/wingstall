@@ -277,7 +277,11 @@ void UninstallWindow::HandleStatusMessage()
 void UninstallWindow::SetStatus(Status status, const std::string& statusStr, const std::string& errorMessage)
 {
     statusText->SetText(statusStr);
-    if (status == Status::running)
+    if (status == Status::succeeded)
+    {
+        log->WriteLine(statusStr);
+    }
+    else if (status == Status::running)
     {
         log->WriteLine(statusStr);
     }
