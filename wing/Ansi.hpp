@@ -10,7 +10,7 @@
 #include <soulng/util/Unicode.hpp>
 #include <functional>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::unicode;
 
@@ -55,6 +55,6 @@ private:
     ColorCharOutputMethod outputMethod;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_ANSI_INCLUDED

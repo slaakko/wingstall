@@ -7,7 +7,7 @@
 #define WING_BUFFER_INCLUDED
 #include <wing/Graphics.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 class Buffer
 {
@@ -23,6 +23,6 @@ private:
     Graphics bmgraphics;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_BUFFER_INCLUDED

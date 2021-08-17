@@ -8,7 +8,7 @@
 #include <wing/Graphics.hpp>
 #include <sngxml/dom/Element.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 const float inchMM = 25.4f;
 const float pointMM = 0.351450f;
@@ -121,6 +121,6 @@ private:
 
 WING_API void LoadMetrics();
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_METRICS_INCLUDED

@@ -442,6 +442,12 @@ std::string ToString(double x, int minNumDecimals, int maxNumDecimals)
     return result;
 }
 
+std::string ToString(bool value)
+{
+    if (value) return "true";
+    else return "false";
+}
+
 inline char HexNibble(uint8_t n)
 {
     static const char* h = "0123456789ABCDEF";
@@ -503,6 +509,13 @@ uint8_t ParseHexByte(const std::string& hexByteStr)
     uint64_t value = 0;
     s >> std::hex >> value;
     return static_cast<uint8_t>(value);
+}
+
+bool ParseBool(const std::string& value)
+{
+    if (value == "true") return true;
+    if (value == "false") return false;
+    throw std::runtime_error("invalid Boolean value '" + value + "': value must be 'true' or 'false'");
 }
 
 int Log10(int n)
@@ -594,6 +607,23 @@ std::string Format(const std::string& s, int width, FormatWidth fw, FormatJustif
         }
     }
     return result;
+}
+
+std::string PercentStr(int n)
+{
+    return "(" + std::to_string(n) + "%)";
+}
+
+std::string BackspaceStr(int n)
+{
+    return std::string(n, '\b');
+}
+
+void WritePercent(std::ostream& s, int n, int& numBackspaces)
+{
+    std::string percentStr = PercentStr(n);
+    s << BackspaceStr(numBackspaces) << percentStr;
+    numBackspaces = percentStr.length();
 }
 
 #if defined(_WIN32)

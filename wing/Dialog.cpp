@@ -3,7 +3,7 @@
 #include <soulng/util/Path.hpp>
 #include <soulng/util/Unicode.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::unicode;
 
@@ -99,4 +99,4 @@ bool OpenFileName(HWND windowHandle, const std::vector<std::pair<std::string, st
     return succeeded;
 }
 
-} } // cmajor::wing
+} // wing

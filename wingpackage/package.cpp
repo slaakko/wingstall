@@ -5,6 +5,9 @@
 
 #include <wingpackage/package.hpp>
 #include <wingpackage/component.hpp>
+#include <wingpackage/preinstall_component.hpp>
+#include <wingpackage/uninstall_component.hpp>
+#include <wingpackage/installation_component.hpp>
 #include <wingpackage/path_matcher.hpp>
 #include <wingpackage/environment.hpp>
 #include <wingpackage/links.hpp>
@@ -19,6 +22,8 @@
 #include <soulng/util/FileStream.hpp>
 #include <soulng/util/MemoryStream.hpp>
 #include <soulng/util/Path.hpp>
+#include <soulng/util/Process.hpp>
+#include <soulng/util/TextUtils.hpp>
 #include <soulng/util/Unicode.hpp>
 #include <boost/uuid/nil_generator.hpp>
 #include <boost/uuid/random_generator.hpp>
@@ -73,21 +78,26 @@ RollbackException::RollbackException() : std::runtime_error("rollback")
 
 Package::Package() : 
     Node(NodeKind::package), id(boost::uuids::nil_uuid()), compression(Compression::none), component(), file(), stream(),
-    streamObserver(this), size(0), interrupted(false), action(Action::continueAction), status(Status::idle)
+    streamObserver(this), size(0), interrupted(false), action(Action::continueAction), status(Status::idle), includeUninstaller(false),
+    fileCount(0), fileIndex(0), includeFileContent(false), fileContentSize(0), fileContentPos(0)
 {
     variables.SetParent(this);
+    SetInstallationComponent(new InstallationComponent());
 }
 
 Package::Package(const std::string& name_) : 
     Node(NodeKind::package, name_), id(boost::uuids::nil_uuid()), compression(Compression::none), component(), file(), stream(),
-    streamObserver(this), size(0), interrupted(false), action(Action::continueAction), status(Status::idle)
+    streamObserver(this), size(0), interrupted(false), action(Action::continueAction), status(Status::idle), includeUninstaller(false),
+    fileCount(0), fileIndex(0), includeFileContent(false), fileContentSize(0), fileContentPos(0)
 {
     variables.SetParent(this);
+    SetInstallationComponent(new InstallationComponent());
 }
 
 Package::Package(PathMatcher& pathMatcher, sngxml::dom::Document* doc) : 
     Node(NodeKind::package), id(boost::uuids::nil_uuid()), compression(Compression::none), component(), file(), stream(),
-    streamObserver(this), size(0), interrupted(false), action(Action::continueAction), status(Status::idle)
+    streamObserver(this), size(0), interrupted(false), action(Action::continueAction), status(Status::idle), includeUninstaller(false),
+    fileCount(0), fileIndex(0), includeFileContent(false), fileContentSize(0), fileContentPos(0)
 {
     variables.SetParent(this);
     std::unique_ptr<sngxml::xpath::XPathObject> packageObject = sngxml::xpath::Evaluate(U"/package", doc);
@@ -132,6 +142,11 @@ Package::Package(PathMatcher& pathMatcher, sngxml::dom::Document* doc) :
                     {
                         SetAppName(ToUtf8(appNameAttr));
                     }
+                    std::u32string publisherAttr = element->GetAttribute(U"publisher");
+                    if (!publisherAttr.empty())
+                    {
+                        SetPublisher(ToUtf8(publisherAttr));
+                    }
                     std::u32string compressionAttr = element->GetAttribute(U"compression");
                     if (!compressionAttr.empty())
                     {
@@ -146,6 +161,18 @@ Package::Package(PathMatcher& pathMatcher, sngxml::dom::Document* doc) :
                     {
                         SetVersion("1.0.0");
                     }
+                    std::u32string includeUninstallerAttr = element->GetAttribute(U"includeUninstaller");
+                    if (!includeUninstallerAttr.empty())
+                    {
+                        try
+                        {
+                            includeUninstaller = ParseBool(ToUtf8(includeUninstallerAttr));
+                        }
+                        catch (const std::exception& ex)
+                        {
+                            throw std::runtime_error("could not parse 'includeUninstaller' attribute: " + std::string(ex.what()));
+                        }
+                    }
                     SetId(boost::uuids::random_generator()());
                 }
                 else
@@ -156,6 +183,28 @@ Package::Package(PathMatcher& pathMatcher, sngxml::dom::Document* doc) :
             else
             {
                 throw std::runtime_error("one package node expected in package XML document '" + pathMatcher.XmlFilePath() + "'");
+            }
+        }
+    }
+    std::unique_ptr<sngxml::xpath::XPathObject> preinstallObject = sngxml::xpath::Evaluate(U"/package/preinstall", doc);
+    if (preinstallObject)
+    {
+        if (preinstallObject->Type() == sngxml::xpath::XPathObjectType::nodeSet)
+        {
+            sngxml::xpath::XPathNodeSet* nodeSet = static_cast<sngxml::xpath::XPathNodeSet*>(preinstallObject.get());
+            int n = nodeSet->Length();
+            if (n == 1)
+            {
+                sngxml::dom::Node* node = (*nodeSet)[0];
+                if (node->GetNodeType() == sngxml::dom::NodeType::elementNode)
+                {
+                    sngxml::dom::Element* element = static_cast<sngxml::dom::Element*>(node);
+                    SetPreinstallComponent(new PreinstallComponent(pathMatcher, element));
+                }
+            }
+            else if (n > 1)
+            {
+                throw std::runtime_error("at most one 'preinstall' element allowed in package XML document '" + pathMatcher.XmlFilePath() + "'");
             }
         }
     }
@@ -177,6 +226,12 @@ Package::Package(PathMatcher& pathMatcher, sngxml::dom::Document* doc) :
                 }
             }
         }
+    }
+    if (includeUninstaller)
+    {
+        UninstallComponent* uninstallComponent = new UninstallComponent();
+        AddComponent(uninstallComponent);
+        uninstallComponent->Initialize();
     }
     std::unique_ptr<sngxml::xpath::XPathObject> environmentObject = sngxml::xpath::Evaluate(U"/package/environment", doc);
     if (environmentObject)
@@ -218,10 +273,37 @@ Package::Package(PathMatcher& pathMatcher, sngxml::dom::Document* doc) :
             }
             else if (n > 1)
             {
-                throw std::runtime_error("at most one links node expected in package XML document '" + pathMatcher.XmlFilePath() + "'");
+                throw std::runtime_error("at most one 'links' node expected in package XML document '" + pathMatcher.XmlFilePath() + "'");
             }
         }
     }
+    std::unique_ptr<sngxml::xpath::XPathObject> uninstallObject = sngxml::xpath::Evaluate(U"package/uninstall/run", doc);
+    if (uninstallObject)
+    {
+        if (uninstallObject->Type() == sngxml::xpath::XPathObjectType::nodeSet)
+        {
+            sngxml::xpath::XPathNodeSet* nodeSet = static_cast<sngxml::xpath::XPathNodeSet*>(uninstallObject.get());
+            int n = nodeSet->Length();
+            for (int i = 0; i < n; ++i)
+            {
+                sngxml::dom::Node* node = (*nodeSet)[i];
+                if (node->GetNodeType() == sngxml::dom::NodeType::elementNode)
+                {
+                    sngxml::dom::Element* element = static_cast<sngxml::dom::Element*>(node);
+                    std::u32string commandAttr = element->GetAttribute(U"command");
+                    if (!commandAttr.empty())
+                    {
+                        uninstallCommands.push_back(ToUtf8(commandAttr));
+                    }
+                    else
+                    {
+                        throw std::runtime_error("'uninstall/run' element does not have 'command' attribute in package XML document '" + pathMatcher.XmlFilePath() + "'");
+                    }
+                }
+            }
+        }
+    }
+    SetInstallationComponent(new InstallationComponent());
 }
 
 void Package::SetStatus(Status status_, const std::string& statusStr_, const std::string& errorMessage_)
@@ -277,6 +359,22 @@ void Package::NotifyFileChanged()
     }
 }
 
+void Package::NotifyFileIndexChanged()
+{
+    for (PackageObserver* observer : observers)
+    {
+        observer->FileIndexChanged(this);
+    }
+}
+
+void Package::NotifyFileContentPositionChanged()
+{
+    for (PackageObserver* observer : observers)
+    {
+        observer->FileContentPositionChanged(this);
+    }
+}
+
 void Package::NotifyStreamPositionChanged()
 {
     for (PackageObserver* observer : observers)
@@ -327,9 +425,106 @@ void Package::SetVersion(const std::string& version_)
     version = version_;
 }
 
+int Package::MajorVersion() const
+{
+    if (!Version().empty())
+    {
+        std::vector<std::string> v = Split(Version(), '.');
+        if (v.size() > 0)
+        {
+            return boost::lexical_cast<int>(v[0]);
+        }
+    }
+    return -1;
+}
+
+int Package::MinorVersion() const
+{
+    if (!Version().empty())
+    {
+        std::vector<std::string> v = Split(Version(), '.');
+        if (v.size() > 1)
+        {
+            return boost::lexical_cast<int>(v[1]);
+        }
+    }
+    return -1;
+}
+
+int Package::Build() const
+{
+    if (!Version().empty())
+    {
+        std::vector<std::string> v = Split(Version(), '.');
+        if (v.size() > 2)
+        {
+            return boost::lexical_cast<int>(v[2]);
+        }
+    }
+    return -1;
+}
+
+int Package::BinaryVersion() const
+{
+    if (!Version().empty())
+    {
+        std::vector<std::string> v = Split(Version(), '.');
+        int major = MajorVersion();
+        if (major != -1)
+        {
+            int minor = MinorVersion();
+            if (minor == -1)
+            {
+                minor = 0;
+            }
+            int build = Build();
+            if (build == -1)
+            {
+                build = 0;
+            }
+            return
+                static_cast<int>(static_cast<uint8_t>(major)) << static_cast<int>(3 * 8) |
+                static_cast<int>(static_cast<uint8_t>(minor)) << static_cast<int>(2 * 8) |
+                static_cast<int>(static_cast<uint16_t>(build));
+        }
+    }
+    return -1;
+}
+
 void Package::SetId(const boost::uuids::uuid& id_)
 {
     id = id_;
+}
+
+std::string Package::UninstallString() const
+{
+    if (includeUninstaller)
+    {
+        return MakeNativePath(Path::Combine(targetRootDir, "uninstall.exe"));
+    }
+    return std::string();
+}
+
+void Package::SetPreinstallComponent(Component* preinstallComponent_)
+{
+    preinstallComponent.reset(preinstallComponent_);
+    preinstallComponent->SetParent(this);
+}
+
+Component* Package::GetPreinstallComponent() const
+{
+    return preinstallComponent.get();
+}
+
+void Package::SetInstallationComponent(Component* installationComponent_)
+{
+    installationComponent.reset(installationComponent_);
+    installationComponent->SetParent(this);
+}
+
+Component* Package::GetInstallationComponent() const
+{
+    return installationComponent.get();
 }
 
 void Package::AddComponent(Component* component)
@@ -350,6 +545,24 @@ void Package::SetLinks(Links* links_)
     links->SetParent(this);
 }
 
+void Package::WriteIndex(const std::string& filePath)
+{
+    Streams streams;
+    streams.Add(new FileStream(filePath, OpenMode::write | OpenMode::binary));
+    streams.Add(new BufferedStream(streams.Back()));
+    BinaryStreamWriter writer(streams.Back());
+    WriteIndex(writer);
+}
+
+void Package::ReadIndex(const std::string& filePath)
+{
+    Streams streams;
+    streams.Add(new FileStream(filePath, OpenMode::read | OpenMode::binary));
+    streams.Add(new BufferedStream(streams.Back()));
+    BinaryStreamReader reader(streams.Back());
+    ReadIndex(reader);
+}
+
 void Package::WriteIndex(BinaryStreamWriter& writer)
 {
     Node::WriteIndex(writer);
@@ -358,13 +571,15 @@ void Package::WriteIndex(BinaryStreamWriter& writer)
     writer.Write(uint8_t(compression));
     writer.Write(version);
     writer.Write(appName);
+    writer.Write(publisher);
     writer.Write(id);
+    writer.Write(includeUninstaller);
     int32_t numComponents = components.size();
     writer.Write(numComponents);
     for (int32_t i = 0; i < numComponents; ++i)
     {
         Component* component = components[i].get();
-        component->WriteIndex(writer);
+        wingpackage::WriteIndex(component, writer);
     }
     bool hasEnvironment = environment != nullptr;
     writer.Write(hasEnvironment);
@@ -377,6 +592,12 @@ void Package::WriteIndex(BinaryStreamWriter& writer)
     if (hasLinks)
     {
         links->WriteIndex(writer);
+    }
+    int32_t numUninstallCommands = uninstallCommands.size();
+    writer.Write(numUninstallCommands);
+    for (int32_t i = 0; i < numUninstallCommands; ++i)
+    {
+        writer.Write(uninstallCommands[i]);
     }
 }
 
@@ -394,11 +615,13 @@ void Package::ReadIndex(BinaryStreamReader& reader)
     compression = Compression(reader.ReadByte());
     version = reader.ReadUtf8String();
     appName = reader.ReadUtf8String();
+    publisher = reader.ReadUtf8String();
     reader.ReadUuid(id);
+    includeUninstaller = reader.ReadBool();
     int32_t numComponents = reader.ReadInt();
     for (int32_t i = 0; i < numComponents; ++i)
     {
-        Component* component = new Component();
+        Component* component = BeginReadComponent(reader);
         AddComponent(component);
         component->ReadIndex(reader);
     }
@@ -413,6 +636,12 @@ void Package::ReadIndex(BinaryStreamReader& reader)
     {
         SetLinks(new Links());
         links->ReadIndex(reader);
+    }
+    int32_t numUninstallCommands = reader.ReadInt();
+    for (int32_t i = 0; i < numUninstallCommands; ++i)
+    {
+        std::string uninstallCommand = reader.ReadUtf8String();
+        uninstallCommands.push_back(uninstallCommand);
     }
 }
 
@@ -439,11 +668,13 @@ sngxml::dom::Element* Package::ToXml() const
     sngxml::dom::Element* element = new sngxml::dom::Element(U"package");
     element->SetAttribute(U"name", ToUtf32(Name()));
     element->SetAttribute(U"appName", ToUtf32(appName));
+    element->SetAttribute(U"publisher", ToUtf32(publisher));
     element->SetAttribute(U"sourceRootDir", ToUtf32(sourceRootDir));
     element->SetAttribute(U"targetRootDir", ToUtf32(targetRootDir));
     element->SetAttribute(U"compression", ToUtf32(CompressionStr(compression)));
     element->SetAttribute(U"version", ToUtf32(version));
     element->SetAttribute(U"id", ToUtf32(boost::lexical_cast<std::string>(id)));
+    element->SetAttribute(U"includeUninstaller", ToUtf32(ToString(includeUninstaller)));
     for (const auto& component : components)
     {
         sngxml::dom::Element* child = component->ToXml();
@@ -485,12 +716,14 @@ std::unique_ptr<sngxml::dom::Document> Package::InfoDoc() const
     sngxml::dom::Element* rootElement = new sngxml::dom::Element(U"packageInfo");
     rootElement->SetAttribute(U"appName", ToUtf32(appName));
     rootElement->SetAttribute(U"appVersion", ToUtf32(version));
+    rootElement->SetAttribute(U"publisher", ToUtf32(publisher));
     rootElement->SetAttribute(U"compression", ToUtf32(CompressionStr(compression)));
     std::string installDirName = Path::GetFileName(targetRootDir);
     rootElement->SetAttribute(U"installDirName", ToUtf32(installDirName));
     std::string defaultContainingDirPath = Path::GetDirectoryName(GetFullPath(targetRootDir));
     rootElement->SetAttribute(U"defaultContainingDirPath", ToUtf32(defaultContainingDirPath));
     rootElement->SetAttribute(U"uncompressedPackageSize", ToUtf32(std::to_string(size)));
+    rootElement->SetAttribute(U"includeUninstaller", ToUtf32(ToString(includeUninstaller)));
     std::unique_ptr<sngxml::dom::Document> doc(new sngxml::dom::Document());
     doc->AppendChild(std::unique_ptr<sngxml::dom::Node>(rootElement));
     return doc;
@@ -509,36 +742,27 @@ void Package::Create(const std::string& filePath, Content content)
 {
     if (content != Content::none)
     {
-        Streams streams;
-        switch (compression)
-        {
-            case Compression::none:
-            {
-                streams.Add(new FileStream(filePath, OpenMode::write | OpenMode::binary));
-                streams.Add(new BufferedStream(*streams.Get(0)));
-                break;
-            }
-            case Compression::deflate:
-            {
-                streams.Add(new FileStream(filePath, OpenMode::write | OpenMode::binary));
-                streams.Add(new BufferedStream(*streams.Get(0)));
-                streams.Add(new DeflateStream(CompressionMode::compress, *streams.Get(1)));
-                streams.Add(new BufferedStream(*streams.Get(2)));
-                break;
-            }
-            case Compression::bzip2:
-            {
-                streams.Add(new FileStream(filePath, OpenMode::write | OpenMode::binary));
-                streams.Add(new BufferedStream(*streams.Get(0)));
-                streams.Add(new BZip2Stream(CompressionMode::compress, *streams.Get(1)));
-                streams.Add(new BufferedStream(*streams.Get(2)));
-                break;
-            }
-        }
+        Streams streams = GetWriteStreams(filePath);
         if (streams.Count() > 0)
         {
-            Stream* stream = streams.Get(streams.Count() - 1);
-            BinaryStreamWriter writer(*stream);
+            includeFileContent = false;
+            Stream* uncompressedStream = streams.Get(0);
+            fileContentSize = 0;
+            fileContentPos = 0;
+            BinaryStreamWriter uncompressedStreamWriter(*uncompressedStream);
+            uncompressedStreamWriter.Write(std::uint8_t(compression));
+            uncompressedStreamWriter.Write(targetRootDir);
+            if ((content & Content::preinstall) != Content::none)
+            {
+                bool hasPreinstallComponent = preinstallComponent != nullptr;
+                uncompressedStreamWriter.Write(hasPreinstallComponent);
+                if (hasPreinstallComponent)
+                {
+                    preinstallComponent->Write(streams);
+                }
+            }
+            includeFileContent = true;
+            BinaryStreamWriter writer(streams.Back());
             if ((content & Content::index) != Content::none)
             {
                 WriteIndex(writer);
@@ -548,6 +772,9 @@ void Package::Create(const std::string& filePath, Content content)
                 WriteData(writer);
             }
             size = writer.Position();
+            SetComponent(nullptr);
+            SetFile(nullptr);
+            SetStatus(Status::succeeded, "writing succeeded", std::string());
         }
     }
 }
@@ -557,17 +784,42 @@ std::string Package::ExpandPath(const std::string& path) const
     return variables.ExpandPath(path);
 }
 
-void Package::Install(Compression comp, DataSource dataSource, const std::string& filePath, uint8_t* data, int64_t size, Content content)
+void Package::Install(DataSource dataSource, const std::string& filePath, uint8_t* data, int64_t size, Content content)
 {
     ResetAction();
     try
     {
         if (content != Content::none)
         {
-            Streams streams = GetStreams(comp, dataSource, filePath, data, size);
+            Streams streams = GetReadBaseStream(dataSource, filePath, data, size);
             if (streams.Count() > 0)
             {
-                stream = streams.Get(streams.Count() - 1);
+                includeFileContent = false;
+                Stream* uncompressedStream = streams.Get(0);
+                BinaryStreamReader uncompressedStreamReader(*uncompressedStream);
+                Compression packageCompression = static_cast<Compression>(uncompressedStreamReader.ReadByte());
+                std::string packageTargetRootDir = uncompressedStreamReader.ReadUtf8String();
+                if (targetRootDir.empty())
+                {
+                    SetTargetRootDir(packageTargetRootDir);
+                }
+                AddReadCompressionStreams(streams, packageCompression);
+                if ((content & Content::preinstall) != Content::none)
+                {
+                    bool hasPreinstallComponent = uncompressedStreamReader.ReadBool();
+                    if (hasPreinstallComponent)
+                    {
+                        SetPreinstallDir(GetFullPath(Path::Combine(GetTargetRootDir(), boost::lexical_cast<std::string>(boost::uuids::random_generator()()))));
+                        SetStatus(Status::running, "checking prerequisites...", std::string());
+                        SetPreinstallComponent(new PreinstallComponent());
+                        preinstallComponent->Read(streams);
+                        preinstallComponent->RunCommands();
+                    }
+                }
+                fileContentSize = 0;
+                fileContentPos = 0;
+                includeFileContent = true;
+                stream = &streams.Back();
                 stream->AddObserver(&streamObserver);
                 BinaryStreamReader reader(*stream);
                 if ((content & Content::index) != Content::none)
@@ -589,6 +841,17 @@ void Package::Install(Compression comp, DataSource dataSource, const std::string
                 {
                     SetStatus(Status::running, "creating links...", std::string());
                     links->Install();
+                }
+                if (includeUninstaller)
+                {
+                    SetStatus(Status::running, "writing uninstall information file...", std::string());
+                    std::string uninstallBinFilePath = GetFullPath(Path::Combine(GetTargetRootDir(), "uninstall.bin"));
+                    WriteIndex(uninstallBinFilePath);
+                }
+                if (installationComponent != nullptr)
+                {
+                    SetStatus(Status::running, "creating installation registry information...", std::string());
+                    installationComponent->CreateInstallationInfo();
                 }
                 SetComponent(nullptr);
                 SetFile(nullptr);
@@ -623,8 +886,12 @@ void Package::Install(Compression comp, DataSource dataSource, const std::string
 
 void Package::Uninstall()
 {
+    ResetAction();
     try
     {
+        Node::Uninstall();
+        SetStatus(Status::running, "running uninstall commands...", std::string());
+        RunUninstallCommands();
         if (links)
         {
             SetStatus(Status::running, "removing links...", std::string());
@@ -640,11 +907,45 @@ void Package::Uninstall()
             SetStatus(Status::running, "removing files...", std::string());
             component->Uninstall();
         }
+        if (installationComponent)
+        {
+            SetStatus(Status::running, "removing installation information from registry...", std::string());
+            installationComponent->RemoveInstallationInfo();
+        }
+        SetComponent(nullptr);
+        SetFile(nullptr);
         SetStatus(Status::succeeded, "uninstallation succceeded", std::string());
     }
     catch (const std::exception& ex)
     {
         SetStatus(Status::failed, "uninstallation failed", ex.what());
+    }
+}
+
+void Package::RunUninstallCommands()
+{
+    int n = uninstallCommands.size();
+    for (int i = 0; i < n; ++i)
+    {
+        RunUninstallCommand(uninstallCommands[i]);
+    }
+}
+
+void Package::RunUninstallCommand(const std::string& uninstallCommand)
+{
+    try
+    {
+        Process process(uninstallCommand, Process::Redirections::none);
+        process.WaitForExit();
+        int exitCode = process.ExitCode();
+        if (exitCode != 0)
+        {
+            throw std::runtime_error("uninstall action '" + uninstallCommand + "' returned exit code " + std::to_string(exitCode));
+        }
+    }
+    catch (const std::exception& ex)
+    {
+        LogError(ex.what());
     }
 }
 
@@ -661,60 +962,91 @@ void Package::LogError(const std::string& error)
     }
 }
 
-Streams Package::GetStreams(Compression comp, DataSource dataSource, const std::string& filePath, uint8_t* data, int64_t size)
+void Package::IncrementFileCount()
+{
+    ++fileCount;
+}
+
+void Package::IncrementFileIndex()
+{
+    ++fileIndex;
+    NotifyFileIndexChanged();
+}
+
+void Package::IncrementFileContentSize(int64_t size)
+{
+    if (!includeFileContent) return;
+    fileContentSize += size;
+}
+
+void Package::IncrementFileContentPosition(int64_t amount)
+{
+    if (!includeFileContent) return;
+    fileContentPos += amount;
+    NotifyFileContentPositionChanged();
+}
+
+Streams Package::GetReadBaseStream(DataSource dataSource, const std::string& filePath, uint8_t* data, int64_t size)
 {
     Streams streams;
     if (dataSource == DataSource::memory)
     {
-        switch (comp)
-        {
-            case Compression::none:
-            {
-                streams.Add(new MemoryStream(data, size));
-                break;
-            }
-            case Compression::deflate:
-            {
-                streams.Add(new MemoryStream(data, size));
-                streams.Add(new DeflateStream(CompressionMode::decompress, *streams.Get(0)));
-                streams.Add(new BufferedStream(*streams.Get(1)));
-                break;
-            }
-            case Compression::bzip2:
-            {
-                streams.Add(new MemoryStream(data, size));
-                streams.Add(new BZip2Stream(CompressionMode::decompress, *streams.Get(0)));
-                streams.Add(new BufferedStream(*streams.Get(1)));
-                break;
-            }
-        }
+        streams.Add(new MemoryStream(data, size));
     }
     else if (dataSource == DataSource::file)
     {
-        switch (comp)
+        streams.Add(new FileStream(filePath, OpenMode::read | OpenMode::binary));
+    }
+    return streams;
+}
+
+void Package::AddReadCompressionStreams(Streams& streams, Compression comp)
+{
+    switch (comp)
+    {
+        case Compression::none:
         {
-            case Compression::none:
-            {
-                streams.Add(new FileStream(filePath, OpenMode::read | OpenMode::binary));
-                streams.Add(new BufferedStream(*streams.Get(0)));
-                break;
-            }
-            case Compression::deflate:
-            {
-                streams.Add(new FileStream(filePath, OpenMode::read | OpenMode::binary));
-                streams.Add(new BufferedStream(*streams.Get(0)));
-                streams.Add(new DeflateStream(CompressionMode::decompress, *streams.Get(1)));
-                streams.Add(new BufferedStream(*streams.Get(2)));
-                break;
-            }
-            case Compression::bzip2:
-            {
-                streams.Add(new FileStream(filePath, OpenMode::read | OpenMode::binary));
-                streams.Add(new BufferedStream(*streams.Get(0)));
-                streams.Add(new BZip2Stream(CompressionMode::decompress, *streams.Get(1)));
-                streams.Add(new BufferedStream(*streams.Get(2)));
-                break;
-            }
+            break;
+        }
+        case Compression::deflate:
+        {
+            streams.Add(new DeflateStream(CompressionMode::decompress, streams.Back()));
+            streams.Add(new BufferedStream(streams.Back()));
+            break;
+        }
+        case Compression::bzip2:
+        {
+            streams.Add(new BZip2Stream(CompressionMode::decompress, streams.Back()));
+            streams.Add(new BufferedStream(streams.Back()));
+            break;
+        }
+    }
+}
+
+Streams Package::GetWriteStreams(const std::string& filePath)
+{
+    Streams streams;
+    streams.Add(new FileStream(filePath, OpenMode::write | OpenMode::binary));
+    switch (compression)
+    {
+        case Compression::none:
+        {
+            streams.Add(new BufferedStream(streams.Back()));
+            break;
+        }
+        case Compression::deflate:
+        {
+            streams.Add(new BufferedStream(streams.Back()));
+            streams.Add(new DeflateStream(CompressionMode::compress, streams.Back()));
+            streams.Add(new BufferedStream(streams.Back()));
+            break;
+        }
+        case Compression::bzip2:
+        {
+            streams.Add(new BufferedStream(streams.Back()));
+            streams.Add(new BZip2Stream(CompressionMode::compress, streams.Back()));
+            streams.Add(new BufferedStream(streams.Back()));
+            break;
         }
     }
     return streams;

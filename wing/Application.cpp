@@ -6,7 +6,7 @@
 #include <wing/Application.hpp>
 #include <wing/Window.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 ResourceManager Application::resourceManager;
 WindowManager Application::windowManager;
@@ -101,4 +101,4 @@ void ApplicationDone()
 {
 }
 
-} } // cmajor::wing
+} // wing

@@ -11,7 +11,7 @@
 #undef min
 #undef max
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::unicode;
 
@@ -538,4 +538,4 @@ void IconListViewItem::SetSize(const Size& size_)
     size = size_;
 }
 
-} } // cmajor::wing
+} // wing

@@ -7,7 +7,7 @@
 #define WING_TEXT_BOX_INCLUDED
 #include <wing/Control.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 struct WING_API TextBoxCreateParams
 {
@@ -67,6 +67,6 @@ private:
     TextBoxFlags flags;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_TEXT_BOX_INCLUDED

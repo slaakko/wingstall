@@ -9,7 +9,7 @@
 #undef max
 #undef min
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::unicode;
 
@@ -707,4 +707,4 @@ StatusBarSpringItem::StatusBarSpringItem() : StatusBarItem()
 {
 }
 
-} } // cmajor::wing
+} // wing

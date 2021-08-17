@@ -24,7 +24,7 @@ public:
     sngxml::dom::Element* ToXml() const override;
     void Create(const std::string& expandedLinkFilePath, const std::string& expandedPath, const std::string& expandedWorkingDirectory, const std::string& expandedIconPath);
     void Install();
-    void Uninstall();
+    void Uninstall() override;
     const std::string& LinkFilePath() const { return linkFilePath; }
     const std::string& Path() const { return path; }
     const std::string& Arguments() const { return arguments; }
@@ -83,7 +83,7 @@ public:
     void Create();
     void Remove();
     void Install();
-    void Uninstall();
+    void Uninstall() override;
     const std::string& Path() const { return path; }
     void SetPath(const std::string& path_) { path = path_; }
 private:
@@ -103,7 +103,7 @@ public:
     void WriteIndex(BinaryStreamWriter& writer);
     void ReadIndex(BinaryStreamReader& reader);
     void Install();
-    void Uninstall();
+    void Uninstall() override;
 private:
     std::vector<std::unique_ptr<LinkDirectory>> linkDirectories;
     std::vector<std::unique_ptr<Link>> links;

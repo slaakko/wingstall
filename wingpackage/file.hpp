@@ -37,6 +37,7 @@ class File : public Node
 public:
     File();
     File(const std::string& name_);
+    File(NodeKind nodeKind_, const std::string& name_);
     uintmax_t Size() const { return size; }
     void SetSize(uintmax_t size_) { size = size_; }
     time_t Time() const { return time; }
@@ -54,7 +55,7 @@ public:
     void WriteData(BinaryStreamWriter& writer) override;
     void ReadData(BinaryStreamReader& reader) override;
     void Remove();
-    void Uninstall();
+    void Uninstall() override;
     sngxml::dom::Element* ToXml() const override;
 private:
     uintmax_t size;

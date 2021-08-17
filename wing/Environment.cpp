@@ -9,7 +9,7 @@
 #include <soulng/util/TextUtils.hpp>
 #include <vector>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::util;
 
@@ -134,4 +134,4 @@ void BroadcastEnvironmentChangedMessage()
     long retval = BroadcastSystemMessageW(0, nullptr, WM_SETTINGCHANGE, 0, (LPARAM)environment.c_str());
 }
 
-} } // cmajor::wing
+} // wing

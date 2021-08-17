@@ -9,7 +9,7 @@
 #include <memory>
 #include <vector>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 class TextView;
 class MenuItem;
@@ -65,6 +65,6 @@ private:
     std::unique_ptr<GroupCommand> groupCommand;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_EDIT_COMMAND_LIST_INCLUDED

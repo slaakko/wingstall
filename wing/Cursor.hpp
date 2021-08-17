@@ -8,7 +8,7 @@
 #include <wing/ResourceManager.hpp>
 #include <Windows.h>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 enum class StandardCursorId : int
 {
@@ -51,6 +51,6 @@ WING_API Cursor LoadStandardCursor(StandardCursorId standardCursorId);
 WING_API Cursor LoadCursorByName(const std::string& cursorName);
 WING_API void SetCursor(const Cursor& cursor);
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_CURSOR_INCLUDED

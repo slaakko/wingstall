@@ -7,7 +7,7 @@
 #include <wing/TextView.hpp>
 #include <wing/Menu.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 EditCommand::EditCommand()
 {
@@ -146,4 +146,4 @@ void EditCommandList::Redo()
     UpdateMenuItems();
 }
 
-} } // cmajor::wing
+} // wing

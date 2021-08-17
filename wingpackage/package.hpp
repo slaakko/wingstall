@@ -5,6 +5,7 @@
 
 #ifndef WINGSTALL_WINGPACKAGE_PACKAGE_INCLUDED
 #define WINGSTALL_WINGPACKAGE_PACKAGE_INCLUDED
+#include <wingpackage/component.hpp>
 #include <wingpackage/variable.hpp>
 #include <wing/ManualResetEvent.hpp>
 #include <sngxml/dom/Document.hpp>
@@ -20,11 +21,6 @@ class Environment;
 class Links;
 class Variables;
 
-enum class Compression : uint8_t
-{
-    none, deflate, bzip2
-};
-
 std::string CompressionStr(Compression compression);
 Compression ParseCompressionStr(const std::string& compressionStr);
 
@@ -36,9 +32,10 @@ enum class DataSource : uint8_t
 enum class Content : uint8_t
 {
     none = 0,
-    index = 1 << 0,
-    data = 1 << 1,
-    all = index | data
+    preinstall = 1 << 0,
+    index = 1 << 1,
+    data = 1 << 2,
+    all = preinstall | index | data
 };
 
 inline Content operator|(Content left, Content right)
@@ -85,8 +82,10 @@ public:
     virtual void StatusChanged(Package* package) {}
     virtual void ComponentChanged(Package* package) {}
     virtual void FileChanged(Package* package) {}
+    virtual void FileIndexChanged(Package* package) {}
     virtual void StreamPositionChanged(Package* package) {}
     virtual void LogError(Package* package, const std::string& error) {}
+    virtual void FileContentPositionChanged(Package* package) {}
 };
 
 class PackageStreamObserver : public StreamObserver
@@ -120,6 +119,8 @@ public:
     const std::string& GetSourceRootDir() const override;
     const std::string& SourceRootDir() const { return sourceRootDir; }
     void SetSourceRootDir(const std::string& sourceRootDir_) { sourceRootDir = sourceRootDir_; }
+    const std::string& PreinstallDir() const { return preinstallDir; }
+    void SetPreinstallDir(const std::string& preinstallDir_) { preinstallDir = preinstallDir_; }
     const std::string& GetTargetRootDir() const override;
     const std::string& TargetRootDir() const { return targetRootDir; }
     void SetTargetRootDir(const std::string& targetRootDir_) { targetRootDir = targetRootDir_; }
@@ -127,10 +128,21 @@ public:
     void SetCompression(Compression compression_) { compression = compression_; }
     const std::string& Version() const { return version; }
     void SetVersion(const std::string& version_);
+    int MajorVersion() const;
+    int MinorVersion() const;
+    int Build() const;
+    int BinaryVersion() const;
     const std::string& AppName() const { return appName; }
     void SetAppName(const std::string& appName_) { appName = appName_; }
+    const std::string& Publisher() const { return publisher; }
+    void SetPublisher(const std::string& publisher_) { publisher = publisher_; }
     const boost::uuids::uuid& Id() const { return id; }
     void SetId(const boost::uuids::uuid& id_);
+    std::string UninstallString() const;
+    void SetPreinstallComponent(Component* preinstallComponent_);
+    Component* GetPreinstallComponent() const;
+    void SetInstallationComponent(Component* installationComponent_);
+    Component* GetInstallationComponent() const;
     const std::vector<std::unique_ptr<Component>>& Components() const { return components; }
     void AddComponent(Component* component);
     Environment* GetEnvironment() const { return environment.get(); }
@@ -138,6 +150,8 @@ public:
     Links* GetLinks() const { return links.get(); }
     void SetLinks(Links* links_);
     Variables& GetVariables() { return variables; }
+    void WriteIndex(const std::string& filePath);
+    void ReadIndex(const std::string& filePath);
     void WriteIndex(BinaryStreamWriter& writer) override;
     void ReadIndex(BinaryStreamReader& reader) override;
     void WriteData(BinaryStreamWriter& writer) override;
@@ -150,8 +164,10 @@ public:
     void Create(const std::string& filePath, Content content);
     int64_t Size() const { return size; }
     std::string ExpandPath(const std::string& str) const;
-    void Install(Compression comp, DataSource dataSource, const std::string& filePath, uint8_t* data, int64_t size, Content content);
-    void Uninstall();
+    void Install(DataSource dataSource, const std::string& filePath, uint8_t* data, int64_t size, Content content);
+    void Uninstall() override;
+    void RunUninstallCommands();
+    void RunUninstallCommand(const std::string& uninstallCommand);
     void Rollback();
     void ResetAction();
     void Interrupt();
@@ -159,11 +175,23 @@ public:
     Action GetAction();
     void SetAction(Action action_);
     void LogError(const std::string& error);
+    int FileCount() const { return fileCount; }
+    void IncrementFileCount();
+    int FileIndex() const { return  fileIndex; }
+    void IncrementFileIndex();
+    int64_t FileContentSize() const { return fileContentSize; }
+    void IncrementFileContentSize(int64_t size);
+    int64_t FileContentPosition() const { return fileContentPos; }
+    void IncrementFileContentPosition(int64_t amount);
 private:
-    Streams GetStreams(Compression comp, DataSource dataSource, const std::string& filePath, uint8_t* data, int64_t size);
+    Streams GetReadBaseStream(DataSource dataSource, const std::string& filePath, uint8_t* data, int64_t size);
+    void AddReadCompressionStreams(Streams& streams, Compression comp);
+    Streams GetWriteStreams(const std::string& filePath);
     void NotifyStatusChanged();
     void NotifyComponentChanged();
     void NotifyFileChanged();
+    void NotifyFileIndexChanged();
+    void NotifyFileContentPositionChanged();
     Status status;
     std::string statusStr;
     std::string errorMessage;
@@ -173,10 +201,16 @@ private:
     std::vector<PackageObserver*> observers;
     std::string sourceRootDir;
     std::string targetRootDir;
+    std::string preinstallDir;
     Compression compression;
     std::string version;
     std::string appName;
+    std::string publisher;
+    bool includeUninstaller;
     boost::uuids::uuid id;
+    std::vector<std::string> uninstallCommands;
+    std::unique_ptr<Component> preinstallComponent;
+    std::unique_ptr<Component> installationComponent;
     std::vector<std::unique_ptr<Component>> components;
     std::unique_ptr<Environment> environment;
     std::unique_ptr<Links> links;
@@ -185,7 +219,12 @@ private:
     int64_t size;
     bool interrupted;
     Action action;
-    cmajor::wing::ManualResetEvent actionEvent;
+    wing::ManualResetEvent actionEvent;
+    int fileCount;
+    int fileIndex;
+    bool includeFileContent;
+    int64_t fileContentSize;
+    int64_t fileContentPos;
 };
 
 } } // namespace wingstall::wingpackage

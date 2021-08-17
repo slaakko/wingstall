@@ -15,7 +15,7 @@
 #undef max
 #undef min
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::unicode;
 
@@ -485,8 +485,8 @@ DialogResult Window::ShowDialog(Window& parentWindow)
     Size size = GetSize();
     SetLocation(Point(std::max(0, parentLoc.X + (parentSize.Width - size.Width) / 2), std::max(0, parentLoc.Y + (parentSize.Height - size.Height) / 2)));
     SetDialogResult(DialogResult::none);
-    DialogResultFunction dialogResultFn = cmajor::wing::GetDialogResult;
-    DialogWindowKeyPreviewFunction keyPreviewFn = cmajor::wing::DialogWindowKeyPreview;
+    DialogResultFunction dialogResultFn = wing::GetDialogResult;
+    DialogWindowKeyPreviewFunction keyPreviewFn = wing::DialogWindowKeyPreview;
     int result = DialogMessageLoop(Handle(), parentWindow.Handle(), dialogResultFn, keyPreviewFn, this);
     return static_cast<DialogResult>(result);
 }
@@ -783,4 +783,4 @@ void DialogWindowKeyPreview(void* dialogWindowPtr, Keys key, bool& handled)
     }
 }
 
-} } // cmajor::wing
+} // wing

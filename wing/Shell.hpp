@@ -8,7 +8,7 @@
 #include <wing/WingApi.hpp>
 #include <string>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 WING_API void ShellInit();
 WING_API void ShellDone();
@@ -20,6 +20,6 @@ WING_API void GetShellLinkData(const std::string& linkFilePath, std::string& pat
 WING_API void CreateShellLink(const std::string& linkFilePath, const std::string& path, const std::string& arguments, const std::string& workingDirectory, 
     const std::string& description, const std::string& iconPath, int iconIndex);
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_SHELL_VIEW_INCLUDED

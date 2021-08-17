@@ -32,6 +32,10 @@ StreamPositionChangedMessage::StreamPositionChangedMessage(int64_t position_) : 
 {
 }
 
+FileIndexChangedMessage::FileIndexChangedMessage(int fileIndex_) : StatusMessage(StatusMessageKind::fileIndexChanged), fileIndex(fileIndex_)
+{
+}
+
 LogErrorMessage::LogErrorMessage(const std::string& error_) : StatusMessage(StatusMessageKind::logError), error(error_)
 {
 }

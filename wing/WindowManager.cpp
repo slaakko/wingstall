@@ -9,7 +9,7 @@
 #include <soulng/util/Unicode.hpp>
 #include <Windows.h>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::unicode;
 
@@ -83,4 +83,4 @@ Control* WindowManager::GetWindow(HWND handle) const
     }
 }
 
-} } // cmajor::wing
+} // wing

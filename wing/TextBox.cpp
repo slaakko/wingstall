@@ -5,7 +5,7 @@
 
 #include <wing/TextBox.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 TextBoxCreateParams::TextBoxCreateParams() : controlCreateParams(), selectAll(false), multiline(false)
 {
@@ -153,4 +153,4 @@ void TextBox::OnGotFocus()
     SelectAll();
 }
 
-} } // cmajor::wing
+} // wing

@@ -8,7 +8,7 @@
 #include <wing/ToolTip.hpp>
 #include <wing/Container.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 enum class ToolBarStyle : int
 {
@@ -362,6 +362,6 @@ public:
     void Draw(Graphics& graphics, const Point& origin) override;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_TOOL_BAR_INCLUDED

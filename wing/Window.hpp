@@ -8,7 +8,7 @@
 #include <wing/Application.hpp>
 #include <wing/ContainerControl.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 enum class WindowState : int
 {
@@ -145,6 +145,6 @@ private:
     KeyPreviewMethod dialogKeyPreviewMethod;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_WINDOW_INCLUDED

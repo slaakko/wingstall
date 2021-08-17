@@ -7,7 +7,7 @@
 #define WING_GROUP_BOX_INCLUDED
 #include <wing/Button.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 class RadioButton;
 
@@ -50,6 +50,6 @@ private:
     RadioButton* checkedRadioButton;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_GROUP_BOX_INCLUDED

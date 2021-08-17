@@ -9,7 +9,7 @@
 #undef max
 #undef min
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 RadioButtonCreateParams::RadioButtonCreateParams() : controlCreateParams(), autoSize(false)
 {
@@ -241,4 +241,4 @@ void RadioButton::ResetCheckedFlag()
     }
 }
 
-} } // cmajor::wing
+} // wing

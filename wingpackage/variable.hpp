@@ -13,6 +13,7 @@ namespace wingstall { namespace wingpackage {
 class Variable : public Node
 {
 public:
+    Variable();
     Variable(const std::string& name_);
     virtual std::string Value() const;
     sngxml::dom::Element* ToXml() const override;
@@ -27,6 +28,13 @@ public:
     std::string Value() const override;
 };
 
+class PreinstallDirVariable : public Variable
+{
+public:
+    PreinstallDirVariable();
+    std::string Value() const override;
+};
+
 class AppNameVariable : public Variable
 {
 public:
@@ -38,6 +46,13 @@ class AppVersionVariable : public Variable
 {
 public:
     AppVersionVariable();
+    std::string Value() const override;
+};
+
+class PublisherVariable : public Variable
+{
+public:
+    PublisherVariable();
     std::string Value() const override;
 };
 

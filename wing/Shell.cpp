@@ -12,7 +12,7 @@
 #include <Knownfolders.h>
 #include <comdef.h>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::unicode;
 
@@ -358,4 +358,4 @@ void CreateShellLink(const std::string& linkFilePath, const std::string& path, c
     }
 }
 
-} } // cmajor::wing
+} // wing

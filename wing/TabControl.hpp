@@ -7,7 +7,7 @@
 #define WING_TAB_CONTROL_INCLUDED
 #include <wing/Panel.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using TabPageSelectedEvent = Event;
 
@@ -234,6 +234,6 @@ private:
     Tab tab;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_TAB_CONTROL_INCLUDED

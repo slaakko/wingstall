@@ -11,8 +11,12 @@
 
 namespace wingstall { namespace wingpackage {
 
-using namespace cmajor::wing;
+using namespace wing;
 using namespace soulng::unicode;
+
+Variable::Variable() : Node(NodeKind::variable)
+{
+}
 
 Variable::Variable(const std::string& name_) : Node(NodeKind::variable, name_)
 {
@@ -48,6 +52,23 @@ std::string TargetRootDirVariable::Value() const
     }
 }
 
+PreinstallDirVariable::PreinstallDirVariable() : Variable("PREINSTALL_DIR")
+{
+}
+
+std::string PreinstallDirVariable::Value() const
+{
+    Package* package = GetPackage();
+    if (package)
+    {
+        return package->PreinstallDir();
+    }
+    else
+    {
+        return Variable::Value();
+    }
+}
+
 AppNameVariable::AppNameVariable() : Variable("APP_NAME")
 {
 }
@@ -75,6 +96,23 @@ std::string AppVersionVariable::Value() const
     if (package)
     {
         return package->Version();
+    }
+    else
+    {
+        return Variable::Value();
+    }
+}
+
+PublisherVariable::PublisherVariable() : Variable("PUBLISHER")
+{
+}
+
+std::string PublisherVariable::Value() const
+{
+    Package* package = GetPackage();
+    if (package)
+    {
+        return package->Publisher();
     }
     else
     {
@@ -133,8 +171,10 @@ std::string ProgramFilesDirVariable::Value() const
 Variables::Variables() : Node(NodeKind::variables, "variables")
 {
     AddVariable(new TargetRootDirVariable());
+    AddVariable(new PreinstallDirVariable());
     AddVariable(new AppNameVariable());
     AddVariable(new AppVersionVariable());
+    AddVariable(new PublisherVariable());
     AddVariable(new StartMenuProgramsFolderVariable());
     AddVariable(new DesktopFolderVariable());
     AddVariable(new ProgramFilesDirVariable());

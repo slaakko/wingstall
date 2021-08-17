@@ -7,7 +7,7 @@
 #define WING_BUTTON_INCLUDED 
 #include <wing/Window.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 class WING_API ButtonBase : public Control
 {
@@ -38,6 +38,6 @@ private:
     void ResetDefaultButtonStyle();
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_BUTTON_INCLUDED

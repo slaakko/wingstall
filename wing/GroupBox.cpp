@@ -6,7 +6,7 @@
 #include <wing/GroupBox.hpp>
 #include <wing/RadioButton.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 GroupBoxCreateParams::GroupBoxCreateParams() : controlCreateParams()
 {
@@ -169,4 +169,4 @@ void GroupBox::OnControlRemoved(ControlEventArgs& args)
     }
 }
 
-} } // cmajor::wing
+} // wing

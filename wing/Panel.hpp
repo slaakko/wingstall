@@ -7,7 +7,7 @@
 #define WING_PANEL_INCLUDED
 #include <wing/ContainerControl.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 class WING_API Panel : public ContainerControl
 {
@@ -17,6 +17,6 @@ protected:
     void OnPaint(PaintEventArgs& args) override;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_PANEL_INCLUDED

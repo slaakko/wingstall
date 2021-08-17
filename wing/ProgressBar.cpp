@@ -5,7 +5,7 @@
 
 #include <wing/ProgressBar.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 Color DefaultProgressBarBackgroundColor()
 {
@@ -257,4 +257,4 @@ void ProgressBar::DrawSunkenBorder(Graphics& graphics)
     CheckGraphicsStatus(graphics.DrawLine(innerRightBottomPen, Point(location.X + 1, location.Y + size.Height - 2), Point(location.X + size.Width - 2, location.Y + size.Height - 2)));
 }
 
-} } // cmajor::wing
+} // wing

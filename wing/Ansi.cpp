@@ -5,7 +5,7 @@
 
 #include <wing/Ansi.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 AnsiEngine::AnsiEngine(int handle_) : handle(handle_), state(0), defaultTextColor(ConsoleColor::gray), defaultBackColor(ConsoleColor::black)
 {
@@ -750,4 +750,4 @@ void AnsiEngine::Emit(char c)
     }
 }
 
-} } // cmajor::wing
+} // wing

@@ -162,10 +162,15 @@
     <ClInclude Include="environment.hpp" />
     <ClInclude Include="file.hpp" />
     <ClInclude Include="info.hpp" />
+    <ClInclude Include="installation_component.hpp" />
     <ClInclude Include="links.hpp" />
     <ClInclude Include="node.hpp" />
     <ClInclude Include="package.hpp" />
     <ClInclude Include="path_matcher.hpp" />
+    <ClInclude Include="preinstall_component.hpp" />
+    <ClInclude Include="uninstall_bin_file.hpp" />
+    <ClInclude Include="uninstall_component.hpp" />
+    <ClInclude Include="uninstall_exe_file.hpp" />
     <ClInclude Include="variable.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -174,10 +179,15 @@
     <ClCompile Include="environment.cpp" />
     <ClCompile Include="file.cpp" />
     <ClCompile Include="info.cpp" />
+    <ClCompile Include="installation_component.cpp" />
     <ClCompile Include="links.cpp" />
     <ClCompile Include="node.cpp" />
     <ClCompile Include="package.cpp" />
     <ClCompile Include="path_matcher.cpp" />
+    <ClCompile Include="preinstall_component.cpp" />
+    <ClCompile Include="uninstall_bin_file.cpp" />
+    <ClCompile Include="uninstall_component.cpp" />
+    <ClCompile Include="uninstall_exe_file.cpp" />
     <ClCompile Include="variable.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

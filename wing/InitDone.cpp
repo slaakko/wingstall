@@ -9,7 +9,7 @@
 #include <wing/Application.hpp>
 #include <wing/Shell.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 void Init(HINSTANCE instance)
 {
@@ -26,4 +26,4 @@ void Done()
     WingDone();
 }
 
-} } // cmajor::wing
+} // wing

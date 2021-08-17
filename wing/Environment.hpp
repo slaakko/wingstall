@@ -7,7 +7,7 @@
 #define WING_ENVIRONMENT_INCLUDED
 #include <wing/Registry.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 WING_API bool HasSystemEnvironmentVariable(const std::string& name);
 
@@ -25,6 +25,6 @@ WING_API void RemovePathDirectory(const std::string& directory);
 
 WING_API void BroadcastEnvironmentChangedMessage();
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_ENVIRONMENT_INCLUDED

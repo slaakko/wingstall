@@ -7,7 +7,7 @@
 #define WING_LIST_BOX_INCLUDED
 #include <wing/Control.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using SelectedIndexChangedEvent = Event;
 
@@ -52,6 +52,6 @@ private:
     SelectedIndexChangedEvent selectedIndexChanged;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_LIST_BOX_INCLUDED

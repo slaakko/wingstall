@@ -10,7 +10,7 @@
 #include <map>
 #include <vector>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 template<typename T>
 std::function<void()> MakeHandler(T* t, void (T::* pm)())
@@ -102,6 +102,6 @@ private:
     int nextHandlerId;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_EVENT_INCLUDED

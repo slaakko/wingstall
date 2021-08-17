@@ -6,7 +6,7 @@
 #include <wing/Console.hpp>
 #include <wing/PaddedControl.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 ConsoleColor DefaultConsoleBackColor()
 {
@@ -516,4 +516,4 @@ SolidBrush* Console::GetOrInsertBrush(ConsoleColor color)
     }
 }
 
-} } // cmajor::wing
+} // wing

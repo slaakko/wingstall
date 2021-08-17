@@ -15,7 +15,7 @@
 #include <string>
 #include <vector>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 class Control;
 class Buffer;
@@ -624,6 +624,6 @@ private:
 
 WING_API HWND LParamHandle(Message& msg);
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_CONTROL_INCLUDED

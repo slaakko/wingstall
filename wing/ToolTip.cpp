@@ -9,7 +9,7 @@
 
 #undef max
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::unicode;
 
@@ -174,4 +174,4 @@ void ToolTip::Measure(Graphics& graphics)
     SetSize(size);
 }
 
-} } // cmajor::wing
+} // wing

@@ -5,7 +5,7 @@
 
 #include <wing/Keys.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 const char* keyCodeStr[] =
 {
@@ -284,4 +284,4 @@ std::string KeyText(Keys key)
     return s;
 }
 
-} } // cmajor::wing
+} // wing

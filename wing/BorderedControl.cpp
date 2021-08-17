@@ -6,7 +6,7 @@
 #include <wing/BorderedControl.hpp>
 #include <wing/ContainerControl.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 int BorderWidth(BorderStyle borderStyle)
 {
@@ -352,4 +352,4 @@ void BorderedControl::Draw3DBorder(Graphics& graphics)
     CheckGraphicsStatus(graphics.DrawLine(&outerRightBottomEdgePen, Point(r.X, r.Y + r.Height), Point(r.X + r.Width, r.Y + r.Height)));
 }
 
-} } // cmajor::wing
+} // wing

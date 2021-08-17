@@ -7,7 +7,7 @@
 #include <wing/Window.hpp>
 #include <soulng/util/Unicode.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::unicode;
 
@@ -1189,4 +1189,4 @@ void ToolButtonSeparator::Draw(Graphics& graphics, const Point& origin)
     CheckGraphicsStatus(graphics.DrawLine(secondLinePen, secondLineStart, secondLineEnd));
 }
 
-} } // cmajor::wing
+} // wing

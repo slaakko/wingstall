@@ -1,7 +1,7 @@
 #include <wing/Button.hpp>
 #include <wing/Window.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 ButtonBase::ButtonBase(ControlCreateParams& createParams) : Control(createParams)
 {
@@ -122,4 +122,4 @@ void Button::OnLostFocus()
     }
 }
 
-} } // cmajor::wing
+} // wing

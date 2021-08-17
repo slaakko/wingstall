@@ -10,7 +10,7 @@
 #include <vector>
 #include <Windows.h>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 // OFN_PATHMUSTEXIST, OFN_FILEMUSTEXIST
 
@@ -18,6 +18,6 @@ WING_API bool OpenFileName(HWND windowHandle, const std::vector<std::pair<std::s
     const std::string& defaultFilePath, const std::string& defaultExtension,
     uint32_t flags, std::string& firstPath, std::string& currentDirectory, std::vector<std::string>& fileNames);
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_DIALOG_INCLUDED

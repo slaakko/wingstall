@@ -9,7 +9,7 @@
 #undef min
 #undef max
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::unicode;
 
@@ -972,4 +972,4 @@ void TabPage::SetState(TabState state_)
     tab.state = state_;
 }
 
-} } // cmajor::wing
+} // wing

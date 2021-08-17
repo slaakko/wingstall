@@ -5,7 +5,7 @@
 
 #include <wing/Event.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 Event::Event() : nextHandlerId(0)
 {
@@ -34,4 +34,4 @@ void Event::RemoveHandler(int handlerId)
     }
 }
 
-} } // cmajor::wing
+} // wing

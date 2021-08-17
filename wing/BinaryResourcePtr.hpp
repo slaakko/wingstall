@@ -9,7 +9,7 @@
 #include <string>
 #include <stdint.h>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 class WING_API BinaryResourcePtr
 {
@@ -24,6 +24,6 @@ private:
     int64_t size;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_BINARY_RESOURCE_PTR_INCLUDED

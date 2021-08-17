@@ -7,7 +7,7 @@
 #define WING_CLIPBOARD_INCLUDED
 #include <wing/Wing.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 const int textClipboardFormat = 1;
 const int unicodeTextClipboardFormat = 13;
@@ -66,6 +66,6 @@ private:
     HWND handle;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_CLIPBOARD_INCLUDED

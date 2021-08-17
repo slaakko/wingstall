@@ -8,7 +8,7 @@
 #include <wing/ResourceManager.hpp>
 #include <Windows.h>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 class WING_API Icon : public Resource
 {
@@ -32,6 +32,6 @@ private:
 WING_API Icon LoadStandardIcon(int standardIconId);
 WING_API Icon LoadIconByName(const std::string& iconName);
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_ICON_INCLUDED

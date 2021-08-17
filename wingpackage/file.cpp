@@ -26,6 +26,10 @@ File::File(const std::string& name_) : Node(NodeKind::file, name_), size(0), tim
 {
 }
 
+File::File(NodeKind nodeKind_, const std::string& name_) : Node(nodeKind_, name_), size(0), time(), flags(FileFlags::none)
+{
+}
+
 void File::WriteIndex(BinaryStreamWriter& writer)
 {
     Node::WriteIndex(writer);
@@ -33,6 +37,11 @@ void File::WriteIndex(BinaryStreamWriter& writer)
     writer.WriteTime(time);
     writer.Write(hash);
     writer.Write(static_cast<uint8_t>(flags));
+    Package* package = GetPackage();
+    if (package)
+    {
+        package->IncrementFileContentSize(size);
+    }
 }
 
 void File::ReadIndex(BinaryStreamReader& reader)
@@ -42,11 +51,16 @@ void File::ReadIndex(BinaryStreamReader& reader)
     if (package)
     {
         package->CheckInterrupted();
+        package->IncrementFileCount();
     }
     size = reader.ReadULong();
     time = reader.ReadTime();
     hash = reader.ReadUtf8String();
     flags = static_cast<FileFlags>(reader.ReadByte());
+    if (package)
+    {
+        package->IncrementFileContentSize(size);
+    }
 }
 
 void File::WriteData(BinaryStreamWriter& writer)
@@ -72,6 +86,11 @@ void File::WriteData(BinaryStreamWriter& writer)
     }
     hash = sha1.GetDigest();
     writer.Write(hash);
+    Package* package = GetPackage();
+    if (package)
+    {
+        package->IncrementFileContentPosition(size);
+    }
 }
 
 void File::ReadData(BinaryStreamReader& reader)
@@ -102,6 +121,10 @@ void File::ReadData(BinaryStreamReader& reader)
         throw std::runtime_error("could not set write time of file '" + filePath + "': " + PlatformStringToUtf8(ec.message()));
     }
     hash = reader.ReadUtf8String();
+    if (package)
+    {
+        package->IncrementFileContentPosition(size);
+    }
 }
 
 std::string File::ComputeHash() const
@@ -185,9 +208,20 @@ void File::Remove()
 
 void File::Uninstall()
 {
+    Package* package = GetPackage();
+    if (package)
+    {
+        package->SetFile(this);
+        package->CheckInterrupted();
+    }
+    Node::Uninstall();
     if (!GetFlag(FileFlags::exists) && !Changed())
     {
         Remove();
+    }
+    if (package)
+    {
+        package->IncrementFileIndex();
     }
 }
 

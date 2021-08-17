@@ -5,7 +5,7 @@
 
 #include <wing/Panel.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 ControlCreateParams& MakePanelCreateParams(ControlCreateParams& createParams)
 {
@@ -27,4 +27,4 @@ void Panel::OnPaint(PaintEventArgs& args)
     ContainerControl::OnPaint(args);
 }
 
-} } // cmajor::wing
+} // wing

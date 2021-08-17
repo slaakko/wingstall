@@ -8,11 +8,12 @@
 #include <wing/Control.hpp>
 #include <wing/Container.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 struct WING_API ScrollableControlCreateParams
 {
     ScrollableControlCreateParams(Control* child_);
+    ScrollableControlCreateParams& Defaults();
     ScrollableControlCreateParams& WindowClassName(const std::string& windowClassName_);
     ScrollableControlCreateParams& WindowClassStyle(uint32_t windowClassStyle_);
     ScrollableControlCreateParams& WindowStyle(int windowStyle_);
@@ -75,6 +76,6 @@ private:
     bool horizontalScrollBarShown;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_SCROLLABLE_CONTROL_INCLUDED

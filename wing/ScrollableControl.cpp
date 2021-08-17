@@ -5,7 +5,7 @@
 
 #include <wing/ScrollableControl.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 ScrollableControlCreateParams::ScrollableControlCreateParams(Control* child_) : controlCreateParams(), child(child_)
 {
@@ -13,6 +13,11 @@ ScrollableControlCreateParams::ScrollableControlCreateParams(Control* child_) : 
     controlCreateParams.WindowStyle(DefaultChildWindowStyle());
     controlCreateParams.WindowClassBackgroundColor(COLOR_WINDOW);
     controlCreateParams.BackgroundColor(child->BackgroundColor());
+}
+
+ScrollableControlCreateParams& ScrollableControlCreateParams::Defaults()
+{
+    return *this;
 }
 
 ScrollableControlCreateParams& ScrollableControlCreateParams::WindowClassName(const std::string& windowClassName_)
@@ -428,5 +433,5 @@ Rect ScrollableControl::MakeUpdateRect(int xAmount, int yAmount)
     return updateRect;
 }
 
-} } // cmajor::wing
+} // wing
 

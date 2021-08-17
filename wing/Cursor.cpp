@@ -7,7 +7,7 @@
 #include <wing/Wing.hpp>
 #include <soulng/util/Unicode.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::unicode;
 
@@ -70,4 +70,4 @@ void SetCursor(const Cursor& cursor)
     ::SetCursor(cursor.Handle());
 }
 
-} } // cmajor::wing
+} // wing

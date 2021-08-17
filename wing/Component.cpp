@@ -5,7 +5,7 @@
 
 #include <wing/Component.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 Component::Component() : container(nullptr), nextSibling(nullptr), prevSibling(nullptr)
 {
@@ -15,4 +15,4 @@ Component::~Component()
 {
 }
 
-} } // cmajor::wing
+} // wing

@@ -12,7 +12,7 @@
 
 namespace wingstall { namespace winggui {
 
-using namespace cmajor::wing;
+using namespace wing;
 
 class InstallationActionDialog : public Window
 {

@@ -8,7 +8,7 @@
 #include <soulng/util/Unicode.hpp>
 #include <shobjidl_core.h>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::unicode;
 
@@ -332,4 +332,4 @@ std::string SelectDirectory(HWND handle, const std::string& directoryPath)
     }
 }
 
-} } // cmajor::wing
+} // wing

@@ -6,7 +6,7 @@
 #include <wing/ManualResetEvent.hpp>
 #include <Windows.h>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 ManualResetEvent::ManualResetEvent() : handle(nullptr)
 {
@@ -36,4 +36,4 @@ void ManualResetEvent::WaitFor()
     DWORD retval = WaitForSingleObject(handle, INFINITE);
 }
 
-} } // cmajor::wing
+} // wing

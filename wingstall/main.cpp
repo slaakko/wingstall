@@ -22,11 +22,11 @@ struct InitDone
     {
         soulng::util::Init();
         sngxml::xpath::Init();
-        cmajor::wing::Init(nullptr);
+        wing::Init(nullptr);
     }
     ~InitDone()
     {
-        cmajor::wing::Done();
+        wing::Done();
         sngxml::xpath::Done();
         soulng::util::Done();
     }
@@ -61,6 +61,70 @@ void PrintHelp()
     std::cout << "  Create Visual C++ setup program from PACKAGE.bin and package info file PACKAGE.info.xml." << std::endl;
 }
 
+class PackageFileContentPositionObserver : public PackageObserver
+{
+public:
+    enum class Kind
+    {
+        read, write
+    };
+    PackageFileContentPositionObserver(Kind kind_);
+    void StatusChanged(Package* package) override;
+    void LogError(Package* package, const std::string& error) override;
+    void FileContentPositionChanged(Package* package) override;
+private:
+    Kind kind;
+    bool firstFileContent;
+    bool inFileContent;
+    int numBackspaces;
+    int prevPercent;
+};
+
+PackageFileContentPositionObserver::PackageFileContentPositionObserver(Kind kind_) : kind(kind_), numBackspaces(0), prevPercent(-1), firstFileContent(true), inFileContent(false)
+{
+}
+
+void PackageFileContentPositionObserver::StatusChanged(Package* package)
+{
+    if (inFileContent)
+    {
+        std::cout << std::endl;
+    }
+    std::cout << package->GetStatusStr() << std::endl;
+    if (package->GetStatus() == Status::failed)
+    {
+        std::cout << package->GetErrorMessage() << std::endl;
+    }
+}
+
+void PackageFileContentPositionObserver::LogError(Package* package, const std::string& error)
+{
+    std::cout << package->GetErrorMessage() << std::endl;
+}
+
+void PackageFileContentPositionObserver::FileContentPositionChanged(Package* package)
+{
+    if (firstFileContent)
+    {
+        firstFileContent = false;
+        if (kind == Kind::write)
+        {
+            std::cout << "writing files ";
+        }
+        else if (kind == Kind::read)
+        {
+            std::cout << "reading files ";
+        }
+    }
+    int percent = static_cast<int>((100.0f * package->FileContentPosition()) / package->FileContentSize());
+    if (percent != prevPercent)
+    {
+        WritePercent(std::cout, percent, numBackspaces);
+        prevPercent = percent;
+    }
+    inFileContent = true;
+}
+
 int main(int argc, const char** argv)
 {
     InitDone initDone;
@@ -72,7 +136,6 @@ int main(int argc, const char** argv)
         std::vector<std::string> packagesToInstall;
         std::vector<std::string> packagesToInstallFromVec;
         std::vector<std::string> setupsToCreate;
-        Compression compression = Compression::none;
         Content content = Content::all;
         for (int i = 1; i < argc; ++i)
         {
@@ -185,29 +248,13 @@ int main(int argc, const char** argv)
                         setupsToCreate.push_back(GetFullPath(arg));
                         break;
                     }
-                    case Command::setCompression:
-                    {
-                        if (arg == "none")
-                        {
-                            compression = Compression::none;
-                        }
-                        else if (arg == "deflate")
-                        {
-                            compression = Compression::deflate;
-                        }
-                        else if (arg == "bzip2")
-                        {
-                            compression = Compression::bzip2;
-                        }
-                        else
-                        {
-                            throw std::runtime_error("unknown compression '" + arg + "'");
-                        }
-                        break;
-                    }
                     case Command::setContent:
                     {
-                        if (arg == "index")
+                        if (arg == "preinstall")
+                        {
+                            content = Content::preinstall;
+                        }
+                        else if (arg == "index")
                         {
                             content = Content::index;
                         }
@@ -248,7 +295,12 @@ int main(int argc, const char** argv)
                 std::cout << "==> " << xmlIndexFilePath << std::endl;
             }
             std::string packageBinFilePath = Path::ChangeExtension(packageXmlFilePath, ".bin");
-            package->Create(packageBinFilePath, content);
+            {
+                PackageFileContentPositionObserver observer(PackageFileContentPositionObserver::Kind::write);
+                package->AddObserver(&observer);
+                package->Create(packageBinFilePath, content);
+                package->RemoveObserver(&observer);
+            }
             if (verbose)
             {
                 std::cout << "==> " << packageBinFilePath << std::endl;
@@ -267,7 +319,12 @@ int main(int argc, const char** argv)
                 std::cout << "installing package '" << packageBinFilePath << "'..." << std::endl;
             }
             std::unique_ptr<Package> package(new Package());
-            package->Install(compression, DataSource::file, packageBinFilePath, nullptr, 0, content);
+            {
+                PackageFileContentPositionObserver observer(PackageFileContentPositionObserver::Kind::read);
+                package->AddObserver(&observer);
+                package->Install(DataSource::file, packageBinFilePath, nullptr, 0, content);
+                package->RemoveObserver(&observer);
+            }
             std::string xmlIndexFilePath = Path::ChangeExtension(packageBinFilePath, ".read.index.xml");
             package->WriteIndexToXmlFile(xmlIndexFilePath);
             if (verbose)
@@ -296,7 +353,7 @@ int main(int argc, const char** argv)
                 uint8_t x = reader.ReadByte();
                 vec.push_back(x);
             }
-            package->Install(compression, DataSource::memory, std::string(), vec.data(), vec.size(), content);
+            package->Install(DataSource::memory, std::string(), vec.data(), vec.size(), content);
             std::string xmlIndexFilePath = Path::ChangeExtension(packageBinFilePath, ".read.index.xml");
             package->WriteIndexToXmlFile(xmlIndexFilePath);
             if (verbose)

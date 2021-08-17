@@ -8,7 +8,7 @@
 #include <wing/Control.hpp>
 #include <wing/Container.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 WING_API Color DefaultTextColor();
 WING_API Color DefaultTopLineColor();
@@ -246,6 +246,6 @@ public:
     bool IsStatusBarSpringItem() const override { return true; }
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_STATUS_BAR_INCLUDED

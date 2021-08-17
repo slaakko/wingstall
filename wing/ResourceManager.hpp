@@ -10,7 +10,7 @@
 #include <unordered_map>
 #include <vector>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 class Cursor;
 class Icon;
@@ -39,6 +39,6 @@ private:
     std::vector<std::unique_ptr<Resource>> resources;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_RESOURCE_MANAGER_INCLUDED

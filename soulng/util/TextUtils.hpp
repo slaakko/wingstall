@@ -49,11 +49,13 @@ UTIL_API std::string ToLower(const std::string& s);
 UTIL_API std::string ToString(double x);
 UTIL_API std::string ToString(double x, int maxNumDecimals);
 UTIL_API std::string ToString(double x, int minNumDecimals, int maxNumDecimals);
+UTIL_API std::string ToString(bool value);
 UTIL_API std::string ToHexString(uint8_t x);
 UTIL_API std::string ToHexString(uint16_t x);
 UTIL_API std::string ToHexString(uint32_t x);
 UTIL_API std::string ToHexString(uint64_t x);
 UTIL_API uint8_t ParseHexByte(const std::string& hexByteStr);
+UTIL_API bool ParseBool(const std::string& value);
 UTIL_API int Log10(int n);
 UTIL_API std::u32string FormatNumber(int n, int numDigits);
 UTIL_API std::string CurrentThreadIdStr();
@@ -62,6 +64,9 @@ UTIL_API std::string Format(const std::string& s, int width, FormatJustify justi
 UTIL_API std::string Format(const std::string& s, int width, FormatWidth fw);
 UTIL_API std::string Format(const std::string& s, int width, FormatWidth fw, FormatJustify justify);
 UTIL_API std::string Format(const std::string& s, int width, FormatWidth fw, FormatJustify justify, char fillChar);
+UTIL_API std::string PercentStr(int n);
+UTIL_API std::string BackspaceStr(int n);
+UTIL_API void WritePercent(std::ostream& s, int n, int& numBackspaces);
 UTIL_API std::string PlatformStringToUtf8(const std::string& platformString);
 
 } } // namespace soulng::util

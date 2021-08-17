@@ -7,7 +7,7 @@
 #define WING_LOG_VIEW_INCLUDED
 #include <wing/TextView.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 class WING_API LogView : public TextView
 {
@@ -16,6 +16,6 @@ public:
     virtual void WriteLine(const std::string& text);
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_LOG_VIEW_INCLUDED

@@ -8,7 +8,7 @@
 #include <wing/Control.hpp>
 #include <wing/Container.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 const int defaultControlPadding = 4;
 
@@ -61,6 +61,6 @@ private:
     Padding padding;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_PADDED_CONTROL_INCLUDED

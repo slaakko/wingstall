@@ -8,7 +8,7 @@
 #include <wing/Graphics.hpp>
 #include <stdint.h>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 enum class ConsoleColor : uint8_t
 {
@@ -18,6 +18,6 @@ enum class ConsoleColor : uint8_t
 
 Color GetColor(ConsoleColor consoleColor);
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_COLOR_INCLUDED

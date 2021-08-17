@@ -5,8 +5,9 @@
 
 #include <wing/Registry.hpp>
 #include <soulng/util/Unicode.hpp>
+#include <algorithm>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::unicode;
 
@@ -20,6 +21,17 @@ RegistryKey::~RegistryKey()
     {
         RegCloseKey(key);
     }
+}
+
+RegistryKey::RegistryKey(RegistryKey&& that) noexcept : key(that.key)
+{
+    that.key = nullptr;
+}
+
+RegistryKey& RegistryKey::operator=(RegistryKey&& that) noexcept
+{
+    std::swap(key, that.key);
+    return *this;
 }
 
 bool RegistryKey::HasValue(const std::string& name) const
@@ -73,6 +85,48 @@ void RegistryKey::DeleteValue(const std::string& name)
     }
 }
 
+void RegistryKey::SetIntegerValue(const std::string& name, int value)
+{
+    std::u16string valueName = ToUtf16(name);
+    DWORD data = static_cast<DWORD>(value);
+    LSTATUS status = RegSetKeyValueW(key, nullptr, (LPCWSTR)valueName.c_str(), REG_DWORD, &data, sizeof(data));
+    if (status != ERROR_SUCCESS)
+    {
+        throw WindowsException(status);
+    }
+}
+
+int RegistryKey::GetIntegerValue(const std::string& name) const
+{
+    std::u16string valueName = ToUtf16(name);
+    DWORD data = 0;
+    DWORD size = sizeof(data);
+    LSTATUS status = RegGetValueW(key, nullptr, (LPCWSTR)valueName.c_str(), RRF_RT_DWORD, nullptr, &data, &size);
+    if (status != ERROR_SUCCESS)
+    {
+        throw WindowsException(status);
+    }
+    return static_cast<int>(data);
+}
+
+std::string RegistryKey::GetSubkeyName(int index) const
+{
+    const int bufferSize = 4096;
+    std::unique_ptr<uint8_t[]> buffer(new uint8_t[bufferSize]);
+    DWORD size = bufferSize;
+    LSTATUS status = RegEnumKeyExW(key, index, (LPWSTR)buffer.get(), &size, nullptr, nullptr, nullptr, nullptr);
+    if (status != ERROR_SUCCESS)
+    {
+        if (status == ERROR_NO_MORE_ITEMS)
+        {
+            return std::string();
+        }
+        throw WindowsException(status);
+    }
+    std::u16string value(reinterpret_cast<const char16_t*>(buffer.get()));
+    return ToUtf8(value);
+}
+
 RegistryKey RegistryKey::CurrentUser(REGSAM access)
 {
     HKEY key = nullptr;
@@ -102,4 +156,44 @@ RegistryKey RegistryKey::Open(HKEY predefinedKey, const std::string& subKey, REG
     }
 }
 
-} } // cmajor::wing
+RegistryKey RegistryKey::Create(HKEY predefinedKey, const std::string& subKey)
+{
+    HKEY key = nullptr;
+    std::u16string subKeyStr = ToUtf16(subKey);
+    LSTATUS status = RegCreateKeyExW(predefinedKey, (LPCWSTR)subKeyStr.c_str(), 0, nullptr, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, nullptr, &key, nullptr);
+    if (status == ERROR_SUCCESS)
+    {
+        return RegistryKey(key);
+    }
+    else
+    {
+        throw WindowsException(status);
+    }
+}
+
+void RegistryKey::Delete()
+{
+    LSTATUS status = RegDeleteKeyW(key, nullptr);
+    if (status != ERROR_SUCCESS)
+    {
+        throw WindowsException(status);
+    }
+}
+
+bool RegistryKey::Exists(HKEY predefinedKey, const std::string& subKey, REGSAM access)
+{
+    HKEY key = nullptr;
+    std::u16string subKeyStr = ToUtf16(subKey);
+    LSTATUS status = RegOpenKeyExW(predefinedKey, (LPCWSTR)subKeyStr.c_str(), 0, access, &key);
+    if (status == ERROR_SUCCESS)
+    {
+        RegCloseKey(key);
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+} // wing

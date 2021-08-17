@@ -6,7 +6,7 @@
 #include <wing/Graphics.hpp>
 #include <soulng/util/Unicode.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::unicode;
 
@@ -220,4 +220,4 @@ std::unique_ptr<Bitmap> ToGrayBitmap(Bitmap* bm, const Color& transparentColor)
     return grayBitmap;
 }
 
-} } // cmajor::wing
+} // wing

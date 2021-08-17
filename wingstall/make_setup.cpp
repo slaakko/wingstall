@@ -30,19 +30,9 @@ namespace wingstall {
 using namespace soulng::util;
 using namespace soulng::unicode;
 
-std::string WingstallRootDir()
-{
-    char* env = std::getenv("WINGSTALL_ROOT");
-    if (!env || !*env)
-    {
-        throw std::runtime_error("environment variable 'WINGSTALL_ROOT' not found: please set it to contain /path/to/wingstall directory");
-    }
-    return GetFullPath(env);
-}
-
 std::string WingstallConfigDir()
 {
-    std::string configDir = Path::Combine(WingstallRootDir(), "config");
+    std::string configDir = Path::Combine(WingstallRoot(), "config");
     boost::filesystem::create_directories(configDir);
     return configDir;
 }
@@ -241,7 +231,7 @@ void MakeMainFile(const std::string& packageBinFilePath, bool verbose)
     sourceFormatter.WriteLine();
     sourceFormatter.WriteLine("using namespace soulng::util;");
     sourceFormatter.WriteLine("using namespace soulng::unicode;");
-    sourceFormatter.WriteLine("using namespace cmajor::wing;");
+    sourceFormatter.WriteLine("using namespace wing;");
     sourceFormatter.WriteLine("using namespace wingstall::winggui;");
     sourceFormatter.WriteLine("using namespace wingstall::wingpackage;");
     sourceFormatter.WriteLine();
@@ -253,13 +243,13 @@ void MakeMainFile(const std::string& packageBinFilePath, bool verbose)
     sourceFormatter.IncIndent();
     sourceFormatter.WriteLine("soulng::util::Init();");
     sourceFormatter.WriteLine("sngxml::xpath::Init();");
-    sourceFormatter.WriteLine("cmajor::wing::Init(instance);");
+    sourceFormatter.WriteLine("wing::Init(instance);");
     sourceFormatter.DecIndent();
     sourceFormatter.WriteLine("}");
     sourceFormatter.WriteLine("~InitDone()");
     sourceFormatter.WriteLine("{");
     sourceFormatter.IncIndent();
-    sourceFormatter.WriteLine("cmajor::wing::Done();");
+    sourceFormatter.WriteLine("wing::Done();");
     sourceFormatter.WriteLine("sngxml::xpath::Done();");
     sourceFormatter.WriteLine("soulng::util::Done();");
     sourceFormatter.DecIndent();
@@ -317,7 +307,7 @@ void MakeMainFile(const std::string& packageBinFilePath, bool verbose)
 void MakeDataFile(const std::string& packageBinFilePath, const std::string& appName, const std::string& appVersion, const std::string& compression, const std::string& defaultContainingDirPath, 
     const std::string& installDirName, int64_t uncompressedPackageSize, bool verbose)
 {
-    std::string wingstallRootDir = WingstallRootDir();
+    std::string wingstallRootDir = WingstallRoot();
     std::string compressedUnicodeDBFilePath = soulng::unicode::CharacterTable::Instance().DeflateFilePath();
     std::string setupIconFilePath = GetFullPath(Path::Combine(Path::Combine(wingstallRootDir, "icon"), "setup.ico"));
     std::string packageResourceName = Path::GetFileNameWithoutExtension(packageBinFilePath) + "_package";
@@ -472,7 +462,7 @@ void MakeProjectFile(const std::string& packageBinFilePath, bool verbose)
     boost::uuids::uuid projectGuid = boost::uuids::random_generator()();
     std::string projectGuidStr = "{" + boost::lexical_cast<std::string>(projectGuid) + "}";
 
-    std::string wingstallRootDir = WingstallRootDir();
+    std::string wingstallRootDir = WingstallRoot();
     std::string wingstallIncludeDir = wingstallRootDir;
     std::string wingstallLibDir = Path::Combine(wingstallRootDir, "lib");
     std::string projectFilePath = GetFullPath(Path::Combine(Path::Combine(Path::GetDirectoryName(GetFullPath(packageBinFilePath)), "program"), "setup.vcxproj"));

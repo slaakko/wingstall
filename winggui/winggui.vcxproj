@@ -155,12 +155,14 @@
     <ClInclude Include="install_window.hpp" />
     <ClInclude Include="message_dialog.hpp" />
     <ClInclude Include="status_message.hpp" />
+    <ClInclude Include="uninstall_window.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="installation_action_dialog.cpp" />
     <ClCompile Include="install_window.cpp" />
     <ClCompile Include="message_dialog.cpp" />
     <ClCompile Include="status_message.cpp" />
+    <ClCompile Include="uninstall_window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

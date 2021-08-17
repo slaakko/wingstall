@@ -14,7 +14,7 @@
 #include <soulng/util/Unicode.hpp>
 #include <windowsx.h>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::unicode;
 
@@ -1819,7 +1819,7 @@ void Control::SetCaretLocation()
 
 void Control::SetCursor()
 {
-    cmajor::wing::SetCursor(arrowCursor);
+    wing::SetCursor(arrowCursor);
 }
 
 void Control::SubClassCommandWndProc()
@@ -1838,4 +1838,4 @@ HWND LParamHandle(Message& msg)
     return reinterpret_cast<HWND>(msg.lParam);
 }
 
-} } // cmajor::wing
+} // wing

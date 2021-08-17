@@ -7,17 +7,20 @@
 #define WINGSTALL_WINGGUI_STATUS_MESSAGE_INCLUDED
 #include <winggui/api.hpp>
 #include <wingpackage/package.hpp>
+#include <wing/Wing.hpp>
 #include <mutex>
 #include <string>
 #include <queue>
 
 namespace wingstall { namespace winggui {
 
+const int STATUS_MESSAGE_AVAILABLE = WM_USER + 2;
+
 using namespace wingstall::wingpackage;
 
 enum class StatusMessageKind : int
 {
-    statusChanged, componentChanged, fileChanged, streamPositionChanged, logError
+    statusChanged, componentChanged, fileChanged, streamPositionChanged, fileIndexChanged, logError
 };
 
 class StatusMessage
@@ -68,6 +71,15 @@ public:
     int64_t Position() const { return position; }
 private:
     int64_t position;
+};
+
+class FileIndexChangedMessage : public StatusMessage
+{
+public:
+    FileIndexChangedMessage(int fileIndex_);
+    int FileIndex() const { return fileIndex; }
+private:
+    int fileIndex;
 };
 
 class LogErrorMessage : public StatusMessage

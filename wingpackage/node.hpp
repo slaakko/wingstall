@@ -18,8 +18,13 @@ using namespace soulng::util;
 
 enum class NodeKind : uint8_t
 {
-    package, component, directory, file, environment, environmentVariable, pathDirectory, variables, variable, links, linkDirectory, link
+    package, component, directory, file, environment, environmentVariable, pathDirectory, variables, variable, links, linkDirectory, link, preinstall_component, 
+    uninstall_component, uninstall_exe_file, uninstall_bin_file, installation_component
 };
+
+class Component;
+class Directory;
+class File;
 
 class Package;
 
@@ -44,12 +49,19 @@ public:
     virtual void ReadIndex(BinaryStreamReader& reader);
     virtual void WriteData(BinaryStreamWriter& writer);
     virtual void ReadData(BinaryStreamReader& reader);
+    virtual void Uninstall();
     virtual sngxml::dom::Element* ToXml() const = 0;
 private:
     NodeKind kind;
     std::string name;
     Node* parent;
 };
+
+Node* CreateNode(NodeKind kind);
+void WriteIndex(Node* node, BinaryStreamWriter& writer);
+Component* BeginReadComponent(BinaryStreamReader& reader);
+Directory* BeginReadDirectory(BinaryStreamReader& reader);
+File* BeginReadFile(BinaryStreamReader& reader);
 
 } } // namespace wingstall::wingpackage
 

@@ -15,7 +15,7 @@
 #undef min
 #undef max
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::unicode;
 
@@ -2547,7 +2547,7 @@ SolidBrush* TextView::GetOrInsertBrush(const Color& color)
 
 void TextView::SetCursor()
 {
-    cmajor::wing::SetCursor(cursor);
+    wing::SetCursor(cursor);
 }
 
 void TextView::SetCaretLocation()
@@ -3124,4 +3124,4 @@ std::vector<int> CalculateLineStartIndeces(const std::u32string& text)
     return indeces;
 }
 
-} } // cmajor::wing
+} // wing

@@ -8,7 +8,7 @@
 #include <wing/EditCommandList.hpp>
 #include <wing/TextView.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 class WING_API InsertCharCommand : public EditCommand
 {
@@ -127,6 +127,6 @@ private:
     bool wholeLine;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_EDIT_COMMAND_INCLUDED

@@ -16,7 +16,7 @@
 
 namespace wingstall { namespace wingpackage {
 
-using namespace cmajor::wing;
+using namespace wing;
 using namespace soulng::unicode;
 
 Link::Link() : Node(NodeKind::link, "link"), iconIndex(0)
@@ -206,16 +206,21 @@ void Link::Install()
 
 void Link::Uninstall()
 {
+    Node::Uninstall();
     Package* package = GetPackage();
     if (package)
     {
+        package->CheckInterrupted();
         try
         {
             if (boost::filesystem::exists(expandedLinkFilePath))
             {
                 boost::system::error_code ec;
                 boost::filesystem::remove(expandedLinkFilePath, ec);
-                throw std::runtime_error(PlatformStringToUtf8(ec.message()));
+                if (ec)
+                {
+                    throw std::runtime_error(PlatformStringToUtf8(ec.message()));
+                }
             }
         }
         catch (const std::exception& ex)
@@ -346,9 +351,15 @@ void LinkDirectory::Install()
 
 void LinkDirectory::Uninstall()
 {
-    if (!GetFlag(LinkDirectoryFlags::exists))
+    Node::Uninstall();
+    Package* package = GetPackage();
+    if (package)
     {
-        Remove();
+        package->CheckInterrupted();
+        if (!GetFlag(LinkDirectoryFlags::exists))
+        {
+            Remove();
+        }
     }
 }
 
@@ -487,13 +498,23 @@ void Links::Install()
 
 void Links::Uninstall()
 {
-    for (const auto& link : links)
+    Node::Uninstall();
+    Package* package = GetPackage();
+    if (package)
     {
-        link->Uninstall();
+        package->CheckInterrupted();
+        for (const auto& link : links)
+        {
+            link->Uninstall();
+        }
+        for (const auto& linkDirectory : linkDirectories)
+        {
+            linkDirectory->Uninstall();
+        }
     }
-    for (const auto& linkDirectory : linkDirectories)
+    else
     {
-        linkDirectory->Uninstall();
+        throw std::runtime_error("package not set");
     }
 }
 

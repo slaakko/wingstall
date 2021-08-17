@@ -10,7 +10,7 @@
 #undef min
 #undef max
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::unicode;    
 
@@ -1322,4 +1322,4 @@ void TreeViewNode::OnMouseHover()
     }
 }
 
-} } // cmajor::wing
+} // wing

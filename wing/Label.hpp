@@ -7,7 +7,7 @@
 #define WING_LABEL_INCLUDED
 #include <wing/Control.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 struct WING_API LabelCreateParams
 {
@@ -60,6 +60,6 @@ private:
     LabelFlags flags;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_LABEL_INCLUDED

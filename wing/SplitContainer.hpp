@@ -7,7 +7,7 @@
 #define WING_SPLIT_CONTAINER_INCLUDED
 #include <wing/ContainerControl.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 class SplitContainer;
 
@@ -175,6 +175,6 @@ private:
     SplitterDistanceChangedEvent splitterDistanceChanged;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_SPLIT_CONTAINER_INCLUDED

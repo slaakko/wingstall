@@ -7,7 +7,7 @@
 #include <wing/Application.hpp>
 #include <wing/Panel.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 Dock SplitDock(SplitterOrientation orientation)
 {
@@ -150,12 +150,12 @@ void Splitter::SetCursor()
     {
         case SplitterOrientation::horizontal:
         {
-            cmajor::wing::SetCursor(horizontalSplitterCursor);
+            wing::SetCursor(horizontalSplitterCursor);
             break;
         }
         case SplitterOrientation::vertical:
         {
-            cmajor::wing::SetCursor(verticalSplitterCursor);
+            wing::SetCursor(verticalSplitterCursor);
             break;
         }
     }
@@ -662,4 +662,4 @@ void SplitContainer::OnSplitterDistanceChanged()
     splitterDistanceChanged.Fire();
 }
 
-} } // cmajor::wing
+} // wing

@@ -5,7 +5,7 @@
 
 #include <wing/EditCommand.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 InsertCharCommand::InsertCharCommand(int lineIndex_, int columnIndex_, char32_t c_, bool removeIndent_) : lineIndex(lineIndex_), columnIndex(columnIndex_), c(c_), removeIndent(removeIndent_)
 {
@@ -160,4 +160,4 @@ void RemoveSelectionCommand::Redo(TextView* textView)
     textView->RemoveSelection();
 }
 
-} } // cmajor::wing
+} // wing

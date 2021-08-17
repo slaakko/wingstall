@@ -6,7 +6,7 @@
 #include <wing/ListBox.hpp>
 #include <soulng/util/Unicode.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::unicode;
 
@@ -207,4 +207,4 @@ void ListBox::OnSelectedIndexChanged()
     selectedIndexChanged.Fire();
 }
 
-} } // cmajor::wing
+} // wing

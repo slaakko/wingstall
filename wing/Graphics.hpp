@@ -8,7 +8,7 @@
 #include <wing/Wing.hpp>
 #include <memory>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using Color = Gdiplus::Color;
 using Point = Gdiplus::Point;
@@ -121,6 +121,6 @@ WING_API RectF MeasureString(Graphics& graphics, const std::string& text, const 
 WING_API Color ToGray(const Color& color, const Color& transparentColor);
 WING_API std::unique_ptr<Bitmap> ToGrayBitmap(Bitmap* bm, const Color& transparentColor);
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_GRAPHICS_INCLUDED

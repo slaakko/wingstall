@@ -8,7 +8,7 @@
 #include <wing/Control.hpp>
 #include <wing/Container.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 enum class BorderStyle : int
 {
@@ -109,6 +109,6 @@ private:
     Color threeDInnerRightBottomEdgeColor;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_BORDERED_CONTROL_INCLUDED

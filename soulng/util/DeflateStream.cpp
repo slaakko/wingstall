@@ -23,6 +23,7 @@ DeflateStream::DeflateStream(CompressionMode mode_, Stream& underlyingStream_, i
     inAvail(0), in(new uint8_t[bufferSize]), outAvail(0), outPos(0), outHave(0), endOfInput(false), endOfStream(false), out(new uint8_t[bufferSize]), 
     handle(nullptr)
 {
+    SetPosition(underlyingStream.Position());
     int ret = zlib_init(int32_t(mode), compressionLevel, &handle);
     if (ret < 0)
     {

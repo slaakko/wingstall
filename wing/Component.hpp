@@ -8,7 +8,7 @@
 #include <wing/WingApi.hpp>
 #include <stdint.h>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 class Container;
 
@@ -66,6 +66,6 @@ private:
     Component* prevSibling;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_COMPONENT_INCLUDED

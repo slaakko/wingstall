@@ -9,7 +9,7 @@
 #include <soulng/lexer/Token.hpp>
 #include <soulng/util/TextUtils.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using Token = soulng::lexer::Token;
 using TokenLine = soulng::lexer::TokenLine;
@@ -121,6 +121,6 @@ private:
     std::vector<std::unique_ptr<Font>> fonts;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_SOURCE_CODE_VIEW_INCLUDED

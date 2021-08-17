@@ -6,7 +6,7 @@
 #include <wing/ContainerControl.hpp>
 #include <wing/Menu.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 ContainerControl::ContainerControl(ControlCreateParams& createParams) : Control(createParams), children(this)
 {
@@ -273,4 +273,4 @@ void ContainerControl::OnChildLostFocus(ControlEventArgs& args)
     }
 }
 
-} } // cmajor::wing
+} // wing

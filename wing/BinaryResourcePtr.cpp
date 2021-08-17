@@ -7,7 +7,7 @@
 #include <wing/Wing.hpp>
 #include <soulng/util/Unicode.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
       
 using namespace soulng::unicode;
 
@@ -34,4 +34,4 @@ BinaryResourcePtr::BinaryResourcePtr(const std::string& moduleName, const std::s
     size = SizeofResource(nullptr, res);
 }
 
-} } // cmajor::wing
+} // wing

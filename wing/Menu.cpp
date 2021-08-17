@@ -11,7 +11,7 @@
 #undef min
 #undef max
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::unicode;
 
@@ -2291,4 +2291,4 @@ void ClickAction::Click()
     Execute();
 }
 
-} } // cmajor::wing
+} // wing

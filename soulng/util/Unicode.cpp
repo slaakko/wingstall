@@ -26,7 +26,7 @@ std::string WingstallRoot()
     }
     if (wingstallRoot.empty())
     {
-        throw UnicodeException("please set 'WINGSTALL_ROOT' environment variable to contain /path/to/wingstall directory.");
+        throw std::runtime_error("please set 'WINGSTALL_ROOT' environment variable to contain /path/to/wingstall directory.");
     }
     return wingstallRoot;
 }

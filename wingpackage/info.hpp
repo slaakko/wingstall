@@ -18,7 +18,7 @@ enum class InfoItemType
 
 enum class InfoItemKind
 {
-    appName, appVersion, installDirName, defaultContainingDirPath, uncompressedPackageSize, compressedPackageSize, compression, dataSource, packageFilePath, packageDataAddress
+    appName, appVersion, companyName, installDirName, defaultContainingDirPath, uncompressedPackageSize, compressedPackageSize, compression, dataSource, packageFilePath, packageDataAddress
 };
 
 class InfoItem

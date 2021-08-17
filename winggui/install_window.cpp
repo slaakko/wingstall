@@ -67,11 +67,11 @@ std::string GetDefaultInstallationDirPath()
     return Path::Combine(GetDefaultContainingDirPath(), GetInstallDirName());
 }
 
-std::string GetMainWindowCaption()
+std::string GetInstallWindowCaption()
 {
-    std::string mainWindowCaption;
-    mainWindowCaption.append(GetAppName()).append(" ").append(GetAppVersion()).append(" installation");
-    return mainWindowCaption;
+    std::string installWindowCaption;
+    installWindowCaption.append(GetAppName()).append(" ").append(GetAppVersion()).append(" installation");
+    return installWindowCaption;
 }
 
 int64_t GetUncompressedPackageSize()
@@ -198,7 +198,7 @@ void InstallWindowPackageObserver::LogError(Package* packge, const std::string& 
     installWindow->PutStatusMessage(new LogErrorMessage(error));
 }
 
-InstallWindow::InstallWindow() : Window(WindowCreateParams().WindowStyle(DialogWindowStyle()).Text(GetMainWindowCaption()).WindowClassName("winggui.InstallWindow").
+InstallWindow::InstallWindow() : Window(WindowCreateParams().WindowStyle(DialogWindowStyle()).Text(GetInstallWindowCaption()).WindowClassName("winggui.InstallWindow").
     WindowClassBackgroundColor(DefaultControlWindowClassBackgroundColor()).BackgroundColor(DefaultControlBackgroundColor()).    
     Location(DefaultLocation()).SetSize(Size(ScreenMetrics::Get().MMToHorizontalPixels(160), ScreenMetrics::Get().MMToVerticalPixels(120)))),
     editMode(false), closeButton(nullptr), installButton(nullptr), containingDirLabel(nullptr), containingDirTextBox(nullptr), 
@@ -498,7 +498,7 @@ void InstallWindow::RunInstallation(const std::string& installationDir)
                     std::string packageFilePath = GetPackageFilePath();
                     if (!packageFilePath.empty())
                     {
-                        package->Install(compression, DataSource::file, packageFilePath, nullptr, 0, Content::all);
+                        package->Install(DataSource::file, packageFilePath, nullptr, 0, Content::all);
                     }
                 }
                 else if (dataSource == DataSource::memory)
@@ -508,7 +508,7 @@ void InstallWindow::RunInstallation(const std::string& installationDir)
                     {
                         uint8_t* data = static_cast<uint8_t*>(reinterpret_cast<void*>(address));
                         int64_t size = GetCompressedPackageSize();
-                        package->Install(compression, DataSource::memory, std::string(), data, size, Content::all);
+                        package->Install(DataSource::memory, std::string(), data, size, Content::all);
                     }
                 }
                 installationRunning = false;

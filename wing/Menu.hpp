@@ -9,7 +9,7 @@
 #include <wing/Container.hpp>
 #include <wing/Keys.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 class MenuItem;
 class MenuItemBase;
@@ -365,6 +365,6 @@ private:
     void Click();
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_MENU_INCLUDED

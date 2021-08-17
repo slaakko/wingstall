@@ -56,7 +56,7 @@ public:
     void ReadData(BinaryStreamReader& reader) override;
     bool HasDirectoriesOrFiles() const;
     void Remove();
-    void Uninstall();
+    void Uninstall() override;
     sngxml::dom::Element* ToXml() const override;
 private:
     std::time_t time;

@@ -11,7 +11,7 @@
 #include <wing/WindowManager.hpp>
 #include <functional>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 class Window;
 
@@ -68,6 +68,6 @@ private:
 WING_API void ApplicationInit();
 WING_API void ApplicationDone();
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_APPLICATION_INCLUDED

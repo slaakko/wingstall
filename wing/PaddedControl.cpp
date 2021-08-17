@@ -6,7 +6,7 @@
 #include <wing/PaddedControl.hpp>
 #include <wing/ContainerControl.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 Padding DefaultPadding()
 {
@@ -197,4 +197,4 @@ void PaddedControl::SetChildPos()
     child->SetSize(Size(childRect.Width, childRect.Height));
 }
 
-} } // cmajor::wing
+} // wing

@@ -8,7 +8,7 @@
 #include <wing/ToolTip.hpp>
 #include <wing/Container.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 class TreeViewNode;
 
@@ -309,6 +309,6 @@ private:
     int index;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_TREE_VIEW_INCLUDED

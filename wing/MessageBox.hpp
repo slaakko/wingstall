@@ -10,7 +10,7 @@
 
 #undef MessageBox
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 class Control;
 
@@ -33,6 +33,6 @@ public:
     static MessageBoxResult Show(const std::string& message, const std::string& caption, Control* owner, int messageBoxType);
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_MESSAGE_BOX_INCLUDED

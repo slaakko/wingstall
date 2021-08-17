@@ -7,7 +7,7 @@
 #define WING_TOOL_TIP_INCLUDED
 #include <wing/Control.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 enum class ToolTipFlags : int
 {
@@ -76,6 +76,6 @@ private:
     StringFormat stringFormat;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_TOOL_TIP_INCLUDED

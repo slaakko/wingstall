@@ -8,7 +8,7 @@
 #include <wing/Control.hpp>
 #include <wing/Container.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 class WING_API ContainerControl : public Control
 {
@@ -38,6 +38,6 @@ private:
     Container children;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_CONTAINER_CONTROL_INCLUDED

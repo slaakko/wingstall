@@ -72,14 +72,14 @@ void Directory::WriteIndex(BinaryStreamWriter& writer)
     for (int32_t i = 0; i < numDirectories; ++i)
     {
         Directory* directory = directories[i].get();
-        directory->WriteIndex(writer);
+        wingpackage::WriteIndex(directory, writer);
     }
     int32_t numFiles = files.size();
     writer.Write(numFiles);
     for (int i = 0; i < numFiles; ++i)
     {
         File* file = files[i].get();
-        file->WriteIndex(writer);
+        wingpackage::WriteIndex(file, writer);
     }
 }
 
@@ -97,14 +97,14 @@ void Directory::ReadIndex(BinaryStreamReader& reader)
     int32_t numDirectories = reader.ReadInt();
     for (int32_t i = 0; i < numDirectories; ++i)
     {
-        Directory* directory = new Directory();
+        Directory* directory = BeginReadDirectory(reader);
         AddDirectory(directory);
         directory->ReadIndex(reader);
     }
     int32_t numFiles = reader.ReadInt();
     for (int32_t i = 0; i < numFiles; ++i)
     {
-        File* file = new File();
+        File* file = BeginReadFile(reader);
         AddFile(file);
         file->ReadIndex(reader);
     }
@@ -254,6 +254,13 @@ void Directory::Remove()
 
 void Directory::Uninstall()
 {
+    Package* package = GetPackage();
+    if (package)
+    {
+        package->SetComponent(this);
+        package->CheckInterrupted();
+    }
+    Node::Uninstall();
     for (const auto& file : files)
     {
         file->Uninstall();

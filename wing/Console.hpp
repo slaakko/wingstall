@@ -8,7 +8,7 @@
 #include <wing/Ansi.hpp>
 #include <wing/TextView.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using ConsoleInputReadyEvent = Event;
 
@@ -92,6 +92,6 @@ private:
     ConsoleInputReadyEvent consoleInputReady;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_CONSOLE_INCLUDED

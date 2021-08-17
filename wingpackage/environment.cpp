@@ -13,7 +13,7 @@
 namespace wingstall { namespace wingpackage {
 
 using namespace soulng::unicode;
-using namespace cmajor::wing;
+using namespace wing;
 
 EnvironmentVariable::EnvironmentVariable() : Node(NodeKind::environmentVariable), flags(EnvironmentVariableFlags::none)
 {
@@ -152,13 +152,23 @@ void EnvironmentVariable::Remove()
 
 void EnvironmentVariable::Uninstall()
 {
-    if (GetFlag(EnvironmentVariableFlags::exists) && !oldValue.empty())
+    Package* package = GetPackage();
+    if (package)
     {
-        SetOldValue();
+        package->CheckInterrupted();
+        Node::Uninstall();
+        if (GetFlag(EnvironmentVariableFlags::exists) && !oldValue.empty())
+        {
+            SetOldValue();
+        }
+        else
+        {
+            Remove();
+        }
     }
     else
     {
-        Remove();
+        throw std::runtime_error("package not set");
     }
 }
 
@@ -247,9 +257,19 @@ void PathDirectory::Remove()
 
 void PathDirectory::Uninstall()
 {
-    if (!GetFlag(PathDirectoryFlags::exists))
+    Package* package = GetPackage();
+    if (package)
     {
-        Remove();
+        package->CheckInterrupted();
+        Node::Uninstall();
+        if (!GetFlag(PathDirectoryFlags::exists))
+        {
+            Remove();
+        }
+    }
+    else
+    {
+        throw std::runtime_error("package not set");
     }
 }
 
@@ -396,11 +416,13 @@ void Environment::Install()
 
 void Environment::Uninstall()
 {
+    Node::Uninstall();
     Package* package = GetPackage();
     if (package)
     {
         try
         {
+            package->CheckInterrupted();
             for (const auto& variable : variables)
             {
                 variable->Uninstall();

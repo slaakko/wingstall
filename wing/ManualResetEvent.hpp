@@ -7,7 +7,7 @@
 #define WING_MANUAL_RESET_EVENT_INCLUDED
 #include <wing/WingApi.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 class WING_API ManualResetEvent
 {
@@ -21,6 +21,6 @@ private:
     void* handle;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_MANUAL_RESET_EVENT_INCLUDED

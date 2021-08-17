@@ -49,7 +49,7 @@ public:
     void SetOldValue();
     void Remove();
     void Install();
-    void Uninstall();
+    void Uninstall() override;
 private:
     EnvironmentVariableFlags flags;
     std::string oldValue;
@@ -93,7 +93,7 @@ public:
     void ReadIndex(BinaryStreamReader& reader) override;
     void Install();
     void Remove();
-    void Uninstall();
+    void Uninstall() override;
 private:
     PathDirectoryFlags flags;
     std::string value;
@@ -111,7 +111,7 @@ public:
     void WriteIndex(BinaryStreamWriter& writer) override;
     void ReadIndex(BinaryStreamReader& reader) override;
     void Install();
-    void Uninstall();
+    void Uninstall() override;
 private:
     std::vector<std::unique_ptr<EnvironmentVariable>> variables;
     std::vector<std::unique_ptr<PathDirectory>> pathDirectories;

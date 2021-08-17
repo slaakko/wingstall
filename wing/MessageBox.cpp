@@ -9,7 +9,7 @@
 
 #undef MessageBox
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::unicode;
 
@@ -20,4 +20,4 @@ MessageBoxResult MessageBox::Show(const std::string& message, const std::string&
     return static_cast<MessageBoxResult>(MessageBoxW(owner->Handle(), reinterpret_cast<LPCWSTR>(msg.c_str()), reinterpret_cast<LPCWSTR>(cap.c_str()), messageBoxType));
 }
 
-} } // cmajor::wing
+} // wing

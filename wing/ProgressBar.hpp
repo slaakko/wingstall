@@ -8,7 +8,7 @@
 #include <wing/Control.hpp>
 #include <wing/Container.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 WING_API Color DefaultProgressBarBackgroundColor();
 WING_API Color DefaultProgressBarProgressColor();
@@ -96,6 +96,6 @@ private:
     ProgressBarBrushesAndPens brushesAndPens;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_PROGRESS_BAR_INCLUDED

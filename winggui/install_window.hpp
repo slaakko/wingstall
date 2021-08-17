@@ -21,16 +21,17 @@
 
 namespace wingstall { namespace winggui {
 
-const int STATUS_MESSAGE_AVAILABLE = WM_USER + 2;
-
 const int64_t updateIntegervalMs = 250;
 
 class InstallWindow;
 
 void RunInstallation(InstallWindow* installWindow, const std::string& installationDir);
+std::string GetAppName();
+std::string GetAppVersion();
+
 
 using namespace wingstall::wingpackage;
-using namespace cmajor::wing;
+using namespace wing;
 
 class InstallWindowPackageObserver : public PackageObserver
 {

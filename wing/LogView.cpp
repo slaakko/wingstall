@@ -6,7 +6,7 @@
 #include <wing/LogView.hpp>
 #include <soulng/util/Unicode.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::unicode;
     
@@ -37,4 +37,4 @@ void LogView::WriteLine(const std::string& text)
     InvalidateLines(startLineNumber, static_cast<int>(startLineNumber + lines.size()));
 }
 
-} } // cmajor::wing
+} // wing

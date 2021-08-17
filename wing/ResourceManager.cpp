@@ -8,7 +8,7 @@
 #include <wing/Icon.hpp>
 #include <stdexcept>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 Resource::~Resource()
 {
@@ -74,4 +74,4 @@ Icon& ResourceManager::GetIcon(const std::string& iconName)
     return *icon;
 }
 
-} } // cmajor::wing
+} // wing

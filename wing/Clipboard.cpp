@@ -8,7 +8,7 @@
 #include <soulng/util/Random.hpp>
 #include <thread>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::unicode;
 
@@ -199,4 +199,4 @@ void Clipboard::SetStringData(const ClipboardFormat& format, const std::u32strin
     }
 }
 
-} } // cmajor::wing
+} // wing

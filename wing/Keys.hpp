@@ -8,7 +8,7 @@
 #include <wing/WingApi.hpp>
 #include <string>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 enum class Keys : int
 {
@@ -224,6 +224,6 @@ inline constexpr Keys operator~(Keys k)
 
 std::string KeyText(Keys key);
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_KEYS_INCLUDED

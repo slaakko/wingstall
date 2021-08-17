@@ -24,6 +24,7 @@ BZip2Stream::BZip2Stream(CompressionMode mode_, Stream& underlyingStream_, int64
     inAvail(0), endOfInput(false), endOfStream(false), in(new uint8_t[bufferSize]), outHave(0), outAvail(0), outPos(0), out(new uint8_t[bufferSize]),
     handle(nullptr)
 {
+    SetPosition(underlyingStream.Position());
     int ret = bz2_init(int32_t(mode), compressionLevel, compressionWorkFactor, &handle);
     if (ret < 0)
     {

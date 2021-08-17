@@ -13,7 +13,7 @@
 #include <unordered_map>
 #include <stdint.h>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 class Control;
 
@@ -32,6 +32,6 @@ private:
     std::unordered_map<HWND, Control*> windowMap;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_WINDOW_MANAGER_INCLUDED

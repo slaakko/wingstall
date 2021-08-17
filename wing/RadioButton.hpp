@@ -7,7 +7,7 @@
 #define WING_RADIO_BUTTON_INCLUDED
 #include <wing/Button.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using CheckedChangedEvent = Event;
 
@@ -73,6 +73,6 @@ private:
     CheckedChangedEvent checkedChanged;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_RADIO_BUTTON_INCLUDED

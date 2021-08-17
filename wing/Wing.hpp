@@ -14,7 +14,7 @@
 
 #pragma comment (lib,"Gdiplus.lib")
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 class WING_API WindowsException : public std::runtime_error
 {
@@ -126,6 +126,6 @@ WING_API LRESULT CALLBACK CommandSubClassWndProc(HWND hWnd, UINT message, WPARAM
 
 WING_API std::string SelectDirectory(HWND handle, const std::string& directoryPath);
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_WING_INCLUDED

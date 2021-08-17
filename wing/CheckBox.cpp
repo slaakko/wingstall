@@ -8,7 +8,7 @@
 #undef min
 #undef max
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 CheckBoxCreateParams::CheckBoxCreateParams() : controlCreateParams(), autoSize(false)
 {
@@ -214,4 +214,4 @@ void CheckBox::ResetCheckedFlag()
     }
 }
 
-} } // cmajor::wing
+} // wing

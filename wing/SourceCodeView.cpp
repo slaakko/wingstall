@@ -6,7 +6,7 @@
 #include <wing/SourceCodeView.hpp>
 #include <soulng/util/Unicode.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::unicode;
 
@@ -394,4 +394,4 @@ std::u32string SourceCodeView::GetTokenText(int lineNumber, int columnNumber) co
     return std::u32string();
 }
 
-} } // cmajor::wing
+} // wing

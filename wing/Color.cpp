@@ -5,7 +5,7 @@
 
 #include <wing/Color.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 Color GetColor(ConsoleColor consoleColor)
 {
@@ -30,4 +30,4 @@ Color GetColor(ConsoleColor consoleColor)
     return Color::Black;
 }
 
-} } // cmajor::wing
+} // wing

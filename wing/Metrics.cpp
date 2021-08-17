@@ -14,7 +14,7 @@
 #include <boost/filesystem.hpp>
 #include <fstream>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::util;
 using namespace soulng::unicode;
@@ -185,4 +185,4 @@ void LoadMetrics()
 
 bool ScreenMetrics::calculated = false;
 
-} } // cmajor::wing
+} // wing

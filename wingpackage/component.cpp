@@ -22,6 +22,10 @@ Component::Component(const std::string& name_) : Node(NodeKind::component, name_
 {
 }
 
+Component::Component(NodeKind nodeKind_, const std::string& name_) : Node(nodeKind_, name_)
+{
+}
+
 Component::Component(PathMatcher& pathMatcher, sngxml::dom::Element* element) : Node(NodeKind::component)
 {
     std::u32string nameAttr = element->GetAttribute(U"name");
@@ -63,10 +67,30 @@ Component::Component(PathMatcher& pathMatcher, sngxml::dom::Element* element) : 
     }
 }
 
+void Component::RunCommands()
+{
+}
+
+void Component::CreateInstallationInfo()
+{
+}
+
+void Component::RemoveInstallationInfo()
+{
+}
+
 void Component::AddDirectory(Directory* directory)
 {
     directory->SetParent(this);
     directories.push_back(std::unique_ptr<Directory>(directory));
+}
+
+void Component::Write(Streams& streams)
+{
+}
+
+void Component::Read(Streams& streams)
+{
 }
 
 void Component::WriteIndex(BinaryStreamWriter& writer)
@@ -77,7 +101,7 @@ void Component::WriteIndex(BinaryStreamWriter& writer)
     for (int32_t i = 0; i < numDirectories; ++i)
     {
         Directory* directory = directories[i].get();
-        directory->WriteIndex(writer);
+        wingpackage::WriteIndex(directory, writer);
     }
 }
 
@@ -93,7 +117,7 @@ void Component::ReadIndex(BinaryStreamReader& reader)
     int32_t numDirectories = reader.ReadInt();
     for (int32_t i = 0; i < numDirectories; ++i)
     {
-        Directory* directory = new Directory();
+        Directory* directory = BeginReadDirectory(reader);
         AddDirectory(directory);
         directory->ReadIndex(reader);
     }
@@ -123,6 +147,13 @@ void Component::ReadData(BinaryStreamReader& reader)
 
 void Component::Uninstall()
 {
+    Package* package = GetPackage();
+    if (package)
+    {
+        package->SetComponent(this);
+        package->CheckInterrupted();
+    }
+    Node::Uninstall();
     for (const auto& directory : directories)
     {
         directory->Uninstall();

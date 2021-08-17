@@ -9,7 +9,7 @@
 #include <wing/EditCommandList.hpp>
 #include <soulng/lexer/SourcePos.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 struct WING_API SelectedEventArgs
 {
@@ -414,6 +414,6 @@ WING_API int MinIndent(const std::u32string& s);
 WING_API std::u32string Unindent(const std::u32string& s, int indent);
 WING_API std::vector<int> CalculateLineStartIndeces(const std::u32string& text);
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_TEXT_VIEW_INCLUDED

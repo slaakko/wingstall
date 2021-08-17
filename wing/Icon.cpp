@@ -7,7 +7,7 @@
 #include <wing/Wing.hpp>
 #include <soulng/util/Unicode.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using namespace soulng::unicode;
 
@@ -57,4 +57,4 @@ Icon LoadIconByName(const std::string& iconName)
     return Icon(iconHandle, false);
 }
 
-} } // cmajor::wing
+} // wing

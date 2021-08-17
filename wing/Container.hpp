@@ -8,7 +8,7 @@
 #include <wing/WingApi.hpp>
 #include <memory>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 class Component;
 
@@ -31,6 +31,6 @@ private:
     Component* lastChild;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_COMTAINER_INCLUDED

@@ -8,7 +8,7 @@
 #include <wing/Control.hpp>
 #include <wing/Container.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 using SelectedIndexChangedEvent = Event;
 using ItemDoubleClickedEvent = Event;
@@ -184,6 +184,6 @@ private:
     Size iconSize;
 };
 
-} } // cmajor::wing
+} // wing
 
 #endif // WING_ICON_LIST_VIEW_INCLUDED

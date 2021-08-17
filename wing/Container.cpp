@@ -7,7 +7,7 @@
 #include <wing/Component.hpp>
 #include <wing/Control.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 Container::Container(Component* parent_) : parent(parent_), firstChild(nullptr), lastChild(nullptr)
 {
@@ -125,4 +125,4 @@ void Container::InsertAfter(Component* child, Component* after)
     }
 }
 
-} } // cmajor::wing
+} // wing

@@ -5,7 +5,7 @@
 
 #include <wing/Label.hpp>
 
-namespace cmajor { namespace wing {
+namespace wing {
 
 LabelCreateParams::LabelCreateParams() : controlCreateParams()
 {
@@ -132,4 +132,4 @@ void Label::DoAutoSize()
     flags = flags | LabelFlags::autoSized;
 }
 
-} } // cmajor::wing
+} // wing
