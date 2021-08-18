@@ -146,7 +146,7 @@ void Link::Create(const std::string& expandedLinkFilePath, const std::string& ex
     {
         std::string directoryPath = Path::GetDirectoryName(GetFullPath(expandedLinkFilePath));
         boost::system::error_code ec;
-        boost::filesystem::create_directories(directoryPath, ec);
+        boost::filesystem::create_directories(MakeNativeBoostPath(directoryPath), ec);
         if (ec)
         {
             throw std::runtime_error("could not create directory '" + directoryPath + "': " + PlatformStringToUtf8(ec.message()));
@@ -177,8 +177,7 @@ void Link::Install()
         {
             expandedIconPath = package->ExpandPath(iconPath);
         }
-        std::string directoryPath = Path::GetDirectoryName(GetFullPath(expandedLinkFilePath));
-        if (boost::filesystem::exists(expandedLinkFilePath))
+        if (boost::filesystem::exists(MakeNativeBoostPath(expandedLinkFilePath)))
         {
             try
             {
@@ -213,10 +212,10 @@ void Link::Uninstall()
         package->CheckInterrupted();
         try
         {
-            if (boost::filesystem::exists(expandedLinkFilePath))
+            if (boost::filesystem::exists(MakeNativeBoostPath(expandedLinkFilePath)))
             {
                 boost::system::error_code ec;
-                boost::filesystem::remove(expandedLinkFilePath, ec);
+                boost::filesystem::remove(MakeNativeBoostPath(expandedLinkFilePath), ec);
                 if (ec)
                 {
                     throw std::runtime_error(PlatformStringToUtf8(ec.message()));
@@ -298,7 +297,7 @@ void LinkDirectory::SetFlag(LinkDirectoryFlags flag, bool value)
 void LinkDirectory::Create()
 {
     boost::system::error_code ec;
-    boost::filesystem::create_directories(expandedPath, ec);
+    boost::filesystem::create_directories(MakeNativeBoostPath(expandedPath), ec);
     if (ec)
     {
         throw std::runtime_error("could not create directory '" + expandedPath + "': " + PlatformStringToUtf8(ec.message()));
@@ -313,7 +312,7 @@ void LinkDirectory::Remove()
         try
         {
             boost::system::error_code ec;
-            boost::filesystem::remove(expandedPath, ec);
+            boost::filesystem::remove(MakeNativeBoostPath(expandedPath), ec);
             if (ec)
             { 
                 throw std::runtime_error("could not remove directory '" + expandedPath + "': " + PlatformStringToUtf8(ec.message()));
@@ -337,7 +336,9 @@ void LinkDirectory::Install()
     {
         package->CheckInterrupted();
         expandedPath = package->ExpandPath(path);
-        SetFlag(LinkDirectoryFlags::exists, boost::filesystem::exists(expandedPath));
+        std::u16string expPath = ToUtf16(expandedPath);
+        boost::filesystem::path p((const wchar_t*)expPath.c_str());
+        SetFlag(LinkDirectoryFlags::exists, boost::filesystem::exists(p));
         if (!GetFlag(LinkDirectoryFlags::exists))
         {
             Create();

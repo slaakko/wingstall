@@ -45,7 +45,7 @@ PreinstallComponent::PreinstallComponent(PathMatcher& pathMatcher, sngxml::dom::
                     if (!filePathAttr.empty())
                     {
                         std::string filePath = GetFullPath(Path::Combine(pathMatcher.SourceRootDir(), ToUtf8(filePathAttr)));
-                        FileInfo fileInfo(filePath, boost::filesystem::file_size(filePath), boost::filesystem::last_write_time(filePath));
+                        FileInfo fileInfo(filePath, boost::filesystem::file_size(MakeNativeBoostPath(filePath)), boost::filesystem::last_write_time(MakeNativeBoostPath(filePath)));
                         fileInfos.push_back(fileInfo);
                         File* file = new File(Path::GetFileName(filePath));
                         file->SetSize(fileInfo.size);
@@ -182,7 +182,7 @@ void PreinstallComponent::ReadIndex(BinaryStreamReader& reader)
             throw std::runtime_error("preinstall directory not set");
         }
         boost::system::error_code ec;
-        boost::filesystem::create_directories(preinstallDir, ec);
+        boost::filesystem::create_directories(MakeNativeBoostPath(preinstallDir), ec);
         if (ec)
         {
             throw std::runtime_error("could not create preinstall directory '" + preinstallDir + "': " + PlatformStringToUtf8(ec.message()));
@@ -264,7 +264,7 @@ void PreinstallComponent::RemovePreinstallDir()
         Package* package = GetPackage();
         if (package)
         {
-            boost::filesystem::remove_all(package->PreinstallDir());
+            boost::filesystem::remove_all(MakeNativeBoostPath(package->PreinstallDir()));
         }
     }
     catch (...)

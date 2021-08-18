@@ -8,6 +8,7 @@
 #include <soulng/util/BinaryReader.hpp>
 #include <soulng/util/FileStream.hpp>
 #include <soulng/util/BufferedStream.hpp>
+#include <soulng/util/Path.hpp>
 #include <soulng/util/Sha1.hpp>
 #include <soulng/util/TextUtils.hpp>
 #include <soulng/util/Time.hpp>
@@ -102,7 +103,7 @@ void File::ReadData(BinaryStreamReader& reader)
         package->CheckInterrupted();
     }
     std::string filePath = Path(GetTargetRootDir());
-    bool exists = boost::filesystem::exists(filePath);
+    bool exists = boost::filesystem::exists(MakeNativeBoostPath(filePath));
     SetFlag(FileFlags::exists, exists);
     {
         FileStream fileStream(filePath, OpenMode::write | OpenMode::binary);
@@ -115,7 +116,7 @@ void File::ReadData(BinaryStreamReader& reader)
         }
     }
     boost::system::error_code ec;
-    boost::filesystem::last_write_time(filePath, time, ec);
+    boost::filesystem::last_write_time(MakeNativeBoostPath(filePath), time, ec);
     if (ec)
     {
         throw std::runtime_error("could not set write time of file '" + filePath + "': " + PlatformStringToUtf8(ec.message()));
@@ -130,7 +131,7 @@ void File::ReadData(BinaryStreamReader& reader)
 std::string File::ComputeHash() const
 {
     std::string filePath = Path(GetTargetRootDir());
-    if (!boost::filesystem::exists(filePath))
+    if (!boost::filesystem::exists(MakeNativeBoostPath(filePath)))
     {
         throw std::runtime_error("file '" + filePath + "' does not exist");
     }
@@ -161,9 +162,9 @@ void File::SetFlag(FileFlags flag, bool value)
 bool File::Changed() const
 {
     std::string filePath = Path(GetTargetRootDir());
-    if (boost::filesystem::exists(filePath))
+    if (boost::filesystem::exists(MakeNativeBoostPath(filePath)))
     {
-        if (size != boost::filesystem::file_size(filePath))
+        if (size != boost::filesystem::file_size(MakeNativeBoostPath(filePath)))
         {
             return true;
         }
@@ -189,7 +190,7 @@ void File::Remove()
         {
             std::string filePath = Path(GetTargetRootDir());
             boost::system::error_code ec;
-            boost::filesystem::remove(filePath, ec);
+            boost::filesystem::remove(MakeNativeBoostPath(filePath), ec);
             if (ec)
             {
                 throw std::runtime_error("could not remove file '" + filePath + "': " + PlatformStringToUtf8(ec.message()));

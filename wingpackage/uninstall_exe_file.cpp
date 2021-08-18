@@ -26,8 +26,8 @@ UninstallExeFile::UninstallExeFile() : File(NodeKind::uninstall_exe_file, "unins
 void UninstallExeFile::SetInfo()
 {
     std::string filePath = Path::Combine(Path::Combine(WingstallRoot(), "bin"), Name());
-    SetSize(boost::filesystem::file_size(filePath));
-    SetTime(boost::filesystem::last_write_time(filePath));
+    SetSize(boost::filesystem::file_size(MakeNativeBoostPath(filePath)));
+    SetTime(boost::filesystem::last_write_time(MakeNativeBoostPath(filePath)));
 }
 
 void UninstallExeFile::WriteIndex(BinaryStreamWriter& writer)
@@ -86,7 +86,7 @@ void UninstallExeFile::ReadData(BinaryStreamReader& reader)
         }
     }
     boost::system::error_code ec;
-    boost::filesystem::last_write_time(filePath, Time(), ec);
+    boost::filesystem::last_write_time(MakeNativeBoostPath(filePath), Time(), ec);
     if (ec)
     {
         throw std::runtime_error("could not set write time of file '" + filePath + "': " + PlatformStringToUtf8(ec.message()));

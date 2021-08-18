@@ -8,6 +8,7 @@
 #include <wingpackage/file.hpp>
 #include <wingpackage/path_matcher.hpp>
 #include <soulng/util/Unicode.hpp>
+#include <soulng/util/Path.hpp>
 #include <soulng/util/TextUtils.hpp>
 #include <soulng/util/Time.hpp>
 #include <boost/filesystem.hpp>
@@ -30,7 +31,7 @@ Directory::Directory(PathMatcher& pathMatcher, const std::string& name, std::tim
     pathMatcher.BeginDirectory(Name(), element);
     if (time == std::time_t())
     {
-        time = boost::filesystem::last_write_time(pathMatcher.CurrentDir());
+        time = boost::filesystem::last_write_time(MakeNativeBoostPath(pathMatcher.CurrentDir()));
     }
     std::vector<DirectoryInfo> directories = pathMatcher.Directories();
     for (const auto& directoryInfo : directories)
@@ -150,10 +151,10 @@ void Directory::ReadData(BinaryStreamReader& reader)
         package->CheckInterrupted();
     }
     std::string directoryPath = Path(GetTargetRootDir());
-    bool exists = boost::filesystem::exists(directoryPath);
+    bool exists = boost::filesystem::exists(MakeNativeBoostPath(directoryPath));
     SetFlag(DirectoryFlags::exists, exists);
     boost::system::error_code ec;
-    boost::filesystem::create_directories(directoryPath, ec);
+    boost::filesystem::create_directories(MakeNativeBoostPath(directoryPath), ec);
     if (ec)
     {
         throw std::runtime_error("could not create directory '" + directoryPath + "': " + PlatformStringToUtf8(ec.message()));
@@ -168,7 +169,7 @@ void Directory::ReadData(BinaryStreamReader& reader)
     }
     if (!exists)
     {
-        boost::filesystem::last_write_time(directoryPath, time, ec);
+        boost::filesystem::last_write_time(MakeNativeBoostPath(directoryPath), time, ec);
         if (ec)
         {
             throw std::runtime_error("could not set write time of directory '" + directoryPath + "': " + PlatformStringToUtf8(ec.message()));
@@ -184,7 +185,7 @@ bool Directory::HasDirectoriesOrFiles() const
         try
         {
             std::string directoryPath = Path(GetTargetRootDir());
-            if (boost::filesystem::exists(directoryPath))
+            if (boost::filesystem::exists(MakeNativeBoostPath(directoryPath)))
             {
                 boost::system::error_code ec;
                 boost::filesystem::directory_iterator it(directoryPath, ec);
@@ -235,7 +236,7 @@ void Directory::Remove()
         {
             std::string directoryPath = Path(GetTargetRootDir());
             boost::system::error_code ec;
-            boost::filesystem::remove(directoryPath, ec);
+            boost::filesystem::remove(MakeNativeBoostPath(directoryPath), ec);
             if (ec)
             {
                 throw std::runtime_error("could not remove directory '" + directoryPath + "': " + PlatformStringToUtf8(ec.message()));

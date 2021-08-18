@@ -60,7 +60,7 @@ void UninstallBinFile::Remove()
     {
         std::string filePath = Path::Combine(package->TargetRootDir(), Name());
         boost::system::error_code ec;
-        boost::filesystem::remove(filePath, ec);
+        boost::filesystem::remove(MakeNativeBoostPath(filePath), ec);
         if (ec)
         {
             package->LogError("could not remove '" + filePath + "': " + PlatformStringToUtf8(ec.message()));
