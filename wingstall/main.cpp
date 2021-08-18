@@ -2,6 +2,7 @@
 #include <wingpackage/path_matcher.hpp>
 #include <wingstall/make_setup.hpp>
 #include <wing/InitDone.hpp>
+#include <wing/Environment.hpp>
 #include <sngxml/xpath/InitDone.hpp>
 #include <sngxml/dom/Parser.hpp>
 #include <soulng/util/InitDone.hpp>

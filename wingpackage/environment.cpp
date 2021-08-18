@@ -406,7 +406,15 @@ void Environment::Install()
         {
             pathDirectory->Install();
         }
-        BroadcastEnvironmentChangedMessage();
+        try
+        {
+            BroadcastEnvironmentChangedMessage();
+        }
+        catch (const std::exception& ex)
+        {
+            std::string what = ex.what();
+            int x = 0;
+        }
     }
     else
     {
@@ -431,7 +439,14 @@ void Environment::Uninstall()
             {
                 pathDirectory->Uninstall();
             }
-            BroadcastEnvironmentChangedMessage();
+            try
+            {
+                BroadcastEnvironmentChangedMessage();
+            }
+            catch (const std::exception& ex)
+            {
+                package->LogError(ex.what());
+            }
         }
         catch (const std::exception& ex)
         {

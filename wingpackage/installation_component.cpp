@@ -63,6 +63,8 @@ void InstallationComponent::CreateInstallationInfo()
             {
                 key.SetValue("UninstallString", uninstallString, RegistryValueKind::regSz);
             }
+            int sizeKB = static_cast<int>(package->FileContentSize() / 1024ll);
+            key.SetIntegerValue("EstimatedSize", sizeKB);
         }
         catch (const std::exception& ex)
         {
