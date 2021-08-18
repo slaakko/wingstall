@@ -5,6 +5,7 @@
 
 #include <wingpackage/installation_component.hpp>
 #include <wingpackage/package.hpp>
+#include <wingpackage/info.hpp>
 #include <wing/Installation.hpp>
 #include <soulng/util/TextUtils.hpp>
 #include <boost/uuid/uuid_io.hpp>
@@ -63,8 +64,14 @@ void InstallationComponent::CreateInstallationInfo()
             {
                 key.SetValue("UninstallString", uninstallString, RegistryValueKind::regSz);
             }
-            int sizeKB = static_cast<int>(package->FileContentSize() / 1024ll);
-            key.SetIntegerValue("EstimatedSize", sizeKB);
+            InfoItem* item = GetInfoItem(InfoItemKind::uncompressedPackageSize);
+            if (item && item->Type() == InfoItemType::integer)
+            {
+                IntegerItem* sizeItem = static_cast<IntegerItem*>(item);
+                int64_t sz = sizeItem->Value();
+                int sizeKB = static_cast<int>(sz / 1024);
+                key.SetIntegerValue("EstimatedSize", sizeKB);
+            }
         }
         catch (const std::exception& ex)
         {
