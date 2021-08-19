@@ -151,14 +151,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="api.hpp" />
-    <ClInclude Include="installation_action_dialog.hpp" />
+    <ClInclude Include="action_dialog.hpp" />
     <ClInclude Include="install_window.hpp" />
     <ClInclude Include="message_dialog.hpp" />
     <ClInclude Include="status_message.hpp" />
     <ClInclude Include="uninstall_window.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="installation_action_dialog.cpp" />
+    <ClCompile Include="action_dialog.cpp" />
     <ClCompile Include="install_window.cpp" />
     <ClCompile Include="message_dialog.cpp" />
     <ClCompile Include="status_message.cpp" />

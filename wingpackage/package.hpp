@@ -55,7 +55,7 @@ inline Content operator~(Content operand)
 
 enum class Action : int
 {
-    abortAction, rollbackAction, continueAction
+    abortAction, continueAction
 };
 
 class AbortException : public std::runtime_error
@@ -64,15 +64,9 @@ public:
     AbortException();
 };
 
-class RollbackException : public std::runtime_error
-{
-public:
-    RollbackException();
-};
-
 enum class Status : int 
 {
-    idle, running, succeeded, failed, aborted, rollbacked
+    idle, running, succeeded, failed, aborted
 };
 
 class PackageObserver
@@ -170,7 +164,6 @@ public:
     void Uninstall() override;
     void RunUninstallCommands();
     void RunUninstallCommand(const std::string& uninstallCommand);
-    void Rollback();
     void ResetAction();
     void Interrupt();
     void CheckInterrupted();

@@ -3,8 +3,8 @@
 // Distributed under the MIT license
 // =================================
 
-#ifndef WINGSTALL_WINGGUI_INSTALLATION_ACTION_DIALOG_INCLUDED
-#define WINGSTALL_WINGGUI_INSTALLATION_ACTION_DIALOG_INCLUDED
+#ifndef WINGSTALL_WINGGUI_ACTION_DIALOG_INCLUDED
+#define WINGSTALL_WINGGUI_ACTION_DIALOG_INCLUDED
 #include <winggui/api.hpp>
 #include <wing/Window.hpp>
 #include <wing/Button.hpp>
@@ -14,16 +14,20 @@ namespace wingstall { namespace winggui {
 
 using namespace wing;
 
-class InstallationActionDialog : public Window
+enum class ActionDialogKind
+{
+    installationAction, uninstallationAction
+};
+
+class ActionDialog : public Window
 {
 public:
-    InstallationActionDialog();
+    ActionDialog(ActionDialogKind kind);
 private:
     Button* abortButton;
-    Button* rollbackButton;
     Button* continueButton;
 };
 
 } } // namespace wingstall::wingui
 
-#endif // WINGSTALL_WINGGUI_INSTALLATION_ACTION_DIALOG_INCLUDED
+#endif // WINGSTALL_WINGGUI_ACTION_DIALOG_INCLUDED

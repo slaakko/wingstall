@@ -4,6 +4,7 @@
 // =================================
 
 #include <winggui/uninstall_window.hpp>
+#include <winggui/action_dialog.hpp>
 #include <wingpackage/file.hpp>
 #include <wing/Metrics.hpp>
 #include <wing/PaddedControl.hpp>
@@ -293,10 +294,6 @@ void UninstallWindow::SetStatus(Status status, const std::string& statusStr, con
     {
         log->WriteLine(statusStr);
     }
-    else if (status == Status::rollbacked)
-    {
-        log->WriteLine(statusStr);
-    }
 }
 
 void UninstallWindow::SetComponent(const std::string& component)
@@ -349,23 +346,16 @@ void UninstallWindow::CloseButtonClick()
             if (package)
             {
                 package->Interrupt();
-                //UninstallationActionDialog actionDialog;
-                /*
+                ActionDialog actionDialog(ActionDialogKind::uninstallationAction);
                 DialogResult result = actionDialog.ShowDialog(*this);
                 if (result == DialogResult::abort)
                 {
                     package->SetAction(Action::abortAction);
                 }
-                else if (result == DialogResult::cancel)
-                {
-                    package->SetAction(Action::rollbackAction);
-                }
                 else if (result == DialogResult::ok)
                 {
                     package->SetAction(Action::continueAction);
                 }
-                */
-                package->SetAction(Action::continueAction);
             }
             else
             {

@@ -4,7 +4,7 @@
 // =================================
 
 #include <winggui/install_window.hpp>
-#include <winggui/installation_action_dialog.hpp>
+#include <winggui/action_dialog.hpp>
 #include <winggui/message_dialog.hpp>
 #include <wingpackage/file.hpp>
 #include <wing/BorderedControl.hpp>
@@ -465,11 +465,6 @@ void InstallWindow::SetStatus(Status status, const std::string& statusStr, const
         MessageDialog dialog(MessageKind::info, statusStr);
         dialog.ShowDialog(*this);
     }
-    else if (status == Status::rollbacked)
-    {
-        MessageDialog dialog(MessageKind::info, statusStr);
-        dialog.ShowDialog(*this);
-    }
 }
 
 void InstallWindow::SetComponent(const std::string& component)
@@ -557,15 +552,11 @@ void InstallWindow::CloseButtonClick()
             if (package)
             {
                 package->Interrupt();
-                InstallationActionDialog actionDialog;
+                ActionDialog actionDialog(ActionDialogKind::installationAction);
                 DialogResult result = actionDialog.ShowDialog(*this);
                 if (result == DialogResult::abort)
                 {
                     package->SetAction(Action::abortAction);
-                }
-                else if (result == DialogResult::cancel)
-                {
-                    package->SetAction(Action::rollbackAction);
                 }
                 else if (result == DialogResult::ok)
                 {

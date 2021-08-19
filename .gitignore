@@ -21,6 +21,7 @@ bind
 *.release
 *.log
 *.ast
+*.bin
 manual.ps
 lib
 trace

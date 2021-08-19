@@ -72,10 +72,6 @@ AbortException::AbortException() : std::runtime_error("abort")
 {
 }
 
-RollbackException::RollbackException() : std::runtime_error("rollback")
-{
-}
-
 Package::Package() : 
     Node(NodeKind::package), id(boost::uuids::nil_uuid()), compression(Compression::none), component(), file(), stream(),
     streamObserver(this), size(0), interrupted(false), action(Action::continueAction), status(Status::idle), includeUninstaller(false),
@@ -873,20 +869,6 @@ void Package::Install(DataSource dataSource, const std::string& filePath, uint8_
     {
         SetStatus(Status::aborted, "installation aborted", std::string());
     }
-    catch (const RollbackException&)
-    {
-        try
-        {
-            Rollback();
-            SetComponent(nullptr);
-            SetFile(nullptr);
-            SetStatus(Status::rollbacked, "installation rollbacked", std::string());
-        }
-        catch (const std::exception& innerEx)
-        {
-            SetStatus(Status::failed, "rollback failed", innerEx.what());
-        }
-    }
     catch (const std::exception& ex)
     {
         SetStatus(Status::failed, "installation failed", ex.what());
@@ -956,11 +938,6 @@ void Package::RunUninstallCommand(const std::string& uninstallCommand)
     {
         LogError(ex.what());
     }
-}
-
-void Package::Rollback()
-{
-    // todo
 }
 
 void Package::LogError(const std::string& error)
@@ -1090,11 +1067,6 @@ void Package::CheckInterrupted()
             {
                 interrupted = false;
                 throw AbortException();
-            }
-            case Action::rollbackAction:
-            {
-                interrupted = false;
-                throw RollbackException();
             }
         }
         interrupted = false;

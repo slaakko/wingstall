@@ -1,0 +1,44 @@
+<package appName="Example" compression="none" iconFilePath="$TARGET_ROOT_DIR$/bin/hello.ico" id="21ab21ac-3c8a-402f-a765-d30db0442330" includeUninstaller="true" name="example" publisher="Joe Coder" sourceRootDir="C:/work/wingstall/example/source" targetRootDir="C:/example" version="1.0.0">
+ <component name="binaries">
+  <directory name="bin" time="19.08.2021 22:27:35">
+   <file hash="" name="filecompare.exe" size="296960" time="18.08.2021 19:57:11"/>
+   <file hash="" name="hello.exe" size="177664" time="19.08.2021 21:59:11"/>
+   <file hash="" name="hello.ico" size="46227" time="02.08.2021 19:05:16"/>
+   <file hash="" name="hello.pdb" size="831488" time="19.08.2021 21:59:12"/>
+  </directory>
+ </component>
+ <component name="libraries">
+  <directory name="lib" time="19.08.2021 21:43:05">
+   <file hash="" name="another.lib" size="3136" time="19.08.2021 21:42:34"/>
+   <file hash="" name="somelib.lib" size="751380" time="17.08.2021 16:33:08"/>
+  </directory>
+ </component>
+ <component name="documentation">
+  <directory name="doc" time="19.08.2021 21:43:56">
+   <directory name="content" time="19.08.2021 21:45:05">
+    <file hash="" name="file.html" size="250" time="19.08.2021 21:45:34"/>
+   </directory>
+   <file hash="" name="index.html" size="305" time="19.08.2021 21:44:24"/>
+  </directory>
+ </component>
+ <component name="uninstall"/>
+ <environment>
+  <variable name="EXAMPLE_ROOT" oldValue="" value="$TARGET_ROOT_DIR$"/>
+  <pathDirectory value="$TARGET_ROOT_DIR$/bin"/>
+ </environment>
+ <links>
+  <linkDirectory path="$START_MENU_PROGRAMS_FOLDER$/Example"/>
+  <link arguments="" description="Hello World Example" iconIndex="0" iconPath="$TARGET_ROOT_DIR$/bin/hello.exe" linkFilePath="$START_MENU_PROGRAMS_FOLDER$/Example/Example.lnk" path="$TARGET_ROOT_DIR$/bin/hello.exe" workingDirecory="$TARGET_ROOT_DIR$/bin"/>
+  <link arguments="" description="Hello World Example" iconIndex="0" iconPath="$TARGET_ROOT_DIR$/bin/hello.exe" linkFilePath="$DESKTOP_FOLDER$/Example.lnk" path="$TARGET_ROOT_DIR$/bin/hello.exe" workingDirecory="$TARGET_ROOT_DIR$/bin"/>
+ </links>
+ <variables>
+  <variable name="TARGET_ROOT_DIR" value="C:/example"/>
+  <variable name="PREINSTALL_DIR" value=""/>
+  <variable name="APP_NAME" value="Example"/>
+  <variable name="APP_VERSION" value="1.0.0"/>
+  <variable name="PUBLISHER" value="Joe Coder"/>
+  <variable name="START_MENU_PROGRAMS_FOLDER" value="C:/ProgramData/Microsoft/Windows/Start Menu/Programs"/>
+  <variable name="DESKTOP_FOLDER" value="C:/Users/seppo/OneDrive/Työpöytä"/>
+  <variable name="PROGRAM_FILES_DIR" value="C:/Program Files"/>
+ </variables>
+</package>

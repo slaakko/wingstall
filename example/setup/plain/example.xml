@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package
+	name="example" 
+	appName="Example" 
+	version="1.0.0" 
+	publisher="Joe Coder" 
+	sourceRootDir="../../source" 
+	targetRootDir="C:/example" 
+	compression="none" 
+	iconFilePath="$TARGET_ROOT_DIR$/bin/hello.ico"
+	includeUninstaller="true">
+	<component name="binaries">
+		<directory name="bin">
+		</directory>
+	</component>
+	<component name="libraries">
+		<directory name="lib">
+			<exclude dir="*"/>
+			<exclude file="*"/>
+			<include file="*.lib"/>
+		</directory>
+	</component>
+	<component name="documentation">
+		<directory name="doc">
+			<exclude dir="private"/>
+			<exclude file="file.txt"/>
+		</directory>
+	</component>
+	<environment>
+		<variable name="EXAMPLE_ROOT" value="$TARGET_ROOT_DIR$"/>
+		<pathDirectory value="$TARGET_ROOT_DIR$/bin"/>
+	</environment>
+	<links>
+		<linkDirectory 
+			path="$START_MENU_PROGRAMS_FOLDER$/Example"/>
+		<link 
+			linkFilePath="$START_MENU_PROGRAMS_FOLDER$/Example/Example.lnk" 
+			path="$TARGET_ROOT_DIR$/bin/hello.exe" 
+			workingDirectory="$TARGET_ROOT_DIR$/bin"
+			description="Hello World Example" 
+			iconPath="$TARGET_ROOT_DIR$/bin/hello.exe"
+			iconIndex="0"/>
+		<link 
+			linkFilePath="$DESKTOP_FOLDER$/Example.lnk" 
+			path="$TARGET_ROOT_DIR$/bin/hello.exe" 
+			workingDirectory="$TARGET_ROOT_DIR$/bin"
+			description="Hello World Example" 
+			iconPath="$TARGET_ROOT_DIR$/bin/hello.exe"
+			iconIndex="0"/>
+	</links>
+</package>
