@@ -486,7 +486,6 @@ void InstallWindow::RunInstallation(const std::string& installationDir)
             if (!installationDir.empty())
             {
                 package->SetTargetRootDir(GetFullPath(installationDir));
-                Compression compression = GetCompression();
                 DataSource dataSource = GetDataSource();
                 if (dataSource == DataSource::file)
                 {

@@ -18,6 +18,16 @@ std::string GetActionDialogKindStr(ActionDialogKind kind)
     return std::string();
 }
 
+std::string GetActionStr(ActionDialogKind kind)
+{
+    switch (kind)
+    {
+    case ActionDialogKind::installationAction: return "installation";
+    case ActionDialogKind::uninstallationAction: return "uninstallation";
+    }
+    return std::string();
+}
+
 ActionDialog::ActionDialog(ActionDialogKind kind) : Window(WindowCreateParams().Text(GetActionDialogKindStr(kind) + " actions").WindowStyle(DialogWindowStyle()).WindowClassName("winggui.ActionDialog").
     WindowClassBackgroundColor(DefaultControlWindowClassBackgroundColor()).BackgroundColor(DefaultControlBackgroundColor()).
     Location(DefaultLocation()).SetSize(Size(ScreenMetrics::Get().MMToHorizontalPixels(160), ScreenMetrics::Get().MMToVerticalPixels(60)))),
@@ -29,12 +39,12 @@ ActionDialog::ActionDialog(ActionDialogKind kind) : Window(WindowCreateParams().
 
     Point abortLabelLocation(16, 16);
     std::unique_ptr<Label> abortLabelPtr(new Label(LabelCreateParams().Location(abortLabelLocation).
-        Text("Abort action: no work is undone, the system is left as it is in the middle of installation.").SetAnchors(Anchors::left | Anchors::top)));
+        Text("Abort action: no work is undone, the system is left as it is in the middle of " + GetActionStr(kind) + ".").SetAnchors(Anchors::left | Anchors::top)));
     AddChild(abortLabelPtr.release());
 
     Point continueLabelLocation(16, 16 + 24);
     std::unique_ptr<Label> continueLabelPtr(new Label(LabelCreateParams().Location(continueLabelLocation).
-        Text("Continue action: continue installation.").SetAnchors(Anchors::left | Anchors::top)));
+        Text("Continue action: continue " + GetActionStr(kind) + ".").SetAnchors(Anchors::left | Anchors::top)));
     AddChild(continueLabelPtr.release());
 
     int x = s.Width - defaultButtonSize.Width - defaultControlSpacing.Width;

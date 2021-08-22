@@ -133,10 +133,18 @@ Package::Package(PathMatcher& pathMatcher, sngxml::dom::Document* doc) :
                     {
                         SetTargetRootDir(ToUtf8(targetRootDirAttr));
                     }
+                    else
+                    {
+                        throw std::runtime_error("package element has no 'targetRootDir' attribute in package XML document '" + pathMatcher.XmlFilePath() + "'");
+                    }
                     std::u32string appNameAttr = element->GetAttribute(U"appName");
                     if (!appNameAttr.empty())
                     {
                         SetAppName(ToUtf8(appNameAttr));
+                    }
+                    else
+                    {
+                        throw std::runtime_error("package element has no 'appname' attribute in package XML document '" + pathMatcher.XmlFilePath() + "'");
                     }
                     std::u32string publisherAttr = element->GetAttribute(U"publisher");
                     if (!publisherAttr.empty())
@@ -174,7 +182,19 @@ Package::Package(PathMatcher& pathMatcher, sngxml::dom::Document* doc) :
                             throw std::runtime_error("could not parse 'includeUninstaller' attribute: " + std::string(ex.what()));
                         }
                     }
-                    SetId(boost::uuids::random_generator()());
+                    else
+                    {
+                        includeUninstaller = true;
+                    }
+                    std::u32string idAttr = element->GetAttribute(U"id");
+                    if (!idAttr.empty())
+                    {
+                        SetId(boost::lexical_cast<boost::uuids::uuid>(ToUtf8(idAttr)));
+                    }
+                    else
+                    {
+                        SetId(boost::uuids::random_generator()());
+                    }
                 }
                 else
                 {
@@ -729,6 +749,7 @@ std::unique_ptr<sngxml::dom::Document> Package::InfoDoc() const
     rootElement->SetAttribute(U"defaultContainingDirPath", ToUtf32(defaultContainingDirPath));
     rootElement->SetAttribute(U"uncompressedPackageSize", ToUtf32(std::to_string(size)));
     rootElement->SetAttribute(U"includeUninstaller", ToUtf32(ToString(includeUninstaller)));
+    rootElement->SetAttribute(U"id", ToUtf32(boost::lexical_cast<std::string>(id)));
     std::unique_ptr<sngxml::dom::Document> doc(new sngxml::dom::Document());
     doc->AppendChild(std::unique_ptr<sngxml::dom::Node>(rootElement));
     return doc;
@@ -907,6 +928,10 @@ void Package::Uninstall()
         SetFile(nullptr);
         SetStatus(Status::succeeded, "uninstallation succceeded", std::string());
     }
+    catch (const AbortException& ex)
+    {
+        SetStatus(Status::aborted, "uninstallation aborted", std::string());
+    }
     catch (const std::exception& ex)
     {
         SetStatus(Status::failed, "uninstallation failed", ex.what());
@@ -924,11 +949,12 @@ void Package::RunUninstallCommands()
 
 void Package::RunUninstallCommand(const std::string& uninstallCommand)
 {
+    int exitCode = 0;
     try
     {
         Process process(uninstallCommand, Process::Redirections::none);
         process.WaitForExit();
-        int exitCode = process.ExitCode();
+        exitCode = process.ExitCode();
         if (exitCode != 0)
         {
             throw std::runtime_error("uninstall action '" + uninstallCommand + "' returned exit code " + std::to_string(exitCode));
@@ -937,6 +963,10 @@ void Package::RunUninstallCommand(const std::string& uninstallCommand)
     catch (const std::exception& ex)
     {
         LogError(ex.what());
+    }
+    if (exitCode == 99)
+    {
+        throw AbortException();
     }
 }
 

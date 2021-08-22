@@ -10,8 +10,7 @@
 	iconFilePath="$TARGET_ROOT_DIR$/bin/hello.ico"
 	includeUninstaller="true">
 	<component name="binaries">
-		<directory name="bin">
-		</directory>
+		<directory name="bin"/>
 	</component>
 	<component name="libraries">
 		<directory name="lib">

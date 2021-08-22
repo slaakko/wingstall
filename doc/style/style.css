@@ -1,0 +1,92 @@
+body
+{
+	max-width: 1200px;
+}
+
+h1, h2, h3, h4, h5, h6
+{
+    color: #005ab4;
+    font-family: sans-serif;
+}
+
+img
+{
+	margin-left: 2em
+}
+
+.toc
+{
+    font-family: sans-serif;
+}
+
+span.syntax
+{
+	font-family: monospace;
+}
+
+span.attribute
+{
+	font-family: monospace;
+	font-style: italic;
+}
+
+span.cardinality
+{
+	font-family: monospace;
+	font-weight: bold;
+}
+
+span.parent, span.children
+{
+	font-family: monospace;
+	font-weight: bold;
+}
+
+div.indent
+{
+	text-indent: 2em
+}
+
+div.double_indent
+{
+	text-indent: 4em
+}
+
+div.triple_indent
+{
+	text-indent: 6em
+}
+
+span.kw
+{
+    font-weight: bold;
+}
+
+span.rule
+{
+    font-family: serif;
+}
+
+span.mono
+{
+    font-family: monospace;
+}
+
+span.var, span.param
+{
+    font-family: serif;
+}
+
+table,th,td
+{
+    background-color: FloralWhite;
+    margin: 20px;
+    padding: 20px;
+    max-width: 1200px;
+	border: 1px solid black;
+}
+
+td.content
+{
+	font-style: italic;
+}	

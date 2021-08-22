@@ -1,4 +1,4 @@
-<package appName="Example" compression="bzip2" iconFilePath="$TARGET_ROOT_DIR$/bin/hello.ico" id="564b9e15-acac-410a-9d73-7c685cc0a1f0" includeUninstaller="true" name="example" publisher="Joe Coder" sourceRootDir="C:/work/wingstall/example/source" targetRootDir="C:/example" version="1.0.0">
+<package appName="Example" compression="bzip2" iconFilePath="$TARGET_ROOT_DIR$/bin/hello.ico" id="82f23536-aea7-478a-8e5d-792ce32b7084" includeUninstaller="true" name="example" publisher="Joe Coder" sourceRootDir="C:/work/wingstall/example/source" targetRootDir="C:/example" version="1.0.0">
  <component name="binaries">
   <directory name="bin" time="19.08.2021 22:27:35">
    <file hash="" name="filecompare.exe" size="296960" time="18.08.2021 19:57:11"/>

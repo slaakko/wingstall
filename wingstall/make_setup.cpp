@@ -454,6 +454,7 @@ void MakeDataFile(const std::string& packageBinFilePath, const std::string& appN
     {
         std::cout << "==> " << headerFilePath << std::endl;
         std::cout << "==> " << sourceFilePath << std::endl;
+        std::cout << "==> " << resourceFilePath << std::endl;
     }
 }
 

@@ -42,6 +42,11 @@ PathRule::PathRule(PathMatcher& pathMatcher, sngxml::dom::Element* element_) : e
     if (!dirAttr.empty())
     {
         pathKind = PathKind::dir;
+        if (dirAttr.find('/') != std::u32string::npos || 
+            (dirAttr.find('\\') != std::u32string::npos))
+        {
+            throw std::runtime_error("the value of the 'dir' attribute may not have '/' or '\\' characters in package XML document '" + pathMatcher.XmlFilePath() + "'");
+        }
         nfa = soulng::rex::CompileFilePattern(pathMatcher.GetContext(), dirAttr);
         name = ToUtf8(dirAttr);
     }
@@ -53,6 +58,11 @@ PathRule::PathRule(PathMatcher& pathMatcher, sngxml::dom::Element* element_) : e
             throw std::runtime_error("path matching rule element 'include' or 'exclude' cannot have both 'dir' and 'file' attribute in package XML document '" + pathMatcher.XmlFilePath() + "'");
         }
         pathKind = PathKind::file;
+        if (fileAttr.find('/') != std::u32string::npos ||
+            (fileAttr.find('\\') != std::u32string::npos))
+        {
+            throw std::runtime_error("the value of the 'file' attribute may not have '/' or '\\' characters in package XML document '" + pathMatcher.XmlFilePath() + "'");
+        }
         nfa = soulng::rex::CompileFilePattern(pathMatcher.GetContext(), fileAttr);
         name = ToUtf8(fileAttr);
     }

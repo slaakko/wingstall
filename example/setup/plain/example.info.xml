@@ -1,1 +1,1 @@
-<packageInfo appName="Example" appVersion="1.0.0" compression="none" defaultContainingDirPath="C:/" iconFilePath="$TARGET_ROOT_DIR$/bin/hello.ico" includeUninstaller="true" installDirName="example" publisher="Joe Coder" uncompressedPackageSize="7491943"/>
+<packageInfo appName="Example" appVersion="1.0.0" compression="none" defaultContainingDirPath="C:/" iconFilePath="$TARGET_ROOT_DIR$/bin/hello.ico" id="3f7a86eb-2003-49fc-9ab8-7167aec2b00e" includeUninstaller="true" installDirName="example" publisher="Joe Coder" uncompressedPackageSize="7500135"/>

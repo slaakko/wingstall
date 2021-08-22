@@ -27,6 +27,10 @@ Directory::Directory(const std::string& name_) : Node(NodeKind::directory, name_
 
 Directory::Directory(PathMatcher& pathMatcher, const std::string& name, std::time_t time_, sngxml::dom::Element* element) : Node(NodeKind::directory), time(time_), flags(DirectoryFlags::none)
 {
+    if (name.empty())
+    {
+        throw std::runtime_error("directory element has no 'name' attribute in package XML document '" + pathMatcher.XmlFilePath() + "'");
+    }
     SetName(name);
     pathMatcher.BeginDirectory(Name(), element);
     if (time == std::time_t())
