@@ -66,7 +66,7 @@
   </directory>
  </component>
  <component name="documentation">
-  <directory name="doc" time="23.08.2021 19:25:41">
+  <directory name="doc" time="23.08.2021 19:48:01">
    <directory name="image" time="22.08.2021 19:13:33">
     <file hash="" name="abort_continue_dialog.png" size="3877" time="22.08.2021 11:54:17"/>
     <file hash="" name="add_remove_programs.png" size="130074" time="22.08.2021 20:18:59"/>
@@ -80,7 +80,8 @@
    <directory name="style" time="19.08.2021 23:19:51">
     <file hash="" name="style.css" size="976" time="22.08.2021 20:06:08"/>
    </directory>
-   <file hash="" name="index.html" size="65653" time="23.08.2021 19:39:36"/>
+   <file hash="" name="footnotes.html" size="807" time="23.08.2021 19:48:21"/>
+   <file hash="" name="index.html" size="65283" time="23.08.2021 19:50:39"/>
    <file hash="" name="LICENSE.txt" size="1076" time="02.08.2021 18:39:43"/>
   </directory>
  </component>
