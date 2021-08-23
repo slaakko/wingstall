@@ -6,6 +6,7 @@
 #ifndef WINGSTALL_WINGPACKAGE_PREINSTALL_COMPONENT_INCLUDED
 #define WINGSTALL_WINGPACKAGE_PREINSTALL_COMPONENT_INCLUDED
 #include <wingpackage/directory.hpp>
+#include <wingpackage/file.hpp>
 #include <wingpackage/component.hpp>
 #include <wingpackage/path_matcher.hpp>
 #include <soulng/util/FileStream.hpp>

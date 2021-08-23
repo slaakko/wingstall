@@ -14,6 +14,7 @@ namespace wingstall { namespace wingpackage {
 using namespace soulng::util;
 
 class Directory;
+class File;
 class PathMatcher;
 
 enum class Compression : uint8_t
@@ -33,6 +34,7 @@ public:
     virtual void RemoveInstallationInfo();
     const std::vector<std::unique_ptr<Directory>>& Directories() const { return directories; }
     void AddDirectory(Directory* directory);
+    void AddFile(File* file);
     virtual void Write(Streams& streams);
     virtual void Read(Streams& streams);
     void WriteIndex(BinaryStreamWriter& writer) override;
@@ -43,6 +45,7 @@ public:
     sngxml::dom::Element* ToXml() const override;
 private:
     std::vector<std::unique_ptr<Directory>> directories;
+    std::vector<std::unique_ptr<File>> files;
 };
 
 } } // namespace wingstall::wingpackage

@@ -928,7 +928,7 @@ void Package::Uninstall()
         SetFile(nullptr);
         SetStatus(Status::succeeded, "uninstallation succceeded", std::string());
     }
-    catch (const AbortException& ex)
+    catch (const AbortException&)
     {
         SetStatus(Status::aborted, "uninstallation aborted", std::string());
     }

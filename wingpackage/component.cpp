@@ -6,9 +6,13 @@
 #include <wingpackage/component.hpp>
 #include <wingpackage/package.hpp>
 #include <wingpackage/directory.hpp>
+#include <wingpackage/file.hpp>
 #include <wingpackage/path_matcher.hpp>
 #include <sngxml/xpath/XPathEvaluate.hpp>
+#include <soulng/util/Path.hpp>
+#include <soulng/util/TextUtils.hpp>
 #include <soulng/util/Unicode.hpp>
+#include <boost/filesystem.hpp>
 
 namespace wingstall { namespace wingpackage {
     
@@ -37,6 +41,16 @@ Component::Component(PathMatcher& pathMatcher, sngxml::dom::Element* element) : 
     {
         throw std::runtime_error("component element has no 'name' attribute in package XML document '" + pathMatcher.XmlFilePath() + "'");
     }
+    pathMatcher.BeginFiles(element);
+    std::vector<FileInfo> fileInfos = pathMatcher.Files();
+    for (const auto& fileInfo : fileInfos)
+    {
+        File* file = new File(fileInfo.name);
+        file->SetSize(fileInfo.size);
+        file->SetTime(fileInfo.time);
+        AddFile(file);
+    }
+    pathMatcher.EndFiles();
     std::unique_ptr<sngxml::xpath::XPathObject> directoryObject = sngxml::xpath::Evaluate(U"directory", element);
     if (directoryObject)
     {
@@ -85,6 +99,12 @@ void Component::AddDirectory(Directory* directory)
     directories.push_back(std::unique_ptr<Directory>(directory));
 }
 
+void Component::AddFile(File* file)
+{
+    file->SetParent(this);
+    files.push_back(std::unique_ptr<File>(file));
+}
+
 void Component::Write(Streams& streams)
 {
 }
@@ -102,6 +122,13 @@ void Component::WriteIndex(BinaryStreamWriter& writer)
     {
         Directory* directory = directories[i].get();
         wingpackage::WriteIndex(directory, writer);
+    }
+    int32_t numFiles = files.size();
+    writer.Write(numFiles);
+    for (int32_t i = 0; i < numFiles; ++i)
+    {
+        File* file = files[i].get();
+        wingpackage::WriteIndex(file, writer);
     }
 }
 
@@ -121,6 +148,13 @@ void Component::ReadIndex(BinaryStreamReader& reader)
         AddDirectory(directory);
         directory->ReadIndex(reader);
     }
+    int32_t numFiles = reader.ReadInt();
+    for (int32_t i = 0; i < numFiles; ++i)
+    {
+        File* file = BeginReadFile(reader);
+        AddFile(file);
+        file->ReadIndex(reader);
+    }
 }
 
 void Component::WriteData(BinaryStreamWriter& writer)
@@ -128,6 +162,10 @@ void Component::WriteData(BinaryStreamWriter& writer)
     for (const auto& directory : directories)
     {
         directory->WriteData(writer);
+    }
+    for (const auto& file : files)
+    {
+        file->WriteData(writer);
     }
 }
 
@@ -143,6 +181,18 @@ void Component::ReadData(BinaryStreamReader& reader)
     {
         directory->ReadData(reader);
     }
+    std::string directoryPath = GetTargetRootDir();
+    bool exists = boost::filesystem::exists(MakeNativeBoostPath(directoryPath));
+    boost::system::error_code ec;
+    boost::filesystem::create_directories(MakeNativeBoostPath(directoryPath), ec);
+    if (ec)
+    {
+        throw std::runtime_error("could not create directory '" + directoryPath + "': " + PlatformStringToUtf8(ec.message()));
+    }
+    for (const auto& file : files)
+    {
+        file->ReadData(reader);
+    }
 }
 
 void Component::Uninstall()
@@ -154,6 +204,10 @@ void Component::Uninstall()
         package->CheckInterrupted();
     }
     Node::Uninstall();
+    for (const auto& file : files)
+    {
+        file->Uninstall();
+    }
     for (const auto& directory : directories)
     {
         directory->Uninstall();
@@ -167,6 +221,11 @@ sngxml::dom::Element* Component::ToXml() const
     for (const auto& directory : directories)
     {
         sngxml::dom::Element* child = directory->ToXml();
+        element->AppendChild(std::unique_ptr<sngxml::dom::Node>(child));
+    }
+    for (const auto& file : files)
+    {
+        sngxml::dom::Element* child = file->ToXml();
         element->AppendChild(std::unique_ptr<sngxml::dom::Node>(child));
     }
     return element;

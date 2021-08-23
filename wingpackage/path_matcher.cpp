@@ -24,25 +24,86 @@ DirectoryInfo::DirectoryInfo(const std::string& name_, std::time_t time_, sngxml
 {
 }
 
-PathRule::PathRule(PathMatcher& pathMatcher, sngxml::dom::Element* element_) : element(element_), ruleKind(RuleKind::none), pathKind(PathKind::none)
+PathRule::PathRule(PathMatcher& pathMatcher, std::string name_, RuleKind ruleKind_, PathKind pathKind_) :
+    element(nullptr), name(name_), ruleKind(ruleKind_), pathKind(pathKind_)
 {
-    if (element->Name() == U"include" || element->Name() == U"directory")
+    nfa = soulng::rex::CompileFilePattern(pathMatcher.GetContext(), ToUtf32(name));
+}
+
+PathRule::PathRule(PathMatcher& pathMatcher, sngxml::dom::Element* element_) :
+    element(element_), ruleKind(RuleKind::none), pathKind(PathKind::none)
+{
+    if (element->Name() == U"include" || element->Name() == U"directory" || element->Name() == U"file")
     {
-        ruleKind = RuleKind::include;
+        ruleKind = ruleKind | RuleKind::include;
+        if (element->Name() == U"include")
+        {
+            std::u32string cascadeAttr = element->GetAttribute(U"cascade");
+            if (!cascadeAttr.empty())
+            {
+                if (cascadeAttr == U"true")
+                {
+                    ruleKind = ruleKind | RuleKind::cascade;
+                }
+            }
+        }
     }
     else if (element->Name() == U"exclude")
     {
-        ruleKind = RuleKind::exclude;
+        ruleKind = ruleKind | RuleKind::exclude;
+        std::u32string cascadeAttr = element->GetAttribute(U"cascade");
+        if (!cascadeAttr.empty())
+        {
+            if (cascadeAttr == U"true")
+            {
+                ruleKind = ruleKind | RuleKind::cascade;
+            }
+        }
     }
     else
     {
         throw std::runtime_error("unknown rule path matching rule '" + ToUtf8(element->Name()) + "' in package XML document '" + pathMatcher.XmlFilePath() + "'");
     }
+    if (element->Name() == U"directory" || element->Name() == U"file")
+    {
+        std::u32string nameAttr = element->GetAttribute(U"name");
+        if (!nameAttr.empty())
+        {
+            if (element->Name() == U"directory")
+            {
+                pathKind = PathKind::dir;
+                if (nameAttr.find('/') != std::u32string::npos ||
+                    (nameAttr.find('\\') != std::u32string::npos))
+                {
+                    throw std::runtime_error("the value of the 'name' attribute may not have '/' or '\\' characters in package XML document '" + pathMatcher.XmlFilePath() + "'");
+                }
+                nfa = soulng::rex::CompileFilePattern(pathMatcher.GetContext(), nameAttr);
+                name = ToUtf8(nameAttr);
+            }
+            else if (element->Name() == U"file")
+            {
+            pathKind = PathKind::file;
+            if (nameAttr.find('/') != std::u32string::npos ||
+                (nameAttr.find('\\') != std::u32string::npos))
+            {
+                throw std::runtime_error("the value of the 'name' attribute may not have '/' or '\\' characters in package XML document '" + pathMatcher.XmlFilePath() + "'");
+            }
+            nfa = soulng::rex::CompileFilePattern(pathMatcher.GetContext(), nameAttr);
+            name = ToUtf8(nameAttr);
+            }
+        }
+        else
+        {
+        throw std::runtime_error("path matching rule element 'directory' or 'file' must have either 'name' attribute in package XML document '" + pathMatcher.XmlFilePath() + "'");
+        }
+    }
+    else
+    {
     std::u32string dirAttr = element->GetAttribute(U"dir");
     if (!dirAttr.empty())
     {
         pathKind = PathKind::dir;
-        if (dirAttr.find('/') != std::u32string::npos || 
+        if (dirAttr.find('/') != std::u32string::npos ||
             (dirAttr.find('\\') != std::u32string::npos))
         {
             throw std::runtime_error("the value of the 'dir' attribute may not have '/' or '\\' characters in package XML document '" + pathMatcher.XmlFilePath() + "'");
@@ -70,11 +131,16 @@ PathRule::PathRule(PathMatcher& pathMatcher, sngxml::dom::Element* element_) : e
     {
         throw std::runtime_error("path matching rule element 'include' or 'exclude' must have either 'dir' or 'file' attribute in package XML document '" + pathMatcher.XmlFilePath() + "'");
     }
+    }
 }
 
-bool PathRule::Matches(const std::string& name) 
+bool PathRule::Matches(const std::string& name)
 {
     return soulng::rex::PatternMatch(ToUtf32(name), nfa);
+}
+
+PathRuleSet::PathRuleSet(PathRuleSet* parentRuleSet_) : parentRuleSet(parentRuleSet_)
+{
 }
 
 void PathRuleSet::AddRule(PathRule* rule)
@@ -96,19 +162,46 @@ PathRule* PathRuleSet::GetRule(const std::string& name) const
 bool PathRuleSet::IncludeDir(const std::string& dirName) const
 {
     bool include = true;
+    bool matched = false;
     for (const auto& rule : rules)
     {
         if (rule->GetPathKind() == PathKind::dir)
         {
-            if (rule->GetRuleKind() == RuleKind::include && rule->Matches(dirName))
+            if ((rule->GetRuleKind() & RuleKind::include) != RuleKind::none && rule->Matches(dirName))
             {
                 include = true;
+                matched = true;
             }
-            else if (rule->GetRuleKind() == RuleKind::exclude && rule->Matches(dirName))
+            else if ((rule->GetRuleKind() & RuleKind::exclude) != RuleKind::none && rule->Matches(dirName))
             {
                 include = false;
+                matched = true;
             }
         }
+    }
+    PathRuleSet* parent = parentRuleSet;
+    while (parent && !matched)
+    {
+        for (const auto& rule : parent->rules)
+        {
+            if (rule->GetPathKind() == PathKind::dir)
+            {
+                if ((rule->GetRuleKind() & RuleKind::cascade) != RuleKind::none)
+                {
+                    if ((rule->GetRuleKind() & RuleKind::include) != RuleKind::none && rule->Matches(dirName))
+                    {
+                        include = true;
+                        matched = true;
+                    }
+                    else if ((rule->GetRuleKind() & RuleKind::exclude) != RuleKind::none && rule->Matches(dirName))
+                    {
+                        include = false;
+                        matched = true;
+                    }
+                }
+            }
+        }
+        parent = parent->parentRuleSet;
     }
     return include;
 }
@@ -116,19 +209,46 @@ bool PathRuleSet::IncludeDir(const std::string& dirName) const
 bool PathRuleSet::IncludeFile(const std::string& fileName) const
 {
     bool include = true;
+    bool matched = false;
     for (const auto& rule : rules)
     {
         if (rule->GetPathKind() == PathKind::file)
         {
-            if (rule->GetRuleKind() == RuleKind::include && rule->Matches(fileName))
+            if ((rule->GetRuleKind() & RuleKind::include) != RuleKind::none && rule->Matches(fileName))
             {
                 include = true;
+                matched = true;
             }
-            else if (rule->GetRuleKind() == RuleKind::exclude && rule->Matches(fileName))
+            else if ((rule->GetRuleKind() & RuleKind::exclude) != RuleKind::none && rule->Matches(fileName))
             {
                 include = false;
+                matched = true;
             }
         }
+    }
+    PathRuleSet* parent = parentRuleSet;
+    while (parent && !matched)
+    {
+        for (const auto& rule : parent->rules)
+        {
+            if (rule->GetPathKind() == PathKind::file)
+            {
+                if ((rule->GetRuleKind() & RuleKind::cascade) != RuleKind::none)
+                {
+                    if ((rule->GetRuleKind() & RuleKind::include) != RuleKind::none && rule->Matches(fileName))
+                    {
+                        include = true;
+                        matched = true;
+                    }
+                    else if ((rule->GetRuleKind() & RuleKind::exclude) != RuleKind::none && rule->Matches(fileName))
+                    {
+                        include = false;
+                        matched = true;
+                    }
+                }
+            }
+        }
+        parent = parent->parentRuleSet;
     }
     return include;
 }
@@ -143,10 +263,44 @@ void PathMatcher::SetSourceRootDir(const std::string& sourceRootDir_)
     currentDir = sourceRootDir;
 }
 
+void PathMatcher::BeginFiles(sngxml::dom::Element* element)
+{
+    PathRuleSet* parentRuleSet = ruleSet.get();
+    ruleSetStack.push(std::move(ruleSet));
+    ruleSet.reset(new PathRuleSet(parentRuleSet));
+    ruleSet->AddRule(new PathRule(*this, "*", RuleKind::exclude, PathKind::file));
+    std::unique_ptr<sngxml::xpath::XPathObject> ruleObject = sngxml::xpath::Evaluate(U"file", element);
+    if (ruleObject)
+    {
+        if (ruleObject->Type() == sngxml::xpath::XPathObjectType::nodeSet)
+        {
+            sngxml::xpath::XPathNodeSet* nodeSet = static_cast<sngxml::xpath::XPathNodeSet*>(ruleObject.get());
+            int n = nodeSet->Length();
+            for (int i = 0; i < n; ++i)
+            {
+                sngxml::dom::Node* node = (*nodeSet)[i];
+                if (node->GetNodeType() == sngxml::dom::NodeType::elementNode)
+                {
+                    sngxml::dom::Element* childElement = static_cast<sngxml::dom::Element*>(node);
+                    PathRule* rule = new PathRule(*this, childElement);
+                    ruleSet->AddRule(rule);
+                }
+            }
+        }
+    }
+}
+
+void PathMatcher::EndFiles()
+{
+    ruleSet = std::move(ruleSetStack.top());
+    ruleSetStack.pop();
+}
+
 void PathMatcher::BeginDirectory(const std::string& name, sngxml::dom::Element* element)
 {
+    PathRuleSet* parentRuleSet = ruleSet.get();
     ruleSetStack.push(std::move(ruleSet));
-    ruleSet.reset(new PathRuleSet());
+    ruleSet.reset(new PathRuleSet(parentRuleSet));
     dirStack.push(currentDir);
     currentDir = Path::Combine(currentDir, name);
     if (element)

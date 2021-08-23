@@ -8,13 +8,14 @@
 #include <soulng/util/BufferedStream.hpp>
 #include <soulng/util/BinaryStreamReader.hpp>
 #include <soulng/util/BinaryStreamWriter.hpp>
+#include <soulng/util/Path.hpp>
 #include <soulng/util/TextUtils.hpp>
 #include <boost/filesystem.hpp>
 #include <iostream>
 
 namespace soulng { namespace util {
 
-void CopyFile(const std::string& source, const std::string& dest, bool force, bool verbose)
+void CopyFile(const std::string& source, const std::string& dest, bool force, bool makeDir, bool verbose)
 {
     if (!boost::filesystem::exists(source))
     {
@@ -23,6 +24,15 @@ void CopyFile(const std::string& source, const std::string& dest, bool force, bo
             std::cout << "source file '" + source + "' does not exist" << std::endl;
         }
         return;
+    }
+    if (makeDir)
+    {
+        boost::system::error_code ec;
+        boost::filesystem::create_directories(Path::GetDirectoryName(dest), ec);
+        if (ec)
+        {
+            throw std::runtime_error("could not create directory '" + dest + "': " + PlatformStringToUtf8(ec.message()));
+        }
     }
     if (force || !boost::filesystem::exists(dest) || boost::filesystem::last_write_time(source) > boost::filesystem::last_write_time(dest))
     {

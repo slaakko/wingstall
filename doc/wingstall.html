@@ -25,18 +25,19 @@
 		&nbsp;&nbsp;&nbsp;&nbsp;5.1 <a href="#package">Package Element</a><br />
 		&nbsp;&nbsp;&nbsp;&nbsp;5.2 <a href="#component">Component Element</a><br />
 		&nbsp;&nbsp;&nbsp;&nbsp;5.3 <a href="#directory">Directory Element</a><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;5.4 <a href="#inclusion_and_exclusion">Include and Exclude Elements</a><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;5.5 <a href="#environment">Environment Element</a><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;5.6 <a href="#environment_variable">Environment Variable Element</a><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;5.7 <a href="#path_directory">Environment Path Directory Element</a><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;5.8 <a href="#links">Links Element</a><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;5.9 <a href="#link_directory">Link Directory Element</a><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;5.10 <a href="#link">Link Element</a><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;5.11 <a href="#preinstall">Preinstall Element</a><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;5.12 <a href="#preinstall_include">Preinstall Include Element</a><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;5.13 <a href="#preinstall_run">Preinstall Run Element</a><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;5.14 <a href="#uninstall">Uninstall Element</a><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;5.15 <a href="#uninstall_run">Uninstall Run Element</a><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;5.4 <a href="#file">File Element</a><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;5.5 <a href="#inclusion_and_exclusion">Include and Exclude Elements</a><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;5.6 <a href="#environment">Environment Element</a><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;5.7 <a href="#environment_variable">Environment Variable Element</a><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;5.8 <a href="#path_directory">Environment Path Directory Element</a><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;5.9 <a href="#links">Links Element</a><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;5.10 <a href="#link_directory">Link Directory Element</a><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;5.11 <a href="#link">Link Element</a><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;5.12 <a href="#preinstall">Preinstall Element</a><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;5.13 <a href="#preinstall_include">Preinstall Include Element</a><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;5.14 <a href="#preinstall_run">Preinstall Run Element</a><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;5.15 <a href="#uninstall">Uninstall Element</a><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;5.16 <a href="#uninstall_run">Uninstall Run Element</a><br />
 		6 <a href="#complete_example">Complete Package XML Example</a><br />
 		&nbsp;&nbsp;&nbsp;&nbsp;6.1 <a href="#example_location">Example Package XML Location</a><br />
 		&nbsp;&nbsp;&nbsp;&nbsp;6.2 <a href="#example_xml">Example Package XML</a><br />
@@ -256,7 +257,7 @@
 			<td></td>
 		</tr>
 		<tr>
-			<td class="content">sourceRootDir</td>
+			<td id="srcRootDir" class="content">sourceRootDir</td>
 			<td>path to the top level directory that contains directories and files included in the package;
 			if this is a relative path, it is taken relative to the directory that contains the package XML file</td>
 			<td>true</td>
@@ -303,7 +304,7 @@
 	<h3 id="component">5.2 Component Element</h3>
 	
 	<p>
-		The contents of the package is organized as components. Each component may contain one or more directories.
+		The contents of the package is organized as components. Each component may contain one or more directories and one or more files.
 	</p>
 	
 	<p>
@@ -329,7 +330,7 @@
 
 	<h4>Children</h4>
 	
-	<span class="children">directory</span>
+	<span class="children">directory | file</span>
 
 	<h4>Example</h4>
 	
@@ -428,8 +429,60 @@
 			<td></td>
         </tr>
 	</table>
+	
+	<h3 id="file">5.4 File Element</h3>
+	
+	<p>
+		A <tt>file</tt> element has a <em>name</em> attribute 
+		that should correspond to a physical file with the same name in the <a href="#srcRootDir"><em>sourceRootDir</em></a> directory.
+		The name can also be a pattern that is matched against file names in the <a href="#srcRootDir"><em>sourceRootDir</em></a> directory.
+	</p>
+	
+	<h4>Syntax</h4>
+	
+	<span class="syntax">
+		&lt;file name="<span class="attribute">file_name</span>"/>
+	</span>
 
-	<h3 id="inclusion_and_exclusion">5.4 Include and Exclude Elements</h3>
+	<h4>Cardinality</h4>
+	
+	<span class="cardinality">0-n</span>
+	
+	<h4>Parent</h4>
+	
+	<span class="parent">component</span>
+
+	<h4>Example</h4>
+	
+	<span class="syntax">
+		&lt;component<br/>
+			<div class="indent">name="root"></div>
+			<div class="indent">&lt;file name="wingstall.sln"/></div>
+		&lt;/component>
+	</span>
+	
+	<p>
+		The <em>root</em> component consists of a wingstall.sln file.
+	</p>
+	
+	<h4>File Attributes</h4>
+
+    <table>
+		<tr>
+			<th>name</th>
+			<th>description</th>
+			<th>mandatory</th>
+			<th>default value</th>
+		</tr>
+        <tr>
+            <td class="content">name</td>
+            <td>the name of the file; can be a pattern; pattern '*' means 'all'; pattern '*.txt' matches all file names ending with '.txt'</td>
+			<td>true</td>
+			<td></td>
+        </tr>
+	</table>
+
+	<h3 id="inclusion_and_exclusion">5.5 Include and Exclude Elements</h3>
 
 	<p>
 		The <tt>include </tt> and <tt>exclude</tt> elements provide a mechanism to selectively include and exclude files and directories.
@@ -540,14 +593,14 @@
         <tr>
             <td class="content">file | dir</td>
             <td>the name of the file or subdirectory to include or exclude; can be a pattern;<br/>
-			pattern '*' means 'all', pattern '*.exe' means all names ending with '.exe';<br/>
+			pattern '*' means 'all', pattern '*.exe' matches all names ending with '.exe';<br/>
 			note: the name or pattern may not contain forward slash '/' or backslash '\' characters</td>
 			<td>true</td>
 			<td></td>
         </tr>
 	</table>
 
-	<h3 id="environment">5.5 Environment Element</h3>
+	<h3 id="environment">5.6 Environment Element</h3>
 	
 	<p>
 		The <tt>environment</tt> element is an optional element that may contain environment variables and path directories.
@@ -581,7 +634,7 @@
 	&lt;/environment>
 	</span>
 	
-	<h3 id="environment_variable">5.6 Environment Variable Element</h3>
+	<h3 id="environment_variable">5.7 Environment Variable Element</h3>
 	
 	<p>
 		An environment variable has a name and a value. The value of the environment variable may have <a href="#engine_variables">engine variables</a> as
@@ -640,7 +693,7 @@
         </tr>
 	</table>
 
-	<h3 id="path_directory">5.7 Environment Path Directory Element</h3>
+	<h3 id="path_directory">5.8 Environment Path Directory Element</h3>
 	
 	<p>
 		A <tt>pathDirectory</tt> element has a value attribute. 
@@ -693,7 +746,7 @@
         </tr>
 	</table>
 
-	<h3 id="links">5.8 Links Element</h3>
+	<h3 id="links">5.9 Links Element</h3>
 	
 	<p>
 		The <tt>links</tt> element is an optional element that may contain link directories and link files.
@@ -727,7 +780,7 @@
 	&lt;/links>
 	</span>
 	
-	<h3 id="link_directory">5.9 Link Directory Element</h3>
+	<h3 id="link_directory">5.10 Link Directory Element</h3>
 	
 	<p>
 		The <tt>linkDirectory</tt> element has a path attribute.
@@ -779,7 +832,7 @@
         </tr>
 	</table>
 	
-	<h3 id="link">5.10 Link Element</h3>
+	<h3 id="link">5.11 Link Element</h3>
 	
 	<p>
 		The <tt>link</tt> element represents a shortcut file (.lnk) to be created to the target computer.
@@ -876,7 +929,7 @@
 		</tr>
 	</table>
 
-	<h3 id="preinstall">5.11 Preinstall Element</h3>
+	<h3 id="preinstall">5.12 Preinstall Element</h3>
 
 	<p>
 		The <tt>preinstall</tt> element is an optional element that may contain <tt>include</tt> and <tt>run</tt> elements.
@@ -919,7 +972,7 @@
 	&lt;/preinstall>
 	</span>
 	
-	<h3 id="preinstall_include">5.12 Preinstall Include Element</h3>
+	<h3 id="preinstall_include">5.13 Preinstall Include Element</h3>
 	
 	<p>
 		The <tt>include</tt> element that is the child of the <tt>preinstall</tt> element represents an executable file that is 
@@ -977,7 +1030,7 @@
         </tr>
 	</table>
 	
-	<h3 id="preinstall_run">5.13 Preinstall Run Element</h3>
+	<h3 id="preinstall_run">5.14 Preinstall Run Element</h3>
 	
 	<p>
 		A <tt>run</tt> element that is a child of the <tt>preinstall</tt> element represents 
@@ -1031,7 +1084,7 @@
         </tr>
 	</table>
 
-	<h3 id="uninstall">5.14 Uninstall Element</h3>
+	<h3 id="uninstall">5.15 Uninstall Element</h3>
 	
 	<p>
 		The <tt>uninstall</tt> element is an optional element that may contain <tt>run</tt> elements.
@@ -1066,7 +1119,7 @@
 	&lt;/uninstall>
 	</span>
 
-	<h3 id="uninstall_run">5.15 Uninstall Run Element</h3>
+	<h3 id="uninstall_run">5.16 Uninstall Run Element</h3>
 	
 	<p>
 		The <tt>run</tt> element that is the child of the <tt>uninstall</tt> element represents a command that should be executed before 

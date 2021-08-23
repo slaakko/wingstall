@@ -7,6 +7,7 @@
 #define WINGSTALL_WINGPACKAGE_INSTALLATION_COMPONENT_INCLUDED
 #include <wingpackage/component.hpp>
 #include <wingpackage/directory.hpp>
+#include <wingpackage/file.hpp>
 #include <boost/uuid/uuid.hpp>
 
 namespace wingstall { namespace wingpackage {

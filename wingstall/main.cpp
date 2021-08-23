@@ -1,3 +1,8 @@
+// =================================
+// Copyright (c) 2021 Seppo Laakko
+// Distributed under the MIT license
+// =================================
+
 #include <wingpackage/package.hpp>
 #include <wingpackage/path_matcher.hpp>
 #include <wingstall/make_setup.hpp>
@@ -49,7 +54,7 @@ std::string WingstallVersionStr()
 
 void PrintHelp()
 {
-    std::cout << "wingstall installer creator application version " << WingstallVersionStr() << std::endl;
+    std::cout << "wingstall installer generator version " << WingstallVersionStr() << std::endl;
     std::cout << "usage: wingstall OPTIONS" << std::endl;
     std::cout << "OPTIONS:" << std::endl;
     std::cout << "--verbose (-v)" << std::endl;

@@ -1,3 +1,8 @@
+// =================================
+// Copyright (c) 2021 Seppo Laakko
+// Distributed under the MIT license
+// =================================
+
 #include <soulng/util/FileStream.hpp>
 #include <soulng/util/BufferedStream.hpp>
 #include <soulng/util/InitDone.hpp>

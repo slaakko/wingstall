@@ -44,6 +44,9 @@ void PrintHelp()
     std::cout << "--force | -f:" << std::endl;
     std::cout << "  force copy although source file is older than destination file" << std::endl;
     std::cout << std::endl;
+    std::cout << "--dir | -d" << std::endl;
+    std::cout << "  make destination directory" << std::endl;
+    std::cout << std::endl;
 }
 
 using namespace soulng::rex;
@@ -69,6 +72,7 @@ int main(int argc, const char** argv)
     {
         bool verbose = false;
         bool force = false;
+        bool makeDir = false;
         std::vector<std::string> paths;
         for (int i = 1; i < argc; ++i)
         {
@@ -82,6 +86,10 @@ int main(int argc, const char** argv)
                 else if (arg == "--force")
                 {
                     force = true;
+                }
+                else if (arg == "--make-dir")
+                {
+                    makeDir = true;
                 }
                 else if (arg == "--help")
                 {
@@ -115,6 +123,11 @@ int main(int argc, const char** argv)
                         force = true;
                         break;
                     }
+                    case 'd':
+                    {
+                        makeDir = true;
+                        break;
+                    }
                     default:
                     {
                         throw std::runtime_error("unknown option '-" + std::string(1, o) + "'");
@@ -125,17 +138,17 @@ int main(int argc, const char** argv)
             else
             {
                 std::string path = GetFullPath(arg);
-                if (boost::filesystem::exists(path))
+                if (boost::filesystem::exists(path) || i == argc - 1 && makeDir)
                 {
                     paths.push_back(path);
                 }
                 else
                 {
-                    std::string dir = Path::GetDirectoryName(path);
-                    if (boost::filesystem::exists(dir))
+                    std::string directory = Path::GetDirectoryName(path);
+                    if (boost::filesystem::exists(directory))
                     {
                         std::string fileMask = Path::GetFileName(path);
-                        boost::filesystem::directory_iterator it(dir);
+                        boost::filesystem::directory_iterator it(directory);
                         while (it != boost::filesystem::directory_iterator())
                         {
                             boost::filesystem::directory_entry entry(*it);
@@ -144,7 +157,7 @@ int main(int argc, const char** argv)
                                 std::string fileName = Path::GetFileName(entry.path().generic_string());
                                 if (FilePatternMatch(ToUtf32(fileName), ToUtf32(fileMask)))
                                 {
-                                    std::string path = Path::Combine(dir, fileName);
+                                    std::string path = Path::Combine(directory, fileName);
                                     paths.push_back(path);
                                 }
                             }
@@ -155,9 +168,8 @@ int main(int argc, const char** argv)
                     {
                         if (verbose)
                         {
-                            std::cout << "source directory '" + dir + "' does not exist" << std::endl;
+                            std::cout << "source directory '" + directory + "' does not exist" << std::endl;
                         }
-
                     }
                 }
             }
@@ -167,20 +179,20 @@ int main(int argc, const char** argv)
             PrintHelp();
             return 1;
         }
-        if (paths.size() == 2 && boost::filesystem::is_regular_file(paths.front()) && boost::filesystem::is_regular_file(paths.back()))
+        if (paths.size() == 2 && boost::filesystem::is_regular_file(paths.front()) && !makeDir)
         {
             std::string source = GetFullPath(paths.front());
             std::string dest = GetFullPath(paths.back());
-            CopyFile(source, dest, force, verbose);
+            CopyFile(source, dest, force, makeDir, verbose);
         }
-        else if (boost::filesystem::is_directory(paths.back()))
+        else if (boost::filesystem::is_directory(paths.back()) || makeDir)
         {
             std::string destDir = paths.back();
             for (int i = 0; i < paths.size() - 1; ++i)
             {
                 std::string source = GetFullPath(paths[i]);
                 std::string dest = GetFullPath(Path::Combine(destDir, Path::GetFileName(source)));
-                CopyFile(source, dest, force, verbose);
+                CopyFile(source, dest, force, makeDir, verbose);
             }
         }
         else

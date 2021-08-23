@@ -10,7 +10,7 @@
 
 namespace soulng { namespace util {
 
-UTIL_API void CopyFile(const std::string& source, const std::string& dest, bool force, bool verbose);
+UTIL_API void CopyFile(const std::string& source, const std::string& dest, bool force, bool makeDir, bool verbose);
 
 } } // namespace soulng::util
 
