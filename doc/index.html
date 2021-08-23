@@ -97,7 +97,7 @@
 	<h3 id="wingstall_config">3.1 Wingstall Configuration</h3>
 	
 	<ul>
-		<li>Open %WINGSTALL_ROOT%/config/configuration.xml<sup><a href="#footnote-1">1</a></sup> with a text editor (e.g. with notepad or Notepad++).</li>
+		<li>Open %WINGSTALL_ROOT%/config/configuration.xml<sup><a href="footnotes.html#footnote-1">1</a></sup> with a text editor (e.g. with notepad or Notepad++).</li>
 		<li>The default Boost include directory is 'C:\boost\include\boost-1_74'. 
 			Change the value of the <em>boostIncludeDir</em> attribute to contain path to your Boost include directory.</li>
 		<li>The default Boost library directory is 'C:\boost\lib'. 
@@ -108,7 +108,7 @@
 	<h3 id="vs_config">3.2 Visual Studio Configuration</h3>
 	
 	<ul>
-		<li>Open %WINGSTALL_ROOT%/config/build.props<sup><a href="#footnote-1">1</a></sup> with Visual Studio or a text editor (e.g. with notepad or Notepad++).</li>
+		<li>Open %WINGSTALL_ROOT%/config/build.props<sup><a href="footnotes.htmlfootnotes.html#footnote-1">1</a></sup> with Visual Studio or a text editor (e.g. with notepad or Notepad++).</li>
 		<li>Change the '&lt;BOOST_INCLUDE_DIR>C:\boost\include\boost-1_74&lt;/BOOST_INCLUDE_DIR>' element to contain path to your Boost include directory.</li>
 		<li>Change the '&lt;BOOST_LIB_DIR>C:\boost\lib&lt;/BOOST_LIB_DIR>' element to contain path to your Boost library directory.</li>
 		<li>The configured directory paths are in effect when building the 'wingstall.sln' solution with Visual Studio.
@@ -1203,7 +1203,7 @@
 	<h3 id="example_location">6.1 Example Package XML Location</h3>
 	
 	<p>
-		The example package XML is in the file %WINGSTALL_ROOT%/example/setup/deflate/example.xml<sup><a href="#footnote-1">1</a></sup>:
+		The example package XML is in the file %WINGSTALL_ROOT%/example/setup/deflate/example.xml<sup><a href="footnotes.html#footnote-1">1</a></sup>:
 	</p>
 	
 	<h3 id="example_xml">6.2 Example Package XML</h3>
@@ -1271,7 +1271,7 @@
 	<ol>
 	<li>Creating package binary file from the package XML file:
 		<ul>
-		<li>Open a command prompt or Windows Terminal window to the %WINGSTALL_ROOT%/example/setup/deflate<sup><a href="#footnote-1">1</a></sup> directory</li>
+		<li>Open a command prompt or Windows Terminal window to the %WINGSTALL_ROOT%/example/setup/deflate<sup><a href="footnotes.html#footnote-1">1</a></sup> directory</li>
 		<li>To create a package, run the following command:
 		<strong><pre>C:\work\wingstall\example\setup\deflate>wingstall -v --create-package example.xml</pre></strong></li>
 		<li>This command generates the following output:
@@ -1319,7 +1319,7 @@ setup for package 'C:/work/wingstall/example/setup/deflate/example.bin' created
 		
 		<li>Compiling the generated setup Visual C++ project using Visual Studio:
 			<ul>
-			<li>Open %WINGSTALL_ROOT%/example/setup/deflate/program/setup.vcxproj<sup><a href="#footnote-1">1</a></sup> in Visual Studio</li>
+			<li>Open %WINGSTALL_ROOT%/example/setup/deflate/program/setup.vcxproj<sup><a href="footnotes.html#footnote-1">1</a></sup> in Visual Studio</li>
 			<li>The current configuration should be <strong>Debug | x64</strong>, if it is not, you should activate the Debug configuration and x64 platform.
 			<li>Build the project. No compilation errors or warnings are expected.</li>
 			<li>The output for the <strong>Debug</strong> configuration is the <strong>setupd.exe</strong> in the <strong>x64/Debug</strong> subdirectory.
@@ -1561,8 +1561,8 @@ setup for package 'C:/work/wingstall/example/setup/deflate/example.bin' created
 	
 	<p>
 		Wingstall tools and libraries can be used without building them from <strong>wingstall.sln</strong>. 
-		Binaries are located in the %WINGSTALL_ROOT%/<strong>bin</strong><sup><a href="#footnote-1">1</a></sup> subdirectory that should be in the system PATH environment variable 
-		and libraries are in the %WINGSTALL_ROOT%/<strong>lib</strong><sup><a href="#footnote-1">1</a></sup> subdirectory.
+		Binaries are located in the %WINGSTALL_ROOT%/<strong>bin</strong><sup><a href="footnotes.html#footnote-1">1</a></sup> subdirectory that should be in the system PATH environment variable 
+		and libraries are in the %WINGSTALL_ROOT%/<strong>lib</strong><sup><a href="footnotes.html#footnote-1">1</a></sup> subdirectory.
 	</p>
 	
 	<p>
@@ -1574,7 +1574,7 @@ setup for package 'C:/work/wingstall/example/setup/deflate/example.bin' created
 	<ul>
 		<li>Configure your Visual Studio as described in the <a href="#vs_config">Visual Studio Configuration</a> section.</li>
 		<li>Open 'Visual Studio 2019 x64 Native Tools Command Prompt'.</li>
-		<li>Change to %WINGSTALL_ROOT%/ext/zlib-1.2.11/contrib/masmx64<sup><a href="#footnote-1">1</a></sup> directory</li>
+		<li>Change to %WINGSTALL_ROOT%/ext/zlib-1.2.11/contrib/masmx64<sup><a href="footnotes.html#footnote-1">1</a></sup> directory</li>
 		<li>Run 'bld_ml64.bat'.
 		<li>Open <strong>wingstall.sln</strong> with Visual Studio.</li>
 		<li>Activate the <strong>Debug | x64</strong> configuration.</li>
@@ -1587,25 +1587,16 @@ setup for package 'C:/work/wingstall/example/setup/deflate/example.bin' created
 	
 	<p>
 		If you want to install the tools and libraries built from <strong>wingstall.sln</strong> to the 
-		%WINGSTALL_ROOT%/<strong>bin</strong><sup><a href="#footnote-1">1</a></sup> and 
-		%WINGSTALL_ROOT%/<strong>lib</strong><sup><a href="#footnote-1">1</a></sup> directories, here's how to do it:
+		%WINGSTALL_ROOT%/<strong>bin</strong><sup><a href="footnotes.html#footnote-1">1</a></sup> and 
+		%WINGSTALL_ROOT%/<strong>lib</strong><sup><a href="footnotes.html#footnote-1">1</a></sup> directories, here's how to do it:
 	</p>
 	
 	<ul>
-		<li>Open a command prompt or Windows Terminal window to the %WINGSTALL_ROOT%/inst<sup><a href="#footnote-1">1</a></sup> directory.</li>
+		<li>Open a command prompt or Windows Terminal window to the %WINGSTALL_ROOT%/inst<sup><a href="footnotes.html#footnote-1">1</a></sup> directory.</li>
 		<li>Run 'inst.bat'.</li>
-		<li>Executables are copied from the x64\Debug and x64\Release directories to the %WINGSTALL_ROOT%/<strong>bin</strong><sup><a href="#footnote-1">1</a></sup> directory and
-			libraries are copied from the x64\Debug and x64\Release directories to the %WINGSTALL_ROOT%/<strong>lib</strong><sup><a href="#footnote-1">1</a></sup> directory.</li>
+		<li>Executables are copied from the x64\Debug and x64\Release directories to the %WINGSTALL_ROOT%/<strong>bin</strong><sup><a href="footnotes.html#footnote-1">1</a></sup> directory and
+			libraries are copied from the x64\Debug and x64\Release directories to the %WINGSTALL_ROOT%/<strong>lib</strong><sup><a href="footnotes.html#footnote-1">1</a></sup> directory.</li>
 	</ul>
-	<br/>
-	<hr />
-
-    <sup id="footnote-1">
-        Footnote 1. %WINGSTALL_ROOT% represents an environment variable whose name is WINGSTALL_ROOT and value is a path to the Wingstall installation directory. 
-		By default the installation directory is 'C:\wingstall'.
-		You can check the value of the WINGSTALL_ROOT environment variable from Windows Control Panel | System | Advanced system settings | Environment Variables.
-		You can also open the Windows Explorer, paste the path that contains %WINGSTALL_ROOT% to the address bar and press enter. 
-    </sup>
     <br />	
 </body>
 </html>
