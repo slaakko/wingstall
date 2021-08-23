@@ -51,27 +51,12 @@
 		name="ext">
 		<directory
 			name="ext">
-			<include
-				dir="bzip2-1.0.6">
-				<exclude
-					dir="*"/>
-				<include
-					dir="gcc"/>
-			</include>
-			<include
-				dir="zlib-1.2.11">
-				<include
-					dir="contrib">
-					<include 
-						dir="vstudio">
-						<include 
-							dir="vc14">
-							<exclude 
-								dir="x64"/>
-						</include>
-					</include>
-				</include>
-			</include>
+			<exclude
+				dir="Debug" cascade="true"/>
+			<exclude
+				dir="Release" cascade="true"/>
+			<exclude
+				dir="x64" cascade="true"/>
 		</directory>
 	</component>
 	<component
@@ -88,44 +73,13 @@
 		</directory>
 		<directory
 			name="sngxml">
-			<include
-				dir="dom">
-				<exclude 
-					dir="x64"/>
-			</include>
-			<include
-				dir="xml">
-				<exclude
-					dir="x64"/>
-			</include>
-			<include
-				dir="xpath">
-				<exclude
-					dir="x64"/>
-			</include>
+			<exclude 
+				dir="x64" cascade="true"/>
 		</directory>
 		<directory
 			name="soulng">
-			<include
-				dir="lexer">
-				<exclude 
-					dir="x64"/>
-			</include>
-			<include
-				dir="parser">
-				<exclude 
-					dir="x64"/>
-			</include>
-			<include
-				dir="rex">
-				<exclude 
-					dir="x64"/>
-			</include>
-			<include
-				dir="util">
-				<exclude 
-					dir="x64"/>
-			</include>
+			<exclude
+				dir="x64" cascade="true"/>
 		</directory>
 		<directory
 			name="uninstall">
@@ -172,56 +126,26 @@
 		name="setup">
 		<directory
 			name="setup">
-			<include
-				dir="plain">
-				<exclude 
-					dir="*"/>
-				<exclude
-					file="*.bin"/>
-			</include>
-			<include
-				dir="deflate">
-					<exclude
-						dir="*"/>
-					<exclude
-						file="*.bin"/>
-			</include>
-			<include
-				dir="bzip2">
-				<exclude
-					dir="*"/>
-				<exclude
-					file="*.bin"/>
-			</include>
+			<exclude
+				dir="bin" cascade="true"/>
+			<exclude
+				dir="program" cascade="true"/>
+			<exclude
+				file="*.bin" cascade="true"/>
 		</directory>
 	</component>
 	<component
 		name="example">
 		<directory
 			name="example">
-			<include
+			<include 
 				dir="setup">
-				<include
-					dir="plain">
-					<exclude 
-						dir="*"/>
-					<exclude
-						file="*.bin"/>
-				</include>
-				<include
-					dir="deflate">
-					<exclude 
-						dir="*"/>
-					<exclude
-						file="*.bin"/>
-				</include>
-				<include
-					dir="bzip2">
-					<exclude 
-						dir="*"/>
-					<exclude
-						file="*.bin"/>
-				</include>
+				<exclude
+					dir="bin" cascade="true"/>
+				<exclude
+					dir="program" cascade="true"/>
+				<exclude 
+					file="*.bin" cascade="true"/>
 			</include>
 		</directory>
 	</component>
