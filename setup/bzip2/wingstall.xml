@@ -132,6 +132,10 @@
 				dir="program" cascade="true"/>
 			<exclude
 				file="*.bin" cascade="true"/>
+			<exclude
+				file="*.index.xml" cascade="true"/>
+			<exclude
+				file="*.info.xml" cascade="true"/>
 		</directory>
 	</component>
 	<component
@@ -146,7 +150,15 @@
 					dir="program" cascade="true"/>
 				<exclude 
 					file="*.bin" cascade="true"/>
+				<exclude
+					file="*.index.xml" cascade="true"/>
+				<exclude
+					file="*.info.xml" cascade="true"/>
 			</include>
 		</directory>
 	</component>
+	<environment>
+		<variable name="WINGSTALL_ROOT" value="$TARGET_ROOT_DIR$"/>
+		<pathDirectory value="$TARGET_ROOT_DIR$/bin"/>
+	</environment>
 </package>

@@ -80,7 +80,7 @@
    <directory name="style" time="19.08.2021 23:19:51">
     <file hash="" name="style.css" size="976" time="22.08.2021 20:06:08"/>
    </directory>
-   <file hash="" name="wingstall.html" size="63517" time="23.08.2021 10:05:09"/>
+   <file hash="" name="wingstall.html" size="64699" time="23.08.2021 15:02:54"/>
   </directory>
  </component>
  <component name="ext">
@@ -947,20 +947,13 @@
  <component name="setup">
   <directory name="setup" time="23.08.2021 09:19:09">
    <directory name="bzip2" time="23.08.2021 11:13:48">
-    <file hash="" name="wingstall.index.xml" size="74695" time="23.08.2021 13:23:19"/>
-    <file hash="" name="wingstall.info.xml" size="310" time="23.08.2021 13:24:30"/>
-    <file hash="" name="wingstall.xml" size="2752" time="23.08.2021 13:54:32"/>
+    <file hash="" name="wingstall.xml" size="3116" time="23.08.2021 15:11:58"/>
    </directory>
    <directory name="deflate" time="23.08.2021 11:11:44">
-    <file hash="" name="wingstall.index.xml" size="74697" time="23.08.2021 13:22:42"/>
-    <file hash="" name="wingstall.info.xml" size="312" time="23.08.2021 13:23:05"/>
-    <file hash="" name="wingstall.xml" size="2754" time="23.08.2021 13:52:54"/>
+    <file hash="" name="wingstall.xml" size="3118" time="23.08.2021 15:11:26"/>
    </directory>
-   <directory name="plain" time="23.08.2021 08:38:37">
-    <file hash="" name="wingstall.index.xml" size="74694" time="23.08.2021 13:56:17"/>
-    <file hash="" name="wingstall.info.xml" size="309" time="23.08.2021 13:56:25"/>
-    <file hash="" name="wingstall.read.index.xml" size="8658" time="23.08.2021 08:38:37"/>
-    <file hash="" name="wingstall.xml" size="2751" time="23.08.2021 13:39:26"/>
+   <directory name="plain" time="23.08.2021 15:09:24">
+    <file hash="" name="wingstall.xml" size="3115" time="23.08.2021 15:10:54"/>
    </directory>
    <file hash="" name="Makefile" size="1546" time="23.08.2021 11:12:15"/>
   </directory>
@@ -969,22 +962,16 @@
   <directory name="example" time="19.08.2021 22:36:37">
    <directory name="setup" time="19.08.2021 22:17:22">
     <directory name="bzip2" time="19.08.2021 22:21:25">
-     <file hash="" name="example.index.xml" size="2657" time="22.08.2021 18:35:48"/>
-     <file hash="" name="example.info.xml" size="300" time="22.08.2021 18:35:49"/>
      <file hash="" name="example.xml" size="1472" time="19.08.2021 22:37:13"/>
      <file hash="" name="make_package.bat" size="54" time="19.08.2021 22:02:16"/>
      <file hash="" name="make_setup.bat" size="50" time="19.08.2021 22:05:41"/>
     </directory>
     <directory name="deflate" time="19.08.2021 22:19:48">
-     <file hash="" name="example.index.xml" size="2659" time="22.08.2021 18:35:36"/>
-     <file hash="" name="example.info.xml" size="302" time="22.08.2021 18:35:36"/>
      <file hash="" name="example.xml" size="1459" time="20.08.2021 15:22:32"/>
      <file hash="" name="make_package.bat" size="54" time="19.08.2021 22:02:16"/>
      <file hash="" name="make_setup.bat" size="50" time="19.08.2021 22:05:41"/>
     </directory>
     <directory name="plain" time="19.08.2021 22:16:23">
-     <file hash="" name="example.index.xml" size="2656" time="22.08.2021 18:35:20"/>
-     <file hash="" name="example.info.xml" size="299" time="22.08.2021 18:35:20"/>
      <file hash="" name="example.xml" size="1471" time="19.08.2021 22:36:50"/>
      <file hash="" name="make_package.bat" size="54" time="19.08.2021 22:02:16"/>
      <file hash="" name="make_setup.bat" size="50" time="19.08.2021 22:05:41"/>
@@ -1018,6 +1005,10 @@
   </directory>
  </component>
  <component name="uninstall"/>
+ <environment>
+  <variable name="WINGSTALL_ROOT" oldValue="" value="$TARGET_ROOT_DIR$"/>
+  <pathDirectory value="$TARGET_ROOT_DIR$/bin"/>
+ </environment>
  <variables>
   <variable name="TARGET_ROOT_DIR" value="C:/wingstall"/>
   <variable name="PREINSTALL_DIR" value=""/>

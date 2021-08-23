@@ -505,18 +505,22 @@
 	</p>
 	
 	<p>
-		This means that if you want to selectively include files, you should first have an <tt>&lt;exclude file="*"/></tt> element, and then have
+		This means that if you want to selectively <strong>include</strong> files, you should first have an <tt>&lt;exclude file="*"/></tt> element, and then have
 		<tt>&lt;include file=<em>"file_name"</em>/></tt> element for each file to include.
 	</p>
 	
 	<p>
-		Again the same goes for selectively including subdirectories: you should first have an <tt>&lt;exclude dir="*"/></tt> element, and then have
+		Again the same goes for selectively <strong>including</strong> subdirectories: you should first have an <tt>&lt;exclude dir="*"/></tt> element, and then have
 		<tt>&lt;include dir=<em>"dir_name"</em>/></tt> element for each subdirectory to include.
 	</p>
 
 	<p>
-		If you want only to selectively exclude files, you should have <tt>&lt;exclude file=<em>"pattern"</em>/></tt> element(s) matching those files,
-		and if you want only to selectively exclude subdirectories, you should have <tt>&lt;exclude dir=<em>"pattern"</em>/></tt> element(s) matching those subdirectories.
+		If you want only to selectively <strong>exclude</strong> files, you should have <tt>&lt;exclude file=<em>"pattern"</em>/></tt> element(s) matching those files,
+		and if you want only to selectively <strong>exclude</strong> subdirectories, you should have <tt>&lt;exclude dir=<em>"pattern"</em>/></tt> element(s) matching those subdirectories.
+	</p>
+	
+	<p>
+		For <tt>exclude</tt> elements: if cascade=<strong>true</strong>, the name/pattern is applied also in the subdirectories and descendant directories recursively.
 	</p>
 
 	<p>
@@ -528,9 +532,9 @@
 	
 	<span class="syntax">
 		&lt;include file="<span class="attribute">file_name</span>"/><br/>
-		&lt;exclude file="<span class="attribute">file_name</span>"/><br/>
+		&lt;exclude file="<span class="attribute">file_name</span>" [cascade="true" | "false"]/><br/>
 		&lt;include dir="<span class="attribute">dir_name</span>"/><br/>
-		&lt;exclude dir="<span class="attribute">dir_name</span>"/><br/>
+		&lt;exclude dir="<span class="attribute">dir_name</span>" [cascade="true" | "false"]/><br/>
 	</span>
 	
 	<h4>Cardinality</h4>
@@ -581,6 +585,22 @@
 		Include only the "system/lib" subdirectory and all files and directories contained by the "system/lib" directory excluding the "system/lib/cpp" directory.
 	</p>
 	
+	<h5>Example 3</h5>
+	
+	<span class="syntax">
+		&lt;component name="sources"><br/>
+		<div class="indent">&lt;directory  name="src"></div>
+		<div class="double_indent">&lt;exclude dir="x64" cascade="true"></div>
+		<div class="double_indent">&lt;exclude dir="Debug" cascade="true"></div>
+		<div class="double_indent">&lt;exclude dir="Release" cascade="true"></div>
+		<div class="indent">&lt;/directory></div>
+		&lt;/component>
+	</span>
+
+	<p>
+		Include all files and directories recursively under the "src" directory except directories that have name "x64", "Debug" or "Release".
+	</p>
+	
 	<h4>Include and Exclude Attributes</h4>
 
     <table>
@@ -598,6 +618,12 @@
 			<td>true</td>
 			<td></td>
         </tr>
+		<tr>
+			<td class="content">cascade</td>
+			<td>for <tt>exclude</tt> elements: if cascade=<strong>true</strong>, the name/pattern is applied also in the subdirectories and descendant directories recursively</td>
+			<td>false</td>
+			<td><strong>false</strong></td>
+		</tr>
 	</table>
 
 	<h3 id="environment">5.6 Environment Element</h3>
