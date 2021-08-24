@@ -22,6 +22,7 @@
 		&nbsp;&nbsp;&nbsp;&nbsp;3.3 <a href="#ucd">Unicode Database</a><br />
 		4 <a href="#creating_installer">Creating an Installer</a><br />
 		&nbsp;&nbsp;&nbsp;&nbsp;4.1 <a href="#installer_ui">Installer User Interface</a><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;4.2 <a href="#debugging">Debugging the Installer</a><br />
 		5 <a href="#package_xml_syntax">Package XML Syntax</a><br />
 		&nbsp;&nbsp;&nbsp;&nbsp;5.1 <a href="#package">Package Element</a><br />
 		&nbsp;&nbsp;&nbsp;&nbsp;5.2 <a href="#component">Component Element</a><br />
@@ -175,6 +176,15 @@
 			'Progress' shows installation progress.
 		</li>
 	</ul>
+	
+	<h3 id="debugging">4.2 Debugging the Installer</h3>
+	
+	<p>
+		The generated installer application requires Administrator privileges because it writes to Windows registry under the HKEY_LOCAL_MACHINE key.
+		Therefore if you want to debug the setup application, you must first start Visual Studio with administrator privileges:
+		right-click the Visual Studio icon in the task bar, right click the Visual Studio 2019 on the opened menu and select 'Run as Administrator' from the opened menu,
+		Then you can open the <strong>setup.vcxproj</strong> and start debugging it.
+	</p>
 
 	<h2 id="package_xml_syntax">5 Package XML Syntax</h2>
 
