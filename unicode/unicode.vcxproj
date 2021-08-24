@@ -155,7 +155,6 @@
     <ClCompile Include="MakeUcdBin.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="readme.html" />
     <None Include="readme.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -2,6 +2,7 @@ Making Wingstall Unicode Database
 =================================
 
 The Wingstall Unicode database is used by the **soulng.util** library that is used by all Wingstall tools and libraries.
+It is located in the **%WINGSTALL_ROOT/unicode** directory.
 Here are instructions how to generate the Unicode database files:
 
 *   Extract the ucd.all.flat.zip (extracts to ucd.all.flat.xml)
