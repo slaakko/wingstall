@@ -18,7 +18,8 @@
         &nbsp;&nbsp;&nbsp;&nbsp;2.2 <a href="#requirements_for_deployed_to">Requirements for the Computer to which a Package is to be Deployed</a><br />
 		3 <a href="#configuration">Configuration</a><br />
 		&nbsp;&nbsp;&nbsp;&nbsp;3.1 <a href="#wingstall_config">Wingstall Configuration</a><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;3.1 <a href="#vs_config">Visual Studio Configuration</a><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;3.2 <a href="#vs_config">Visual Studio Configuration</a><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;3.3 <a href="#ucd">Unicode Database</a><br />
 		4 <a href="#creating_installer">Creating an Installer</a><br />
 		&nbsp;&nbsp;&nbsp;&nbsp;4.1 <a href="#installer_ui">Installer User Interface</a><br />
 		5 <a href="#package_xml_syntax">Package XML Syntax</a><br />
@@ -118,6 +119,13 @@
 		<li>Change the '&lt;BOOST_LIB_DIR>C:\boost\lib&lt;/BOOST_LIB_DIR>' element to contain path to your Boost library directory.</li>
 		<li>The configured directory paths are in effect when building the 'wingstall.sln' solution with Visual Studio.
 	</ul>
+	
+	<h3 id="ucd">3.3 Unicode Database</h3>
+	
+	<p>
+		If the files <strong>%WINGSTALL_ROOT%/unicode/wingstall_ucd.bin</strong> and/or <strong>%WINGSTALL_ROOT%/unicode/wingstall_ucd.deflate.bin</strong> are missing,
+		<a href="../unicode/readme.html">here</a> are instructions how to generate them.
+	</p>
 
 	<h2 id="creating_installer">4 Creating an Installer</h2>
 	

@@ -1,0 +1,18 @@
+<h1>Making Wingstall Unicode Database</h1>
+
+<p>The Wingstall Unicode database is used by the <strong>soulng.util</strong> library that is used by all Wingstall tools and libraries.
+Here are instructions how to generate the Unicode database files:</p>
+
+<ul>
+<li><p>Extract the ucd.all.flat.zip (extracts to ucd.all.flat.xml)</p></li>
+<li><p>Run make_wingstall_ucd.exe</p></li>
+<li><p>The make_wingstall_ucd program generates two files:</p>
+
+<ul>
+<li><p>wingstall_ucd.bin
+contains uncompressed Unicode database</p></li>
+<li><p>wingstall_ucd.deflate.bin
+contains Unicode database compressed with zlib</p></li>
+</ul></li>
+<li><p>Now the Wingstall Unicode database is ready for use by the Wingstall tools and libraries.</p></li>
+</ul>
