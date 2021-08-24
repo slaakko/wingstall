@@ -66,7 +66,7 @@
   </directory>
  </component>
  <component name="documentation">
-  <directory name="doc" time="23.08.2021 19:48:01">
+  <directory name="doc" time="23.08.2021 20:48:38">
    <directory name="image" time="22.08.2021 19:13:33">
     <file hash="" name="abort_continue_dialog.png" size="3877" time="22.08.2021 11:54:17"/>
     <file hash="" name="add_remove_programs.png" size="130074" time="22.08.2021 20:18:59"/>
@@ -77,11 +77,16 @@
     <file hash="" name="uninstaller.png" size="4916" time="22.08.2021 19:08:24"/>
     <file hash="" name="uninstaller_abort_continue_dialog.png" size="3917" time="22.08.2021 19:23:04"/>
    </directory>
+   <directory name="rel" time="23.08.2021 20:48:44">
+    <directory name="1.0.0" time="23.08.2021 20:53:27">
+     <file hash="" name="release.notes.html" size="193" time="23.08.2021 20:53:27"/>
+    </directory>
+   </directory>
    <directory name="style" time="19.08.2021 23:19:51">
     <file hash="" name="style.css" size="976" time="22.08.2021 20:06:08"/>
    </directory>
    <file hash="" name="footnotes.html" size="807" time="23.08.2021 19:48:21"/>
-   <file hash="" name="index.html" size="65269" time="23.08.2021 19:58:38"/>
+   <file hash="" name="index.html" size="65364" time="23.08.2021 21:44:22"/>
    <file hash="" name="LICENSE.txt" size="1076" time="02.08.2021 18:39:43"/>
   </directory>
  </component>
