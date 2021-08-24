@@ -48,7 +48,7 @@
 		9 <a href="#uninstaller">Uninstaller</a><br />
 		&nbsp;&nbsp;&nbsp;&nbsp;9.1 <a href="#uninstaller_user_interface">Uninstaller User Interface</a><br />
 		&nbsp;&nbsp;&nbsp;&nbsp;9.2 <a href="#uninstaller_actions">Detailed Actions of the Uninstaller</a><br />
-		10 <a href="#building_and_installing_wingstall">Optional: Building and Installing Wingstall from Sources</a><br />
+		10 <a href="#building_and_installing_wingstall">Building and Installing Wingstall from Sources</a><br />
 		&nbsp;&nbsp;&nbsp;&nbsp;10.1 <a href="#building_wingstall">Building Wingstall from Sources</a><br />
 		&nbsp;&nbsp;&nbsp;&nbsp;10.2 <a href="#installing_wingstall">Installing Wingstall Tools and Libraries Built from Sources</a><br />
 		11 <a href="https://github.com/slaakko/wingstall">Project's GitHub Site</a><br/>
@@ -124,7 +124,13 @@
 	
 	<p>
 		If the files <strong>%WINGSTALL_ROOT%/unicode/wingstall_ucd.bin</strong> and/or <strong>%WINGSTALL_ROOT%/unicode/wingstall_ucd.deflate.bin</strong> are missing,
-		<a href="ucd.html">here</a> are instructions how to generate them.
+		you can generate them with the <strong>make_wingstall_ucd</strong> tool:
+		
+		<ul>
+			<li>If you don't have binaries in your %WINGSTALL_ROOT%/bin<sup><a href="footnotes.html#footnote-1">1</a></sup> directory, 
+			you must first <a href="#building_and_installing_wingstall">build</a> the tools from sources.</li>
+			<li><a href="ucd.html">Here</a> are instructions how to generate the Unicode database with the <strong>make_wingstall_ucd</strong> tool.
+		</ul>
 	</p>
 
 	<h2 id="creating_installer">4 Creating an Installer</h2>
@@ -1571,7 +1577,7 @@ setup for package 'C:/work/wingstall/example/setup/deflate/example.bin' created
 		</li>
 	</ol>
 	
-	<h2 id="building_and_installing_wingstall">10 Optional: Building and Installing Wingstall from Sources</h2>
+	<h2 id="building_and_installing_wingstall">10 Building and Installing Wingstall from Sources</h2>
 	
 	<p>
 		Wingstall tools and libraries can be used without building them from <strong>wingstall.sln</strong>. 
