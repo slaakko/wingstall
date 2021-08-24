@@ -154,6 +154,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Rules.cpp" />
     <ClCompile Include="XmlApi.cpp" />
     <ClCompile Include="XmlContentHandler.cpp" />
     <ClCompile Include="XmlParser.cpp" />
@@ -161,6 +162,7 @@
     <ClCompile Include="XmlProcessor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Rules.hpp" />
     <ClInclude Include="XmlApi.hpp" />
     <ClInclude Include="XmlContentHandler.hpp" />
     <ClInclude Include="XmlParser.hpp" />

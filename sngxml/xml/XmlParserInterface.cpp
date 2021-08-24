@@ -46,6 +46,7 @@ void ParseXmlContent(const std::u32string& xmlContent, const std::string& system
 {
     soulng::lexer::XmlParsingLog debugLog(std::cerr);
     TrivialLexer xmlLexer(xmlContent, systemId, 0);
+    xmlLexer.SetFlag(soulng::lexer::LexerFlags::farthestError);
     if ((flags & Flags::debug) != Flags::none)
     {
         xmlLexer.SetLog(&debugLog);
