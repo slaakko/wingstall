@@ -693,7 +693,7 @@ void Package::ReadData(BinaryStreamReader& reader)
 
 sngxml::dom::Element* Package::ToXml() const
 {
-    sngxml::dom::Element* element = new sngxml::dom::Element(U"package");
+    sngxml::dom::Element* element = new sngxml::dom::Element(U"packageIndex");
     element->SetAttribute(U"name", ToUtf32(Name()));
     element->SetAttribute(U"appName", ToUtf32(appName));
     element->SetAttribute(U"publisher", ToUtf32(publisher));
