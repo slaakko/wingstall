@@ -13,12 +13,13 @@
 #include <map>
 
 using namespace soulng::unicode;
+using soulng::lexer::SourcePos;
 
 class UnicodeCharacterDatabaseContentHandler : public sngxml::xml::XmlContentHandler
 {
 public:
     UnicodeCharacterDatabaseContentHandler();
-    void StartElement(const std::u32string& namespaceUri, const std::u32string& localName, const std::u32string& qualifiedName, const sngxml::xml::Attributes& attributes) override;
+    void StartElement(const std::u32string& namespaceUri, const std::u32string& localName, const std::u32string& qualifiedName, const sngxml::xml::Attributes& attributes, const SourcePos& sourcePos) override;
     void EndElement(const std::u32string& namespaceUri, const std::u32string& localName, const std::u32string& qualifiedName) override;
 private:
     char32_t codePoint;
@@ -46,7 +47,8 @@ uint32_t FromHex(const std::string& hex)
     return c;
 }
 
-void UnicodeCharacterDatabaseContentHandler::StartElement(const std::u32string& namespaceUri, const std::u32string& localName, const std::u32string& qualifiedName, const sngxml::xml::Attributes& attributes)
+void UnicodeCharacterDatabaseContentHandler::StartElement(const std::u32string& namespaceUri, const std::u32string& localName, const std::u32string& qualifiedName, 
+    const sngxml::xml::Attributes& attributes, const SourcePos& sourcePos)
 {
     auto it = elementNames.find(qualifiedName);
     if (it == elementNames.cend())
@@ -89,7 +91,7 @@ void UnicodeCharacterDatabaseContentHandler::StartElement(const std::u32string& 
                     }
                     else if (attributeValue != "N")
                     {
-                        throw std::runtime_error("binary property value not Y/N");
+                        throw std::runtime_error("binary property value not Y/N: line " + std::to_string(sourcePos.line) + ", column " + std::to_string(sourcePos.col));
                     }
                     characterInfo->SetBinaryPropery(id, value);
                 }

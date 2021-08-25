@@ -39,7 +39,8 @@ Component::Component(PathMatcher& pathMatcher, sngxml::dom::Element* element) : 
     }
     else
     {
-        throw std::runtime_error("component element has no 'name' attribute in package XML document '" + pathMatcher.XmlFilePath() + "'");
+        throw std::runtime_error("component element has no 'name' attribute in package XML document '" + pathMatcher.XmlFilePath() + "' line " + 
+            std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
     }
     pathMatcher.BeginFiles(element);
     std::vector<FileInfo> fileInfos = pathMatcher.Files();
@@ -73,7 +74,8 @@ Component::Component(PathMatcher& pathMatcher, sngxml::dom::Element* element) : 
                     }
                     else
                     {
-                        throw std::runtime_error("directory element has no 'name' attribute in package XML document '" + pathMatcher.XmlFilePath() + "'");
+                        throw std::runtime_error("directory element has no 'name' attribute in package XML document '" + pathMatcher.XmlFilePath() + "' line " + 
+                            std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
                     }
                 }
             }

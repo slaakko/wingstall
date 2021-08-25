@@ -116,7 +116,8 @@ Package::Package(PathMatcher& pathMatcher, sngxml::dom::Document* doc) :
                     }
                     else
                     {
-                        throw std::runtime_error("package element has no 'name' attribute in package XML document '" + pathMatcher.XmlFilePath() + "'");
+                        throw std::runtime_error("package element has no 'name' attribute in package XML document '" + pathMatcher.XmlFilePath() + "' line " + 
+                            std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
                     }
                     std::u32string sourceRootDirAttr = element->GetAttribute(U"sourceRootDir");
                     if (!sourceRootDirAttr.empty())
@@ -126,7 +127,8 @@ Package::Package(PathMatcher& pathMatcher, sngxml::dom::Document* doc) :
                     }
                     else
                     {
-                        throw std::runtime_error("package element has no 'sourceRootDir' attribute in package XML document '" + pathMatcher.XmlFilePath() + "'");
+                        throw std::runtime_error("package element has no 'sourceRootDir' attribute in package XML document '" + pathMatcher.XmlFilePath() + "' line " + 
+                            std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
                     }
                     std::u32string targetRootDirAttr = element->GetAttribute(U"targetRootDir");
                     if (!targetRootDirAttr.empty())
@@ -135,7 +137,8 @@ Package::Package(PathMatcher& pathMatcher, sngxml::dom::Document* doc) :
                     }
                     else
                     {
-                        throw std::runtime_error("package element has no 'targetRootDir' attribute in package XML document '" + pathMatcher.XmlFilePath() + "'");
+                        throw std::runtime_error("package element has no 'targetRootDir' attribute in package XML document '" + pathMatcher.XmlFilePath() + "' line " + 
+                            std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
                     }
                     std::u32string appNameAttr = element->GetAttribute(U"appName");
                     if (!appNameAttr.empty())
@@ -144,7 +147,8 @@ Package::Package(PathMatcher& pathMatcher, sngxml::dom::Document* doc) :
                     }
                     else
                     {
-                        throw std::runtime_error("package element has no 'appname' attribute in package XML document '" + pathMatcher.XmlFilePath() + "'");
+                        throw std::runtime_error("package element has no 'appname' attribute in package XML document '" + pathMatcher.XmlFilePath() + "' line " + 
+                            std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
                     }
                     std::u32string publisherAttr = element->GetAttribute(U"publisher");
                     if (!publisherAttr.empty())
@@ -318,7 +322,8 @@ Package::Package(PathMatcher& pathMatcher, sngxml::dom::Document* doc) :
                     }
                     else
                     {
-                        throw std::runtime_error("'uninstall/run' element does not have 'command' attribute in package XML document '" + pathMatcher.XmlFilePath() + "'");
+                        throw std::runtime_error("'uninstall/run' element does not have 'command' attribute in package XML document '" + pathMatcher.XmlFilePath() + "' line " + 
+                            std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
                     }
                 }
             }

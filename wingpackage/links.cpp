@@ -39,7 +39,8 @@ Link::Link(PathMatcher& pathMatcher, sngxml::dom::Element* element) : Node(NodeK
     }
     else
     {
-        throw std::runtime_error("link element has no 'linkFilePath' attribute in package XML document '" + pathMatcher.XmlFilePath() + "'");
+        throw std::runtime_error("link element has no 'linkFilePath' attribute in package XML document '" + pathMatcher.XmlFilePath() + "' line " + 
+            std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
     }
     std::u32string pathAttr = element->GetAttribute(U"path");
     if (!pathAttr.empty())
@@ -48,7 +49,8 @@ Link::Link(PathMatcher& pathMatcher, sngxml::dom::Element* element) : Node(NodeK
     }
     else
     {
-        throw std::runtime_error("link element has no 'path' attribute in package XML document '" + pathMatcher.XmlFilePath() + "'");
+        throw std::runtime_error("link element has no 'path' attribute in package XML document '" + pathMatcher.XmlFilePath() + "' line " + 
+            std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
     }
     std::u32string argumentsAttr = element->GetAttribute(U"arguments");
     if (!argumentsAttr.empty())
@@ -261,7 +263,8 @@ LinkDirectory::LinkDirectory(PathMatcher& pathMatcher, sngxml::dom::Element* ele
     }
     else
     {
-        throw std::runtime_error("link directory element has no 'path' attribute in package XML document '" + pathMatcher.XmlFilePath() + "'");
+        throw std::runtime_error("link directory element has no 'path' attribute in package XML document '" + pathMatcher.XmlFilePath() + "' line " + 
+            std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
     }
 }
 

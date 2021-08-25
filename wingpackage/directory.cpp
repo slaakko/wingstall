@@ -29,7 +29,12 @@ Directory::Directory(PathMatcher& pathMatcher, const std::string& name, std::tim
 {
     if (name.empty())
     {
-        throw std::runtime_error("directory element has no 'name' attribute in package XML document '" + pathMatcher.XmlFilePath() + "'");
+        std::string lineColStr;
+        if (element)
+        {
+            lineColStr = " line " + std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col);
+        }
+        throw std::runtime_error("directory element has no 'name' attribute in package XML document '" + pathMatcher.XmlFilePath() + "'" + lineColStr);
     }
     SetName(name);
     pathMatcher.BeginDirectory(Name(), element);

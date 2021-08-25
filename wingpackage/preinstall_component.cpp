@@ -54,7 +54,8 @@ PreinstallComponent::PreinstallComponent(PathMatcher& pathMatcher, sngxml::dom::
                     }
                     else
                     {
-                        throw std::runtime_error("preinstall/include element has no 'filePath' attribute in package XML document '" + pathMatcher.XmlFilePath() + "'");
+                        throw std::runtime_error("preinstall/include element has no 'filePath' attribute in package XML document '" + pathMatcher.XmlFilePath() + "' line " + 
+                            std::to_string(includeElement->GetSourcePos().line) + ", column " + std::to_string(includeElement->GetSourcePos().col));
                     }
                 }
             }
@@ -80,7 +81,8 @@ PreinstallComponent::PreinstallComponent(PathMatcher& pathMatcher, sngxml::dom::
                     }
                     else
                     {
-                        throw std::runtime_error("preinstall/run element has no 'command' attribute in package XML document '" + pathMatcher.XmlFilePath() + "'");
+                        throw std::runtime_error("preinstall/run element has no 'command' attribute in package XML document '" + pathMatcher.XmlFilePath() + "' line " + 
+                            std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
                     }
                 }
             }

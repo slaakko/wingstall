@@ -32,7 +32,8 @@ EnvironmentVariable::EnvironmentVariable(PathMatcher& pathMatcher, sngxml::dom::
     }
     else
     {
-        throw std::runtime_error("environment variable element has no 'name' attribute in package XML document '" + pathMatcher.XmlFilePath() + "'");
+        throw std::runtime_error("environment variable element has no 'name' attribute in package XML document '" + pathMatcher.XmlFilePath() + "' line " + 
+            std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
     }
     std::u32string valueAttr = element->GetAttribute(U"value");
     if (!valueAttr.empty())
@@ -41,7 +42,8 @@ EnvironmentVariable::EnvironmentVariable(PathMatcher& pathMatcher, sngxml::dom::
     }
     else
     {
-        throw std::runtime_error("environment variable element has no 'value' attribute in package XML document '" + pathMatcher.XmlFilePath() + "'");
+        throw std::runtime_error("environment variable element has no 'value' attribute in package XML document '" + pathMatcher.XmlFilePath() + "' line " + 
+            std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
     }
 }
 
@@ -189,7 +191,8 @@ PathDirectory::PathDirectory(PathMatcher& pathMatcher, sngxml::dom::Element* ele
     }
     else
     {
-        throw std::runtime_error("path directory element has no 'value' attribute in package XML document '" + pathMatcher.XmlFilePath() + "'");
+        throw std::runtime_error("path directory element has no 'value' attribute in package XML document '" + pathMatcher.XmlFilePath() + "' line " + 
+            std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
     }
 }
 

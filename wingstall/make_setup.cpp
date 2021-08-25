@@ -159,37 +159,43 @@ void MakeSetup(const std::string& packageBinFilePath, bool verbose)
                     std::u32string appNameAttr = element->GetAttribute(U"appName");
                     if (appNameAttr.empty())
                     {
-                        throw std::runtime_error("root element has no 'appName' attribute in package info document '" + packageInfoFilePath + "'");
+                        throw std::runtime_error("root element has no 'appName' attribute in package info document '" + packageInfoFilePath + "' line " + 
+                            std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
                     }
                     std::string appName = ToUtf8(appNameAttr);
                     std::u32string appVersionAttr = element->GetAttribute(U"appVersion");
                     if (appVersionAttr.empty())
                     {
-                        throw std::runtime_error("root element has no 'appVersion' attribute in package info document '" + packageInfoFilePath + "'");
+                        throw std::runtime_error("root element has no 'appVersion' attribute in package info document '" + packageInfoFilePath + "' line " + 
+                            std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
                     }
                     std::string appVersion = ToUtf8(appVersionAttr);
                     std::u32string compressionAttr = element->GetAttribute(U"compression");
                     if (compressionAttr.empty())
                     {
-                        throw std::runtime_error("root element has no 'compression' attribute in package info document '" + packageInfoFilePath + "'");
+                        throw std::runtime_error("root element has no 'compression' attribute in package info document '" + packageInfoFilePath + "' line " + 
+                            std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
                     }
                     std::string compression = ToUtf8(compressionAttr);
                     std::u32string defaultContainingDirPathAttr = element->GetAttribute(U"defaultContainingDirPath");
                     if (defaultContainingDirPathAttr.empty())
                     {
-                        throw std::runtime_error("root element has no 'defaultContainingDirPath' attribute in package info document '" + packageInfoFilePath + "'");
+                        throw std::runtime_error("root element has no 'defaultContainingDirPath' attribute in package info document '" + packageInfoFilePath + "' line " + 
+                            std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
                     }
                     std::string defaultContainingDirPath = ToUtf8(defaultContainingDirPathAttr);
                     std::u32string installDirNameAttr = element->GetAttribute(U"installDirName");
                     if (installDirNameAttr.empty())
                     {
-                        throw std::runtime_error("root element has no 'installDirName' attribute in package info document '" + packageInfoFilePath + "'");
+                        throw std::runtime_error("root element has no 'installDirName' attribute in package info document '" + packageInfoFilePath + "' line " + 
+                            std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
                     }
                     std::string installDirName = ToUtf8(installDirNameAttr);
                     std::u32string uncompressedPackageSizeAttr = element->GetAttribute(U"uncompressedPackageSize");
                     if (uncompressedPackageSizeAttr.empty())
                     {
-                        throw std::runtime_error("root element has no 'uncompressedPackageSize' attribute in package info document '" + packageInfoFilePath + "'");
+                        throw std::runtime_error("root element has no 'uncompressedPackageSize' attribute in package info document '" + packageInfoFilePath + "' line " + 
+                            std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
                     }
                     int64_t uncompressedPackageSize = boost::lexical_cast<int64_t>(ToUtf8(uncompressedPackageSizeAttr));
                     MakeDataFile(packageBinFilePath, appName, appVersion, compression, defaultContainingDirPath, installDirName, uncompressedPackageSize, verbose);
