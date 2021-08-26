@@ -7,7 +7,7 @@
 
 namespace soulng { namespace util {
 
-BufferedStream::BufferedStream(Stream& baseStream_) : BufferedStream(baseStream_, 4096)
+BufferedStream::BufferedStream(Stream& baseStream_) : BufferedStream(baseStream_, 16384)
 {
 }
 

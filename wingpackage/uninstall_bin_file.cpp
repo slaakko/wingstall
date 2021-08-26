@@ -47,10 +47,6 @@ void UninstallBinFile::Uninstall()
     }
     Node::Uninstall();
     Remove();
-    if (package)
-    {
-        package->IncrementFileIndex();
-    }
 }
 
 void UninstallBinFile::Remove()

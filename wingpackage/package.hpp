@@ -106,8 +106,8 @@ public:
     void SetComponent(Node* component_);
     File* GetFile() const { return file; }
     void SetFile(File* file_);
-    Stream* GetStream() const { return stream; }
     void NotifyStreamPositionChanged();
+    int64_t GetStreamPosition() const;
     void AddObserver(PackageObserver* observer);
     void RemoveObserver(PackageObserver* observer);
     const std::string& GetSourceRootDir() const override;
@@ -213,6 +213,8 @@ private:
     Variables variables;
     PackageStreamObserver streamObserver;
     int64_t size;
+    int64_t uncompressedSize;
+    int64_t streamStartPosition;
     bool interrupted;
     Action action;
     wing::ManualResetEvent actionEvent;

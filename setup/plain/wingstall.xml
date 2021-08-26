@@ -2,7 +2,7 @@
 <package
 	name="wingstall"
 	appName="Wingstall"
-	version="1.0.0"
+	version="1.1.0"
 	publisher="Seppo Laakko"
 	sourceRootDir="../.."
 	targetRootDir="C:/wingstall"
@@ -155,6 +155,12 @@
 				<exclude
 					file="*.info.xml" cascade="true"/>
 			</include>
+		</directory>
+	</component>
+	<component
+		name="resources">
+		<directory
+			name="res">
 		</directory>
 	</component>
 	<environment>

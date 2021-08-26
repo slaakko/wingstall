@@ -53,7 +53,7 @@ private:
     void SetComponent(const std::string& component);
     void SetFile(const std::string& file);
     void SetFileIndex(int fileIndex);
-    void SetProgressPercent(float percent);
+    void SetProgressPercent(int fileIndex, int fileCount);
     void UninstallButtonClick();
     void CloseButtonClick();
     Package* package;

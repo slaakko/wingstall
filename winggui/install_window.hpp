@@ -52,7 +52,7 @@ public:
     InstallWindow();
     ~InstallWindow();
     void SetPackage(Package* package_);
-    void SetProgressPercent(float percent);
+    void SetProgressPercent(int64_t pos, int64_t size);
     void SetStatus(Status status, const std::string& statusStr, const std::string& errorMessage);
     void SetComponent(const std::string& component);
     void SetFile(const std::string& filePath);

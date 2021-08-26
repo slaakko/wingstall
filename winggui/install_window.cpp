@@ -182,11 +182,10 @@ void InstallWindowPackageObserver::FileChanged(Package* package)
 
 void InstallWindowPackageObserver::StreamPositionChanged(Package* package)
 {
-    Stream* stream = package->GetStream();
-    int64_t position = stream->Position();
+    int64_t position = package->GetStreamPosition();
     int64_t size = GetUncompressedPackageSize();
     std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
-    if (position == size || now - installWindow->UpdateTime() >= std::chrono::milliseconds{ updateIntegervalMs })
+    if (position >= size || now - installWindow->UpdateTime() >= std::chrono::milliseconds{ updateIntegervalMs })
     {
         installWindow->SetUpdateTime(now);
         installWindow->PutStatusMessage(new StreamPositionChangedMessage(position));
@@ -430,20 +429,32 @@ InstallWindow::~InstallWindow()
     }
 }
 
-void InstallWindow::SetProgressPercent(float percent)
+void InstallWindow::SetProgressPercent(int64_t pos, int64_t size)
 {
+    int percent = 0;
+    if (size > 0)
+    {
+        if (pos == size)
+        {
+            percent = 100;
+        }
+        else if (pos < size)
+        {
+            percent = (100.0 * pos) / size;
+        }
+        else
+        {
+            percent = 100;
+        }
+    }
     progressBar->SetProgressPercent(percent);
-    progressPercentText->SetText(std::to_string(static_cast<int>(percent)) + "%");
+    progressPercentText->SetText(std::to_string(percent) + "%");
 }
 
 void InstallWindow::SetStreamPosition(int64_t position)
 {
     int64_t packageSize = GetUncompressedPackageSize();
-    if (packageSize != 0)
-    {
-        float percent = (100.0f * position) / packageSize;
-        SetProgressPercent(percent);
-    }
+    SetProgressPercent(position, packageSize);
 }
 
 std::string InstallWindow::GetInstallationDir() const

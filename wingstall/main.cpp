@@ -130,7 +130,15 @@ void PackageFileContentPositionObserver::FileContentPositionChanged(Package* pac
                 std::cout << "reading files ";
             }
         }
-        int percent = static_cast<int>((100.0f * package->FileContentPosition()) / package->FileContentSize());
+        int percent = 0;
+        if (package->FileContentPosition() == package->FileContentSize())
+        {
+            percent = 100;
+        }
+        else
+        {
+            percent = static_cast<int>((100.0 * package->FileContentPosition()) / package->FileContentSize());
+        }
         if (percent != prevPercent)
         {
             WritePercent(std::cout, percent, numBackspaces);

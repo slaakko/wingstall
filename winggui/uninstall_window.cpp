@@ -309,17 +309,29 @@ void UninstallWindow::SetFile(const std::string& file)
 void UninstallWindow::SetFileIndex(int fileIndex)
 {
     int fileCount = package->FileCount();
-    if (fileCount != 0)
-    {
-        float percent = (100.0f * fileIndex) / fileCount;
-        SetProgressPercent(percent);
-    }
+    SetProgressPercent(fileIndex, fileCount);
 }
 
-void UninstallWindow::SetProgressPercent(float percent)
+void UninstallWindow::SetProgressPercent(int fileIndex, int fileCount)
 {
+    int percent = 0;
+    if (fileCount > 0)
+    {
+        if (fileIndex == fileCount)
+        {
+            percent = 100;
+        }
+        else if (fileIndex < fileCount)
+        {
+            percent = (100.0 * fileIndex) / fileCount;
+        }
+        else
+        {
+            percent = 100;
+        }
+    }
     progressBar->SetProgressPercent(percent);
-    progressPercentText->SetText(std::to_string(static_cast<int>(percent)) + "%");
+    progressPercentText->SetText(std::to_string(percent) + "%");
 }
 
 void UninstallWindow::UninstallButtonClick()

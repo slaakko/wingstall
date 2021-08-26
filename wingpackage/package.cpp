@@ -5,6 +5,7 @@
 
 #include <wingpackage/package.hpp>
 #include <wingpackage/component.hpp>
+#include <wingpackage/info.hpp>
 #include <wingpackage/preinstall_component.hpp>
 #include <wingpackage/uninstall_component.hpp>
 #include <wingpackage/installation_component.hpp>
@@ -75,7 +76,7 @@ AbortException::AbortException() : std::runtime_error("abort")
 Package::Package() : 
     Node(NodeKind::package), id(boost::uuids::nil_uuid()), compression(Compression::none), component(), file(), stream(),
     streamObserver(this), size(0), interrupted(false), action(Action::continueAction), status(Status::idle), includeUninstaller(false),
-    fileCount(0), fileIndex(0), includeFileContent(false), fileContentSize(0), fileContentPos(0)
+    fileCount(0), fileIndex(0), includeFileContent(false), fileContentSize(0), fileContentPos(0), uncompressedSize(0), streamStartPosition(0)
 {
     variables.SetParent(this);
     SetInstallationComponent(new InstallationComponent());
@@ -84,7 +85,7 @@ Package::Package() :
 Package::Package(const std::string& name_) : 
     Node(NodeKind::package, name_), id(boost::uuids::nil_uuid()), compression(Compression::none), component(), file(), stream(),
     streamObserver(this), size(0), interrupted(false), action(Action::continueAction), status(Status::idle), includeUninstaller(false),
-    fileCount(0), fileIndex(0), includeFileContent(false), fileContentSize(0), fileContentPos(0)
+    fileCount(0), fileIndex(0), includeFileContent(false), fileContentSize(0), fileContentPos(0), uncompressedSize(0), streamStartPosition(0)
 {
     variables.SetParent(this);
     SetInstallationComponent(new InstallationComponent());
@@ -93,7 +94,7 @@ Package::Package(const std::string& name_) :
 Package::Package(PathMatcher& pathMatcher, sngxml::dom::Document* doc) : 
     Node(NodeKind::package), id(boost::uuids::nil_uuid()), compression(Compression::none), component(), file(), stream(),
     streamObserver(this), size(0), interrupted(false), action(Action::continueAction), status(Status::idle), includeUninstaller(false),
-    fileCount(0), fileIndex(0), includeFileContent(false), fileContentSize(0), fileContentPos(0)
+    fileCount(0), fileIndex(0), includeFileContent(false), fileContentSize(0), fileContentPos(0), uncompressedSize(0), streamStartPosition(0)
 {
     variables.SetParent(this);
     std::unique_ptr<sngxml::xpath::XPathObject> packageObject = sngxml::xpath::Evaluate(U"/package", doc);
@@ -403,10 +404,25 @@ void Package::NotifyFileContentPositionChanged()
 
 void Package::NotifyStreamPositionChanged()
 {
+    int64_t pos = stream->Position() - streamStartPosition;
+    if (pos == uncompressedSize)
+    {
+        int x = 0;
+    }
+    else if (pos > uncompressedSize)
+    {
+        int x = 0;
+    }
     for (PackageObserver* observer : observers)
     {
         observer->StreamPositionChanged(this);
     }
+}
+
+int64_t Package::GetStreamPosition() const
+{
+    int64_t pos = stream->Position() - streamStartPosition;
+    return pos;
 }
 
 void Package::AddObserver(PackageObserver* observer)
@@ -794,6 +810,7 @@ void Package::Create(const std::string& filePath, Content content)
             }
             includeFileContent = true;
             BinaryStreamWriter writer(streams.Back());
+            streamStartPosition = writer.Position();
             if ((content & Content::index) != Content::none)
             {
                 WriteIndex(writer);
@@ -802,7 +819,7 @@ void Package::Create(const std::string& filePath, Content content)
             {
                 WriteData(writer);
             }
-            size = writer.Position();
+            size = writer.Position() - streamStartPosition;
             SetComponent(nullptr);
             SetFile(nullptr);
             SetStatus(Status::succeeded, "writing succeeded", std::string());
@@ -817,6 +834,11 @@ std::string Package::ExpandPath(const std::string& path) const
 
 void Package::Install(DataSource dataSource, const std::string& filePath, uint8_t* data, int64_t size, Content content)
 {
+    InfoItem* uncompressedSizeItem = GetInfoItem(InfoItemKind::uncompressedPackageSize);
+    if (uncompressedSizeItem && uncompressedSizeItem->Type() == InfoItemType::integer)
+    {
+        uncompressedSize = static_cast<IntegerItem*>(uncompressedSizeItem)->Value();
+    }
     ResetAction();
     try
     {
@@ -853,6 +875,7 @@ void Package::Install(DataSource dataSource, const std::string& filePath, uint8_
                 stream = &streams.Back();
                 stream->AddObserver(&streamObserver);
                 BinaryStreamReader reader(*stream);
+                streamStartPosition = reader.Position();
                 if ((content & Content::index) != Content::none)
                 {
                     SetStatus(Status::running, "reading package index...", std::string());
