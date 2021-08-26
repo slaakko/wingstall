@@ -155,6 +155,16 @@
 				<exclude
 					file="*.info.xml" cascade="true"/>
 			</include>
+			<include
+				dir="source">
+				<include 
+					dir="example">
+					<exclude dir=".vs" cascade="true"/>
+					<exclude dir="x64" cascade="true"/>
+					<exclude dir="Debug" cascade="true"/>
+					<exclude dir="Release" cascade="true"/>
+				</include>
+			</include>
 		</directory>
 	</component>
 	<component

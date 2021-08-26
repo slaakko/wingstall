@@ -935,16 +935,16 @@
    <file hash="" name="wingpackage.vcxproj.filters" size="1602" time="16.08.2021 18:59:14"/>
    <file hash="" name="wingpackage.vcxproj.user" size="168" time="07.08.2021 18:32:24"/>
   </directory>
-  <directory name="wingstall" time="25.08.2021 21:02:37">
-   <file hash="" name="main.cpp" size="14812" time="25.08.2021 21:02:37"/>
+  <directory name="wingstall" time="27.08.2021 01:05:18">
+   <file hash="" name="main.cpp" size="14812" time="27.08.2021 01:05:18"/>
    <file hash="" name="make_setup.cpp" size="55443" time="25.08.2021 15:32:41"/>
    <file hash="" name="make_setup.hpp" size="418" time="10.08.2021 16:26:05"/>
    <file hash="" name="wingstall.vcxproj" size="8214" time="21.08.2021 12:48:22"/>
    <file hash="" name="wingstall.vcxproj.filters" size="331" time="09.08.2021 22:31:28"/>
    <file hash="" name="wingstall.vcxproj.user" size="719" time="26.08.2021 22:22:07"/>
   </directory>
-  <directory name="wnginst" time="23.08.2021 11:08:46">
-   <file hash="" name="main.cpp" size="7084" time="23.08.2021 11:08:46"/>
+  <directory name="wnginst" time="27.08.2021 01:05:28">
+   <file hash="" name="main.cpp" size="7084" time="27.08.2021 01:05:28"/>
    <file hash="" name="wnginst.vcxproj" size="8041" time="21.08.2021 12:49:00"/>
    <file hash="" name="wnginst.vcxproj.filters" size="212" time="12.08.2021 16:04:11"/>
    <file hash="" name="wnginst.vcxproj.user" size="514" time="23.08.2021 11:04:45"/>
@@ -964,13 +964,13 @@
  <component name="setup">
   <directory name="setup" time="23.08.2021 09:19:09">
    <directory name="bzip2" time="23.08.2021 11:13:48">
-    <file hash="" name="wingstall.xml" size="3211" time="27.08.2021 00:19:25"/>
+    <file hash="" name="wingstall.xml" size="3484" time="27.08.2021 01:13:40"/>
    </directory>
    <directory name="deflate" time="23.08.2021 11:11:44">
-    <file hash="" name="wingstall.xml" size="3213" time="27.08.2021 00:19:13"/>
+    <file hash="" name="wingstall.xml" size="3486" time="27.08.2021 01:13:29"/>
    </directory>
    <directory name="plain" time="23.08.2021 15:09:24">
-    <file hash="" name="wingstall.xml" size="3210" time="27.08.2021 00:19:00"/>
+    <file hash="" name="wingstall.xml" size="3483" time="27.08.2021 01:12:45"/>
    </directory>
    <file hash="" name="Makefile" size="1546" time="23.08.2021 11:12:15"/>
   </directory>
@@ -979,44 +979,70 @@
   <directory name="example" time="19.08.2021 22:36:37">
    <directory name="setup" time="19.08.2021 22:17:22">
     <directory name="bzip2" time="19.08.2021 22:21:25">
-     <file hash="" name="example.xml" size="1472" time="19.08.2021 22:37:13"/>
+     <file hash="" name="example.xml" size="1488" time="27.08.2021 00:51:08"/>
      <file hash="" name="make_package.bat" size="54" time="19.08.2021 22:02:16"/>
      <file hash="" name="make_setup.bat" size="50" time="19.08.2021 22:05:41"/>
     </directory>
     <directory name="deflate" time="19.08.2021 22:19:48">
-     <file hash="" name="example.xml" size="1459" time="20.08.2021 15:22:32"/>
+     <file hash="" name="example.xml" size="1475" time="27.08.2021 00:50:48"/>
      <file hash="" name="make_package.bat" size="54" time="19.08.2021 22:02:16"/>
      <file hash="" name="make_setup.bat" size="50" time="19.08.2021 22:05:41"/>
     </directory>
     <directory name="plain" time="19.08.2021 22:16:23">
-     <file hash="" name="example.xml" size="1471" time="24.08.2021 22:39:14"/>
+     <file hash="" name="example.xml" size="1487" time="27.08.2021 00:50:08"/>
      <file hash="" name="make_package.bat" size="54" time="19.08.2021 22:02:16"/>
      <file hash="" name="make_setup.bat" size="50" time="19.08.2021 22:05:41"/>
     </directory>
    </directory>
-   <directory name="source" time="19.08.2021 21:10:24">
-    <directory name="bin" time="19.08.2021 22:27:35">
-     <file hash="" name="filecompare.exe" size="296960" time="18.08.2021 19:57:11"/>
-     <file hash="" name="hello.exe" size="177664" time="19.08.2021 21:59:11"/>
-     <file hash="" name="hello.ico" size="46227" time="02.08.2021 19:05:16"/>
-     <file hash="" name="hello.pdb" size="831488" time="19.08.2021 21:59:12"/>
-    </directory>
-    <directory name="doc" time="19.08.2021 21:43:56">
-     <directory name="content" time="19.08.2021 21:45:05">
-      <file hash="" name="file.html" size="250" time="19.08.2021 21:45:34"/>
+   <directory name="source" time="27.08.2021 00:42:37">
+    <directory name="example" time="27.08.2021 00:36:23">
+     <directory name="another" time="27.08.2021 00:29:29">
+      <file hash="" name="another.cpp" size="171" time="27.08.2021 00:28:56"/>
+      <file hash="" name="another.vcxproj" size="7415" time="27.08.2021 00:40:27"/>
+      <file hash="" name="another.vcxproj.filters" size="1105" time="27.08.2021 00:28:56"/>
+      <file hash="" name="another.vcxproj.user" size="168" time="27.08.2021 00:28:56"/>
+      <file hash="" name="framework.h" size="214" time="27.08.2021 00:28:56"/>
      </directory>
-     <directory name="private" time="19.08.2021 21:19:17">
-      <file hash="" name="document.txt" size="28" time="19.08.2021 21:36:04"/>
+     <directory name="bin" time="27.08.2021 00:49:33">
+      <file hash="" name="example.exe" size="106496" time="27.08.2021 00:27:44"/>
+      <file hash="" name="example.ico" size="46227" time="02.08.2021 19:05:16"/>
+      <file hash="" name="exampled.exe" size="177664" time="27.08.2021 00:38:12"/>
      </directory>
-     <file hash="" name="file.txt" size="10" time="19.08.2021 21:17:26"/>
-     <file hash="" name="index.html" size="305" time="19.08.2021 21:44:24"/>
-    </directory>
-    <directory name="lib" time="19.08.2021 21:43:05">
-     <directory name="sub" time="19.08.2021 21:35:44">
-      <file hash="" name="not_included.lib" size="4533952" time="18.08.2021 19:42:57"/>
+     <directory name="doc" time="27.08.2021 00:30:33">
+      <directory name="content" time="19.08.2021 21:45:05">
+       <file hash="" name="file.html" size="250" time="19.08.2021 21:45:34"/>
+      </directory>
+      <directory name="private" time="19.08.2021 21:19:17">
+       <file hash="" name="document.txt" size="28" time="19.08.2021 21:36:04"/>
+      </directory>
+      <file hash="" name="file.txt" size="10" time="19.08.2021 21:17:26"/>
+      <file hash="" name="index.html" size="305" time="19.08.2021 21:44:24"/>
      </directory>
-     <file hash="" name="another.lib" size="3136" time="19.08.2021 21:42:34"/>
-     <file hash="" name="somelib.lib" size="751380" time="17.08.2021 16:33:08"/>
+     <directory name="example" time="27.08.2021 00:28:24">
+      <file hash="" name="example.cpp" size="5014" time="27.08.2021 00:27:21"/>
+      <file hash="" name="example.h" size="39" time="27.08.2021 00:27:22"/>
+      <file hash="" name="example.ico" size="46227" time="02.08.2021 19:05:16"/>
+      <file hash="" name="example.rc" size="6828" time="27.08.2021 00:27:22"/>
+      <file hash="" name="example.vcxproj" size="7719" time="27.08.2021 00:40:27"/>
+      <file hash="" name="example.vcxproj.filters" size="1727" time="27.08.2021 00:27:22"/>
+      <file hash="" name="example.vcxproj.user" size="168" time="27.08.2021 00:27:21"/>
+      <file hash="" name="framework.h" size="395" time="27.08.2021 00:27:21"/>
+      <file hash="" name="Resource.h" size="731" time="27.08.2021 00:27:22"/>
+      <file hash="" name="small.ico" size="46227" time="02.08.2021 19:05:16"/>
+      <file hash="" name="targetver.h" size="313" time="27.08.2021 00:27:22"/>
+     </directory>
+     <directory name="inst" time="27.08.2021 00:31:20">
+      <file hash="" name="inst.bat" size="171" time="27.08.2021 00:36:14"/>
+     </directory>
+     <directory name="lib" time="27.08.2021 00:41:43">
+      <directory name="sub" time="19.08.2021 21:35:44">
+       <file hash="" name="not_included.lib" size="4533952" time="18.08.2021 19:42:57"/>
+      </directory>
+      <file hash="" name="another.lib" size="1988" time="27.08.2021 00:29:33"/>
+      <file hash="" name="anotherd.lib" size="3240" time="27.08.2021 00:38:11"/>
+      <file hash="" name="somelib.lib" size="751380" time="17.08.2021 16:33:08"/>
+     </directory>
+     <file hash="" name="example.sln" size="2349" time="27.08.2021 00:29:17"/>
     </directory>
    </directory>
   </directory>

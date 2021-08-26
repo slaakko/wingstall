@@ -4,7 +4,7 @@
 	appName="Example" 
 	version="1.0.0" 
 	publisher="Joe Coder" 
-	sourceRootDir="../../source" 
+	sourceRootDir="../../source/example" 
 	targetRootDir="C:/example" 
 	compression="bzip2" 
 	iconFilePath="$TARGET_ROOT_DIR$/bin/hello.ico"
@@ -35,17 +35,17 @@
 			path="$START_MENU_PROGRAMS_FOLDER$/Example"/>
 		<link 
 			linkFilePath="$START_MENU_PROGRAMS_FOLDER$/Example/Example.lnk" 
-			path="$TARGET_ROOT_DIR$/bin/hello.exe" 
+			path="$TARGET_ROOT_DIR$/bin/example.exe" 
 			workingDirectory="$TARGET_ROOT_DIR$/bin"
 			description="Hello World Example" 
-			iconPath="$TARGET_ROOT_DIR$/bin/hello.exe"
+			iconPath="$TARGET_ROOT_DIR$/bin/example.exe"
 			iconIndex="0"/>
 		<link 
 			linkFilePath="$DESKTOP_FOLDER$/Example.lnk" 
-			path="$TARGET_ROOT_DIR$/bin/hello.exe" 
+			path="$TARGET_ROOT_DIR$/bin/example.exe" 
 			workingDirectory="$TARGET_ROOT_DIR$/bin"
 			description="Hello World Example" 
-			iconPath="$TARGET_ROOT_DIR$/bin/hello.exe"
+			iconPath="$TARGET_ROOT_DIR$/bin/example.exe"
 			iconIndex="0"/>
 	</links>
 </package>
