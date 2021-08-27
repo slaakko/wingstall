@@ -84,14 +84,14 @@
      <file hash="" name="release.notes.html" size="193" time="23.08.2021 20:53:27"/>
     </directory>
     <directory name="1.1.0" time="24.08.2021 22:49:35">
-     <file hash="" name="release.notes.html" size="227" time="24.08.2021 22:49:35"/>
+     <file hash="" name="release.notes.html" size="819" time="27.08.2021 13:23:45"/>
     </directory>
    </directory>
    <directory name="style" time="19.08.2021 23:19:51">
     <file hash="" name="style.css" size="976" time="22.08.2021 20:06:08"/>
    </directory>
    <file hash="" name="footnotes.html" size="807" time="23.08.2021 19:48:21"/>
-   <file hash="" name="index.html" size="67280" time="24.08.2021 20:04:21"/>
+   <file hash="" name="index.html" size="67300" time="27.08.2021 14:00:21"/>
    <file hash="" name="LICENSE.txt" size="1076" time="02.08.2021 18:39:43"/>
    <file hash="" name="ucd.html" size="803" time="24.08.2021 19:09:23"/>
   </directory>
@@ -984,7 +984,7 @@
      <file hash="" name="make_setup.bat" size="50" time="19.08.2021 22:05:41"/>
     </directory>
     <directory name="deflate" time="19.08.2021 22:19:48">
-     <file hash="" name="example.xml" size="1475" time="27.08.2021 00:50:48"/>
+     <file hash="" name="example.xml" size="1477" time="27.08.2021 13:59:41"/>
      <file hash="" name="make_package.bat" size="54" time="19.08.2021 22:02:16"/>
      <file hash="" name="make_setup.bat" size="50" time="19.08.2021 22:05:41"/>
     </directory>

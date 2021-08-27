@@ -3,6 +3,11 @@
 <h2>Release notes</h2>
 
 <ul>
-<li><p>Error reporting of the XML parser improved.</p></li>
+<li><p>Bug fix: Progress percentages fixed in wingstall --create-package command, install window and uninstall window.</p></li>
+<li><p>Bug fix: For some packages the bzip2 library reported a parameter error when compressing. 
+This is probably a bug in my BZip2Stream class (note: this is not a bug in the bzip2 library, I think). 
+Resolved by setting the buffer size of the BufferedStream the same as the buffer size of the BZip2Stream (16K). </p></li>
+<li><p>Error reporting of the XML parser improved. Now the XML parser reports error line and column in case of a parsing error.</p></li>
+<li><p>Source code for the example project included.</p></li>
 <li><p><a href="https://slaakko.github.io/wingstall/">Documentation</a> revised.</p></li>
 </ul>

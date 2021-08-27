@@ -7,7 +7,7 @@
 	sourceRootDir="../../source/example" 
 	targetRootDir="C:/example" 
 	compression="deflate" 
-	iconFilePath="$TARGET_ROOT_DIR$/bin/hello.ico"
+	iconFilePath="$TARGET_ROOT_DIR$/bin/example.ico"
 	includeUninstaller="true">
 	<component name="binaries">
 		<directory name="bin"/>
