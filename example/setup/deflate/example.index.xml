@@ -1,4 +1,4 @@
-<packageIndex appName="Example" compression="deflate" iconFilePath="$TARGET_ROOT_DIR$/bin/hello.ico" id="19e71ac4-6adb-4505-a6c4-99b94ea51c62" includeUninstaller="true" name="example" publisher="Joe Coder" sourceRootDir="C:/work/wingstall/example/source/example" targetRootDir="C:/example" version="1.0.0">
+<packageIndex appName="Example" compression="deflate" iconFilePath="$TARGET_ROOT_DIR$/bin/example.ico" id="09296284-297b-4b52-96f0-9bb09aaf960c" includeUninstaller="true" name="example" publisher="Joe Coder" sourceRootDir="C:/work/wingstall/example/source/example" targetRootDir="C:/example" version="1.0.0">
  <component name="binaries">
   <directory name="bin" time="27.08.2021 00:49:33">
    <file hash="" name="example.exe" size="106496" time="27.08.2021 00:27:44"/>
