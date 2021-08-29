@@ -40,10 +40,10 @@ bool OpenFileName(HWND windowHandle, const std::vector<std::pair<std::string, st
     }
     else
     {
-        std::u16string defFilePath = ToUtf16(defaultFilePath);
+        std::u16string defFilePath = ToUtf16(MakeNativePath(defaultFilePath));
         std::memcpy(fileNameBuffer.get(), defFilePath.c_str(), (defFilePath.length() + 1) * sizeof(char16_t));
     }
-    std::u16string initialDir = ToUtf16(initialDirectory);
+    std::u16string initialDir = ToUtf16(MakeNativePath(initialDirectory));
     std::u16string defaultExt = ToUtf16(defaultExtension);
     OPENFILENAMEW openFileName;
     std::memset(&openFileName, 0, sizeof(openFileName));

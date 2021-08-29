@@ -21,9 +21,6 @@ class Environment;
 class Links;
 class Variables;
 
-std::string CompressionStr(Compression compression);
-Compression ParseCompressionStr(const std::string& compressionStr);
-
 enum class DataSource : uint8_t
 {
     file, memory

@@ -1,3 +1,8 @@
+// =================================
+// Copyright (c) 2021 Seppo Laakko
+// Distributed under the MIT license
+// =================================
+
 #include <winggui/uninstall_window.hpp>
 #include <wingpackage/package.hpp>
 #include <wingpackage/links.hpp>

@@ -316,7 +316,7 @@ void MakeDataFile(const std::string& packageBinFilePath, const std::string& appN
     std::string wingstallRootDir = WingstallRoot();
     std::string compressedUnicodeDBFilePath = soulng::unicode::CharacterTable::Instance().DeflateFilePath();
     std::string setupIconFilePath = GetFullPath(Path::Combine(Path::Combine(wingstallRootDir, "icon"), "setup.ico"));
-    std::string packageResourceName = Path::GetFileNameWithoutExtension(packageBinFilePath) + "_package";
+    std::string packageResourceName = Path::GetFileNameWithoutExtension(packageBinFilePath);
     std::string unicodeDBResourceName = "wng_unicode_db";
     int64_t uncompressedUnicodeDBSize = soulng::unicode::CharacterTable::Instance().GetUncompressedFileSize();
 

@@ -50,25 +50,6 @@ void PackageStreamObserver::PositionChanged(Stream* stream)
     package->NotifyStreamPositionChanged();
 }
 
-std::string CompressionStr(Compression compression)
-{
-    switch (compression)
-    {
-        case Compression::none: return "none";
-        case Compression::deflate: return "deflate";
-        case Compression::bzip2: return "bzip2";
-    }
-    return std::string();
-}
-
-Compression ParseCompressionStr(const std::string& compressionStr)
-{
-    if (compressionStr == "none") return Compression::none;
-    else if (compressionStr == "deflate") return Compression::deflate;
-    else if (compressionStr == "bzip2") return Compression::bzip2;
-    else throw std::runtime_error("invalid compression name");
-}
-
 AbortException::AbortException() : std::runtime_error("abort")
 {
 }

@@ -4,12 +4,12 @@ namespace setup {
 
 std::string PackageResourceName()
 {
-    return "wingstall_package";
+    return "wingstall.package";
 }
 
 int64_t UncompressedPackageSize()
 {
-    return 744374528;
+    return 767500301;
 }
 
 std::string UnicodeDBResourceName()

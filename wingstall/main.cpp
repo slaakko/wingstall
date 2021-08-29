@@ -61,10 +61,10 @@ void PrintHelp()
     std::cout << "  Be verbose." << std::endl;
     std::cout << "--help (-h)" << std::endl;
     std::cout << "  Print help and exit." << std::endl;
-    std::cout << "--create-package (-c) PACKAGE.xml" << std::endl;
-    std::cout << "  Create binary package PACKAGE.bin, package info file PACKAGE.info.xml and package index PACKAGE.index.xml from package description file PACKAGE.xml." << std::endl;
+    std::cout << "--create-package (-c) PACKAGE.package.xml" << std::endl;
+    std::cout << "  Create binary package PACKAGE.package.bin, package info file PACKAGE.package.info.xml and package index PACKAGE.index.xml from package description file PACKAGE.package.xml." << std::endl;
     std::cout << "--make-setup (-m) PACKAGE.bin" << std::endl;
-    std::cout << "  Create Visual C++ setup program from PACKAGE.bin and package info file PACKAGE.info.xml." << std::endl;
+    std::cout << "  Create Visual C++ setup program from PACKAGE.package.bin and package info file PACKAGE.package.info.xml." << std::endl;
 }
 
 class PackageFileContentPositionObserver : public PackageObserver

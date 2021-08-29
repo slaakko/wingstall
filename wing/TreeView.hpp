@@ -10,6 +10,8 @@
 
 namespace wing {
 
+Padding DefaultTreeViewNodeImagePadding();
+    
 class TreeViewNode;
 
 struct WING_API TreeViewNodeClickEventArgs
@@ -81,6 +83,9 @@ struct WING_API TreeViewCreateParams
     TreeViewCreateParams& TextColor(const Color& color);
     TreeViewCreateParams& StateIndicatorPercentage(float percentage);
     TreeViewCreateParams& AddToolTip(bool addToolTip_);
+    TreeViewCreateParams& NodeIndentPercent(float percent);
+    TreeViewCreateParams& NodeTextIndentPercent(float percent);
+    TreeViewCreateParams& NodeImagePadding(const Padding& padding);
     ControlCreateParams controlCreateParams;
     std::string normalNodeFontFamilyName;
     float normalNodeFontSize;
@@ -93,6 +98,9 @@ struct WING_API TreeViewCreateParams
     Color textColor;
     float stateIndicatorPercentage;
     bool addToolTip;
+    float nodeIndentPercent;
+    float nodeTextIndentPercent;
+    Padding nodeImagePadding;
 };
 
 class WING_API TreeView : public Control
@@ -137,6 +145,8 @@ public:
     void SetToolTipWindowShown() { flags = flags | TreeViewFlags::toolTipWindowShown; }
     void ResetToolTipWindowShown() { flags = flags & ~TreeViewFlags::toolTipWindowShown; }
     float TextHeight() const { return textHeight; }
+    float NodeIndentPercent() const { return nodeIndentPercent; }
+    float NodeTextIndentPercent() const { return nodeTextIndentPercent; }
     NodeClickEvent& NodeClick() { return nodeClick; }
     NodeDoubleClickEvent& NodeDoubleClick() { return nodeDoubleClick; }
     NodeEnterEvent& NodeEnter() { return nodeEnter; }
@@ -156,6 +166,12 @@ public:
     const StringFormat& GetStringFormat() const { return stringFormat; }
     Bitmap* NodeCollapsedBitmap() const { return nodeCollapsedBitmap.get(); }
     Bitmap* NodeExpandedBitmap() const { return nodeExpandedBitmap.get(); }
+    void AddImage(const std::string& imageName);
+    void AddDisabledImage(const std::string& imageName);
+    void AddImage(const std::string& imageName, Bitmap* bitmap);
+    int GetImageIndex(const std::string& imageName);
+    Bitmap* GetImage(int imageIndex) const;
+    const Padding& NodeImagePadding() const { return nodeImagePadding; }
 protected:
     void OnPaint(PaintEventArgs& args) override;
     virtual void OnNodeClick(TreeViewNodeClickEventArgs& args);
@@ -195,6 +211,11 @@ private:
     float textHeight;
     float stateIndicatorHeight;
     float stateIndicatorPercentage;
+    float nodeIndentPercent;
+    float nodeTextIndentPercent;
+    Padding nodeImagePadding;
+    std::vector<std::unique_ptr<Bitmap>> images;
+    std::map<std::string, int> imageIndexMap;
     std::unique_ptr<Bitmap> nodeCollapsedBitmap;
     std::unique_ptr<Bitmap> nodeExpandedBitmap;
     StringFormat stringFormat;
@@ -288,6 +309,7 @@ public:
     void Draw(Graphics& graphics, SolidBrush& selectedBrush, SolidBrush& textBrush);
     const std::string& ToolTip() const { return toolTip; }
     void SetToolTip(const std::string& toolTip_);
+    void SetImageIndex(int imageIndex_);
 protected:
     virtual void OnMouseDown(MouseEventArgs& args);
     virtual void OnMouseUp(MouseEventArgs& args);
@@ -296,6 +318,7 @@ protected:
     virtual void OnMouseLeave();
     virtual void OnMouseHover();
 private:
+    void DrawImage(TreeView* view, Graphics& graphics, Point& loc);
     std::string text;
     std::string toolTip;
     TreeView* treeView;
@@ -307,6 +330,7 @@ private:
     Size size;
     Rect childRect;
     int index;
+    int imageIndex;
 };
 
 } // wing

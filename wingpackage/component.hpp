@@ -22,6 +22,9 @@ enum class Compression : uint8_t
     none, deflate, bzip2
 };
 
+std::string CompressionStr(Compression compression);
+Compression ParseCompressionStr(const std::string& compressionStr);
+
 class Component : public Node
 {
 public:
