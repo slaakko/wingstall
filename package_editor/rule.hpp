@@ -52,7 +52,7 @@ private:
     RuleKind ruleKind;
     PathKind pathKind;
     bool cascade;
-    std::unique_ptr<Rules> rules;
+    std::vector<std::unique_ptr<Rule>> rules;
 };
 
 } } // wingstall::package_editor

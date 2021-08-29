@@ -118,7 +118,9 @@ PackageExplorer::PackageExplorer(PackageExplorerCreateParams& createParams) : Co
     treeView->AddImage("add.folder.bitmap");
     treeView->AddImage("add.file.bitmap");
     treeView->AddImage("delete.folder.bitmap");
+    treeView->AddImage("delete.folder.cascade.bitmap");
     treeView->AddImage("delete.file.bitmap");
+    treeView->AddImage("delete.file.cascade.bitmap");
     treeView->AddImage("folder.closed.bitmap");
     treeView->AddImage("folder.opened.bitmap");
     treeView->AddImage("file.bitmap");

@@ -160,11 +160,25 @@ std::string Rule::ImageName() const
     {
         if (pathKind == PathKind::dir)
         {
-            return "delete.folder.bitmap";
+            if (cascade)
+            {
+                return "delete.folder.cascade.bitmap";
+            }
+            else
+            {
+                return "delete.folder.bitmap";
+            }
         }
         else if (pathKind == PathKind::file)
         {
-            return "delete.file.bitmap";
+            if (cascade)
+            {
+                return "delete.file.cascade.bitmap";
+            }
+            else
+            {
+                return "delete.file.bitmap";
+            }
         }
     }
     return std::string();
@@ -176,20 +190,17 @@ TreeViewNode* Rule::ToTreeViewNode(TreeView* view)
     SetTreeViewNode(node);
     node->SetData(this);
     node->SetImageIndex(view->GetImageIndex(ImageName()));
-    if (rules)
+    for (const auto& rule : rules)
     {
-        node->AddChild(rules->ToTreeViewNode(view));
+        node->AddChild(rule->ToTreeViewNode(view));
     }
     return node;
 }
 
 void Rule::AddRule(Rule* rule)
 {
-    if (!rules)
-    {
-        rules.reset(new Rules());
-    }
-    rules->AddRule(rule);
+    rule->SetParent(this);
+    rules.push_back(std::unique_ptr<Rule>(rule));
 }
 
 } } // wingstall::package_editor
