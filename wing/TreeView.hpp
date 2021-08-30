@@ -10,6 +10,8 @@
 
 namespace wing {
 
+class ImageList;
+
 Padding DefaultTreeViewNodeImagePadding();
     
 class TreeViewNode;
@@ -166,11 +168,8 @@ public:
     const StringFormat& GetStringFormat() const { return stringFormat; }
     Bitmap* NodeCollapsedBitmap() const { return nodeCollapsedBitmap.get(); }
     Bitmap* NodeExpandedBitmap() const { return nodeExpandedBitmap.get(); }
-    void AddImage(const std::string& imageName);
-    void AddDisabledImage(const std::string& imageName);
-    void AddImage(const std::string& imageName, Bitmap* bitmap);
-    int GetImageIndex(const std::string& imageName);
-    Bitmap* GetImage(int imageIndex) const;
+    ImageList* GetImageList() const { return imageList; }
+    void SetImageList(ImageList* imageList_) { imageList = imageList_; }
     const Padding& NodeImagePadding() const { return nodeImagePadding; }
 protected:
     void OnPaint(PaintEventArgs& args) override;
@@ -214,8 +213,7 @@ private:
     float nodeIndentPercent;
     float nodeTextIndentPercent;
     Padding nodeImagePadding;
-    std::vector<std::unique_ptr<Bitmap>> images;
-    std::map<std::string, int> imageIndexMap;
+    ImageList* imageList;
     std::unique_ptr<Bitmap> nodeCollapsedBitmap;
     std::unique_ptr<Bitmap> nodeExpandedBitmap;
     StringFormat stringFormat;

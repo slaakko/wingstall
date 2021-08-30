@@ -5,6 +5,7 @@
 
 #include <package_editor/engine_variable.hpp>
 #include <package_editor/package.hpp>
+#include <wing/ImageList.hpp>
 #include <wing/Shell.hpp>
 
 namespace wingstall { namespace package_editor {
@@ -39,7 +40,11 @@ TreeViewNode* EngineVariables::ToTreeViewNode(TreeView* view)
     TreeViewNode* node = new TreeViewNode("Engine Variables");
     SetTreeViewNode(node);
     node->SetData(this);
-    node->SetImageIndex(view->GetImageIndex("engine.variables.bitmap"));
+    ImageList* imageList = view->GetImageList();
+    if (imageList)
+    {
+        node->SetImageIndex(imageList->GetImageIndex("engine.variables.bitmap"));
+    }
     for (const auto& engineVariable : engineVariables)
     {
         node->AddChild(engineVariable->ToTreeViewNode(view));
@@ -56,7 +61,11 @@ TreeViewNode* EngineVariable::ToTreeViewNode(TreeView* view)
     TreeViewNode* node = new TreeViewNode(Name() + "=" + Value());
     SetTreeViewNode(node);
     node->SetData(this);
-    node->SetImageIndex(view->GetImageIndex("engine.variable.bitmap"));
+    ImageList* imageList = view->GetImageList();
+    if (imageList)
+    {
+        node->SetImageIndex(imageList->GetImageIndex("engine.variable.bitmap"));
+    }
     return node;
 }
 

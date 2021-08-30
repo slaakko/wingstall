@@ -5,6 +5,7 @@
 
 #include <package_editor/links.hpp>
 #include <package_editor/error.hpp>
+#include <wing/ImageList.hpp>
 #include <sngxml/xpath/XPathEvaluate.hpp>
 #include <soulng/util/Unicode.hpp>
 #include <boost/lexical_cast.hpp>
@@ -64,7 +65,11 @@ TreeViewNode* Links::ToTreeViewNode(TreeView* view)
     TreeViewNode* node = new TreeViewNode("Links");
     SetTreeViewNode(node);
     node->SetData(this);
-    node->SetImageIndex(view->GetImageIndex("links.bitmap"));
+    ImageList* imageList = view->GetImageList();
+    if (imageList)
+    {
+        node->SetImageIndex(imageList->GetImageIndex("links.bitmap"));
+    }
     for (const auto& linkDirectory : linkDirectories)
     {
         node->AddChild(linkDirectory->ToTreeViewNode(view));
@@ -110,7 +115,11 @@ TreeViewNode* LinkDirectory::ToTreeViewNode(TreeView* view)
     TreeViewNode* node = new TreeViewNode(path);
     SetTreeViewNode(node);
     node->SetData(this);
-    node->SetImageIndex(view->GetImageIndex("linked.folder.closed.bitmap"));
+    ImageList* imageList = view->GetImageList();
+    if (imageList)
+    {
+        node->SetImageIndex(imageList->GetImageIndex("linked.folder.closed.bitmap"));
+    }
     return node;
 }
 
@@ -170,7 +179,11 @@ TreeViewNode* Link::ToTreeViewNode(TreeView* view)
     TreeViewNode* node = new TreeViewNode(linkFilePath);
     SetTreeViewNode(node);
     node->SetData(this);
-    node->SetImageIndex(view->GetImageIndex("shortcut.bitmap"));
+    ImageList* imageList = view->GetImageList();
+    if (imageList)
+    {
+        node->SetImageIndex(imageList->GetImageIndex("shortcut.bitmap"));
+    }
     return node;
 }
 

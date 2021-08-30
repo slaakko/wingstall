@@ -5,6 +5,7 @@
 
 #include <wingstall/make_setup.hpp>
 #include <wingpackage/package.hpp>
+#include <wingstall_config/config.hpp>
 #include <sngxml/dom/Element.hpp>
 #include <sngxml/dom/Parser.hpp>
 #include <sngxml/dom/CharacterData.hpp>
@@ -30,58 +31,11 @@ namespace wingstall {
 using namespace soulng::util;
 using namespace soulng::unicode;
 
-std::string WingstallConfigDir()
-{
-    std::string configDir = Path::Combine(WingstallRoot(), "config");
-    boost::filesystem::create_directories(configDir);
-    return configDir;
-}
-
-std::string defaultBoostIncludeDir = "C:\\boost\\include\\boost-1_74";
-std::string defaultBoostLibDir = "C:\\boost\\lib";
-
-std::string ConfigFilePath()
-{
-    return Path::Combine(WingstallConfigDir(), "configuration.xml");
-}
-
-std::unique_ptr<sngxml::dom::Document> ConfigurationDocument()
-{
-    std::string operation;
-    try
-    {
-        std::unique_ptr<sngxml::dom::Document> configDoc;
-        if (boost::filesystem::exists(ConfigFilePath()))
-        {
-            operation = "read";
-            configDoc = sngxml::dom::ReadDocument(ConfigFilePath());
-        }
-        else
-        {
-            operation = "write";
-            configDoc.reset(new sngxml::dom::Document());
-            sngxml::dom::Element* rootElement = new sngxml::dom::Element(U"configuration");
-            configDoc->AppendChild(std::unique_ptr<sngxml::dom::Node>(rootElement));
-            rootElement->SetAttribute(U"boostIncludeDir", ToUtf32(defaultBoostIncludeDir));
-            rootElement->SetAttribute(U"boostLibDir", ToUtf32(defaultBoostLibDir));
-            std::ofstream configFile(ConfigFilePath());
-            CodeFormatter formatter(configFile);
-            configDoc->Write(formatter);
-        }
-        return configDoc;
-    }
-    catch (const std::exception& ex)
-    {
-        std::cerr << "could not " << operation << " configuration document '" + ConfigFilePath() + "': " + ex.what() << std::endl;;
-    }
-    return std::unique_ptr<sngxml::dom::Document>();
-}
-
 std::string BoostIncludeDir()
 {
     try
     {
-        std::unique_ptr<sngxml::dom::Document> configDoc = ConfigurationDocument();
+        std::unique_ptr<sngxml::dom::Document> configDoc = wingstall::config::ConfigurationDocument();
         if (configDoc)
         {
             sngxml::dom::Element* rootElement = configDoc->DocumentElement();
@@ -95,16 +49,16 @@ std::string BoostIncludeDir()
     }
     catch (const std::exception& ex)
     {
-        std::cerr << "could not access configuration document '" + ConfigFilePath() + "': " + ex.what() << std::endl;
+        std::cerr << "could not access configuration document '" + wingstall::config::ConfigFilePath() + "': " + ex.what() << std::endl;
     }
-    return defaultBoostIncludeDir;
+    return wingstall::config::DefaultBoostIncludeDir();
 }
 
 std::string BoostLibDir()
 {
     try
     {
-        std::unique_ptr<sngxml::dom::Document> configDoc = ConfigurationDocument();
+        std::unique_ptr<sngxml::dom::Document> configDoc = wingstall::config::ConfigurationDocument();
         if (configDoc)
         {
             sngxml::dom::Element* rootElement = configDoc->DocumentElement();
@@ -118,9 +72,9 @@ std::string BoostLibDir()
     }
     catch (const std::exception& ex)
     {
-        std::cerr << "could not access configuration document '" + ConfigFilePath() + "': " + ex.what() << std::endl;
+        std::cerr << "could not access configuration document '" + wingstall::config::ConfigFilePath() + "': " + ex.what() << std::endl;
     }
-    return defaultBoostLibDir;
+    return wingstall::config::DefaultBoostLibDir();
 }
 
 std::string SetupIconResourceName()

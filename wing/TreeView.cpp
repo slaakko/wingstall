@@ -5,6 +5,7 @@
 
 #include <wing/TreeView.hpp>
 #include <wing/Window.hpp>
+#include <wing/ImageList.hpp>
 #include <soulng/util/Unicode.hpp>
 
 #undef min
@@ -202,6 +203,7 @@ TreeViewCreateParams& TreeViewCreateParams::NodeImagePadding(const Padding& padd
 
 TreeView::TreeView(TreeViewCreateParams& createParams) : 
     Control(createParams.controlCreateParams), 
+    imageList(nullptr),
     flags(),
     root(),
     selectedNode(),
@@ -385,56 +387,6 @@ void TreeView::FireNodeHovered(TreeViewNode* node)
 {
     TreeViewNodeEventArgs args(node);
     OnNodeHovered(args);
-}
-
-void TreeView::AddImage(const std::string& imageName)
-{
-    std::u16string bitmapName = ToUtf16(imageName);
-    Bitmap* bitmap = Bitmap::FromResource(Instance(), (const WCHAR*)bitmapName.c_str());
-    AddImage(imageName, bitmap);
-}
-
-void TreeView::AddDisabledImage(const std::string& imageName)
-{
-    int imageIndex = GetImageIndex(imageName);
-    if (imageIndex != -1)
-    {
-        Bitmap* bitmap = images[imageIndex].get();
-        std::unique_ptr<Bitmap> disabledBitmap = ToGrayBitmap(bitmap, DefaultBitmapTransparentColor());
-        AddImage(imageName + ".disabled", disabledBitmap.release());
-    }
-}
-
-void TreeView::AddImage(const std::string& imageName, Bitmap* bitmap)
-{
-    int imageIndex = images.size();
-    images.push_back(std::unique_ptr<Bitmap>(bitmap));
-    imageIndexMap[imageName] = imageIndex;
-}
-
-int TreeView::GetImageIndex(const std::string& imageName)
-{
-    auto it = imageIndexMap.find(imageName);
-    if (it != imageIndexMap.cend())
-    {
-        return it->second;
-    }
-    else
-    {
-        return -1;
-    }
-}
-
-Bitmap* TreeView::GetImage(int imageIndex) const
-{
-    if (imageIndex >= 0 && imageIndex < images.size())
-    {
-        return images[imageIndex].get();
-    }
-    else
-    {
-        return nullptr;
-    }
 }
 
 void TreeView::OnPaint(PaintEventArgs& args)
@@ -1212,9 +1164,13 @@ void TreeViewNode::MeasureSize(Graphics& graphics)
         if (imageIndex != -1)
         {
             Padding padding = view->NodeImagePadding();
-            Bitmap* bitmap = view->GetImage(imageIndex);
-            imageSize.Width = bitmap->GetWidth() + padding.Horizontal();
-            imageSize.Height = bitmap->GetHeight() + padding.Vertical();
+            ImageList* imageList = view->GetImageList();
+            if (imageList)
+            {
+                Bitmap* bitmap = imageList->GetImage(imageIndex);
+                imageSize.Width = bitmap->GetWidth() + padding.Horizontal();
+                imageSize.Height = bitmap->GetHeight() + padding.Vertical();
+            }
         }
         size = Size(static_cast<int>(view->TextHeight() + textRect.Width + imageSize.Width), static_cast<int>(std::max(textRect.Height, imageSize.Height)));
         Component* child = children.FirstChild();
@@ -1240,8 +1196,12 @@ void TreeViewNode::Measure(Graphics& graphics, const Point& loc, int level, int&
         if (imageIndex != -1)
         {
             Padding padding = view->NodeImagePadding();
-            Bitmap* image = view->GetImage(imageIndex);
-            imageHeight = image->GetHeight() + padding.Vertical();
+            ImageList* imageList = view->GetImageList();
+            if (imageList)
+            {
+                Bitmap* image = imageList->GetImage(imageIndex);
+                imageHeight = image->GetHeight() + padding.Vertical();
+            }
         }
         location = Point(static_cast<int>(loc.X + level * view->NodeIndentPercent() * view->TextHeight() / 100.0f), static_cast<int>(loc.Y + idx * std::max(view->TextHeight(), imageHeight)));
         Rect rect(location, size);
@@ -1447,17 +1407,21 @@ void TreeViewNode::OnMouseHover()
 
 void TreeViewNode::DrawImage(TreeView* view, Graphics& graphics, Point& loc)
 {
-    Bitmap* image = view->GetImage(imageIndex);
-    if (image)
+    ImageList* imageList = view->GetImageList();
+    if (imageList)
     {
-        int imageWidth = image->GetWidth();
-        int imageHeight = image->GetHeight();
-        Padding padding = view->NodeImagePadding();
-        Rect r(loc, Size(imageWidth + padding.Horizontal(), imageHeight + padding.Vertical()));
-        Gdiplus::ImageAttributes attributes;
-        attributes.SetColorKey(DefaultBitmapTransparentColor(), DefaultBitmapTransparentColor());
-        CheckGraphicsStatus(graphics.DrawImage(image, r, 0, 0, imageWidth + padding.Horizontal(), imageHeight + padding.Vertical(), Unit::UnitPixel, &attributes));
-        loc.X = loc.X + imageWidth + padding.Horizontal();
+        Bitmap* image = imageList->GetImage(imageIndex);
+        if (image)
+        {
+            int imageWidth = image->GetWidth();
+            int imageHeight = image->GetHeight();
+            Padding padding = view->NodeImagePadding();
+            Rect r(loc, Size(imageWidth + padding.Horizontal(), imageHeight + padding.Vertical()));
+            Gdiplus::ImageAttributes attributes;
+            attributes.SetColorKey(DefaultBitmapTransparentColor(), DefaultBitmapTransparentColor());
+            CheckGraphicsStatus(graphics.DrawImage(image, r, 0, 0, imageWidth + padding.Horizontal(), imageHeight + padding.Vertical(), Unit::UnitPixel, &attributes));
+            loc.X = loc.X + imageWidth + padding.Horizontal();
+        }
     }
 }
 

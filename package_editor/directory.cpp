@@ -5,6 +5,7 @@
 
 #include <package_editor/directory.hpp>
 #include <package_editor/error.hpp>
+#include <wing/ImageList.hpp>
 #include <sngxml/xpath/XPathEvaluate.hpp>
 #include <soulng/util/Unicode.hpp>
 
@@ -61,7 +62,11 @@ TreeViewNode* Directory::ToTreeViewNode(TreeView* view)
     TreeViewNode* node = new TreeViewNode(Name());
     SetTreeViewNode(node);
     node->SetData(this);
-    node->SetImageIndex(view->GetImageIndex("folder.closed.bitmap"));
+    ImageList* imageList = view->GetImageList();
+    if (imageList)
+    {
+        node->SetImageIndex(imageList->GetImageIndex("folder.closed.bitmap"));
+    }
     node->AddChild(rules->ToTreeViewNode(view));
     node->AddChild(content->ToTreeViewNode(view));
     return node;
@@ -76,7 +81,11 @@ TreeViewNode* Content::ToTreeViewNode(TreeView* view)
     TreeViewNode* node = new TreeViewNode("Content");
     SetTreeViewNode(node);
     node->SetData(this);
-    node->SetImageIndex(view->GetImageIndex("document.collection.bitmap"));
+    ImageList* imageList = view->GetImageList();
+    if (imageList)
+    {
+        node->SetImageIndex(imageList->GetImageIndex("document.collection.bitmap"));
+    }
     return node;
 }
 

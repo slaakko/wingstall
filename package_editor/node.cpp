@@ -29,4 +29,32 @@ Package* Node::GetPackage() const
     return nullptr;
 }
 
+Control* Node::CreateView(ImageList* imageList)
+{
+    throw std::runtime_error("not implemented");
+}
+
+std::string Node::ImageName() const
+{
+    return std::string();
+}
+
+void Node::SetData(ListViewItem* item, ImageList* imageList)
+{
+    item->SetColumnValue(0, Name());
+    std::string imageName = ImageName();
+    if (!imageName.empty())
+    {
+        item->SetImageIndex(imageList->GetImageIndex(imageName));
+        if (CanDisable())
+        {
+            item->SetDisabledImageIndex(imageList->GetDisabledImageIndex(imageName));
+            if (IsDisabled())
+            {
+                item->SetState(ListViewItemState::disabled);
+            }
+        }
+    }
+}
+
 } } // wingstall::package_editor

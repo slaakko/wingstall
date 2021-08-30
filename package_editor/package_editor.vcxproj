@@ -163,6 +163,7 @@
     <ClCompile Include="main_window.cpp" />
     <ClCompile Include="node.cpp" />
     <ClCompile Include="package.cpp" />
+    <ClCompile Include="package_content_view.cpp" />
     <ClCompile Include="package_explorer.cpp" />
     <ClCompile Include="rule.cpp" />
   </ItemGroup>
@@ -176,6 +177,7 @@
     <ClInclude Include="main_window.hpp" />
     <ClInclude Include="node.hpp" />
     <ClInclude Include="package.hpp" />
+    <ClInclude Include="package_content_view.hpp" />
     <ClInclude Include="package_explorer.hpp" />
     <ClInclude Include="rule.hpp" />
     <ClInclude Include="engine_variable.hpp" />

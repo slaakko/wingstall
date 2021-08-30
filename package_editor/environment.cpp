@@ -5,6 +5,7 @@
 
 #include <package_editor/environment.hpp>
 #include <package_editor/error.hpp>
+#include <wing/ImageList.hpp>
 #include <sngxml/xpath/XPathEvaluate.hpp>
 #include <soulng/util/Unicode.hpp>
 
@@ -63,7 +64,11 @@ TreeViewNode* Environment::ToTreeViewNode(TreeView* view)
     TreeViewNode* node = new TreeViewNode("Environment");
     SetTreeViewNode(node);
     node->SetData(this);
-    node->SetImageIndex(view->GetImageIndex("environment.bitmap"));
+    ImageList* imageList = view->GetImageList();
+    if (imageList)
+    {
+        node->SetImageIndex(imageList->GetImageIndex("environment.bitmap"));
+    }
     for (const auto& environmentVariable : environmentVariables)
     {
         node->AddChild(environmentVariable->ToTreeViewNode(view));
@@ -118,7 +123,11 @@ TreeViewNode* EnvironmentVariable::ToTreeViewNode(TreeView* view)
     TreeViewNode* node = new TreeViewNode(Name() + "=" + value);
     SetTreeViewNode(node);
     node->SetData(this);
-    node->SetImageIndex(view->GetImageIndex("environment.var.bitmap"));
+    ImageList* imageList = view->GetImageList();
+    if (imageList)
+    {
+        node->SetImageIndex(imageList->GetImageIndex("environment.var.bitmap"));
+    }
     return node;
 }
 
@@ -144,7 +153,11 @@ TreeViewNode* PathDirectory::ToTreeViewNode(TreeView* view)
     TreeViewNode* node = new TreeViewNode(value);
     SetTreeViewNode(node);
     node->SetData(this);
-    node->SetImageIndex(view->GetImageIndex("path.directory.bitmap"));
+    ImageList* imageList = view->GetImageList();
+    if (imageList)
+    {
+        node->SetImageIndex(imageList->GetImageIndex("path.directory.bitmap"));
+    }
     return node;
 }
 

@@ -12,6 +12,8 @@ namespace wingstall { namespace package_editor {
 
 using namespace wing;
 
+class PackageContentView;
+
 Color DefaultPackageExplorerBackgroundColor();
 Color DefaultPackageExplorerFrameColor();
 Padding PackageExplorerNodeImagePadding();
@@ -41,16 +43,20 @@ class PackageExplorer : public Control
 public:
     PackageExplorer(PackageExplorerCreateParams& createParams);
     void SetPackage(Package* package_);
+    void SetImageList(ImageList* imageList);
+    void SetContentView(PackageContentView* contentView_);
 protected:
     void OnLocationChanged() override;
     void OnSizeChanged() override;
     void OnPaint(PaintEventArgs& args) override;
 private:
     void SetChildPos();
+    void TreeViewNodeClick(TreeViewNodeClickEventArgs& args);
     Package* package;
     TreeView* treeView;
     Control* child;
     Container container;
+    PackageContentView* contentView;
 };
 
 } } // wingstall::package_editor

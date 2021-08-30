@@ -5,6 +5,8 @@
 
 #ifndef WINGSTALL_PACKAGE_EDITOR_NODE_INCLUDED
 #define WINGSTALL_PACKAGE_EDITOR_NODE_INCLUDED
+#include <wing/ImageList.hpp>
+#include <wing/ListView.hpp>
 #include <wing/TreeView.hpp>
 
 namespace wingstall {namespace package_editor {
@@ -31,11 +33,17 @@ public:
     TreeViewNode* GetTreeViewNode() const { return treeViewNode; }
     void SetTreeViewNode(TreeViewNode* treeViewNode_) { treeViewNode = treeViewNode_; }
     virtual Package* GetPackage() const;
+    virtual Control* CreateView(ImageList* imageList);
+    virtual std::string ImageName() const;
+    virtual bool CanDisable() const { return false; }
+    virtual bool IsDisabled() const { return false; }
+    virtual void SetData(ListViewItem* item, ImageList* imageList);
 private:
     NodeKind kind;
     std::string name;
     Node* parent;
     TreeViewNode* treeViewNode;
+    
 };
 
 } } // wingstall::package_editor

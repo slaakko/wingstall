@@ -7,6 +7,8 @@
 #define WINGSTALL_PACKAGE_EDITOR_MAIN_WINDOW_INCLUDED
 #include <package_editor/package.hpp>
 #include <package_editor/package_explorer.hpp>
+#include <package_editor/package_content_view.hpp>
+#include <wing/ImageList.hpp>
 #include <wing/Menu.hpp>
 #include <wing/Window.hpp>
 
@@ -25,6 +27,9 @@ private:
     MenuItem* exitMenuItem;
     std::unique_ptr<Package> package;
     PackageExplorer* packageExplorer;
+    PackageContentView* packageContentView;
+    LogView* logView;
+    ImageList imageList;
     void NewPackageClick();
     void OpenPackageClick();
     void ClosePackageClick();

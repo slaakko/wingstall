@@ -4,6 +4,7 @@
 // =================================
 
 #include <package_editor/package_explorer.hpp>
+#include <package_editor/package_content_view.hpp>
 #include <wing/BorderedControl.hpp>
 #include <wing/PaddedControl.hpp>
 #include <wing/ScrollableControl.hpp>
@@ -28,7 +29,7 @@ Padding PackageExplorerNodeImagePadding()
 
 PackageExplorerCreateParams::PackageExplorerCreateParams()
 {
-    controlCreateParams.WindowClassName("wingstall.pacakge_editor.package_explorer");
+    controlCreateParams.WindowClassName("wingstall.package_editor.package_explorer");
     controlCreateParams.WindowClassBackgroundColor(COLOR_WINDOW);
     controlCreateParams.BackgroundColor(DefaultPackageExplorerBackgroundColor());
     treeViewCreateParams = TreeViewCreateParams().NodeIndentPercent(100).NodeImagePadding(PackageExplorerNodeImagePadding());
@@ -106,36 +107,13 @@ PackageExplorerCreateParams& PackageExplorerCreateParams::FrameColor(const Color
     return *this;
 }
 
-PackageExplorer::PackageExplorer(PackageExplorerCreateParams& createParams) : Control(createParams.controlCreateParams), package(nullptr), treeView(nullptr), child(nullptr), container(this)
+PackageExplorer::PackageExplorer(PackageExplorerCreateParams& createParams) : 
+    Control(createParams.controlCreateParams), package(nullptr), treeView(nullptr), child(nullptr), container(this), contentView(nullptr)
 {
     std::unique_ptr<TreeView> treeViewPtr(new TreeView(createParams.treeViewCreateParams));
     treeView = treeViewPtr.get();
     treeView->SetDoubleBuffered();
-    treeView->AddImage("package.bitmap");
-    treeView->AddImage("components.bitmap");
-    treeView->AddImage("component.bitmap");
-    treeView->AddImage("component.bitmap");
-    treeView->AddImage("add.folder.bitmap");
-    treeView->AddImage("add.file.bitmap");
-    treeView->AddImage("delete.folder.bitmap");
-    treeView->AddImage("delete.folder.cascade.bitmap");
-    treeView->AddImage("delete.file.bitmap");
-    treeView->AddImage("delete.file.cascade.bitmap");
-    treeView->AddImage("folder.closed.bitmap");
-    treeView->AddImage("folder.opened.bitmap");
-    treeView->AddImage("file.bitmap");
-    treeView->AddImage("rules.bitmap");
-    treeView->AddImage("document.collection.bitmap");
-    treeView->AddImage("package.properties.bitmap");
-    treeView->AddImage("environment.bitmap");
-    treeView->AddImage("environment.var.bitmap");
-    treeView->AddImage("path.directory.bitmap");
-    treeView->AddImage("links.bitmap");
-    treeView->AddImage("linked.folder.closed.bitmap");
-    treeView->AddImage("shortcut.bitmap");
-    treeView->AddImage("engine.variables.bitmap");
-    treeView->AddImage("engine.variable.bitmap");
-    treeView->AddImage("xml.file.bitmap");
+    treeView->NodeClick().AddHandler(this, &PackageExplorer::TreeViewNodeClick);
     std::unique_ptr<Control> paddedTreeView(new PaddedControl(PaddedControlCreateParams(treeViewPtr.release()).Defaults()));
     std::unique_ptr<Control> borderedTreeView(new BorderedControl(BorderedControlCreateParams(paddedTreeView.release()).SetBorderStyle(BorderStyle::single).
         NormalSingleBorderColor(createParams.frameColor)));
@@ -161,6 +139,16 @@ void PackageExplorer::SetPackage(Package* package_)
     Invalidate();
 }
 
+void PackageExplorer::SetImageList(ImageList* imageList)
+{
+    treeView->SetImageList(imageList);
+}
+
+void PackageExplorer::SetContentView(PackageContentView* contentView_)
+{
+    contentView = contentView_;
+}
+
 void PackageExplorer::OnLocationChanged()
 {
     Control::OnLocationChanged();
@@ -177,6 +165,23 @@ void PackageExplorer::SetChildPos()
 {
     child->SetLocation(Point());
     child->SetSize(GetSize());
+}
+
+void PackageExplorer::TreeViewNodeClick(TreeViewNodeClickEventArgs& args)
+{
+    try
+    {
+        void* data = args.node->Data();
+        if (data)
+        {
+            Node* node = static_cast<Node*>(data);
+            contentView->ViewContent(node);
+        }
+    }
+    catch (const std::exception& ex)
+    {
+        ShowErrorMessageBox(Handle(), ex.what());
+    }
 }
 
 void PackageExplorer::OnPaint(PaintEventArgs& args)

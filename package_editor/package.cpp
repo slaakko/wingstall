@@ -5,6 +5,7 @@
 
 #include <package_editor/package.hpp>
 #include <package_editor/error.hpp>
+#include <wing/ImageList.hpp>
 #include <sngxml/xpath/XPathEvaluate.hpp>
 #include <soulng/util/TextUtils.hpp>
 #include <soulng/util/Unicode.hpp>
@@ -72,7 +73,11 @@ TreeViewNode* Properties::ToTreeViewNode(TreeView* view)
     TreeViewNode* node = new TreeViewNode("Properties");
     SetTreeViewNode(node);
     node->SetData(this);
-    node->SetImageIndex(view->GetImageIndex("package.properties.bitmap"));
+    ImageList* imageList = view->GetImageList();
+    if (imageList)
+    {
+        node->SetImageIndex(imageList->GetImageIndex("package.properties.bitmap"));
+    }
     return node;
 }
 
@@ -267,7 +272,11 @@ TreeViewNode* Package::ToTreeViewNode(TreeView* view)
     TreeViewNode* root = new TreeViewNode("Package '" + Name() + "'");
     SetTreeViewNode(root);
     root->SetData(this);
-    root->SetImageIndex(view->GetImageIndex("package.bitmap"));
+    ImageList* imageList = view->GetImageList();
+    if (imageList)
+    {
+        root->SetImageIndex(imageList->GetImageIndex("package.bitmap"));
+    }
     root->AddChild(properties->ToTreeViewNode(view));
     root->AddChild(components->ToTreeViewNode(view));
     root->AddChild(environment->ToTreeViewNode(view));

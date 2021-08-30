@@ -18,6 +18,7 @@ public:
     Components();
     void AddComponent(Component* component);
     TreeViewNode* ToTreeViewNode(TreeView* view);
+    Control* CreateView(ImageList* imageList) override;
 private:
     std::vector<std::unique_ptr<Component>> components;
 };
@@ -30,6 +31,7 @@ public:
     TreeViewNode* ToTreeViewNode(TreeView* view);
     void AddDirectory(Directory* directory);
     void AddFile(File* file);
+    std::string ImageName() const override { return "component.bitmap"; }
 private:
     std::vector<std::unique_ptr<Directory>> directories;
     std::vector<std::unique_ptr<File>> files;

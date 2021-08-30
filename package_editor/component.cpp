@@ -27,12 +27,30 @@ TreeViewNode* Components::ToTreeViewNode(TreeView* view)
     TreeViewNode* node = new TreeViewNode("Components");
     SetTreeViewNode(node);
     node->SetData(this);
-    node->SetImageIndex(view->GetImageIndex("components.bitmap"));
+    ImageList* imageList = view->GetImageList();
+    if (imageList)
+    {
+        node->SetImageIndex(imageList->GetImageIndex("components.bitmap"));
+    }
     for (const auto& component : components)
     {
         node->AddChild(component->ToTreeViewNode(view));
     }
     return node;
+}
+
+Control* Components::CreateView(ImageList* imageList)
+{
+    std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    listView->SetDoubleBuffered();
+    listView->SetImageList(imageList);
+    listView->AddColumn("Name", 200);
+    for (const auto& component : components)
+    {
+        ListViewItem* item = listView->AddItem();
+        component->SetData(item, imageList);
+    }
+    return listView.release();
 }
 
 Component::Component() : Node(NodeKind::component, std::string())
@@ -95,7 +113,11 @@ TreeViewNode* Component::ToTreeViewNode(TreeView* view)
     TreeViewNode* node = new TreeViewNode(Name());
     SetTreeViewNode(node);
     node->SetData(this);
-    node->SetImageIndex(view->GetImageIndex("component.bitmap"));
+    ImageList* imageList = view->GetImageList();
+    if (imageList)
+    {
+        node->SetImageIndex(imageList->GetImageIndex("component.bitmap"));
+    }
     for (const auto& directory : directories)
     {
         node->AddChild(directory->ToTreeViewNode(view));

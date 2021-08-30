@@ -5,6 +5,9 @@
 
 #include <package_editor/main_window.hpp>
 #include <wing/Dialog.hpp>
+#include <wing/LogView.hpp>
+#include <wing/PaddedControl.hpp>
+#include <wing/ScrollableControl.hpp>
 #include <wing/SplitContainer.hpp>
 #include <sngxml/dom/Parser.hpp>
 #include <soulng/util/Path.hpp>
@@ -28,7 +31,9 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
     openPackageMenuItem(nullptr),
     closePackageMenuItem(nullptr),
     exitMenuItem(nullptr),
-    packageExplorer(nullptr)
+    packageExplorer(nullptr),
+    packageContentView(nullptr),
+    logView(nullptr)
 {
     std::unique_ptr<MenuBar> menuBar(new MenuBar());
 
@@ -67,9 +72,52 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
     packageExplorer = packageExplorerPtr.get();
     horizontalSplitContainer->Pane1Container()->AddChild(packageExplorerPtr.release());
 
+    std::unique_ptr<PackageContentView> packageContentViewPtr(new PackageContentView(PackageContentViewCreateParams().SetDock(Dock::fill)));
+    packageContentView = packageContentViewPtr.get();
+    horizontalSplitContainer->Pane2Container()->AddChild(packageContentViewPtr.release());
+
+    packageExplorer->SetContentView(packageContentView);
+    
     verticalSplitContainer->Pane1Container()->AddChild(horizontalSplitContainer.release());
 
+    std::unique_ptr<LogView> logViewPtr(new LogView(TextViewCreateParams().Defaults()));
+    logView = logViewPtr.get();
+    std::unique_ptr<Control> paddedLogView(new PaddedControl(PaddedControlCreateParams(logViewPtr.release()).Defaults()));
+    std::unique_ptr<Control> scrollableLogView(new ScrollableControl(ScrollableControlCreateParams(paddedLogView.release()).SetDock(Dock::fill)));
+    Application::SetLogView(logView);
+    verticalSplitContainer->Pane2Container()->AddChild(scrollableLogView.release());
+
     AddChild(verticalSplitContainer.release());
+
+    imageList.AddImage("package.bitmap");
+    imageList.AddImage("components.bitmap");
+    imageList.AddImage("component.bitmap");
+    imageList.AddImage("component.bitmap");
+    imageList.AddImage("add.folder.bitmap");
+    imageList.AddImage("add.file.bitmap");
+    imageList.AddImage("delete.folder.bitmap");
+    imageList.AddImage("delete.folder.cascade.bitmap");
+    imageList.AddImage("delete.file.bitmap");
+    imageList.AddImage("delete.file.cascade.bitmap");
+    imageList.AddImage("folder.closed.bitmap");
+    imageList.AddImage("folder.opened.bitmap");
+    imageList.AddImage("file.bitmap");
+    imageList.AddImage("rules.bitmap");
+    imageList.AddImage("document.collection.bitmap");
+    imageList.AddImage("package.properties.bitmap");
+    imageList.AddImage("environment.bitmap");
+    imageList.AddImage("environment.var.bitmap");
+    imageList.AddImage("path.directory.bitmap");
+    imageList.AddImage("links.bitmap");
+    imageList.AddImage("linked.folder.closed.bitmap");
+    imageList.AddImage("shortcut.bitmap");
+    imageList.AddImage("engine.variables.bitmap");
+    imageList.AddImage("engine.variable.bitmap");
+    imageList.AddImage("xml.file.bitmap");
+
+    packageExplorer->SetImageList(&imageList);
+    packageContentView->SetImageList(&imageList);
+
 }
 
 void MainWindow::NewPackageClick()

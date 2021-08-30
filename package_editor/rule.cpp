@@ -5,6 +5,7 @@
 
 #include <package_editor/rule.hpp>
 #include <package_editor/error.hpp>
+#include <wing/ImageList.hpp>
 #include <sngxml/xpath/XPathEvaluate.hpp>
 #include <soulng/util/TextUtils.hpp>
 #include <soulng/util/Unicode.hpp>
@@ -30,7 +31,11 @@ TreeViewNode* Rules::ToTreeViewNode(TreeView* view)
     TreeViewNode* node = new TreeViewNode("Rules");
     SetTreeViewNode(node);
     node->SetData(this);
-    node->SetImageIndex(view->GetImageIndex("rules.bitmap"));
+    ImageList* imageList = view->GetImageList();
+    if (imageList)
+    {
+        node->SetImageIndex(imageList->GetImageIndex("rules.bitmap"));
+    }
     for (const auto& rule : rules)
     {
         node->AddChild(rule->ToTreeViewNode(view));
@@ -189,7 +194,11 @@ TreeViewNode* Rule::ToTreeViewNode(TreeView* view)
     TreeViewNode* node = new TreeViewNode(Text());
     SetTreeViewNode(node);
     node->SetData(this);
-    node->SetImageIndex(view->GetImageIndex(ImageName()));
+    ImageList* imageList = view->GetImageList();
+    if (imageList)
+    {
+        node->SetImageIndex(imageList->GetImageIndex(ImageName()));
+    }
     for (const auto& rule : rules)
     {
         node->AddChild(rule->ToTreeViewNode(view));

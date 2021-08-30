@@ -5,6 +5,7 @@
 
 #include <package_editor/file.hpp>
 #include <package_editor/error.hpp>
+#include <wing/ImageList.hpp>
 #include <soulng/util/Unicode.hpp>
 
 namespace wingstall { namespace package_editor {
@@ -33,7 +34,11 @@ TreeViewNode* File::ToTreeViewNode(TreeView* view)
     TreeViewNode* node = new TreeViewNode(Name());
     SetTreeViewNode(node);
     node->SetData(this);
-    node->SetImageIndex(view->GetImageIndex("file.bitmap"));
+    ImageList* imageList = view->GetImageList();
+    if (imageList)
+    {
+        node->SetImageIndex(imageList->GetImageIndex("file.bitmap"));
+    }
     return node;
 }
 
