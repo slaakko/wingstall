@@ -13,8 +13,10 @@ using namespace wing;
 
 enum class NodeKind : int
 {
-    package, properties, components, component, directory, file, rules, rule, content, environment, links
+    package, properties, components, component, directory, file, rules, rule, content, environment, environmentVariable, pathDirectory, links, linkDirectory, link, engineVariables, engineVariable
 };
+
+class Package;
 
 class Node
 {
@@ -28,6 +30,7 @@ public:
     void SetParent(Node* parent_) { parent = parent_; }
     TreeViewNode* GetTreeViewNode() const { return treeViewNode; }
     void SetTreeViewNode(TreeViewNode* treeViewNode_) { treeViewNode = treeViewNode_; }
+    virtual Package* GetPackage() const;
 private:
     NodeKind kind;
     std::string name;

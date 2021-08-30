@@ -154,6 +154,7 @@
   <ItemGroup>
     <ClCompile Include="component.cpp" />
     <ClCompile Include="directory.cpp" />
+    <ClCompile Include="engine_variable.cpp" />
     <ClCompile Include="environment.cpp" />
     <ClCompile Include="error.cpp" />
     <ClCompile Include="file.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="package.hpp" />
     <ClInclude Include="package_explorer.hpp" />
     <ClInclude Include="rule.hpp" />
+    <ClInclude Include="engine_variable.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

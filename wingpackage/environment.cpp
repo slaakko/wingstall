@@ -323,7 +323,6 @@ Environment::Environment(PathMatcher& pathMatcher, sngxml::dom::Element* element
                     PathDirectory* pathDirectory = new PathDirectory(pathMatcher, element);
                     AddPathDirectory(pathDirectory);
                 }
-
             }
         }
     }

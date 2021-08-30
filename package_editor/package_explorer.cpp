@@ -128,7 +128,14 @@ PackageExplorer::PackageExplorer(PackageExplorerCreateParams& createParams) : Co
     treeView->AddImage("document.collection.bitmap");
     treeView->AddImage("package.properties.bitmap");
     treeView->AddImage("environment.bitmap");
+    treeView->AddImage("environment.var.bitmap");
+    treeView->AddImage("path.directory.bitmap");
     treeView->AddImage("links.bitmap");
+    treeView->AddImage("linked.folder.closed.bitmap");
+    treeView->AddImage("shortcut.bitmap");
+    treeView->AddImage("engine.variables.bitmap");
+    treeView->AddImage("engine.variable.bitmap");
+    treeView->AddImage("xml.file.bitmap");
     std::unique_ptr<Control> paddedTreeView(new PaddedControl(PaddedControlCreateParams(treeViewPtr.release()).Defaults()));
     std::unique_ptr<Control> borderedTreeView(new BorderedControl(BorderedControlCreateParams(paddedTreeView.release()).SetBorderStyle(BorderStyle::single).
         NormalSingleBorderColor(createParams.frameColor)));

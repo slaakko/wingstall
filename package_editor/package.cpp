@@ -86,6 +86,8 @@ Package::Package() : Node(NodeKind::package, std::string()), filePath()
     environment->SetParent(this);
     links.reset(new Links());
     links->SetParent(this);
+    engineVariables.reset(new EngineVariables());
+    engineVariables->SetParent(this);
 }
 
 Package::Package(const std::string& packageXMLFilePath, sngxml::dom::Element* root) : 
@@ -210,6 +212,54 @@ Package::Package(const std::string& packageXMLFilePath, sngxml::dom::Element* ro
             }
         }
     }
+    std::unique_ptr<sngxml::xpath::XPathObject> environmentObject = sngxml::xpath::Evaluate(U"environment", root);
+    if (environmentObject)
+    {
+        if (environmentObject->Type() == sngxml::xpath::XPathObjectType::nodeSet)
+        {
+            sngxml::xpath::XPathNodeSet* nodeSet = static_cast<sngxml::xpath::XPathNodeSet*>(environmentObject.get());
+            int n = nodeSet->Length();
+            if (n == 1)
+            {
+                sngxml::dom::Node* node = (*nodeSet)[0];
+                if (node->GetNodeType() == sngxml::dom::NodeType::elementNode)
+                {
+                    sngxml::dom::Element* element = static_cast<sngxml::dom::Element*>(node);
+                    environment.reset(new Environment(packageXMLFilePath, element));
+                    environment->SetParent(this);
+                }
+            }
+            else if (n > 1)
+            {
+                throw PackageXMLException("'package' element should contain at most one 'environment' element", packageXMLFilePath, root);
+            }
+        }
+    }
+    std::unique_ptr<sngxml::xpath::XPathObject> linksObject = sngxml::xpath::Evaluate(U"links", root);
+    if (linksObject)
+    {
+        if (linksObject->Type() == sngxml::xpath::XPathObjectType::nodeSet)
+        {
+            sngxml::xpath::XPathNodeSet* nodeSet = static_cast<sngxml::xpath::XPathNodeSet*>(linksObject.get());
+            int n = nodeSet->Length();
+            if (n == 1)
+            {
+                sngxml::dom::Node* node = (*nodeSet)[0];
+                if (node->GetNodeType() == sngxml::dom::NodeType::elementNode)
+                {
+                    sngxml::dom::Element* element = static_cast<sngxml::dom::Element*>(node);
+                    links.reset(new Links(packageXMLFilePath, element));
+                    links->SetParent(this);
+                }
+            }
+            else if (n > 1)
+            {
+                throw PackageXMLException("'package' element should contain at most one 'links' element", packageXMLFilePath, root);
+            }
+        }
+    }
+    engineVariables.reset(new EngineVariables());
+    engineVariables->SetParent(this);
 }
 
 TreeViewNode* Package::ToTreeViewNode(TreeView* view) 
@@ -222,6 +272,7 @@ TreeViewNode* Package::ToTreeViewNode(TreeView* view)
     root->AddChild(components->ToTreeViewNode(view));
     root->AddChild(environment->ToTreeViewNode(view));
     root->AddChild(links->ToTreeViewNode(view));
+    root->AddChild(engineVariables->ToTreeViewNode(view));
     return root;
 }
 

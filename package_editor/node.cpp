@@ -20,4 +20,13 @@ void Node::SetName(const std::string& name_)
     name = name_;
 }
 
+Package* Node::GetPackage() const
+{
+    if (parent)
+    {
+        return parent->GetPackage();
+    }
+    return nullptr;
+}
+
 } } // wingstall::package_editor
