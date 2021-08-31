@@ -19,6 +19,8 @@ public:
     Environment();
     Environment(const std::string& packageXMLFilePath, sngxml::dom::Element* element);
     TreeViewNode* ToTreeViewNode(TreeView* view);
+    Control* CreateView(ImageList* imageList) override;
+    std::string ImageName() const override { return "environment.bitmap"; }
     void AddEnvironentVariable(EnvironmentVariable* environmentVariable);
     void AddPathDirectory(PathDirectory* pathDirectory);
 private:
@@ -31,6 +33,8 @@ class EnvironmentVariable : public Node
 public:
     EnvironmentVariable();
     EnvironmentVariable(const std::string& packageXMLFilePath, sngxml::dom::Element* element);
+    std::string ImageName() const override { return "environment.var.bitmap"; }
+    void SetData(ListViewItem* item, ImageList* imageList) override;
     TreeViewNode* ToTreeViewNode(TreeView* view);
 private:
     std::string value;
@@ -41,6 +45,8 @@ class PathDirectory : public Node
 public:
     PathDirectory();
     PathDirectory(const std::string& packageXMLFilePath, sngxml::dom::Element* element);
+    std::string ImageName() const override { return "path.directory.bitmap"; }
+    void SetData(ListViewItem* item, ImageList* imageList) override;
     TreeViewNode* ToTreeViewNode(TreeView* view);
 private:
     std::string value;

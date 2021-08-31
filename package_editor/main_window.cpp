@@ -82,6 +82,7 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
 
     std::unique_ptr<LogView> logViewPtr(new LogView(TextViewCreateParams().Defaults()));
     logView = logViewPtr.get();
+    logView->SetDoubleBuffered();
     std::unique_ptr<Control> paddedLogView(new PaddedControl(PaddedControlCreateParams(logViewPtr.release()).Defaults()));
     std::unique_ptr<Control> scrollableLogView(new ScrollableControl(ScrollableControlCreateParams(paddedLogView.release()).SetDock(Dock::fill)));
     Application::SetLogView(logView);

@@ -38,6 +38,7 @@ public:
     void SetIncludeUninstaller(bool includeUninstaller_);
     const boost::uuids::uuid& Id() const { return id; }
     void SetId(const boost::uuids::uuid& id_);
+    std::string ImageName() const override { return "package.properties.bitmap"; }
 private:
     std::string sourceRootDir;
     std::string targetRootDir;
@@ -61,6 +62,7 @@ public:
     Environment* GetEnvironment() const { return environment.get(); }
     Links* GetLinks() const { return links.get(); }
     TreeViewNode* ToTreeViewNode(TreeView* view);
+    Control* CreateView(ImageList* imageList)  override;
     Package* GetPackage() const override { return const_cast<Package*>(this); }
 private:
     std::string filePath;

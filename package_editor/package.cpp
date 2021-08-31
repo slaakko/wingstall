@@ -19,7 +19,7 @@ namespace wingstall { namespace package_editor {
 using namespace soulng::unicode;
 using namespace soulng::util;
 
-Properties::Properties() : Node(NodeKind::properties, std::string()), compression(wingstall::wingpackage::Compression::none), includeUninstaller(true), id(boost::uuids::nil_uuid())
+Properties::Properties() : Node(NodeKind::properties, "Properties"), compression(wingstall::wingpackage::Compression::none), includeUninstaller(true), id(boost::uuids::nil_uuid())
 {
 }
 
@@ -283,6 +283,23 @@ TreeViewNode* Package::ToTreeViewNode(TreeView* view)
     root->AddChild(links->ToTreeViewNode(view));
     root->AddChild(engineVariables->ToTreeViewNode(view));
     return root;
+}
+
+Control* Package::CreateView(ImageList* imageList)
+{
+    std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    listView->SetDoubleBuffered();
+    listView->SetImageList(imageList);
+    listView->AddColumn("Name", 200);
+    ListViewItem* propertiesItem = listView->AddItem();
+    properties->SetData(propertiesItem, imageList);
+    ListViewItem* componentsItem = listView->AddItem();
+    components->SetData(componentsItem, imageList);
+    ListViewItem* environmentItem = listView->AddItem();
+    environment->SetData(environmentItem, imageList);
+    ListViewItem* linksItem = listView->AddItem();
+    links->SetData(linksItem, imageList);
+    return listView.release();
 }
 
 } } // wingstall::package_editor

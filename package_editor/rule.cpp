@@ -16,7 +16,7 @@ using namespace soulng::unicode;
 using namespace soulng::util;
 
 
-Rules::Rules() : Node(NodeKind::rules, std::string())
+Rules::Rules() : Node(NodeKind::rules, "Rules")
 {
 }
 
@@ -43,6 +43,22 @@ TreeViewNode* Rules::ToTreeViewNode(TreeView* view)
     return node;
 }
 
+Control* Rules::CreateView(ImageList* imageList)
+{
+    std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    listView->SetDoubleBuffered();
+    listView->SetImageList(imageList);
+    listView->AddColumn("Kind", 200);
+    listView->AddColumn("Name/Pattern", 200);
+    listView->AddColumn("Cascade", 200);
+    for (const auto& rule : rules)
+    {
+        ListViewItem* item = listView->AddItem();
+        rule->SetData(item, imageList);
+    }
+    return listView.release();
+}
+
 Rule::Rule(RuleKind ruleKind_, PathKind pathKind_) : Node(NodeKind::rule, std::string()), ruleKind(ruleKind_), pathKind(pathKind_), cascade(false)
 {
 }
@@ -52,10 +68,12 @@ Rule::Rule(const std::string& packageXMLFilePath, sngxml::dom::Element* element)
     if (element->Name() == U"include")
     {
         ruleKind = RuleKind::include;
+        SetName("Include");
     }
     else if (element->Name() == U"exclude")
     {
         ruleKind = RuleKind::exclude;
+        SetName("Exclude");
     }
     else
     {
@@ -70,7 +88,8 @@ Rule::Rule(const std::string& packageXMLFilePath, sngxml::dom::Element* element)
         {
             throw PackageXMLException("rule '" + ToUtf8(element->Name()) + "' has both 'dir' and 'file' attributes", packageXMLFilePath, element);
         }
-        SetName(ToUtf8(dirAttr));
+        SetName(Name() + " Directory");
+        value = ToUtf8(dirAttr);
     }
     else
     {
@@ -78,7 +97,8 @@ Rule::Rule(const std::string& packageXMLFilePath, sngxml::dom::Element* element)
         if (!fileAttr.empty())
         {
             pathKind = PathKind::file;
-            SetName(ToUtf8(fileAttr));
+            SetName(Name() + " File");
+            value = ToUtf8(fileAttr);
         }
         else
         {
@@ -134,13 +154,13 @@ std::string Rule::Text() const
     }
     if (pathKind == PathKind::dir)
     {
-        text.append("directory ");
+        text.append("Directory ");
     }
     else if (pathKind == PathKind::file)
     {
-        text.append("file ");
+        text.append("File ");
     }
-    text.append("'").append(Name()).append("'");
+    text.append("'").append(value).append("'");
     if (cascade)
     {
         text.append(" (cascade)");
@@ -189,6 +209,28 @@ std::string Rule::ImageName() const
     return std::string();
 }
 
+std::string Rule::PathKindStr() const
+{
+    switch (pathKind)
+    {
+        case PathKind::dir: return "Directory";
+        case PathKind::file: return "File";
+    }
+    return std::string();
+}
+
+std::string Rule::CascadeStr() const
+{
+    if (cascade)
+    {
+        return "true";
+    }
+    else
+    {
+        return "false";
+    }
+}
+
 TreeViewNode* Rule::ToTreeViewNode(TreeView* view)
 {
     TreeViewNode* node = new TreeViewNode(Text());
@@ -210,6 +252,16 @@ void Rule::AddRule(Rule* rule)
 {
     rule->SetParent(this);
     rules.push_back(std::unique_ptr<Rule>(rule));
+}
+
+void Rule::SetData(ListViewItem* item, ImageList* imageList)
+{
+    Node::SetData(item, imageList);
+    item->SetColumnValue(1, Value());
+    if (ruleKind == RuleKind::exclude)
+    {
+        item->SetColumnValue(2, CascadeStr());
+    }
 }
 
 } } // wingstall::package_editor

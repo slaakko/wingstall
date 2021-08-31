@@ -12,7 +12,7 @@ namespace wingstall { namespace package_editor {
 
 using namespace soulng::unicode;
 
-Components::Components() : Node(NodeKind::components, std::string())
+Components::Components() : Node(NodeKind::components, "Components")
 {
 }
 
@@ -127,6 +127,25 @@ TreeViewNode* Component::ToTreeViewNode(TreeView* view)
         node->AddChild(file->ToTreeViewNode(view));
     }
     return node;
+}
+
+Control* Component::CreateView(ImageList* imageList)
+{
+    std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    listView->SetDoubleBuffered();
+    listView->SetImageList(imageList);
+    listView->AddColumn("Name", 200);
+    for (const auto& directory : directories)
+    {
+        ListViewItem* item = listView->AddItem();
+        directory->SetData(item, imageList);
+    }
+    for (const auto& file : files)
+    {
+        ListViewItem* item = listView->AddItem();
+        file->SetData(item, imageList);
+    }
+    return listView.release();
 }
 
 void Component::AddDirectory(Directory* directory)

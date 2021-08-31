@@ -72,7 +72,20 @@ TreeViewNode* Directory::ToTreeViewNode(TreeView* view)
     return node;
 }
 
-Content::Content() : Node(NodeKind::content, std::string())
+Control* Directory::CreateView(ImageList* imageList)
+{
+    std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    listView->SetDoubleBuffered();
+    listView->SetImageList(imageList);
+    listView->AddColumn("Name", 200);
+    ListViewItem* rulesItem = listView->AddItem();
+    rules->SetData(rulesItem, imageList);
+    ListViewItem* contentItem = listView->AddItem();
+    content->SetData(contentItem, imageList);
+    return listView.release();
+}
+
+Content::Content() : Node(NodeKind::content, "Content") 
 {
 }
 

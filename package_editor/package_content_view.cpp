@@ -115,10 +115,6 @@ PackageContentView::PackageContentView(PackageContentViewCreateParams& createPar
     ContainerControl(createParams.controlCreateParams), frameColor(createParams.frameColor), imageList(nullptr), framedChild(nullptr), child(nullptr)
 {
     AddChild(MakeFramedControl(new EmptyView()));
-    //AddChild(new ListView(ListViewCreateParams().Defaults()));
-    //std::unique_ptr<LogView> logViewPtr(new LogView(TextViewCreateParams().Defaults()));
-    //logViewPtr->WriteLine("hurraa");
-    //AddChild(MakeFramedControl(logViewPtr.release()));
 }
 
 void PackageContentView::SetChildPos()
@@ -159,8 +155,13 @@ void PackageContentView::ViewContent(Node* node)
         framedChild = nullptr;
         child = nullptr;
     }
-    std::unique_ptr<Control> view(MakeFramedControl(node->CreateView(imageList)));
-    AddChild(view.release());
+    Control* view = node->CreateView(imageList);
+    if (!view)
+    {
+        view = new EmptyView();
+    }
+    std::unique_ptr<Control> framedView(MakeFramedControl(view));
+    AddChild(framedView.release());
 }
 
 Control* PackageContentView::MakeFramedControl(Control* child_)

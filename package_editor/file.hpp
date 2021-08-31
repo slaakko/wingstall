@@ -18,6 +18,7 @@ class File : public Node
 public:
     File();
     File(const std::string& packageXMLFilePath, sngxml::dom::Element* element);
+    std::string ImageName() const override { return "file.bitmap"; }
     TreeViewNode* ToTreeViewNode(TreeView* view);
 };
 

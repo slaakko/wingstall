@@ -18,6 +18,7 @@ Color DefaultListViewItemTextColor();
 Color DefaultListViewSelectedItemBackgroundColor();
 Padding DefaultListViewColumnHeaderPadding();
 Padding DefaultListViewItemPadding();
+Padding DefaultListViewItemColumnPadding();
 Padding DefaultListViewImagePadding();
 
 struct WING_API ListViewCreateParams
@@ -43,6 +44,7 @@ struct WING_API ListViewCreateParams
     Color listViewSelectedItemBackgroundColor;
     Padding columnHeaderPadding;
     Padding itemPadding;
+    Padding itemColumnPadding;
     Padding imagePadding;
 };
 
@@ -90,11 +92,15 @@ public:
     void SetMeasured() { flags = flags | ListViewFlags::measured; }
     const Padding& ColumnHeaderPadding() const { return columnHeaderPadding; }
     const Padding& ItemPadding() const { return itemPadding; }
+    const Padding& ItemColumnPadding() const { return itemColumnPadding; }
     const Padding& ImagePadding() const { return imagePadding; }
+    const StringFormat& GetStringFormat() const { return stringFormat; }
+    float TextHeight() const { return charHeight; }
 protected:
     void OnPaint(PaintEventArgs& args) override;
     void Measure(Graphics& graphics);
 private:
+    void MeasureItems(Graphics& graphics);
     void DrawColumnHeader(Graphics& graphics, PointF& origin);
     void DrawItems(Graphics& graphics, PointF& origin);
     ListViewFlags flags;
@@ -109,6 +115,7 @@ private:
     float charHeight;
     Padding columnHeaderPadding;
     Padding itemPadding;
+    Padding itemColumnPadding;
     Padding imagePadding;
 };
 
@@ -144,6 +151,12 @@ public:
     int DisabledImageIndex() const { return disabledImageIndex; }
     void SetDisabledImageIndex(int disabledImageIndex_);
     void Draw(Graphics& graphics, const PointF& origin);
+    void Measure(Graphics& graphics);
+    const Point& Location() const { return location; }
+    void SetLocation(const Point& location_);
+    const Size& GetSize() const { return size; }
+    void SetData(void* data_) { data = data_; }
+    void* Data() const { return data; }
 private:
     void DrawImage(Graphics& graphics, PointF& origin);
     ListView* view;
@@ -151,6 +164,9 @@ private:
     std::vector<std::string> columnValues;
     int imageIndex;
     int disabledImageIndex;
+    void* data;
+    Point location;
+    Size size;
 };
 
 } // wing

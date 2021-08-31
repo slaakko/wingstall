@@ -19,6 +19,7 @@ public:
     void AddComponent(Component* component);
     TreeViewNode* ToTreeViewNode(TreeView* view);
     Control* CreateView(ImageList* imageList) override;
+    std::string ImageName() const override { return "components.bitmap"; }
 private:
     std::vector<std::unique_ptr<Component>> components;
 };
@@ -29,6 +30,7 @@ public:
     Component();
     Component(const std::string& packageXMLFilePath, sngxml::dom::Element* element);
     TreeViewNode* ToTreeViewNode(TreeView* view);
+    Control* CreateView(ImageList* imageList) override;
     void AddDirectory(Directory* directory);
     void AddFile(File* file);
     std::string ImageName() const override { return "component.bitmap"; }

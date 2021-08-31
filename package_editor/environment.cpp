@@ -13,11 +13,11 @@ namespace wingstall { namespace package_editor {
 
 using namespace soulng::unicode;
 
-Environment::Environment() : Node(NodeKind::environment, std::string())
+Environment::Environment() : Node(NodeKind::environment, "Environment")
 {
 }
 
-Environment::Environment(const std::string& packageXMLFilePath, sngxml::dom::Element* element) : Node(NodeKind::environment, std::string())
+Environment::Environment(const std::string& packageXMLFilePath, sngxml::dom::Element* element) : Node(NodeKind::environment, "Environment")
 {
     std::unique_ptr<sngxml::xpath::XPathObject> variableObject = sngxml::xpath::Evaluate(U"variable", element);
     if (variableObject)
@@ -80,6 +80,26 @@ TreeViewNode* Environment::ToTreeViewNode(TreeView* view)
     return node;
 }
 
+Control* Environment::CreateView(ImageList* imageList)
+{
+    std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    listView->SetDoubleBuffered();
+    listView->SetImageList(imageList);
+    listView->AddColumn("Name", 200);
+    listView->AddColumn("Value", 200);
+    for (const auto& environmentVariable : environmentVariables)
+    {
+        ListViewItem* item = listView->AddItem();
+        environmentVariable->SetData(item, imageList);
+    }
+    for (const auto& pathDirectory : pathDirectories)
+    {
+        ListViewItem* item = listView->AddItem();
+        pathDirectory->SetData(item, imageList);
+    }
+    return listView.release();
+}
+
 void Environment::AddEnvironentVariable(EnvironmentVariable* environmentVariable)
 {
     environmentVariable->SetParent(this);
@@ -118,6 +138,12 @@ EnvironmentVariable::EnvironmentVariable(const std::string& packageXMLFilePath, 
     }
 }
 
+void EnvironmentVariable::SetData(ListViewItem* item, ImageList* imageList)
+{
+    Node::SetData(item, imageList);
+    item->SetColumnValue(1, value);
+}
+
 TreeViewNode* EnvironmentVariable::ToTreeViewNode(TreeView* view)
 {
     TreeViewNode* node = new TreeViewNode(Name() + "=" + value);
@@ -135,7 +161,7 @@ PathDirectory::PathDirectory() : Node(NodeKind::pathDirectory, std::string())
 {
 }
 
-PathDirectory::PathDirectory(const std::string& packageXMLFilePath, sngxml::dom::Element* element) : Node(NodeKind::pathDirectory, std::string())
+PathDirectory::PathDirectory(const std::string& packageXMLFilePath, sngxml::dom::Element* element) : Node(NodeKind::pathDirectory, "Path Directory")
 {
     std::u32string valueAttr = element->GetAttribute(U"value");
     if (!valueAttr.empty())
@@ -159,6 +185,12 @@ TreeViewNode* PathDirectory::ToTreeViewNode(TreeView* view)
         node->SetImageIndex(imageList->GetImageIndex("path.directory.bitmap"));
     }
     return node;
+}
+
+void PathDirectory::SetData(ListViewItem* item, ImageList* imageList)
+{
+    Node::SetData(item, imageList);
+    item->SetColumnValue(1, value);
 }
 
 } } // wingstall::package_editor

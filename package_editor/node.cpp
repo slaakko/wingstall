@@ -31,7 +31,7 @@ Package* Node::GetPackage() const
 
 Control* Node::CreateView(ImageList* imageList)
 {
-    throw std::runtime_error("not implemented");
+    return nullptr;
 }
 
 std::string Node::ImageName() const
@@ -41,6 +41,7 @@ std::string Node::ImageName() const
 
 void Node::SetData(ListViewItem* item, ImageList* imageList)
 {
+    item->SetData(this);
     item->SetColumnValue(0, Name());
     std::string imageName = ImageName();
     if (!imageName.empty())

@@ -19,6 +19,7 @@ public:
     Links();
     Links(const std::string& packageXMLFilePath, sngxml::dom::Element* element);
     TreeViewNode* ToTreeViewNode(TreeView* view);
+    std::string ImageName() const override { return "links.bitmap"; }
     void AddLinkDirectory(LinkDirectory* linkDirectory);
     void AddLink(Link* link);
 private:

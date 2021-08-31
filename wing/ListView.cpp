@@ -7,6 +7,9 @@
 #include <wing/ImageList.hpp>
 #include <soulng/util/Unicode.hpp>
 
+#undef max
+#undef min
+
 namespace wing {
 
 using namespace soulng::unicode;
@@ -51,6 +54,11 @@ Padding DefaultListViewItemPadding()
     return Padding(4, 0, 4, 0);
 }
 
+Padding DefaultListViewItemColumnPadding()
+{
+    return Padding(0, 0, 0, 0);
+}
+
 Padding DefaultListViewImagePadding()
 {
     return Padding(2, 2, 2, 2);
@@ -66,6 +74,7 @@ ListViewCreateParams::ListViewCreateParams() :
     listViewSelectedItemBackgroundColor(DefaultListViewSelectedItemBackgroundColor()),
     columnHeaderPadding(DefaultListViewColumnHeaderPadding()),
     itemPadding(DefaultListViewItemPadding()),
+    itemColumnPadding(DefaultListViewItemColumnPadding()),
     imagePadding(DefaultListViewImagePadding())
 {
     controlCreateParams.WindowClassName("wing.ListView");
@@ -149,6 +158,7 @@ ListView::ListView(ListViewCreateParams& createParams) :
     disabledItemTextBrush(createParams.listViewDisabledItemTextColor),
     columnHeaderPadding(createParams.columnHeaderPadding),
     itemPadding(createParams.itemPadding),
+    itemColumnPadding(createParams.itemColumnPadding),
     imagePadding(createParams.imagePadding),
     charWidth(0), 
     charHeight(0)
@@ -220,6 +230,7 @@ void ListView::OnPaint(PaintEventArgs& args)
         }
         args.graphics.Clear(BackgroundColor());
         PointF origin;
+        MeasureItems(args.graphics);
         DrawColumnHeader(args.graphics, origin);
         DrawItems(args.graphics, origin);
         Control::OnPaint(args);
@@ -236,6 +247,17 @@ void ListView::Measure(Graphics& graphics)
     charHeight = charRect.Height;
     charWidth = charRect.Width;
     SetScrollUnits(ScrollUnits(static_cast<int>(charHeight + 0.5), static_cast<int>(2 * (charWidth + 0.5))));
+}
+
+void ListView::MeasureItems(Graphics& graphics)
+{
+    Point loc(0, 0);
+    for (const auto& item : items)
+    {
+        item->SetLocation(loc);
+        item->Measure(graphics);
+        loc.Y = loc.Y + item->GetSize().Height;
+    }
 }
 
 void ListView::DrawColumnHeader(Graphics& graphics, PointF& origin)
@@ -259,7 +281,7 @@ void ListView::DrawItems(Graphics& graphics, PointF& origin)
         itemOrigin.Y = itemOrigin.Y + itemPadding.top;
         itemOrigin.X = itemOrigin.X + itemPadding.left;
         item->Draw(graphics, itemOrigin);
-        origin.Y = origin.Y + charHeight + itemPadding.Vertical();
+        origin.Y = origin.Y + item->GetSize().Height;
     }
 }
 
@@ -281,7 +303,7 @@ void ListViewColumn::Draw(Graphics& graphics, const PointF& origin)
     DrawString(graphics, name, view->GetFont(), origin, view->GetColumnHeaderTextBrush());
 }
 
-ListViewItem::ListViewItem(ListView* view_) : view(view_), state(ListViewItemState::enabled), imageIndex(-1), disabledImageIndex(-1)
+ListViewItem::ListViewItem(ListView* view_) : view(view_), state(ListViewItemState::enabled), imageIndex(-1), disabledImageIndex(-1), data(nullptr)
 {
 }
 
@@ -333,9 +355,9 @@ void ListViewItem::SetDisabledImageIndex(int disabledImageIndex_)
 void ListViewItem::Draw(Graphics& graphics, const PointF& origin)
 {
     PointF itemOrigin = origin;
+    DrawImage(graphics, itemOrigin);
     for (int index = 0; index < view->ColumnCount(); ++index)
     {
-        DrawImage(graphics, itemOrigin);
         if (state == ListViewItemState::enabled)
         {
             DrawString(graphics, GetColumnValue(index), view->GetFont(), itemOrigin, view->GetItemTextBrush());
@@ -348,17 +370,60 @@ void ListViewItem::Draw(Graphics& graphics, const PointF& origin)
     }
 }
 
+void ListViewItem::SetLocation(const Point& location_)
+{
+    location = location_;
+}
+
+void ListViewItem::Measure(Graphics& graphics)
+{
+    float width = 0;
+    float height = 0;
+    Bitmap* image = nullptr;
+    ImageList* imageList = view->GetImageList();
+    if (imageList)
+    {
+        if (state == ListViewItemState::enabled)
+        {
+            image = imageList->GetImage(imageIndex);
+        }
+        else
+        {
+            image = imageList->GetImage(disabledImageIndex);
+        }
+    }
+    if (image)
+    {
+        int imageWidth = image->GetWidth();
+        int imageHeight = image->GetHeight();
+        Padding padding = view->ImagePadding();
+        width = imageWidth + padding.Horizontal();;
+        height = imageHeight + padding.Vertical();
+    }
+    for (int index = 0; index < view->ColumnCount(); ++index)
+    {
+        std::string columnValue = GetColumnValue(index);
+        width = width + view->GetColumn(index).Width();
+        height = std::max(height, view->TextHeight());
+    }
+    width = width + view->ItemPadding().Horizontal();
+    size = Size(static_cast<int>(width + 0.5f), static_cast<int>(height + 0.5f));
+}
+
 void ListViewItem::DrawImage(Graphics& graphics, PointF& origin)
 {
     Bitmap* image = nullptr;
     ImageList* imageList = view->GetImageList();
-    if (state == ListViewItemState::enabled)
+    if (imageList)
     {
-        image = imageList->GetImage(imageIndex);
-    }
-    else
-    {
-        image = imageList->GetImage(disabledImageIndex);
+        if (state == ListViewItemState::enabled)
+        {
+            image = imageList->GetImage(imageIndex);
+        }
+        else
+        {
+            image = imageList->GetImage(disabledImageIndex);
+        }
     }
     if (image)
     {

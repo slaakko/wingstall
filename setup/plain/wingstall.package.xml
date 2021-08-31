@@ -11,11 +11,6 @@
 	includeUninstaller="true"
 	id="17e24c2e-5ddf-4b18-b4ee-1d66182ab193">
 	<component
-		name="root">
-		<file 
-			name="wingstall.sln"/>
-	</component>
-	<component
 		name="binaries">
 		<directory
 			name="bin">
@@ -61,6 +56,8 @@
 	</component>
 	<component
 		name="sources">
+		<file 
+			name="wingstall.sln"/>
 		<directory
 			name="example">
 			<exclude dir=".vs" cascade="true"/>

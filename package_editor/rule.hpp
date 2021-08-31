@@ -20,7 +20,9 @@ class Rules : public Node
 public:
     Rules();
     void AddRule(Rule* rule);
+    std::string ImageName() const override { return "rules.bitmap"; }
     TreeViewNode* ToTreeViewNode(TreeView* view);
+    Control* CreateView(ImageList* imageList) override;
 private:
     std::vector<std::unique_ptr<Rule>> rules;
 };
@@ -47,12 +49,17 @@ public:
     bool Cascade() const { return cascade; }
     void SetCascade(bool cascade_) { cascade = cascade_; }
     void AddRule(Rule* rule);
+    std::string ImageName() const override;
+    std::string PathKindStr() const;
+    std::string CascadeStr() const;
+    const std::string& Value() const { return value; }
+    void SetData(ListViewItem* item, ImageList* imageList);
 private:
-    std::string ImageName() const;
     RuleKind ruleKind;
     PathKind pathKind;
     bool cascade;
     std::vector<std::unique_ptr<Rule>> rules;
+    std::string value;
 };
 
 } } // wingstall::package_editor

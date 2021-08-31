@@ -14,11 +14,11 @@ namespace wingstall { namespace package_editor {
 
 using namespace soulng::unicode;
 
-Links::Links() : Node(NodeKind::links, std::string())
+Links::Links() : Node(NodeKind::links, "Links")
 {
 }
 
-Links::Links(const std::string& packageXMLFilePath, sngxml::dom::Element* element) : Node(NodeKind::links, std::string())
+Links::Links(const std::string& packageXMLFilePath, sngxml::dom::Element* element) : Node(NodeKind::links, "Links")
 {
     std::unique_ptr<sngxml::xpath::XPathObject> linkDirectoryObject = sngxml::xpath::Evaluate(U"linkDirectory", element);
     if (linkDirectoryObject)
