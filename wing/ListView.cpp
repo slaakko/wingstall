@@ -190,10 +190,7 @@ void ListView::AddColumn(const std::string& name, int width)
 {
     ListViewColumn* column = new ListViewColumn(this, name, width);
     columns.push_back(std::unique_ptr<ListViewColumn>(column));
-    if (columns.size() > 1)
-    {
-        columnDividers.push_back(std::unique_ptr<ListViewColumnDivider>(new ListViewColumnDivider(this)));
-    }
+    columnDividers.push_back(std::unique_ptr<ListViewColumnDivider>(new ListViewColumnDivider(this)));
 }
 
 const ListViewColumn& ListView::GetColumn(int columnIndex) const
@@ -293,13 +290,10 @@ void ListView::DrawColumnHeader(Graphics& graphics, PointF& origin)
         ListViewColumn* column = columns[i].get();
         column->Draw(graphics, headerOrigin);
         headerOrigin.X = headerOrigin.X + columnHeaderPadding.Horizontal() + column->Width();
-        if (i < n - 1)
-        {
-            ListViewColumnDivider* divider = columnDividers[i].get();
-            headerOrigin.X = headerOrigin.X + columnDividerPadding.left;
-            divider->Draw(graphics, headerOrigin);
-            headerOrigin.X = headerOrigin.X + columnDividerWidth + columnDividerPadding.right;
-        }
+        ListViewColumnDivider* divider = columnDividers[i].get();
+        headerOrigin.X = headerOrigin.X + columnDividerPadding.left;
+        divider->Draw(graphics, headerOrigin);
+        headerOrigin.X = headerOrigin.X + columnDividerWidth + columnDividerPadding.right;
     }
     origin.Y = origin.Y + charHeight + columnHeaderPadding.Vertical();
 }
@@ -431,11 +425,7 @@ void ListViewItem::Draw(Graphics& graphics, const PointF& origin)
             PointF ellipsisOrigin(itemOrigin.X - view->EllipsisWidth() - imgSpc, itemOrigin.Y);
             DrawString(graphics, "...", view->GetFont(), ellipsisOrigin, *brush);
         }
-        itemOrigin.X  = itemOrigin.X + view->ItemPadding().Horizontal() + view->ColumnDividerPadding().Horizontal() + view->ColumnDividerWidth();
-        if (index == 0)
-        {
-            itemOrigin.X = itemOrigin.X - imageSpace;
-        }
+        itemOrigin.X  = itemOrigin.X + view->ItemPadding().Horizontal() + view->ColumnDividerPadding().Horizontal() + view->ColumnDividerWidth() - imgSpc;
     }
 }
 
