@@ -16,6 +16,8 @@ class EngineVariables : public Node
 public:
     EngineVariables();
     TreeViewNode* ToTreeViewNode(TreeView* view);
+    Control* CreateView(ImageList* imageList) override;
+    std::string ImageName() const override { return "engine.variables.bitmap"; }
 private:
     std::vector<std::unique_ptr<EngineVariable>> engineVariables;
 };
@@ -25,6 +27,8 @@ class EngineVariable : public Node
 public:
     EngineVariable();
     TreeViewNode* ToTreeViewNode(TreeView* view);
+    std::string ImageName() const override { return "engine.variable.bitmap"; }
+    void SetData(ListViewItem* item, ImageList* imageList) override;
     virtual std::string Value() const = 0;
 };
 

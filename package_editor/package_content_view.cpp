@@ -117,15 +117,6 @@ PackageContentView::PackageContentView(PackageContentViewCreateParams& createPar
     AddChild(MakeFramedControl(new EmptyView()));
 }
 
-void PackageContentView::SetChildPos()
-{
-    if (framedChild)
-    {
-        framedChild->SetLocation(Point(0, 0));
-        framedChild->SetSize(GetSize());
-    }
-}
-
 void PackageContentView::OnPaint(PaintEventArgs& args)
 {
     try

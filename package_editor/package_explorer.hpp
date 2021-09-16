@@ -6,6 +6,7 @@
 #ifndef WINGSTALL_PACKAGE_EDITOR_PACKAGE_EXPLORER_INCLUDED
 #define WINGSTALL_PACKAGE_EDITOR_PACKAGE_EXPLORER_INCLUDED
 #include <package_editor/package.hpp>
+#include <wing/ContainerControl.hpp>
 #include <wing/TreeView.hpp>
 
 namespace wingstall { namespace package_editor {
@@ -38,7 +39,7 @@ struct PackageExplorerCreateParams
     Color frameColor;
 };
 
-class PackageExplorer : public Control
+class PackageExplorer : public ContainerControl
 {
 public:
     PackageExplorer(PackageExplorerCreateParams& createParams);
@@ -46,16 +47,16 @@ public:
     void SetImageList(ImageList* imageList);
     void SetContentView(PackageContentView* contentView_);
 protected:
-    void OnLocationChanged() override;
-    void OnSizeChanged() override;
     void OnPaint(PaintEventArgs& args) override;
 private:
-    void SetChildPos();
     void TreeViewNodeClick(TreeViewNodeClickEventArgs& args);
+    void MakeView();
+    TreeViewCreateParams treeViewCreateParams;
+    ImageList* imageList;
+    Color frameColor;
     Package* package;
     TreeView* treeView;
     Control* child;
-    Container container;
     PackageContentView* contentView;
 };
 

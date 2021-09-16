@@ -52,6 +52,11 @@ void Container::AddChild(Component* child)
 
 std::unique_ptr<Component> Container::RemoveChild(Component* child)
 {
+    if (child->IsControl())
+    {
+        Control* controlChild = static_cast<Control*>(child);
+        controlChild->Hide();
+    }
     child->Unlink();
     if (child == firstChild)
     {

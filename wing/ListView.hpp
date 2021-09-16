@@ -16,9 +16,11 @@ float DefaultListViewFontSize();
 Color DefaultListViewColumnTextColor();
 Color DefaultListViewItemTextColor();
 Color DefaultListViewSelectedItemBackgroundColor();
+Color DefaultListViewColumnDividerColor();
 Padding DefaultListViewColumnHeaderPadding();
 Padding DefaultListViewItemPadding();
 Padding DefaultListViewItemColumnPadding();
+Padding DefaultListViewColumnDividerPadding();
 Padding DefaultListViewImagePadding();
 
 struct WING_API ListViewCreateParams
@@ -42,13 +44,16 @@ struct WING_API ListViewCreateParams
     Color listViewItemTextColor;
     Color listViewDisabledItemTextColor;
     Color listViewSelectedItemBackgroundColor;
+    Color listViewColumnDividerColor;
     Padding columnHeaderPadding;
     Padding itemPadding;
     Padding itemColumnPadding;
+    Padding columnDividerPadding;
     Padding imagePadding;
 };
 
 class ListViewColumn;
+class ListViewColumnDivider;
 class ListViewItem;
 
 enum class ListViewFlags : int
@@ -88,14 +93,18 @@ public:
     const Brush& GetColumnHeaderTextBrush() const { return columnHeaderTextBrush; }
     const Brush& GetItemTextBrush() const { return itemTextBrush; }
     const Brush& GetDisabledItemTextBrush() const { return disabledItemTextBrush; }
+    const Pen& ColumnDividerPen() const { return columnDividerPen; }
     bool Measured() const { return (flags & ListViewFlags::measured) != ListViewFlags::none; }
     void SetMeasured() { flags = flags | ListViewFlags::measured; }
     const Padding& ColumnHeaderPadding() const { return columnHeaderPadding; }
     const Padding& ItemPadding() const { return itemPadding; }
     const Padding& ItemColumnPadding() const { return itemColumnPadding; }
+    const Padding& ColumnDividerPadding() const { return columnDividerPadding; }
     const Padding& ImagePadding() const { return imagePadding; }
     const StringFormat& GetStringFormat() const { return stringFormat; }
     float TextHeight() const { return charHeight; }
+    float ColumnDividerWidth() const { return columnDividerWidth; }
+    float EllipsisWidth() const { return ellipsisWidth; }
 protected:
     void OnPaint(PaintEventArgs& args) override;
     void Measure(Graphics& graphics);
@@ -105,17 +114,22 @@ private:
     void DrawItems(Graphics& graphics, PointF& origin);
     ListViewFlags flags;
     std::vector<std::unique_ptr<ListViewColumn>> columns;
+    std::vector<std::unique_ptr<ListViewColumnDivider>> columnDividers;
     std::vector<std::unique_ptr<ListViewItem>> items;
     ImageList* imageList;
     SolidBrush columnHeaderTextBrush;
     SolidBrush itemTextBrush;
     SolidBrush disabledItemTextBrush;
+    Pen columnDividerPen;
     StringFormat stringFormat;
     float charWidth;
     float charHeight;
+    float columnDividerWidth;
+    float ellipsisWidth;
     Padding columnHeaderPadding;
     Padding itemPadding;
     Padding itemColumnPadding;
+    Padding columnDividerPadding;
     Padding imagePadding;
 };
 
@@ -131,6 +145,15 @@ private:
     ListView* view;
     std::string name;
     int width;
+};
+
+class WING_API ListViewColumnDivider
+{
+public:
+    ListViewColumnDivider(ListView* view_);
+    void Draw(Graphics& graphics, const PointF& origin);
+private:
+    ListView* view;
 };
 
 enum class ListViewItemState : int
@@ -158,10 +181,11 @@ public:
     void SetData(void* data_) { data = data_; }
     void* Data() const { return data; }
 private:
-    void DrawImage(Graphics& graphics, PointF& origin);
+    void DrawImage(Graphics& graphics, PointF& origin, int& imageSpace);
     ListView* view;
     ListViewItemState state;
     std::vector<std::string> columnValues;
+    std::vector<float> textWidths;
     int imageIndex;
     int disabledImageIndex;
     void* data;

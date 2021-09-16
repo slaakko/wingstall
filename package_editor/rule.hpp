@@ -50,10 +50,9 @@ public:
     void SetCascade(bool cascade_) { cascade = cascade_; }
     void AddRule(Rule* rule);
     std::string ImageName() const override;
-    std::string PathKindStr() const;
     std::string CascadeStr() const;
     const std::string& Value() const { return value; }
-    void SetData(ListViewItem* item, ImageList* imageList);
+    void SetData(ListViewItem* item, ImageList* imageList) override;
 private:
     RuleKind ruleKind;
     PathKind pathKind;

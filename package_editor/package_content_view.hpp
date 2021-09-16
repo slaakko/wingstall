@@ -50,7 +50,6 @@ protected:
     void OnPaint(PaintEventArgs& args) override;
 private:
     Control* MakeFramedControl(Control* child_);
-    void SetChildPos();
     Control* framedChild;
     Control* child;
     Color frameColor;

@@ -299,6 +299,8 @@ Control* Package::CreateView(ImageList* imageList)
     environment->SetData(environmentItem, imageList);
     ListViewItem* linksItem = listView->AddItem();
     links->SetData(linksItem, imageList);
+    ListViewItem* engineVariablesItem = listView->AddItem();
+    engineVariables->SetData(engineVariablesItem, imageList);
     return listView.release();
 }
 

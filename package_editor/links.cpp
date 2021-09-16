@@ -16,10 +16,14 @@ using namespace soulng::unicode;
 
 Links::Links() : Node(NodeKind::links, "Links")
 {
+    linkDirectories.reset(new LinkDirectories());
+    shortcuts.reset(new Shortcuts());
 }
 
 Links::Links(const std::string& packageXMLFilePath, sngxml::dom::Element* element) : Node(NodeKind::links, "Links")
 {
+    linkDirectories.reset(new LinkDirectories());
+    shortcuts.reset(new Shortcuts());
     std::unique_ptr<sngxml::xpath::XPathObject> linkDirectoryObject = sngxml::xpath::Evaluate(U"linkDirectory", element);
     if (linkDirectoryObject)
     {
@@ -34,7 +38,7 @@ Links::Links(const std::string& packageXMLFilePath, sngxml::dom::Element* elemen
                 {
                     sngxml::dom::Element* element = static_cast<sngxml::dom::Element*>(node);
                     LinkDirectory* linkDirectory = new LinkDirectory(packageXMLFilePath, element);
-                    AddLinkDirectory(linkDirectory);
+                    linkDirectories->AddLinkDirectory(linkDirectory);
                 }
             }
         }
@@ -52,8 +56,8 @@ Links::Links(const std::string& packageXMLFilePath, sngxml::dom::Element* elemen
                 if (node->GetNodeType() == sngxml::dom::NodeType::elementNode)
                 {
                     sngxml::dom::Element* element = static_cast<sngxml::dom::Element*>(node);
-                    Link* link = new Link(packageXMLFilePath, element);
-                    AddLink(link);
+                    Shortcut* shortcut = new Shortcut(packageXMLFilePath, element);
+                    shortcuts->AddShortcut(shortcut);
                 }
             }
         }
@@ -70,34 +74,71 @@ TreeViewNode* Links::ToTreeViewNode(TreeView* view)
     {
         node->SetImageIndex(imageList->GetImageIndex("links.bitmap"));
     }
-    for (const auto& linkDirectory : linkDirectories)
-    {
-        node->AddChild(linkDirectory->ToTreeViewNode(view));
-    }
-    for (const auto& link : links)
-    {
-        node->AddChild(link->ToTreeViewNode(view));
-    }
+    node->AddChild(linkDirectories->ToTreeViewNode(view));
+    node->AddChild(shortcuts->ToTreeViewNode(view));
     return node;
 }
 
-void Links::AddLinkDirectory(LinkDirectory* linkDirectory)
+Control* Links::CreateView(ImageList* imageList)
+{
+    std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    listView->SetDoubleBuffered();
+    listView->SetImageList(imageList);
+    listView->AddColumn("Name", 200);
+    ListViewItem* linkDirectoriesItem = listView->AddItem();
+    linkDirectories->SetData(linkDirectoriesItem, imageList);
+    ListViewItem* shurtcutsItem = listView->AddItem();
+    shortcuts->SetData(shurtcutsItem, imageList);
+    return listView.release();
+
+}
+
+LinkDirectories::LinkDirectories() : Node(NodeKind::linkDirectories, "Link Directories")
+{
+}
+
+void LinkDirectories::AddLinkDirectory(LinkDirectory* linkDirectory)
 {
     linkDirectory->SetParent(this);
     linkDirectories.push_back(std::unique_ptr<LinkDirectory>(linkDirectory));
 }
 
-void Links::AddLink(Link* link)
+TreeViewNode* LinkDirectories::ToTreeViewNode(TreeView* view)
 {
-    link->SetParent(this);
-    links.push_back(std::unique_ptr<Link>(link));
+    TreeViewNode* node = new TreeViewNode("Link Directories");
+    SetTreeViewNode(node);
+    node->SetData(this);
+    ImageList* imageList = view->GetImageList();
+    if (imageList)
+    {
+        node->SetImageIndex(imageList->GetImageIndex("linked.folder.closed.bitmap"));
+    }
+    for (const auto& linkDirectory : linkDirectories)
+    {
+        node->AddChild(linkDirectory->ToTreeViewNode(view));
+    }
+    return node;
 }
 
-LinkDirectory::LinkDirectory() : Node(NodeKind::linkDirectory, std::string())
+Control* LinkDirectories::CreateView(ImageList* imageList)
+{
+    std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    listView->SetDoubleBuffered();
+    listView->SetImageList(imageList);
+    listView->AddColumn("Path", 200);
+    for (const auto& linkDirectory : linkDirectories)
+    {
+        ListViewItem* item = listView->AddItem();
+        linkDirectory->SetData(item, imageList);
+    }
+    return listView.release();
+}
+
+LinkDirectory::LinkDirectory() : Node(NodeKind::linkDirectory, "Link Directory")
 {
 }
 
-LinkDirectory::LinkDirectory(const std::string& packageXMLFilePath, sngxml::dom::Element* element) : Node(NodeKind::linkDirectory, std::string())
+LinkDirectory::LinkDirectory(const std::string& packageXMLFilePath, sngxml::dom::Element* element) : Node(NodeKind::linkDirectory, "Link Directory")
 {
     std::u32string pathAttr = element->GetAttribute(U"path");
     if (!pathAttr.empty())
@@ -123,11 +164,59 @@ TreeViewNode* LinkDirectory::ToTreeViewNode(TreeView* view)
     return node;
 }
 
-Link::Link() : Node(NodeKind::link, std::string()), iconIndex(0)
+void LinkDirectory::SetData(ListViewItem* item, ImageList* imageList)
+{
+    Node::SetData(item, imageList);
+    item->SetColumnValue(0, path);
+}
+
+Shortcuts::Shortcuts() : Node(NodeKind::shortcuts, "Shortcuts")
 {
 }
 
-Link::Link(const std::string& packageXMLFilePath, sngxml::dom::Element* element) : Node(NodeKind::link, std::string()), iconIndex(0)
+void Shortcuts::AddShortcut(Shortcut* shortcut)
+{
+    shortcut->SetParent(this);
+    shortcuts.push_back(std::unique_ptr<Shortcut>(shortcut));
+}
+
+TreeViewNode* Shortcuts::ToTreeViewNode(TreeView* view)
+{
+    TreeViewNode* node = new TreeViewNode("Shortcuts");
+    SetTreeViewNode(node);
+    node->SetData(this);
+    ImageList* imageList = view->GetImageList();
+    if (imageList)
+    {
+        node->SetImageIndex(imageList->GetImageIndex("shortcut.bitmap"));
+    }
+    for (const auto& shortcut : shortcuts)
+    {
+        node->AddChild(shortcut->ToTreeViewNode(view));
+    }
+    return node;
+}
+
+Control* Shortcuts::CreateView(ImageList* imageList)
+{
+    std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    listView->SetDoubleBuffered();
+    listView->SetImageList(imageList);
+    listView->AddColumn("Link File Path", 200);
+    listView->AddColumn("Path", 200);
+    for (const auto& shortcut : shortcuts)
+    {
+        ListViewItem* item = listView->AddItem();
+        shortcut->SetData(item, imageList);
+    }
+    return listView.release();
+}
+
+Shortcut::Shortcut() : Node(NodeKind::shortcut, "Shortcut"), iconIndex(0)
+{
+}
+
+Shortcut::Shortcut(const std::string& packageXMLFilePath, sngxml::dom::Element* element) : Node(NodeKind::shortcut, "Shortcut"), iconIndex(0)
 {
     std::u32string linkFilePathAttr = element->GetAttribute(U"linkFilePath");
     if (!linkFilePathAttr.empty())
@@ -136,7 +225,7 @@ Link::Link(const std::string& packageXMLFilePath, sngxml::dom::Element* element)
     }
     else
     {
-        throw PackageXMLException("'link' element has no 'linkFilePath' attribute", packageXMLFilePath, element);
+        throw PackageXMLException("'shortcut' element has no 'linkFilePath' attribute", packageXMLFilePath, element);
     }
     std::u32string pathAttr = element->GetAttribute(U"path");
     if (!pathAttr.empty())
@@ -145,7 +234,7 @@ Link::Link(const std::string& packageXMLFilePath, sngxml::dom::Element* element)
     }
     else
     {
-        throw PackageXMLException("'link' element has no 'path' attribute", packageXMLFilePath, element);
+        throw PackageXMLException("'shortcut' element has no 'path' attribute", packageXMLFilePath, element);
     }
     std::u32string argumentsAttr = element->GetAttribute(U"arguments");
     if (!argumentsAttr.empty())
@@ -174,7 +263,7 @@ Link::Link(const std::string& packageXMLFilePath, sngxml::dom::Element* element)
     }
 }
 
-TreeViewNode* Link::ToTreeViewNode(TreeView* view)
+TreeViewNode* Shortcut::ToTreeViewNode(TreeView* view)
 {
     TreeViewNode* node = new TreeViewNode(linkFilePath);
     SetTreeViewNode(node);
@@ -185,6 +274,13 @@ TreeViewNode* Link::ToTreeViewNode(TreeView* view)
         node->SetImageIndex(imageList->GetImageIndex("shortcut.bitmap"));
     }
     return node;
+}
+
+void Shortcut::SetData(ListViewItem* item, ImageList* imageList)
+{
+    Node::SetData(item, imageList);
+    item->SetColumnValue(0, linkFilePath);
+    item->SetColumnValue(1, path);
 }
 
 } } // wingstall::package_editor

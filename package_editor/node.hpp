@@ -15,7 +15,8 @@ using namespace wing;
 
 enum class NodeKind : int
 {
-    package, properties, components, component, directory, file, rules, rule, content, environment, environmentVariable, pathDirectory, links, linkDirectory, link, engineVariables, engineVariable
+    package, properties, components, component, directory, file, rules, rule, content, environment, environmentVariable, pathDirectory, links, linkDirectories, linkDirectory, shortcuts, shortcut,
+    engineVariables, engineVariable
 };
 
 class Package;

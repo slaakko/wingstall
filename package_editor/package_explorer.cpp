@@ -108,23 +108,43 @@ PackageExplorerCreateParams& PackageExplorerCreateParams::FrameColor(const Color
 }
 
 PackageExplorer::PackageExplorer(PackageExplorerCreateParams& createParams) : 
-    Control(createParams.controlCreateParams), package(nullptr), treeView(nullptr), child(nullptr), container(this), contentView(nullptr)
+    ContainerControl(createParams.controlCreateParams), 
+    package(nullptr), 
+    treeView(nullptr), 
+    child(nullptr), 
+    contentView(nullptr), 
+    imageList(nullptr),
+    treeViewCreateParams(createParams.treeViewCreateParams),
+    frameColor(createParams.frameColor)
 {
-    std::unique_ptr<TreeView> treeViewPtr(new TreeView(createParams.treeViewCreateParams));
+    MakeView();
+}
+
+void PackageExplorer::MakeView()
+{
+    if (child)
+    {
+        RemoveChild(child);
+        child = nullptr;
+        treeView = nullptr;
+    }
+    std::unique_ptr<TreeView> treeViewPtr(new TreeView(treeViewCreateParams));
     treeView = treeViewPtr.get();
     treeView->SetDoubleBuffered();
+    treeView->SetImageList(imageList);
     treeView->NodeClick().AddHandler(this, &PackageExplorer::TreeViewNodeClick);
     std::unique_ptr<Control> paddedTreeView(new PaddedControl(PaddedControlCreateParams(treeViewPtr.release()).Defaults()));
     std::unique_ptr<Control> borderedTreeView(new BorderedControl(BorderedControlCreateParams(paddedTreeView.release()).SetBorderStyle(BorderStyle::single).
-        NormalSingleBorderColor(createParams.frameColor)));
+        NormalSingleBorderColor(frameColor)));
     std::unique_ptr<Control> scrollableTreeView(new ScrollableControl(ScrollableControlCreateParams(borderedTreeView.release()).SetDock(Dock::fill)));
     child = scrollableTreeView.get();
-    container.AddChild(scrollableTreeView.release());
+    AddChild(scrollableTreeView.release());
     Invalidate();
 }
 
 void PackageExplorer::SetPackage(Package* package_)
 {
+    MakeView();
     package = package_;
     if (package)
     {
@@ -132,39 +152,21 @@ void PackageExplorer::SetPackage(Package* package_)
         package->GetTreeViewNode()->Expand();
         package->GetComponents()->GetTreeViewNode()->Expand();
     }
-    else
-    {
-        treeView->SetRoot(nullptr);
-    }
     Invalidate();
 }
 
-void PackageExplorer::SetImageList(ImageList* imageList)
+void PackageExplorer::SetImageList(ImageList* imageList_)
 {
-    treeView->SetImageList(imageList);
+    imageList = imageList_;
+    if (treeView)
+    {
+        treeView->SetImageList(imageList);
+    }
 }
 
 void PackageExplorer::SetContentView(PackageContentView* contentView_)
 {
     contentView = contentView_;
-}
-
-void PackageExplorer::OnLocationChanged()
-{
-    Control::OnLocationChanged();
-    SetChildPos();
-}
-
-void PackageExplorer::OnSizeChanged()
-{
-    Control::OnSizeChanged();
-    SetChildPos();
-}
-
-void PackageExplorer::SetChildPos()
-{
-    child->SetLocation(Point());
-    child->SetSize(GetSize());
 }
 
 void PackageExplorer::TreeViewNodeClick(TreeViewNodeClickEventArgs& args)

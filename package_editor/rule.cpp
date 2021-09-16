@@ -209,16 +209,6 @@ std::string Rule::ImageName() const
     return std::string();
 }
 
-std::string Rule::PathKindStr() const
-{
-    switch (pathKind)
-    {
-        case PathKind::dir: return "Directory";
-        case PathKind::file: return "File";
-    }
-    return std::string();
-}
-
 std::string Rule::CascadeStr() const
 {
     if (cascade)

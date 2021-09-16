@@ -10,7 +10,7 @@
 
 namespace wingstall { namespace package_editor {
 
-EngineVariables::EngineVariables() : Node(NodeKind::engineVariables, std::string())
+EngineVariables::EngineVariables() : Node(NodeKind::engineVariables, "Engine Variables")
 {
     std::unique_ptr<EngineVariable> targetRootDir(new TargetRootDirVariable());
     targetRootDir->SetParent(this);
@@ -52,6 +52,22 @@ TreeViewNode* EngineVariables::ToTreeViewNode(TreeView* view)
     return node;
 }
 
+Control* EngineVariables::CreateView(ImageList* imageList)
+{
+    std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    listView->SetDoubleBuffered();
+    listView->SetImageList(imageList);
+    listView->AddColumn("Name", 200);
+    listView->AddColumn("Value", 200);
+    for (const auto& engineVariable : engineVariables)
+    {
+        ListViewItem* item = listView->AddItem();
+        engineVariable->SetData(item, imageList);
+    }
+    return listView.release();
+
+}
+
 EngineVariable::EngineVariable() : Node(NodeKind::engineVariable, std::string())
 {
 }
@@ -67,6 +83,12 @@ TreeViewNode* EngineVariable::ToTreeViewNode(TreeView* view)
         node->SetImageIndex(imageList->GetImageIndex("engine.variable.bitmap"));
     }
     return node;
+}
+
+void EngineVariable::SetData(ListViewItem* item, ImageList* imageList)
+{
+    Node::SetData(item, imageList);
+    item->SetColumnValue(1, Value());
 }
 
 TargetRootDirVariable::TargetRootDirVariable()

@@ -44,6 +44,11 @@ Color DefaultListViewSelectedItemBackgroundColor()
     return Color(204, 232, 255);
 }
 
+Color DefaultListViewColumnDividerColor()
+{
+    return Color(229, 229, 229);
+}
+
 Padding DefaultListViewColumnHeaderPadding()
 {
     return Padding(4, 0, 4, 4);
@@ -59,6 +64,11 @@ Padding DefaultListViewItemColumnPadding()
     return Padding(0, 0, 0, 0);
 }
 
+Padding DefaultListViewColumnDividerPadding()
+{
+    return Padding(1, 0, 1, 0);
+}
+
 Padding DefaultListViewImagePadding()
 {
     return Padding(2, 2, 2, 2);
@@ -72,9 +82,11 @@ ListViewCreateParams::ListViewCreateParams() :
     listViewItemTextColor(DefaultListViewItemTextColor()),
     listViewDisabledItemTextColor(DefaultListViewDisabledItemTextColor()),
     listViewSelectedItemBackgroundColor(DefaultListViewSelectedItemBackgroundColor()),
+    listViewColumnDividerColor(DefaultListViewColumnDividerColor()),
     columnHeaderPadding(DefaultListViewColumnHeaderPadding()),
     itemPadding(DefaultListViewItemPadding()),
     itemColumnPadding(DefaultListViewItemColumnPadding()),
+    columnDividerPadding(DefaultListViewColumnDividerPadding()),
     imagePadding(DefaultListViewImagePadding())
 {
     controlCreateParams.WindowClassName("wing.ListView");
@@ -156,12 +168,16 @@ ListView::ListView(ListViewCreateParams& createParams) :
     columnHeaderTextBrush(createParams.listViewColumnTextColor),
     itemTextBrush(createParams.listViewItemTextColor),
     disabledItemTextBrush(createParams.listViewDisabledItemTextColor),
+    columnDividerPen(createParams.listViewColumnDividerColor),
     columnHeaderPadding(createParams.columnHeaderPadding),
     itemPadding(createParams.itemPadding),
     itemColumnPadding(createParams.itemColumnPadding),
+    columnDividerPadding(createParams.columnDividerPadding),
     imagePadding(createParams.imagePadding),
     charWidth(0), 
-    charHeight(0)
+    charHeight(0),
+    columnDividerWidth(1),
+    ellipsisWidth(0)
 {
     stringFormat.SetAlignment(StringAlignment::StringAlignmentNear);
     stringFormat.SetLineAlignment(StringAlignment::StringAlignmentNear);
@@ -174,6 +190,10 @@ void ListView::AddColumn(const std::string& name, int width)
 {
     ListViewColumn* column = new ListViewColumn(this, name, width);
     columns.push_back(std::unique_ptr<ListViewColumn>(column));
+    if (columns.size() > 1)
+    {
+        columnDividers.push_back(std::unique_ptr<ListViewColumnDivider>(new ListViewColumnDivider(this)));
+    }
 }
 
 const ListViewColumn& ListView::GetColumn(int columnIndex) const
@@ -247,6 +267,8 @@ void ListView::Measure(Graphics& graphics)
     charHeight = charRect.Height;
     charWidth = charRect.Width;
     SetScrollUnits(ScrollUnits(static_cast<int>(charHeight + 0.5), static_cast<int>(2 * (charWidth + 0.5))));
+    RectF ellipsisRect = MeasureString(graphics, "...", GetFont(), PointF(0, 0), stringFormat);
+    ellipsisWidth = ellipsisRect.Width;
 }
 
 void ListView::MeasureItems(Graphics& graphics)
@@ -265,10 +287,19 @@ void ListView::DrawColumnHeader(Graphics& graphics, PointF& origin)
     PointF headerOrigin = origin;
     headerOrigin.X = headerOrigin.X + columnHeaderPadding.left;
     headerOrigin.Y = headerOrigin.Y + columnHeaderPadding.top;
-    for (const auto& column : columns)
+    int n = columns.size();
+    for (int i = 0; i < n; ++i)
     {
+        ListViewColumn* column = columns[i].get();
         column->Draw(graphics, headerOrigin);
         headerOrigin.X = headerOrigin.X + columnHeaderPadding.Horizontal() + column->Width();
+        if (i < n - 1)
+        {
+            ListViewColumnDivider* divider = columnDividers[i].get();
+            headerOrigin.X = headerOrigin.X + columnDividerPadding.left;
+            divider->Draw(graphics, headerOrigin);
+            headerOrigin.X = headerOrigin.X + columnDividerWidth + columnDividerPadding.right;
+        }
     }
     origin.Y = origin.Y + charHeight + columnHeaderPadding.Vertical();
 }
@@ -301,6 +332,19 @@ void ListViewColumn::SetWidth(int width_)
 void ListViewColumn::Draw(Graphics& graphics, const PointF& origin)
 {
     DrawString(graphics, name, view->GetFont(), origin, view->GetColumnHeaderTextBrush());
+}
+
+ListViewColumnDivider::ListViewColumnDivider(ListView* view_) : view(view_)
+{
+}
+
+void ListViewColumnDivider::Draw(Graphics& graphics, const PointF& origin)
+{
+    const Pen& pen = view->ColumnDividerPen();
+    PointF start = origin;
+    PointF end = origin;
+    end.Y += view->TextHeight();
+    graphics.DrawLine(&pen, start, end);
 }
 
 ListViewItem::ListViewItem(ListView* view_) : view(view_), state(ListViewItemState::enabled), imageIndex(-1), disabledImageIndex(-1), data(nullptr)
@@ -355,18 +399,43 @@ void ListViewItem::SetDisabledImageIndex(int disabledImageIndex_)
 void ListViewItem::Draw(Graphics& graphics, const PointF& origin)
 {
     PointF itemOrigin = origin;
-    DrawImage(graphics, itemOrigin);
+    int imageSpace = 0;
+    DrawImage(graphics, itemOrigin, imageSpace);
     for (int index = 0; index < view->ColumnCount(); ++index)
     {
-        if (state == ListViewItemState::enabled)
+        int imgSpc = 0;
+        if (index == 0)
         {
-            DrawString(graphics, GetColumnValue(index), view->GetFont(), itemOrigin, view->GetItemTextBrush());
+            imgSpc = imageSpace;
         }
-        else
+        bool clipped = false;
+        Gdiplus::Region prevClip;
+        if (textWidths[index] > view->GetColumn(index).Width())
         {
-            DrawString(graphics, GetColumnValue(index), view->GetFont(), itemOrigin, view->GetDisabledItemTextBrush());
+            CheckGraphicsStatus(graphics.GetClip(&prevClip));
+            clipped = true;
+            SizeF itemSize(view->GetColumn(index).Width() - view->EllipsisWidth() - imgSpc, view->TextHeight());
+            RectF clip(itemOrigin, itemSize);
+            CheckGraphicsStatus(graphics.SetClip(clip));
         }
-        itemOrigin.X = itemOrigin.X + view->ItemPadding().Horizontal() + view->GetColumn(index).Width();
+        const Brush* brush = &view->GetItemTextBrush();
+        if (state == ListViewItemState::disabled)
+        {
+            brush = &view->GetDisabledItemTextBrush();
+        }
+        DrawString(graphics, GetColumnValue(index), view->GetFont(), itemOrigin, *brush);
+        itemOrigin.X = itemOrigin.X + view->GetColumn(index).Width();
+        if (clipped)
+        {
+            CheckGraphicsStatus(graphics.SetClip(&prevClip));
+            PointF ellipsisOrigin(itemOrigin.X - view->EllipsisWidth() - imgSpc, itemOrigin.Y);
+            DrawString(graphics, "...", view->GetFont(), ellipsisOrigin, *brush);
+        }
+        itemOrigin.X  = itemOrigin.X + view->ItemPadding().Horizontal() + view->ColumnDividerPadding().Horizontal() + view->ColumnDividerWidth();
+        if (index == 0)
+        {
+            itemOrigin.X = itemOrigin.X - imageSpace;
+        }
     }
 }
 
@@ -397,21 +466,30 @@ void ListViewItem::Measure(Graphics& graphics)
         int imageWidth = image->GetWidth();
         int imageHeight = image->GetHeight();
         Padding padding = view->ImagePadding();
-        width = imageWidth + padding.Horizontal();;
         height = imageHeight + padding.Vertical();
     }
     for (int index = 0; index < view->ColumnCount(); ++index)
     {
-        std::string columnValue = GetColumnValue(index);
         width = width + view->GetColumn(index).Width();
+        if (index < view->ColumnCount() - 1)
+        {
+            width = width + view->ColumnDividerWidth() + view->ColumnDividerPadding().Horizontal();
+        }
         height = std::max(height, view->TextHeight());
     }
     width = width + view->ItemPadding().Horizontal();
     size = Size(static_cast<int>(width + 0.5f), static_cast<int>(height + 0.5f));
+    textWidths.clear();
+    for (const std::string& columnValue : columnValues)
+    {
+        RectF r = MeasureString(graphics, columnValue, view->GetFont(), PointF(0, 0), view->GetStringFormat());
+        textWidths.push_back(r.Width);
+    }
 }
 
-void ListViewItem::DrawImage(Graphics& graphics, PointF& origin)
+void ListViewItem::DrawImage(Graphics& graphics, PointF& origin, int& imageSpace)
 {
+    imageSpace = 0;
     Bitmap* image = nullptr;
     ImageList* imageList = view->GetImageList();
     if (imageList)
@@ -437,7 +515,8 @@ void ListViewItem::DrawImage(Graphics& graphics, PointF& origin)
         Gdiplus::ImageAttributes attributes;
         attributes.SetColorKey(DefaultBitmapTransparentColor(), DefaultBitmapTransparentColor());
         CheckGraphicsStatus(graphics.DrawImage(image, r, 0, 0, imageWidth + padding.Horizontal(), imageHeight + padding.Vertical(), Unit::UnitPixel, &attributes));
-        origin.X = origin.X + imageWidth + padding.Horizontal();
+        imageSpace = imageWidth + padding.Horizontal();
+        origin.X = origin.X + imageSpace;
     }
 }
 
