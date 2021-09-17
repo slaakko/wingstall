@@ -5,6 +5,7 @@
 
 #include <package_editor/component.hpp>
 #include <package_editor/error.hpp>
+#include <package_editor/main_window.hpp>
 #include <sngxml/xpath/XPathEvaluate.hpp>
 #include <soulng/util/Unicode.hpp>
 
@@ -42,6 +43,11 @@ TreeViewNode* Components::ToTreeViewNode(TreeView* view)
 Control* Components::CreateView(ImageList* imageList)
 {
     std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    MainWindow* mainWindow = GetMainWindow();
+    if (mainWindow)
+    {
+        mainWindow->AddListViewEventHandlers(listView.get());
+    }
     listView->SetDoubleBuffered();
     listView->SetImageList(imageList);
     listView->AddColumn("Name", 200);
@@ -132,6 +138,11 @@ TreeViewNode* Component::ToTreeViewNode(TreeView* view)
 Control* Component::CreateView(ImageList* imageList)
 {
     std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    MainWindow* mainWindow = GetMainWindow();
+    if (mainWindow)
+    {
+        mainWindow->AddListViewEventHandlers(listView.get());
+    }
     listView->SetDoubleBuffered();
     listView->SetImageList(imageList);
     listView->AddColumn("Name", 200);

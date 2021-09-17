@@ -1155,6 +1155,7 @@ void Control::DoMouseMove(MouseEventArgs& args)
             {
                 TranslateMousePos(args.location);
             }
+            SetCursor();
             OnMouseMove(args);
         }
         if (mouseHoverMs != 0u && !MouseHoverTimerStarted())

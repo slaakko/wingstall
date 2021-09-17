@@ -112,7 +112,7 @@ PackageContentViewCreateParams& PackageContentViewCreateParams::FrameColor(const
 }
 
 PackageContentView::PackageContentView(PackageContentViewCreateParams& createParams) : 
-    ContainerControl(createParams.controlCreateParams), frameColor(createParams.frameColor), imageList(nullptr), framedChild(nullptr), child(nullptr)
+    ContainerControl(createParams.controlCreateParams), frameColor(createParams.frameColor), imageList(nullptr), framedChild(nullptr), child(nullptr), mainWindow(nullptr)
 {
     AddChild(MakeFramedControl(new EmptyView()));
 }
@@ -146,6 +146,7 @@ void PackageContentView::ViewContent(Node* node)
         framedChild = nullptr;
         child = nullptr;
     }
+    node->SetView(this);
     Control* view = node->CreateView(imageList);
     if (!view)
     {

@@ -20,6 +20,8 @@ enum class NodeKind : int
 };
 
 class Package;
+class PackageContentView;
+class MainWindow;
 
 class Node
 {
@@ -31,6 +33,9 @@ public:
     void SetName(const std::string& name_);
     Node* Parent() const { return parent; }
     void SetParent(Node* parent_) { parent = parent_; }
+    PackageContentView* View() const;
+    void SetView(PackageContentView* view_) { view = view_; }
+    MainWindow* GetMainWindow() const;
     TreeViewNode* GetTreeViewNode() const { return treeViewNode; }
     void SetTreeViewNode(TreeViewNode* treeViewNode_) { treeViewNode = treeViewNode_; }
     virtual Package* GetPackage() const;
@@ -44,7 +49,7 @@ private:
     std::string name;
     Node* parent;
     TreeViewNode* treeViewNode;
-    
+    PackageContentView* view;
 };
 
 } } // wingstall::package_editor

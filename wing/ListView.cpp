@@ -4,6 +4,8 @@
 // =================================
 
 #include <wing/ListView.hpp>
+#include <wing/Application.hpp>
+#include <wing/ResourceManager.hpp>
 #include <wing/ImageList.hpp>
 #include <soulng/util/Unicode.hpp>
 
@@ -49,6 +51,11 @@ Color DefaultListViewColumnDividerColor()
     return Color(229, 229, 229);
 }
 
+Color DefaultListViewItemSelectedColor()
+{
+    return Color(204, 232, 255);
+}
+
 Padding DefaultListViewColumnHeaderPadding()
 {
     return Padding(4, 0, 4, 4);
@@ -61,7 +68,7 @@ Padding DefaultListViewItemPadding()
 
 Padding DefaultListViewItemColumnPadding()
 {
-    return Padding(0, 0, 0, 0);
+    return Padding(4, 0, 4, 0);
 }
 
 Padding DefaultListViewColumnDividerPadding()
@@ -83,6 +90,7 @@ ListViewCreateParams::ListViewCreateParams() :
     listViewDisabledItemTextColor(DefaultListViewDisabledItemTextColor()),
     listViewSelectedItemBackgroundColor(DefaultListViewSelectedItemBackgroundColor()),
     listViewColumnDividerColor(DefaultListViewColumnDividerColor()),
+    listViewItemSelectedColor(DefaultListViewItemSelectedColor()),
     columnHeaderPadding(DefaultListViewColumnHeaderPadding()),
     itemPadding(DefaultListViewItemPadding()),
     itemColumnPadding(DefaultListViewItemColumnPadding()),
@@ -168,6 +176,7 @@ ListView::ListView(ListViewCreateParams& createParams) :
     columnHeaderTextBrush(createParams.listViewColumnTextColor),
     itemTextBrush(createParams.listViewItemTextColor),
     disabledItemTextBrush(createParams.listViewDisabledItemTextColor),
+    itemSelectedBrush(createParams.listViewItemSelectedColor),
     columnDividerPen(createParams.listViewColumnDividerColor),
     columnHeaderPadding(createParams.columnHeaderPadding),
     itemPadding(createParams.itemPadding),
@@ -177,7 +186,13 @@ ListView::ListView(ListViewCreateParams& createParams) :
     charWidth(0), 
     charHeight(0),
     columnDividerWidth(1),
-    ellipsisWidth(0)
+    ellipsisWidth(0),
+    mouseDownItem(nullptr),
+    mouseEnterItem(nullptr), 
+    selectedItem(nullptr),
+    mouseDownColumnDivider(nullptr),
+    arrowCursor(LoadStandardCursor(StandardCursorId::arrow)),
+    columnSizeCursor(Application::GetResourceManager().GetCursor("column.size.wing.cursor"))
 {
     stringFormat.SetAlignment(StringAlignment::StringAlignmentNear);
     stringFormat.SetLineAlignment(StringAlignment::StringAlignmentNear);
@@ -190,7 +205,7 @@ void ListView::AddColumn(const std::string& name, int width)
 {
     ListViewColumn* column = new ListViewColumn(this, name, width);
     columns.push_back(std::unique_ptr<ListViewColumn>(column));
-    columnDividers.push_back(std::unique_ptr<ListViewColumnDivider>(new ListViewColumnDivider(this)));
+    columnDividers.push_back(std::unique_ptr<ListViewColumnDivider>(new ListViewColumnDivider(this, column)));
 }
 
 const ListViewColumn& ListView::GetColumn(int columnIndex) const
@@ -236,6 +251,48 @@ ListViewItem& ListView::GetItem(int itemIndex)
     return *items[itemIndex];
 }
 
+void ListView::SetSelectedItem(ListViewItem* selectedItem_)
+{
+    if (selectedItem != selectedItem_)
+    {
+        if (selectedItem)
+        {
+            selectedItem->ResetSelected();
+        }
+        selectedItem = selectedItem_;
+        if (selectedItem)
+        {
+            selectedItem->SetSelected();
+        }
+    }
+}
+
+ListViewItem* ListView::ItemAt(const Point& location) const
+{
+    for (const std::unique_ptr<ListViewItem>& item : items)
+    {
+        Rect rect(item->Location(), item->GetSize());
+        if (rect.Contains(location))
+        {
+            return item.get();
+        }
+    }
+    return nullptr;
+}
+
+ListViewColumnDivider* ListView::ColumnDividerAt(const Point& location) const
+{
+    for (const std::unique_ptr<ListViewColumnDivider>& columnDivider : columnDividers)
+    {
+        Rect rect(columnDivider->Location(), columnDivider->GetSize());
+        if (rect.Contains(location))
+        {
+            return columnDivider.get();
+        }
+    }
+    return nullptr;
+}
+
 void ListView::OnPaint(PaintEventArgs& args)
 {
     try
@@ -258,6 +315,177 @@ void ListView::OnPaint(PaintEventArgs& args)
     }
 }
 
+void ListView::OnMouseDown(MouseEventArgs& args)
+{
+    try
+    {
+        mouseDownItem = nullptr;
+        ListViewItem* item = ItemAt(args.location);
+        if (item)
+        {
+            mouseDownItem = item;
+        }
+        if (args.buttons == MouseButtons::lbutton)
+        {
+            ListViewColumnDivider* columnDivider = ColumnDividerAt(args.location);
+            if (columnDivider)
+            {
+                columnDivider->OnLButtonDown(args.location);
+                mouseDownColumnDivider = columnDivider;
+            }
+        }
+    }
+    catch (const std::exception& ex)
+    {
+        ShowErrorMessageBox(Handle(), ex.what());
+    }
+}
+
+void ListView::OnMouseUp(MouseEventArgs& args)
+{
+    try
+    {
+        ListViewItem* item = ItemAt(args.location);
+        if (item == mouseDownItem)
+        {
+            ListViewItemEventArgs itemArgs(item);
+            if (args.buttons == MouseButtons::lbutton)
+            {
+                itemClick.Fire(itemArgs);
+            }
+            else if (args.buttons == MouseButtons::rbutton)
+            {
+                itemRightClick.Fire(itemArgs);
+            }
+        }
+        mouseDownItem = nullptr;
+        if (args.buttons == MouseButtons::lbutton)
+        {
+            if (mouseDownColumnDivider)
+            {
+                mouseDownColumnDivider->OnLButtonUp();
+                mouseDownColumnDivider = nullptr;
+            }
+        }
+    }
+    catch (const std::exception& ex)
+    {
+        ShowErrorMessageBox(Handle(), ex.what());
+    }
+}
+
+void ListView::OnMouseDoubleClick(MouseEventArgs& args) 
+{
+    try
+    {
+        ListViewItem* item = ItemAt(args.location);
+        if (item == mouseDownItem)
+        {
+            ListViewItemEventArgs args(item);
+            itemDoubleClick.Fire(args);
+        }
+        mouseDownItem = nullptr;
+    }
+    catch (const std::exception& ex)
+    {
+        ShowErrorMessageBox(Handle(), ex.what());
+    }
+}
+
+void ListView::OnMouseEnter()
+{
+    try
+    {
+        mouseEnterItem = nullptr;
+    }
+    catch (const std::exception& ex)
+    {
+        ShowErrorMessageBox(Handle(), ex.what());
+    }
+}
+
+void ListView::OnMouseLeave()
+{
+    try
+    {
+        if (mouseEnterItem)
+        {
+            ListViewItemEventArgs leaveItemArgs(mouseEnterItem);
+            itemLeave.Fire(leaveItemArgs);
+            mouseEnterItem = nullptr;
+        }
+    }
+    catch (const std::exception& ex)
+    {
+        ShowErrorMessageBox(Handle(), ex.what());
+    }
+}
+
+void ListView::OnMouseMove(MouseEventArgs& args)
+{
+    try
+    {
+        if (!mouseEnterItem)
+        {
+            mouseEnterItem = ItemAt(args.location);
+            if (mouseEnterItem)
+            {
+                ListViewItemEventArgs itemArgs(mouseEnterItem);
+                itemEnter.Fire(itemArgs);
+            }
+        }
+        else
+        {
+            ListViewItem* item = ItemAt(args.location);
+            if (item != mouseEnterItem)
+            {
+                ListViewItemEventArgs leaveItemArgs(mouseEnterItem);
+                itemLeave.Fire(leaveItemArgs);
+                mouseEnterItem = item;
+                if (mouseEnterItem)
+                {
+                    ListViewItemEventArgs enterItemArgs(mouseEnterItem);
+                    itemEnter.Fire(enterItemArgs);
+                }
+            }
+        }
+        if (args.buttons == MouseButtons::lbutton)
+        {
+            if (mouseDownColumnDivider)
+            {
+                if (mouseDownColumnDivider->HasMouseCapture())
+                {
+                    mouseDownColumnDivider->OnMouseMove(args.location);
+                }
+            }
+        }
+    }
+    catch (const std::exception& ex)
+    {
+        ShowErrorMessageBox(Handle(), ex.what());
+    }
+}
+
+void ListView::SetCursor()
+{
+    Point cursorPos = ScreenToClient(GetCursorPos());
+    bool cursorSet = false;
+    for (const std::unique_ptr<ListViewColumnDivider>& columnDivider : columnDividers)
+    {
+        Rect r(columnDivider->Location(), columnDivider->GetSize());
+        if (r.Contains(cursorPos))
+        {
+            wing::SetCursor(columnSizeCursor);
+            cursorSet = true;
+            break;
+        }
+    }
+    if (!cursorSet)
+    {
+        wing::SetCursor(arrowCursor);
+    }
+}
+
 void ListView::Measure(Graphics& graphics)
 {
     RectF charRect = MeasureString(graphics, "This is test string", GetFont(), PointF(0, 0), stringFormat);
@@ -270,7 +498,7 @@ void ListView::Measure(Graphics& graphics)
 
 void ListView::MeasureItems(Graphics& graphics)
 {
-    Point loc(0, 0);
+    Point loc(itemPadding.left, charHeight + columnHeaderPadding.Vertical());
     for (const auto& item : items)
     {
         item->SetLocation(loc);
@@ -289,7 +517,7 @@ void ListView::DrawColumnHeader(Graphics& graphics, PointF& origin)
     {
         ListViewColumn* column = columns[i].get();
         column->Draw(graphics, headerOrigin);
-        headerOrigin.X = headerOrigin.X + columnHeaderPadding.Horizontal() + column->Width();
+        headerOrigin.X = headerOrigin.X + column->Width() + columnHeaderPadding.Horizontal();
         ListViewColumnDivider* divider = columnDividers[i].get();
         headerOrigin.X = headerOrigin.X + columnDividerPadding.left;
         divider->Draw(graphics, headerOrigin);
@@ -310,7 +538,7 @@ void ListView::DrawItems(Graphics& graphics, PointF& origin)
     }
 }
 
-ListViewColumn::ListViewColumn(ListView* view_, const std::string& name_, int width_) : view(view_), name(name_), width(width_)
+ListViewColumn::ListViewColumn(ListView* view_, const std::string& name_, int width_) : view(view_), name(name_), width(width_), minWidth(0)
 {
 }
 
@@ -328,20 +556,44 @@ void ListViewColumn::Draw(Graphics& graphics, const PointF& origin)
     DrawString(graphics, name, view->GetFont(), origin, view->GetColumnHeaderTextBrush());
 }
 
-ListViewColumnDivider::ListViewColumnDivider(ListView* view_) : view(view_)
+ListViewColumnDivider::ListViewColumnDivider(ListView* view_, ListViewColumn* column_) : view(view_), column(column_), location(), startCapturePos(), startColumnWidth(0), hasMouseCapture(false)
 {
+}
+
+Size ListViewColumnDivider::GetSize() const
+{
+    return Size(view->ColumnDividerWidth() + 4 * view->ColumnDividerPadding().Horizontal(), view->TextHeight());
+}
+
+void ListViewColumnDivider::OnLButtonDown(const Point& pos)
+{
+    SetCapture(view->Handle());
+    startCapturePos = pos;
+    startColumnWidth = column->Width();
+    hasMouseCapture = true;
+}
+
+void ListViewColumnDivider::OnMouseMove(const Point& pos)
+{
+    column->SetWidth(std::max(column->MinWidth(), startColumnWidth + pos.X - startCapturePos.X));
+}
+
+void ListViewColumnDivider::OnLButtonUp()
+{
+    ReleaseCapture();
+    hasMouseCapture = false;
 }
 
 void ListViewColumnDivider::Draw(Graphics& graphics, const PointF& origin)
 {
     const Pen& pen = view->ColumnDividerPen();
-    PointF start = origin;
+    location = Point(origin.X - GetSize().Width / 2, origin.Y);
     PointF end = origin;
     end.Y += view->TextHeight();
-    graphics.DrawLine(&pen, start, end);
+    graphics.DrawLine(&pen, origin, end);
 }
 
-ListViewItem::ListViewItem(ListView* view_) : view(view_), state(ListViewItemState::enabled), imageIndex(-1), disabledImageIndex(-1), data(nullptr)
+ListViewItem::ListViewItem(ListView* view_) : view(view_), flags(ListViewItemFlags::none), imageIndex(-1), disabledImageIndex(-1), data(nullptr)
 {
 }
 
@@ -371,12 +623,49 @@ std::string ListViewItem::GetColumnValue(int columnIndex) const
     return columnValues[columnIndex];
 }
 
-void ListViewItem::SetState(ListViewItemState state_)
+void ListViewItem::SetState(ListViewItemState state)
 {
-    if (state != state_)
+    if (state != State())
     {
-        state = state_;
+        if (state == ListViewItemState::disabled)
+        {
+            SetFlag(ListViewItemFlags::disabled);
+        }
+        else
+        {
+            ResetFlag(ListViewItemFlags::disabled);
+        }
         view->Invalidate();
+    }
+}
+
+void ListViewItem::SetSelected()
+{ 
+    if (!IsSelected())
+    {
+        SetFlag(ListViewItemFlags::selected);
+        view->Invalidate();
+    }
+}
+
+void ListViewItem::ResetSelected()
+{ 
+    if (IsSelected())
+    {
+        ResetFlag(ListViewItemFlags::selected);
+        view->Invalidate();
+    }
+}
+
+ListViewItemState ListViewItem::State() const
+{
+    if (GetFlag(ListViewItemFlags::disabled))
+    {
+        return ListViewItemState::disabled;
+    }
+    else
+    {
+        return ListViewItemState::enabled;
     }
 }
 
@@ -392,6 +681,12 @@ void ListViewItem::SetDisabledImageIndex(int disabledImageIndex_)
 
 void ListViewItem::Draw(Graphics& graphics, const PointF& origin)
 {
+    if (IsSelected())
+    {
+        const Brush& selectedBrush = view->GetItemSelectedBrush();
+        Rect rect(location, size);
+        graphics.FillRectangle(&selectedBrush, rect);
+    }
     PointF itemOrigin = origin;
     int imageSpace = 0;
     DrawImage(graphics, itemOrigin, imageSpace);
@@ -413,7 +708,7 @@ void ListViewItem::Draw(Graphics& graphics, const PointF& origin)
             CheckGraphicsStatus(graphics.SetClip(clip));
         }
         const Brush* brush = &view->GetItemTextBrush();
-        if (state == ListViewItemState::disabled)
+        if (State() == ListViewItemState::disabled)
         {
             brush = &view->GetDisabledItemTextBrush();
         }
@@ -425,7 +720,8 @@ void ListViewItem::Draw(Graphics& graphics, const PointF& origin)
             PointF ellipsisOrigin(itemOrigin.X - view->EllipsisWidth() - imgSpc, itemOrigin.Y);
             DrawString(graphics, "...", view->GetFont(), ellipsisOrigin, *brush);
         }
-        itemOrigin.X  = itemOrigin.X + view->ItemPadding().Horizontal() + view->ColumnDividerPadding().Horizontal() + view->ColumnDividerWidth() - imgSpc;
+        itemOrigin.X = itemOrigin.X + view->ColumnDividerPadding().Horizontal() + view->ColumnDividerWidth() - imgSpc;
+        itemOrigin.X = itemOrigin.X + view->ItemColumnPadding().Horizontal();
     }
 }
 
@@ -442,7 +738,7 @@ void ListViewItem::Measure(Graphics& graphics)
     ImageList* imageList = view->GetImageList();
     if (imageList)
     {
-        if (state == ListViewItemState::enabled)
+        if (State() == ListViewItemState::enabled)
         {
             image = imageList->GetImage(imageIndex);
         }
@@ -456,16 +752,20 @@ void ListViewItem::Measure(Graphics& graphics)
         int imageWidth = image->GetWidth();
         int imageHeight = image->GetHeight();
         Padding padding = view->ImagePadding();
+        if (view->ColumnCount() > 0)
+        {
+            ListViewColumn& firstColumn = view->GetColumn(0);
+            firstColumn.SetMinWidth(std::max(firstColumn.MinWidth(), static_cast<int>(imageWidth + padding.Horizontal() + view->EllipsisWidth() + 0.5f)));
+        }
         height = imageHeight + padding.Vertical();
     }
     for (int index = 0; index < view->ColumnCount(); ++index)
     {
         width = width + view->GetColumn(index).Width();
-        if (index < view->ColumnCount() - 1)
-        {
-            width = width + view->ColumnDividerWidth() + view->ColumnDividerPadding().Horizontal();
-        }
+        width = width + view->ColumnDividerWidth() + view->ColumnDividerPadding().Horizontal();
         height = std::max(height, view->TextHeight());
+        ListViewColumn& column = view->GetColumn(index);
+        column.SetMinWidth(std::max(column.MinWidth(), static_cast<int>(view->EllipsisWidth() + 0.5f)));
     }
     width = width + view->ItemPadding().Horizontal();
     size = Size(static_cast<int>(width + 0.5f), static_cast<int>(height + 0.5f));
@@ -484,7 +784,7 @@ void ListViewItem::DrawImage(Graphics& graphics, PointF& origin, int& imageSpace
     ImageList* imageList = view->GetImageList();
     if (imageList)
     {
-        if (state == ListViewItemState::enabled)
+        if (State() == ListViewItemState::enabled)
         {
             image = imageList->GetImage(imageIndex);
         }

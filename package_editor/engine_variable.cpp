@@ -5,6 +5,7 @@
 
 #include <package_editor/engine_variable.hpp>
 #include <package_editor/package.hpp>
+#include <package_editor/main_window.hpp>
 #include <wing/ImageList.hpp>
 #include <wing/Shell.hpp>
 
@@ -55,6 +56,11 @@ TreeViewNode* EngineVariables::ToTreeViewNode(TreeView* view)
 Control* EngineVariables::CreateView(ImageList* imageList)
 {
     std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    MainWindow* mainWindow = GetMainWindow();
+    if (mainWindow)
+    {
+        mainWindow->AddListViewEventHandlers(listView.get());
+    }
     listView->SetDoubleBuffered();
     listView->SetImageList(imageList);
     listView->AddColumn("Name", 200);

@@ -1,5 +1,6 @@
 horizontal.splitter.wing.cursor CURSOR "../wing/res/horizontal.splitter.wing.cur"
 vertical.splitter.wing.cursor CURSOR "../wing/res/vertical.splitter.wing.cur"
+column.size.wing.cursor CURSOR "../wing/res/column.size.wing.cur"
 package.icon ICON "../res/package.ico"
 add.bitmap BITMAP "../res/add.bmp"
 add.document.bitmap BITMAP "../res/add_document.bmp"

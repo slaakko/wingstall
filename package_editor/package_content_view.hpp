@@ -10,6 +10,8 @@
 
 namespace wingstall { namespace package_editor {
 
+class MainWindow;
+
 class EmptyView : public Control
 {
 public:
@@ -46,6 +48,8 @@ public:
     PackageContentView(PackageContentViewCreateParams& createParams);
     void SetImageList(ImageList* imageList_) { imageList = imageList_; }
     void ViewContent(Node* node);
+    void SetMainWindow(MainWindow* mainWindow_) { mainWindow = mainWindow_; }
+    MainWindow* GetMainWindow() const { return mainWindow; }
 protected:
     void OnPaint(PaintEventArgs& args) override;
 private:
@@ -54,6 +58,7 @@ private:
     Control* child;
     Color frameColor;
     ImageList* imageList;
+    MainWindow* mainWindow;
 };
 
 } } // wingstall::package_editor

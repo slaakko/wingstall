@@ -5,6 +5,7 @@
 
 #include <package_editor/links.hpp>
 #include <package_editor/error.hpp>
+#include <package_editor/main_window.hpp>
 #include <wing/ImageList.hpp>
 #include <sngxml/xpath/XPathEvaluate.hpp>
 #include <soulng/util/Unicode.hpp>
@@ -82,13 +83,18 @@ TreeViewNode* Links::ToTreeViewNode(TreeView* view)
 Control* Links::CreateView(ImageList* imageList)
 {
     std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    MainWindow* mainWindow = GetMainWindow();
+    if (mainWindow)
+    {
+        mainWindow->AddListViewEventHandlers(listView.get());
+    }
     listView->SetDoubleBuffered();
     listView->SetImageList(imageList);
     listView->AddColumn("Name", 200);
     ListViewItem* linkDirectoriesItem = listView->AddItem();
     linkDirectories->SetData(linkDirectoriesItem, imageList);
-    ListViewItem* shurtcutsItem = listView->AddItem();
-    shortcuts->SetData(shurtcutsItem, imageList);
+    ListViewItem* shortcutsItem = listView->AddItem();
+    shortcuts->SetData(shortcutsItem, imageList);
     return listView.release();
 
 }
@@ -123,6 +129,11 @@ TreeViewNode* LinkDirectories::ToTreeViewNode(TreeView* view)
 Control* LinkDirectories::CreateView(ImageList* imageList)
 {
     std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    MainWindow* mainWindow = GetMainWindow();
+    if (mainWindow)
+    {
+        mainWindow->AddListViewEventHandlers(listView.get());
+    }
     listView->SetDoubleBuffered();
     listView->SetImageList(imageList);
     listView->AddColumn("Path", 200);
@@ -200,6 +211,11 @@ TreeViewNode* Shortcuts::ToTreeViewNode(TreeView* view)
 Control* Shortcuts::CreateView(ImageList* imageList)
 {
     std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    MainWindow* mainWindow = GetMainWindow();
+    if (mainWindow)
+    {
+        mainWindow->AddListViewEventHandlers(listView.get());
+    }
     listView->SetDoubleBuffered();
     listView->SetImageList(imageList);
     listView->AddColumn("Link File Path", 200);

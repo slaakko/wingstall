@@ -6,6 +6,7 @@
 #ifndef WING_LIST_VIEW_INCLUDED
 #define WING_LIST_VIEW_INCLUDED
 #include <wing/Control.hpp>
+#include <wing/Cursor.hpp>
 
 namespace wing {    
 
@@ -17,11 +18,26 @@ Color DefaultListViewColumnTextColor();
 Color DefaultListViewItemTextColor();
 Color DefaultListViewSelectedItemBackgroundColor();
 Color DefaultListViewColumnDividerColor();
+Color DefaultListViewItemSelectedColor();
 Padding DefaultListViewColumnHeaderPadding();
 Padding DefaultListViewItemPadding();
 Padding DefaultListViewItemColumnPadding();
 Padding DefaultListViewColumnDividerPadding();
 Padding DefaultListViewImagePadding();
+
+class ListViewItem;
+
+struct WING_API ListViewItemEventArgs
+{
+    ListViewItemEventArgs(ListViewItem* item_) : item(item_) {}
+    ListViewItem* item;
+};
+
+using ListViewItemClickEvent = EventWithArgs<ListViewItemEventArgs>;
+using ListViewItemDoubleClickEvent = EventWithArgs<ListViewItemEventArgs>;
+using ListViewItemEnterEvent = EventWithArgs<ListViewItemEventArgs>;
+using ListViewItemLeaveEvent = EventWithArgs<ListViewItemEventArgs>;
+using ListViewItemSelectedEvent = EventWithArgs<ListViewItemEventArgs>;
 
 struct WING_API ListViewCreateParams
 {
@@ -45,6 +61,7 @@ struct WING_API ListViewCreateParams
     Color listViewDisabledItemTextColor;
     Color listViewSelectedItemBackgroundColor;
     Color listViewColumnDividerColor;
+    Color listViewItemSelectedColor;
     Padding columnHeaderPadding;
     Padding itemPadding;
     Padding itemColumnPadding;
@@ -54,7 +71,6 @@ struct WING_API ListViewCreateParams
 
 class ListViewColumn;
 class ListViewColumnDivider;
-class ListViewItem;
 
 enum class ListViewFlags : int
 {
@@ -93,6 +109,7 @@ public:
     const Brush& GetColumnHeaderTextBrush() const { return columnHeaderTextBrush; }
     const Brush& GetItemTextBrush() const { return itemTextBrush; }
     const Brush& GetDisabledItemTextBrush() const { return disabledItemTextBrush; }
+    const Brush& GetItemSelectedBrush() const { return itemSelectedBrush; }
     const Pen& ColumnDividerPen() const { return columnDividerPen; }
     bool Measured() const { return (flags & ListViewFlags::measured) != ListViewFlags::none; }
     void SetMeasured() { flags = flags | ListViewFlags::measured; }
@@ -105,8 +122,24 @@ public:
     float TextHeight() const { return charHeight; }
     float ColumnDividerWidth() const { return columnDividerWidth; }
     float EllipsisWidth() const { return ellipsisWidth; }
+    ListViewItem* SelectedItem() const { return selectedItem; }
+    void SetSelectedItem(ListViewItem* selectedItem_);
+    ListViewItem* ItemAt(const Point& location) const;
+    ListViewColumnDivider* ColumnDividerAt(const Point& location) const;
+    ListViewItemClickEvent& ItemClick() { return itemClick; }
+    ListViewItemClickEvent& ItemRightClick() { return itemRightClick; }
+    ListViewItemDoubleClickEvent& ItemDoubleClick() { return itemDoubleClick; }
+    ListViewItemEnterEvent& ItemEnter() { return itemEnter; }
+    ListViewItemLeaveEvent& ItemLeave() { return itemLeave; }
 protected:
     void OnPaint(PaintEventArgs& args) override;
+    void OnMouseDown(MouseEventArgs& args) override;
+    void OnMouseUp(MouseEventArgs& args) override;
+    void OnMouseDoubleClick(MouseEventArgs& args) override;
+    void OnMouseEnter() override;
+    void OnMouseLeave() override;
+    void OnMouseMove(MouseEventArgs& args) override;
+    void SetCursor() override;
     void Measure(Graphics& graphics);
 private:
     void MeasureItems(Graphics& graphics);
@@ -120,6 +153,7 @@ private:
     SolidBrush columnHeaderTextBrush;
     SolidBrush itemTextBrush;
     SolidBrush disabledItemTextBrush;
+    SolidBrush itemSelectedBrush;
     Pen columnDividerPen;
     StringFormat stringFormat;
     float charWidth;
@@ -131,6 +165,17 @@ private:
     Padding itemColumnPadding;
     Padding columnDividerPadding;
     Padding imagePadding;
+    Cursor& columnSizeCursor;
+    Cursor arrowCursor;
+    ListViewItem* mouseDownItem;
+    ListViewItem* mouseEnterItem;
+    ListViewItem* selectedItem;
+    ListViewColumnDivider* mouseDownColumnDivider;
+    ListViewItemClickEvent itemClick;
+    ListViewItemClickEvent itemRightClick;
+    ListViewItemDoubleClickEvent itemDoubleClick;
+    ListViewItemEnterEvent itemEnter;
+    ListViewItemLeaveEvent itemLeave;
 };
 
 class WING_API ListViewColumn
@@ -141,20 +186,54 @@ public:
     const std::string& Name() const { return name; }
     int Width() const { return width; }
     void SetWidth(int width_);
+    int MinWidth() const { return minWidth; }
+    void SetMinWidth(int minWidth_) { minWidth = minWidth_; }
 private:
     ListView* view;
     std::string name;
     int width;
+    int minWidth;
 };
 
 class WING_API ListViewColumnDivider
 {
 public:
-    ListViewColumnDivider(ListView* view_);
+    ListViewColumnDivider(ListView* view_, ListViewColumn* column_);
+    bool HasMouseCapture() const { return hasMouseCapture; }
+    void OnLButtonDown(const Point& pos);
+    void OnMouseMove(const Point& pos);
+    void OnLButtonUp();
     void Draw(Graphics& graphics, const PointF& origin);
+    Point Location() const { return location; }
+    Size GetSize() const;
 private:
     ListView* view;
+    ListViewColumn* column;
+    Point location;
+    Point startCapturePos;
+    int startColumnWidth;
+    bool hasMouseCapture;
 };
+
+enum class ListViewItemFlags : int
+{
+    none = 0, disabled = 1 << 0, selected = 1 << 1
+};
+
+inline ListViewItemFlags operator|(ListViewItemFlags left, ListViewItemFlags right)
+{
+    return ListViewItemFlags(int(left) | int(right));
+}
+
+inline ListViewItemFlags operator&(ListViewItemFlags left, ListViewItemFlags right)
+{
+    return ListViewItemFlags(int(left) & int(right));
+}
+
+inline ListViewItemFlags operator~(ListViewItemFlags flags)
+{
+    return ListViewItemFlags(~int(flags));
+}
 
 enum class ListViewItemState : int
 {
@@ -167,8 +246,14 @@ public:
     ListViewItem(ListView* view_);
     void SetColumnValue(int columnIndex, const std::string& columnValue);
     std::string GetColumnValue(int columnIndex) const;
-    ListViewItemState State() const { return state; }
-    void SetState(ListViewItemState state_);
+    bool GetFlag(ListViewItemFlags flag) const { return (flags & flag) != ListViewItemFlags::none; }
+    void SetFlag(ListViewItemFlags flag) { flags = flags | flag; }
+    void ResetFlag(ListViewItemFlags flag) { flags = flags & ~flag; }
+    ListViewItemState State() const;
+    void SetState(ListViewItemState state);
+    bool IsSelected() const { return GetFlag(ListViewItemFlags::selected); }
+    void SetSelected();
+    void ResetSelected();
     int ImageIndex() const { return imageIndex; }
     void SetImageIndex(int imageIndex_);
     int DisabledImageIndex() const { return disabledImageIndex; }
@@ -178,12 +263,13 @@ public:
     const Point& Location() const { return location; }
     void SetLocation(const Point& location_);
     const Size& GetSize() const { return size; }
+    ListView* View() const { return view; }
     void SetData(void* data_) { data = data_; }
     void* Data() const { return data; }
 private:
     void DrawImage(Graphics& graphics, PointF& origin, int& imageSpace);
     ListView* view;
-    ListViewItemState state;
+    ListViewItemFlags flags;
     std::vector<std::string> columnValues;
     std::vector<float> textWidths;
     int imageIndex;

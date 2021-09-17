@@ -4,15 +4,42 @@
 // =================================
 
 #include <package_editor/node.hpp>
+#include <package_editor/package_content_view.hpp>
 
 namespace wingstall { namespace package_editor {
 
-Node::Node(NodeKind kind_, const std::string& name_) : kind(kind_), name(name_), parent(nullptr), treeViewNode(nullptr)
+Node::Node(NodeKind kind_, const std::string& name_) : kind(kind_), name(name_), parent(nullptr), treeViewNode(nullptr), view(nullptr)
 {
 }
 
 Node::~Node()
 {
+}
+
+PackageContentView* Node::View() const
+{
+    if (view)
+    {
+        return view;
+    }
+    else
+    {
+        if (parent)
+        {
+            return parent->View();
+        }
+    }
+    return nullptr;
+}
+
+MainWindow* Node::GetMainWindow() const
+{
+    PackageContentView* view = View();
+    if (view)
+    {
+        return view->GetMainWindow();
+    }
+    return nullptr;
 }
 
 void Node::SetName(const std::string& name_)

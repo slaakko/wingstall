@@ -74,6 +74,7 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
 
     std::unique_ptr<PackageContentView> packageContentViewPtr(new PackageContentView(PackageContentViewCreateParams().SetDock(Dock::fill)));
     packageContentView = packageContentViewPtr.get();
+    packageContentView->SetMainWindow(this);
     horizontalSplitContainer->Pane2Container()->AddChild(packageContentViewPtr.release());
 
     packageExplorer->SetContentView(packageContentView);
@@ -119,6 +120,23 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
     packageExplorer->SetImageList(&imageList);
     packageContentView->SetImageList(&imageList);
 
+}
+
+void MainWindow::AddListViewEventHandlers(ListView* listView)
+{
+    listView->ItemClick().AddHandler(this, &MainWindow::ListViewItemClick);
+}
+
+void MainWindow::ListViewItemClick(ListViewItemEventArgs& args)
+{
+    if (args.item)
+    {
+        ListView* view = args.item->View();
+        if (view)
+        {
+            view->SetSelectedItem(args.item);
+        }
+    }
 }
 
 void MainWindow::NewPackageClick()

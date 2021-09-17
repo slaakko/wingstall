@@ -20,6 +20,7 @@ class MainWindow : public Window
 {
 public:
     MainWindow();
+    void AddListViewEventHandlers(ListView* listView);
 private:
     MenuItem* newPackageMenuItem;
     MenuItem* openPackageMenuItem;
@@ -34,6 +35,7 @@ private:
     void OpenPackageClick();
     void ClosePackageClick();
     void ExitClick();
+    void ListViewItemClick(ListViewItemEventArgs& args);
 };
 
 } } // wingstall::package_editor
