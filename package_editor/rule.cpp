@@ -65,6 +65,74 @@ Control* Rules::CreateView(ImageList* imageList)
     return listView.release();
 }
 
+int Rules::Count() const
+{
+    return rules.size();
+}
+
+int Rules::IndexOf(const Node* child) const
+{
+    if (child->Kind() == NodeKind::rule)
+    {
+        const Rule* rule = static_cast<const Rule*>(child);
+        int n = rules.size();
+        for (int i = 0; i < n; ++i)
+        {
+            if (rules[i].get() == rule)
+            {
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
+Node* Rules::GetNode(int index) const
+{
+    if (index >= 0 && index < Count())
+    {
+        return rules[index].get();
+    }
+    return nullptr;
+}
+
+std::unique_ptr<Node> Rules::RemoveChild(int index)
+{
+    if (index >= 0 && index < Count())
+    {
+        Rule* rule = rules[index].release();
+        rules.erase(rules.begin() + index);
+        return std::unique_ptr<Node>(rule);
+    }
+    return std::unique_ptr<Node>();
+}
+
+void Rules::InsertBefore(int index, std::unique_ptr<Node>&& child)
+{
+    if (child->Kind() == NodeKind::rule && index >= 0 && index < Count())
+    {
+        Rule* rule = static_cast<Rule*>(child.release());
+        rules.insert(rules.begin() + index, std::unique_ptr<Rule>(rule));
+    }
+    else
+    {
+        child.reset();
+    }
+}
+
+void Rules::InsertAfter(int index, std::unique_ptr<Node>&& child)
+{
+    if (child->Kind() == NodeKind::rule && index >= 0 && index < Count())
+    {
+        Rule* rule = static_cast<Rule*>(child.release());
+        rules.insert(rules.begin() + index + 1, std::unique_ptr<Rule>(rule));
+    }
+    else
+    {
+        child.reset();
+    }
+}
+
 Rule::Rule(RuleKind ruleKind_, PathKind pathKind_) : Node(NodeKind::rule, std::string()), ruleKind(ruleKind_), pathKind(pathKind_), cascade(false)
 {
 }
@@ -257,6 +325,95 @@ void Rule::SetData(ListViewItem* item, ImageList* imageList)
     if (ruleKind == RuleKind::exclude)
     {
         item->SetColumnValue(2, CascadeStr());
+    }
+}
+
+Control* Rule::CreateView(ImageList* imageList)
+{
+    std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    MainWindow* mainWindow = GetMainWindow();
+    if (mainWindow)
+    {
+        mainWindow->AddListViewEventHandlers(listView.get());
+    }
+    listView->SetDoubleBuffered();
+    listView->SetImageList(imageList);
+    listView->AddColumn("Kind", 200);
+    listView->AddColumn("Name/Pattern", 200);
+    listView->AddColumn("Cascade", 200);
+    for (const auto& rule : rules)
+    {
+        ListViewItem* item = listView->AddItem();
+        rule->SetData(item, imageList);
+    }
+    return listView.release();
+}
+
+int Rule::Count() const
+{
+    return rules.size();
+}
+
+int Rule::IndexOf(const Node* child) const
+{
+    if (child->Kind() == NodeKind::rule)
+    {
+        const Rule* rule = static_cast<const Rule*>(child);
+        int n = rules.size();
+        for (int i = 0; i < n; ++i)
+        {
+            if (rules[i].get() == rule)
+            {
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
+Node* Rule::GetNode(int index) const
+{
+    if (index >= 0 && index < Count())
+    {
+        return rules[index].get();
+    }
+    return nullptr;
+}
+
+std::unique_ptr<Node> Rule::RemoveChild(int index)
+{
+    if (index >= 0 && index < Count())
+    {
+        Rule* rule = rules[index].release();
+        rules.erase(rules.begin() + index);
+        return std::unique_ptr<Node>(rule);
+    }
+    return std::unique_ptr<Node>();
+}
+
+void Rule::InsertBefore(int index, std::unique_ptr<Node>&& child)
+{
+    if (child->Kind() == NodeKind::rule && index >= 0 && index < Count())
+    {
+        Rule* rule = static_cast<Rule*>(child.release());
+        rules.insert(rules.begin() + index, std::unique_ptr<Rule>(rule));
+    }
+    else
+    {
+        child.reset();
+    }
+}
+
+void Rule::InsertAfter(int index, std::unique_ptr<Node>&& child)
+{
+    if (child->Kind() == NodeKind::rule && index >= 0 && index < Count())
+    {
+        Rule* rule = static_cast<Rule*>(child.release());
+        rules.insert(rules.begin() + index + 1, std::unique_ptr<Rule>(rule));
+    }
+    else
+    {
+        child.reset();
     }
 }
 

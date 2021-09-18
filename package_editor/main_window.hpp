@@ -21,6 +21,9 @@ class MainWindow : public Window
 public:
     MainWindow();
     void AddListViewEventHandlers(ListView* listView);
+protected:
+    void OnKeyDown(KeyEventArgs& args) override;
+    void MouseUpNotification(MouseEventArgs& args) override;
 private:
     MenuItem* newPackageMenuItem;
     MenuItem* openPackageMenuItem;
@@ -31,6 +34,8 @@ private:
     PackageContentView* packageContentView;
     LogView* logView;
     ImageList imageList;
+    bool showingDialog;
+    std::vector<std::unique_ptr<ClickAction>> clickActions;
     void NewPackageClick();
     void OpenPackageClick();
     void ClosePackageClick();

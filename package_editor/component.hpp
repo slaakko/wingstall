@@ -20,6 +20,12 @@ public:
     TreeViewNode* ToTreeViewNode(TreeView* view);
     Control* CreateView(ImageList* imageList) override;
     std::string ImageName() const override { return "components.bitmap"; }
+    int Count() const override;
+    int IndexOf(const Node* child) const override;
+    Node* GetNode(int index) const override;
+    std::unique_ptr<Node> RemoveChild(int index) override;
+    void InsertBefore(int index, std::unique_ptr<Node>&& child);
+    void InsertAfter(int index, std::unique_ptr<Node>&& child);
 private:
     std::vector<std::unique_ptr<Component>> components;
 };
@@ -34,6 +40,14 @@ public:
     void AddDirectory(Directory* directory);
     void AddFile(File* file);
     std::string ImageName() const override { return "component.bitmap"; }
+    int Count() const override;
+    int IndexOf(const Node* child) const override;
+    Node* GetNode(int index) const override;
+    std::unique_ptr<Node> RemoveChild(int index) override;
+    void InsertBefore(int index, std::unique_ptr<Node>&& child);
+    void InsertAfter(int index, std::unique_ptr<Node>&& child);
+    bool CanMoveUp(const Node* child) const override;
+    bool CanMoveDown(const Node* child) const override;
 private:
     std::vector<std::unique_ptr<Directory>> directories;
     std::vector<std::unique_ptr<File>> files;

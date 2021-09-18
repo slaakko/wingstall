@@ -18,13 +18,17 @@ using namespace soulng::unicode;
 Links::Links() : Node(NodeKind::links, "Links")
 {
     linkDirectories.reset(new LinkDirectories());
+    linkDirectories->SetParent(this);
     shortcuts.reset(new Shortcuts());
+    shortcuts->SetParent(this);
 }
 
 Links::Links(const std::string& packageXMLFilePath, sngxml::dom::Element* element) : Node(NodeKind::links, "Links")
 {
     linkDirectories.reset(new LinkDirectories());
+    linkDirectories->SetParent(this);
     shortcuts.reset(new Shortcuts());
+    shortcuts->SetParent(this);
     std::unique_ptr<sngxml::xpath::XPathObject> linkDirectoryObject = sngxml::xpath::Evaluate(U"linkDirectory", element);
     if (linkDirectoryObject)
     {
@@ -145,6 +149,74 @@ Control* LinkDirectories::CreateView(ImageList* imageList)
     return listView.release();
 }
 
+int LinkDirectories::Count() const
+{
+    return linkDirectories.size();
+}
+
+int LinkDirectories::IndexOf(const Node* child) const
+{
+    if (child->Kind() == NodeKind::linkDirectory)
+    {
+        const LinkDirectory* linkDirectory = static_cast<const LinkDirectory*>(child);
+        int n = linkDirectories.size();
+        for (int i = 0; i < n; ++i)
+        {
+            if (linkDirectories[i].get() == linkDirectory)
+            {
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
+Node* LinkDirectories::GetNode(int index) const
+{
+    if (index >= 0 && index < Count())
+    {
+        return linkDirectories[index].get();
+    }
+    return nullptr;
+}
+
+std::unique_ptr<Node> LinkDirectories::RemoveChild(int index)
+{
+    if (index >= 0 && index < Count())
+    {
+        LinkDirectory* linkDirectory = linkDirectories[index].release();
+        linkDirectories.erase(linkDirectories.begin() + index);
+        return std::unique_ptr<Node>(linkDirectory);
+    }
+    return std::unique_ptr<Node>();
+}
+
+void LinkDirectories::InsertBefore(int index, std::unique_ptr<Node>&& child)
+{
+    if (child->Kind() == NodeKind::linkDirectory && index >= 0 && index < Count())
+    {
+        LinkDirectory* linkDirectory = static_cast<LinkDirectory*>(child.release());
+        linkDirectories.insert(linkDirectories.begin() + index, std::unique_ptr<LinkDirectory>(linkDirectory));
+    }
+    else
+    {
+        child.reset();
+    }
+}
+
+void LinkDirectories::InsertAfter(int index, std::unique_ptr<Node>&& child)
+{
+    if (child->Kind() == NodeKind::linkDirectory && index >= 0 && index < Count())
+    {
+        LinkDirectory* linkDirectory = static_cast<LinkDirectory*>(child.release());
+        linkDirectories.insert(linkDirectories.begin() + index + 1, std::unique_ptr<LinkDirectory>(linkDirectory));
+    }
+    else
+    {
+        child.reset();
+    }
+}
+
 LinkDirectory::LinkDirectory() : Node(NodeKind::linkDirectory, "Link Directory")
 {
 }
@@ -226,6 +298,74 @@ Control* Shortcuts::CreateView(ImageList* imageList)
         shortcut->SetData(item, imageList);
     }
     return listView.release();
+}
+
+int Shortcuts::Count() const
+{
+    return shortcuts.size();
+}
+
+int Shortcuts::IndexOf(const Node* child) const
+{
+    if (child->Kind() == NodeKind::shortcut)
+    {
+        const Shortcut* shortcut = static_cast<const Shortcut*>(child);
+        int n = shortcuts.size();
+        for (int i = 0; i < n; ++i)
+        {
+            if (shortcuts[i].get() == shortcut)
+            {
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
+Node* Shortcuts::GetNode(int index) const
+{
+    if (index >= 0 && index < Count())
+    {
+        return shortcuts[index].get();
+    }
+    return nullptr;
+}
+
+std::unique_ptr<Node> Shortcuts::RemoveChild(int index)
+{
+    if (index >= 0 && index < Count())
+    {
+        Shortcut* shortcut = shortcuts[index].release();
+        shortcuts.erase(shortcuts.begin() + index);
+        return std::unique_ptr<Node>(shortcut);
+    }
+    return std::unique_ptr<Node>();
+}
+
+void Shortcuts::InsertBefore(int index, std::unique_ptr<Node>&& child)
+{
+    if (child->Kind() == NodeKind::shortcut && index >= 0 && index < Count())
+    {
+        Shortcut* shortcut = static_cast<Shortcut*>(child.release());
+        shortcuts.insert(shortcuts.begin() + index, std::unique_ptr<Shortcut>(shortcut));
+    }
+    else
+    {
+        child.reset();
+    }
+}
+
+void Shortcuts::InsertAfter(int index, std::unique_ptr<Node>&& child)
+{
+    if (child->Kind() == NodeKind::shortcut && index >= 0 && index < Count())
+    {
+        Shortcut* shortcut = static_cast<Shortcut*>(child.release());
+        shortcuts.insert(shortcuts.begin() + index + 1, std::unique_ptr<Shortcut>(shortcut));
+    }
+    else
+    {
+        child.reset();
+    }
 }
 
 Shortcut::Shortcut() : Node(NodeKind::shortcut, "Shortcut"), iconIndex(0)

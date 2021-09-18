@@ -31,6 +31,7 @@ struct WING_API ListViewItemEventArgs
 {
     ListViewItemEventArgs(ListViewItem* item_) : item(item_) {}
     ListViewItem* item;
+    Point location;
 };
 
 using ListViewItemClickEvent = EventWithArgs<ListViewItemEventArgs>;

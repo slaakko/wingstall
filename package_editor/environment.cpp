@@ -118,6 +118,142 @@ void Environment::AddPathDirectory(PathDirectory* pathDirectory)
     pathDirectories.push_back(std::unique_ptr<PathDirectory>(pathDirectory));
 }
 
+int Environment::Count() const
+{
+    return environmentVariables.size() + pathDirectories.size();
+}
+
+int Environment::IndexOf(const Node* child) const
+{
+    int ne = environmentVariables.size();
+    if (child->Kind() == NodeKind::environmentVariable)
+    {
+        const EnvironmentVariable* environmentVariable = static_cast<const EnvironmentVariable*>(child);
+        for (int i = 0; i < ne; ++i)
+        {
+            if (environmentVariables[i].get() == environmentVariable)
+            {
+                return i;
+            }
+        }
+    }
+    else if (child->Kind() == NodeKind::pathDirectory)
+    {
+        const PathDirectory* pathDirectory = static_cast<const PathDirectory*>(child);
+        int n = pathDirectories.size();
+        for (int i = 0; i < n; ++i)
+        {
+            if (pathDirectories[i].get() == pathDirectory)
+            {
+                return ne + i;
+            }
+        }
+    }
+    return -1;
+}
+
+Node* Environment::GetNode(int index) const
+{
+    int ne = environmentVariables.size();
+    if (index >= 0 && index < ne)
+    {
+        return environmentVariables[index].get();
+    }
+    else if (index >= ne && index < Count())
+    {
+        return pathDirectories[index - ne].get();
+    }
+    return nullptr;
+}
+
+std::unique_ptr<Node> Environment::RemoveChild(int index)
+{
+    int ne = environmentVariables.size();
+    if (index >= 0 && index < ne)
+    {
+        EnvironmentVariable* environmentVariable = environmentVariables[index].release();
+        environmentVariables.erase(environmentVariables.begin() + index);
+        return std::unique_ptr<Node>(environmentVariable);
+    }
+    else if (index >= ne && index < Count())
+    {
+        PathDirectory* pathDirectory = pathDirectories[index - ne].release();
+        pathDirectories.erase(pathDirectories.begin() + index - ne);
+        return std::unique_ptr<Node>(pathDirectory);
+    }
+    return std::unique_ptr<Node>();
+}
+
+void Environment::InsertBefore(int index, std::unique_ptr<Node>&& child)
+{
+    int ne = environmentVariables.size();
+    if (child->Kind() == NodeKind::environmentVariable && index >= 0 && index < ne)
+    {
+        EnvironmentVariable* environmentVariable = static_cast<EnvironmentVariable*>(child.release());
+        environmentVariables.insert(environmentVariables.begin() + index, std::unique_ptr<EnvironmentVariable>(environmentVariable));
+    }
+    else if (child->Kind() == NodeKind::pathDirectory && index >= ne && index < Count())
+    {
+        PathDirectory* pathDirectory = static_cast<PathDirectory*>(child.release());
+        pathDirectories.insert(pathDirectories.begin() + index - ne, std::unique_ptr<PathDirectory>(pathDirectory));
+    }
+    else
+    {
+        child.reset();
+    }
+}
+
+void Environment::InsertAfter(int index, std::unique_ptr<Node>&& child)
+{
+    int ne = environmentVariables.size();
+    if (child->Kind() == NodeKind::environmentVariable && index >= 0 && index < ne)
+    {
+        EnvironmentVariable* environmentVariable = static_cast<EnvironmentVariable*>(child.release());
+        environmentVariables.insert(environmentVariables.begin() + index + 1, std::unique_ptr<EnvironmentVariable>(environmentVariable));
+    }
+    else if (child->Kind() == NodeKind::pathDirectory && index >= ne && index < Count())
+    {
+        PathDirectory* pathDirectory = static_cast<PathDirectory*>(child.release());
+        pathDirectories.insert(pathDirectories.begin() + index - ne + 1, std::unique_ptr<PathDirectory>(pathDirectory));
+    }
+    else
+    {
+        child.reset();
+    }
+}
+
+bool Environment::CanMoveUp(const Node* child) const
+{
+    int ne = environmentVariables.size();
+    if (child->Kind() == NodeKind::environmentVariable)
+    {
+        int index = IndexOf(child);
+        return index > 0 && index < ne;
+    }
+    else if (child->Kind() == NodeKind::pathDirectory)
+    {
+        int index = IndexOf(child);
+        return index - ne > 0 && index - ne < pathDirectories.size();
+    }
+    return false;
+}
+
+bool Environment::CanMoveDown(const Node* child) const
+{
+    int ne = environmentVariables.size();
+    if (child->Kind() == NodeKind::environmentVariable)
+    {
+        int index = IndexOf(child);
+        return index >= 0 && index < ne - 1;
+    }
+    else if (child->Kind() == NodeKind::pathDirectory)
+    {
+        int index = IndexOf(child);
+        return index - ne >= 0 && index - ne < pathDirectories.size() - 1;
+    }
+    return false;
+}
+
 EnvironmentVariable::EnvironmentVariable() : Node(NodeKind::environmentVariable, std::string())
 {
 }

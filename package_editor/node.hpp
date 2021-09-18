@@ -8,6 +8,7 @@
 #include <wing/ImageList.hpp>
 #include <wing/ListView.hpp>
 #include <wing/TreeView.hpp>
+#include <wing/Menu.hpp>
 
 namespace wingstall {namespace package_editor {
 
@@ -33,24 +34,41 @@ public:
     void SetName(const std::string& name_);
     Node* Parent() const { return parent; }
     void SetParent(Node* parent_) { parent = parent_; }
-    MainWindow* GetMainWindow() const;
+    MainWindow* GetMainWindow();
     TreeViewNode* GetTreeViewNode() const { return treeViewNode; }
     void SetTreeViewNode(TreeViewNode* treeViewNode_) { treeViewNode = treeViewNode_; }
     void Explore();
     void ViewContent();
     void Open();
+    void Select();
     virtual Package* GetPackage() const;
     virtual Control* CreateView(ImageList* imageList);
     virtual std::string ImageName() const;
     virtual bool CanDisable() const { return false; }
     virtual bool IsDisabled() const { return false; }
     virtual void SetData(ListViewItem* item, ImageList* imageList);
+    virtual int Count() const;
+    virtual int IndexOf(const Node* child) const;
+    virtual Node* GetNode(int index) const;
+    virtual std::unique_ptr<Node> RemoveChild(int index);
+    virtual void InsertBefore(int index, std::unique_ptr<Node>&& child);
+    virtual void InsertAfter(int index, std::unique_ptr<Node>&& child);
+    virtual bool CanOpen() const { return true; }
+    virtual bool CanMoveUp(const Node* child) const;
+    virtual bool CanMoveDown(const Node* child) const;
+    bool CanRemove() const;
+    bool CanMoveUp() const;
+    bool CanMoveDown() const;
+    void Remove();
+    void MoveUp();
+    void MoveDown();
+    void AddMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions);
 private:
     NodeKind kind;
     std::string name;
     Node* parent;
     TreeViewNode* treeViewNode;
-    PackageContentView* view;
+    ListViewItem* listViewItem;
 };
 
 } } // wingstall::package_editor

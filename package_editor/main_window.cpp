@@ -33,7 +33,8 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
     exitMenuItem(nullptr),
     packageExplorer(nullptr),
     packageContentView(nullptr),
-    logView(nullptr)
+    logView(nullptr),
+    showingDialog(false)
 {
     std::unique_ptr<MenuBar> menuBar(new MenuBar());
 
@@ -129,6 +130,48 @@ void MainWindow::AddListViewEventHandlers(ListView* listView)
     listView->ItemDoubleClick().AddHandler(this, &MainWindow::ListViewItemDoubleClick);
 }
 
+void MainWindow::OnKeyDown(KeyEventArgs& args)
+{
+    try
+    {
+        Window::OnKeyDown(args);
+        if (!args.handled)
+        {
+            switch (args.key)
+            {
+                case Keys::escape:
+                {
+                    RemoveContextMenu();
+                    args.handled = true;
+                    break;
+                }
+            }
+        }
+    }
+    catch (const std::exception& ex)
+    {
+        ShowErrorMessageBox(Handle(), ex.what());
+    }
+}
+
+void MainWindow::MouseUpNotification(MouseEventArgs& args)
+{
+    try
+    {
+        if (args.buttons == MouseButtons::lbutton)
+        {
+            if (!showingDialog)
+            {
+                RemoveContextMenu();
+            }
+        }
+    }
+    catch (const std::exception& ex)
+    {
+        ShowErrorMessageBox(Handle(), ex.what());
+    }
+}
+
 void MainWindow::ListViewItemClick(ListViewItemEventArgs& args)
 {
     if (args.item)
@@ -149,6 +192,19 @@ void MainWindow::ListViewItemRightClick(ListViewItemEventArgs& args)
         if (view)
         {
             view->SetSelectedItem(args.item);
+            void* data = args.item->Data();
+            if (data)
+            {
+                Node* node = static_cast<Node*>(data);
+                clickActions.clear();
+                std::unique_ptr<ContextMenu> contextMenu(new ContextMenu());
+                node->AddMenuItems(contextMenu.get(), clickActions);
+                if (contextMenu->HasMenuItems())
+                {
+                    Point screenLoc = view->ClientToScreen(args.location);
+                    ShowContextMenu(contextMenu.release(), screenLoc);
+                }
+            }
         }
     }
 }

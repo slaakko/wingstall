@@ -23,6 +23,12 @@ public:
     std::string ImageName() const override { return "rules.bitmap"; }
     TreeViewNode* ToTreeViewNode(TreeView* view);
     Control* CreateView(ImageList* imageList) override;
+    int Count() const override;
+    int IndexOf(const Node* child) const override;
+    Node* GetNode(int index) const override;
+    std::unique_ptr<Node> RemoveChild(int index) override;
+    void InsertBefore(int index, std::unique_ptr<Node>&& child);
+    void InsertAfter(int index, std::unique_ptr<Node>&& child);
 private:
     std::vector<std::unique_ptr<Rule>> rules;
 };
@@ -44,6 +50,7 @@ public:
     Rule(const std::string& packageXMLFilePath, sngxml::dom::Element* element);
     std::string Text() const;
     TreeViewNode* ToTreeViewNode(TreeView* view);
+    Control* CreateView(ImageList* imageList) override;
     RuleKind GetRuleKind() const { return ruleKind; }
     PathKind GetPathKind() const { return pathKind; }
     bool Cascade() const { return cascade; }
@@ -53,6 +60,12 @@ public:
     std::string CascadeStr() const;
     const std::string& Value() const { return value; }
     void SetData(ListViewItem* item, ImageList* imageList) override;
+    int Count() const override;
+    int IndexOf(const Node* child) const override;
+    Node* GetNode(int index) const override;
+    std::unique_ptr<Node> RemoveChild(int index) override;
+    void InsertBefore(int index, std::unique_ptr<Node>&& child);
+    void InsertAfter(int index, std::unique_ptr<Node>&& child);
 private:
     RuleKind ruleKind;
     PathKind pathKind;

@@ -23,6 +23,14 @@ public:
     std::string ImageName() const override { return "environment.bitmap"; }
     void AddEnvironentVariable(EnvironmentVariable* environmentVariable);
     void AddPathDirectory(PathDirectory* pathDirectory);
+    int Count() const override;
+    int IndexOf(const Node* child) const override;
+    Node* GetNode(int index) const override;
+    std::unique_ptr<Node> RemoveChild(int index) override;
+    void InsertBefore(int index, std::unique_ptr<Node>&& child);
+    void InsertAfter(int index, std::unique_ptr<Node>&& child);
+    bool CanMoveUp(const Node* child) const override;
+    bool CanMoveDown(const Node* child) const override;
 private:
     std::vector<std::unique_ptr<EnvironmentVariable>> environmentVariables;
     std::vector<std::unique_ptr<PathDirectory>> pathDirectories;

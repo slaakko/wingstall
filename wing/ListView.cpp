@@ -359,6 +359,7 @@ void ListView::OnMouseUp(MouseEventArgs& args)
             }
             else if (args.buttons == MouseButtons::rbutton)
             {
+                itemArgs.location = args.location;
                 itemRightClick.Fire(itemArgs);
             }
         }

@@ -36,6 +36,12 @@ public:
     TreeViewNode* ToTreeViewNode(TreeView* view);
     Control* CreateView(ImageList* imageList) override;
     std::string ImageName() const override { return "linked.folder.closed.bitmap"; }
+    int Count() const override;
+    int IndexOf(const Node* child) const override;
+    Node* GetNode(int index) const override;
+    std::unique_ptr<Node> RemoveChild(int index) override;
+    void InsertBefore(int index, std::unique_ptr<Node>&& child);
+    void InsertAfter(int index, std::unique_ptr<Node>&& child);
 private:
     std::vector<std::unique_ptr<LinkDirectory>> linkDirectories;
 };
@@ -60,6 +66,12 @@ public:
     TreeViewNode* ToTreeViewNode(TreeView* view);
     Control* CreateView(ImageList* imageList) override;
     std::string ImageName() const override { return "shortcut.bitmap"; }
+    int Count() const override;
+    int IndexOf(const Node* child) const override;
+    Node* GetNode(int index) const override;
+    std::unique_ptr<Node> RemoveChild(int index) override;
+    void InsertBefore(int index, std::unique_ptr<Node>&& child);
+    void InsertAfter(int index, std::unique_ptr<Node>&& child);
 private:
     std::vector<std::unique_ptr<Shortcut>> shortcuts;
 };

@@ -186,7 +186,7 @@ void Directory::ReadData(BinaryStreamReader& reader)
     }
 }
 
-bool Directory::HasDirectoriesOrFiles() const
+bool Directory::HasDirectoriesOrFiles() 
 {
     Package* package = GetPackage();
     if (package)

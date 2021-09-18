@@ -6,10 +6,11 @@
 #include <package_editor/node.hpp>
 #include <package_editor/package_content_view.hpp>
 #include <package_editor/package_explorer.hpp>
+#include <package_editor/action.hpp>
 
 namespace wingstall { namespace package_editor {
 
-Node::Node(NodeKind kind_, const std::string& name_) : kind(kind_), name(name_), parent(nullptr), treeViewNode(nullptr), view(nullptr)
+Node::Node(NodeKind kind_, const std::string& name_) : kind(kind_), name(name_), parent(nullptr), treeViewNode(nullptr), listViewItem(nullptr)
 {
 }
 
@@ -17,7 +18,7 @@ Node::~Node()
 {
 }
 
-MainWindow* Node::GetMainWindow() const
+MainWindow* Node::GetMainWindow() 
 {
     Package* package = GetPackage();
     if (package)
@@ -57,6 +58,7 @@ std::string Node::ImageName() const
 
 void Node::SetData(ListViewItem* item, ImageList* imageList)
 {
+    listViewItem = item;
     item->SetData(this);
     item->SetColumnValue(0, Name());
     std::string imageName = ImageName();
@@ -104,6 +106,168 @@ void Node::Open()
 {
     Explore();
     ViewContent();
+}
+
+void Node::Select()
+{
+    if (listViewItem)
+    {
+        ListView* view = listViewItem->View();
+        if (view)
+        {
+            view->SetSelectedItem(listViewItem);
+        }
+    }
+}
+
+int Node::Count() const
+{
+    return 0;
+}
+
+int Node::IndexOf(const Node* child) const
+{
+    return -1;
+}
+
+Node* Node::GetNode(int index) const
+{
+    return nullptr;
+}
+
+bool Node::CanRemove() const
+{
+    if (parent)
+    {
+        int index = parent->IndexOf(this);
+        return index >= 0 && index < parent->Count();
+    }
+    return false;
+}
+
+bool Node::CanMoveUp() const
+{
+    if (parent)
+    {
+        return parent->CanMoveUp(this);
+    }
+    return false;
+}
+
+bool Node::CanMoveDown() const
+{
+    if (parent)
+    {
+        return parent->CanMoveDown(this);
+    }
+    return false;
+}
+
+void Node::Remove()
+{
+    Node* p = parent;
+    if (p)
+    {
+        int index = p->IndexOf(this);
+        if (treeViewNode && treeViewNode->Parent())
+        {
+            treeViewNode->Parent()->RemoveChild(treeViewNode);
+        }
+        p->RemoveChild(index);
+        p->Open();
+        Node* node = p->GetNode(index);
+        if (node)
+        {
+            node->Select();
+        }
+    }
+}
+
+void Node::MoveUp()
+{
+    if (parent)
+    {
+        int index = parent->IndexOf(this);
+        if (index > 0 && index < parent->Count())
+        {
+            std::unique_ptr<Node> thisNode = parent->RemoveChild(index);
+            Node* node = thisNode.get();
+            parent->InsertBefore(index - 1, std::move(thisNode));
+            parent->Open();
+            node->Select();
+        }
+    }
+}
+
+void Node::MoveDown()
+{
+    if (parent)
+    {
+        int index = parent->IndexOf(this);
+        if (index >= 0 && index < parent->Count())
+        {
+            std::unique_ptr<Node> thisNode = parent->RemoveChild(index);
+            Node* node = thisNode.get();
+            parent->InsertAfter(index, std::move(thisNode));
+            parent->Open();
+            node->Select();
+        }
+    }
+}
+
+void Node::AddMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions)
+{
+    if (CanOpen())
+    {
+        std::unique_ptr<MenuItem> openMenuItem(new MenuItem("Open"));
+        clickActions.push_back(std::unique_ptr<ClickAction>(new OpenAction(openMenuItem.get(), this)));
+        contextMenu->AddMenuItem(openMenuItem.release());
+    }
+    if (CanRemove())
+    {
+        std::unique_ptr<MenuItem> removeMenuItem(new MenuItem("Remove"));
+        clickActions.push_back(std::unique_ptr<ClickAction>(new RemoveAction(removeMenuItem.get(), this)));
+        contextMenu->AddMenuItem(removeMenuItem.release());
+    }
+    if (CanMoveUp())
+    {
+        std::unique_ptr<MenuItem> moveUpMenuItem(new MenuItem("Move Up"));
+        clickActions.push_back(std::unique_ptr<ClickAction>(new MoveUpAction(moveUpMenuItem.get(), this)));
+        contextMenu->AddMenuItem(moveUpMenuItem.release());
+    }
+    if (CanMoveDown())
+    {
+        std::unique_ptr<MenuItem> moveDownMenuItem(new MenuItem("Move Down"));
+        clickActions.push_back(std::unique_ptr<ClickAction>(new MoveDownAction(moveDownMenuItem.get(), this)));
+        contextMenu->AddMenuItem(moveDownMenuItem.release());
+    }
+}
+
+std::unique_ptr<Node> Node::RemoveChild(int index)
+{
+    return std::unique_ptr<Node>();
+}
+
+void Node::InsertBefore(int index, std::unique_ptr<Node>&& child)
+{
+    child.reset();
+}
+
+void Node::InsertAfter(int index, std::unique_ptr<Node>&& child)
+{
+    child.reset();
+}
+
+bool Node::CanMoveUp(const Node* child) const
+{
+    int index = IndexOf(child);
+    return index > 0 && index < Count();
+}
+
+bool Node::CanMoveDown(const Node* child) const
+{
+    int index = IndexOf(child);
+    return index >= 0 && index < Count() - 1;
 }
 
 } } // wingstall::package_editor

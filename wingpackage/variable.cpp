@@ -41,7 +41,7 @@ TargetRootDirVariable::TargetRootDirVariable() : Variable("TARGET_ROOT_DIR")
 
 std::string TargetRootDirVariable::Value() const
 {
-    Package* package = GetPackage();
+    const Package* package = GetPackage();
     if (package)
     {
         return package->TargetRootDir();

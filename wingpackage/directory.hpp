@@ -54,7 +54,7 @@ public:
     void ReadIndex(BinaryStreamReader& reader) override;
     void WriteData(BinaryStreamWriter& writer) override;
     void ReadData(BinaryStreamReader& reader) override;
-    bool HasDirectoriesOrFiles() const;
+    bool HasDirectoriesOrFiles();
     void Remove();
     void Uninstall() override;
     sngxml::dom::Element* ToXml() const override;

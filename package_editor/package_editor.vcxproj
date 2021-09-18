@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="action.cpp" />
     <ClCompile Include="component.cpp" />
     <ClCompile Include="directory.cpp" />
     <ClCompile Include="engine_variable.cpp" />
@@ -168,6 +169,7 @@
     <ClCompile Include="rule.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="action.hpp" />
     <ClInclude Include="component.hpp" />
     <ClInclude Include="directory.hpp" />
     <ClInclude Include="environment.hpp" />
