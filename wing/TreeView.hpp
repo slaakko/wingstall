@@ -265,7 +265,9 @@ public:
     TreeViewNode* Parent() const;
     const Container& Children() const { return children; }
     void AddChild(TreeViewNode* child);
-    void RemoveChild(TreeViewNode* child);
+    std::unique_ptr<TreeViewNode> RemoveChild(TreeViewNode* child);
+    void InsertChildBefore(TreeViewNode* child, TreeViewNode* before);
+    void InsertChildAfter(TreeViewNode* child, TreeViewNode* after);
     void RemoveChildren();
     int Level() const;
     TreeViewNodeState State() const { return state; }

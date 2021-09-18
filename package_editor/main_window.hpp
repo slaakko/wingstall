@@ -21,6 +21,9 @@ class MainWindow : public Window
 public:
     MainWindow();
     void AddListViewEventHandlers(ListView* listView);
+    void AddTreeViewEventHandlers(TreeView* treeView);
+    void ClearClickActions();
+    std::vector<std::unique_ptr<ClickAction>>& ClickActions() { return clickActions; }
 protected:
     void OnKeyDown(KeyEventArgs& args) override;
     void MouseUpNotification(MouseEventArgs& args) override;

@@ -758,9 +758,34 @@ void TreeViewNode::AddChild(TreeViewNode* child)
     }
 }
 
-void TreeViewNode::RemoveChild(TreeViewNode* child)
+std::unique_ptr<TreeViewNode> TreeViewNode::RemoveChild(TreeViewNode* child)
 {
     std::unique_ptr<Component> removed = children.RemoveChild(child);
+    TreeView* view = GetTreeView();
+    if (view)
+    {
+        view->SetTreeViewNodeChanged();
+        view->SetChanged();
+        view->Invalidate();
+    }
+    return std::unique_ptr<TreeViewNode>(static_cast<TreeViewNode*>(removed.release()));
+}
+
+void TreeViewNode::InsertChildBefore(TreeViewNode* child, TreeViewNode* before)
+{
+    children.InsertBefore(child, before);
+    TreeView* view = GetTreeView();
+    if (view)
+    {
+        view->SetTreeViewNodeChanged();
+        view->SetChanged();
+        view->Invalidate();
+    }
+}
+
+void TreeViewNode::InsertChildAfter(TreeViewNode* child, TreeViewNode* after)
+{
+    children.InsertAfter(child, after);
     TreeView* view = GetTreeView();
     if (view)
     {

@@ -143,6 +143,10 @@ Node* Node::GetNode(int index) const
     return nullptr;
 }
 
+void Node::AddNew(NodeKind kind)
+{
+}
+
 bool Node::CanRemove() const
 {
     if (parent)
@@ -183,10 +187,10 @@ void Node::Remove()
         }
         p->RemoveChild(index);
         p->Open();
-        Node* node = p->GetNode(index);
-        if (node)
+        Node* prev = p->GetNode(index);
+        if (prev)
         {
-            node->Select();
+            prev->Select();
         }
     }
 }
@@ -203,6 +207,20 @@ void Node::MoveUp()
             parent->InsertBefore(index - 1, std::move(thisNode));
             parent->Open();
             node->Select();
+            TreeViewNode* p = treeViewNode->Parent();
+            if (treeViewNode && p)
+            {
+                TreeViewNode* before = static_cast<TreeViewNode*>(treeViewNode->PrevSibling());
+                if (before)
+                {
+                    TreeView* treeView = treeViewNode->GetTreeView();
+                    p->InsertChildBefore(treeViewNode, before);
+                    if (treeView)
+                    {
+                        treeView->SetSelectedNode(treeViewNode);
+                    }
+                }
+            }
         }
     }
 }
@@ -219,12 +237,33 @@ void Node::MoveDown()
             parent->InsertAfter(index, std::move(thisNode));
             parent->Open();
             node->Select();
+            TreeViewNode* p = treeViewNode->Parent();
+            if (treeViewNode && p)
+            {
+                TreeViewNode* after = static_cast<TreeViewNode*>(treeViewNode->NextSibling());
+                if (after)
+                {
+                    TreeView* treeView = treeViewNode->GetTreeView();
+                    p->InsertChildAfter(treeViewNode, after);
+                    if (treeView)
+                    {
+                        treeView->SetSelectedNode(treeViewNode);
+                    }
+                }
+            }
         }
     }
 }
 
-void Node::AddMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions)
+void Node::AddMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions, ContextMenuKind menuKind)
 {
+    if (menuKind == ContextMenuKind::treeView)
+    {
+        if (CanAdd())
+        {
+            AddAddNewMenuItems(contextMenu, clickActions);
+        }
+    }
     if (CanOpen())
     {
         std::unique_ptr<MenuItem> openMenuItem(new MenuItem("Open"));
@@ -249,6 +288,10 @@ void Node::AddMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<Cl
         clickActions.push_back(std::unique_ptr<ClickAction>(new MoveDownAction(moveDownMenuItem.get(), this)));
         contextMenu->AddMenuItem(moveDownMenuItem.release());
     }
+}
+
+void Node::AddAddNewMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions)
+{
 }
 
 std::unique_ptr<Node> Node::RemoveChild(int index)

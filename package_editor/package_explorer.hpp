@@ -43,16 +43,19 @@ class PackageExplorer : public ContainerControl
 {
 public:
     PackageExplorer(PackageExplorerCreateParams& createParams);
+    MainWindow* GetMainWindow() const { return mainWindow; }
+    void SetMainWindow(MainWindow* mainWindow_) { mainWindow = mainWindow_; }
     void SetPackage(Package* package_);
     void SetImageList(ImageList* imageList);
     void SetContentView(PackageContentView* contentView_);
     void Open(Node* node);
+    void TreeViewNodeClick(TreeViewNodeClickEventArgs& args);
 protected:
     void OnPaint(PaintEventArgs& args) override;
 private:
-    void TreeViewNodeClick(TreeViewNodeClickEventArgs& args);
     void TreeViewNodeDoubleClick(TreeViewNodeClickEventArgs& args);
     void MakeView();
+    MainWindow* mainWindow;
     TreeViewCreateParams treeViewCreateParams;
     ImageList* imageList;
     Color frameColor;

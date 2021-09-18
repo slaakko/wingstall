@@ -12,6 +12,7 @@ namespace wingstall { namespace package_editor {
 using namespace wing;
 
 class Node;
+enum class NodeKind;
 
 class OpenAction : public ClickAction
 {
@@ -20,6 +21,16 @@ public:
     void Execute() override;
 private:
     Node* node;
+};
+
+class AddAction : public ClickAction
+{
+public:
+    AddAction(MenuItem* menuItem_, Node* node_, NodeKind kind_);
+    void Execute() override;
+private:
+    Node* node;
+    NodeKind kind;
 };
 
 class RemoveAction : public ClickAction

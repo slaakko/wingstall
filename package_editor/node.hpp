@@ -20,6 +20,11 @@ enum class NodeKind : int
     engineVariables, engineVariable
 };
 
+enum class ContextMenuKind
+{
+    treeView, listView
+};
+
 class Package;
 class PackageContentView;
 class MainWindow;
@@ -50,10 +55,12 @@ public:
     virtual int Count() const;
     virtual int IndexOf(const Node* child) const;
     virtual Node* GetNode(int index) const;
+    virtual void AddNew(NodeKind kind);
     virtual std::unique_ptr<Node> RemoveChild(int index);
     virtual void InsertBefore(int index, std::unique_ptr<Node>&& child);
     virtual void InsertAfter(int index, std::unique_ptr<Node>&& child);
     virtual bool CanOpen() const { return true; }
+    virtual bool CanAdd() const { return false; }
     virtual bool CanMoveUp(const Node* child) const;
     virtual bool CanMoveDown(const Node* child) const;
     bool CanRemove() const;
@@ -62,7 +69,8 @@ public:
     void Remove();
     void MoveUp();
     void MoveDown();
-    void AddMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions);
+    void AddMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions, ContextMenuKind menuKind);
+    virtual void AddAddNewMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions);
 private:
     NodeKind kind;
     std::string name;

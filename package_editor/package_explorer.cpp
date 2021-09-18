@@ -5,6 +5,7 @@
 
 #include <package_editor/package_explorer.hpp>
 #include <package_editor/package_content_view.hpp>
+#include <package_editor/main_window.hpp>
 #include <wing/BorderedControl.hpp>
 #include <wing/PaddedControl.hpp>
 #include <wing/ScrollableControl.hpp>
@@ -109,6 +110,7 @@ PackageExplorerCreateParams& PackageExplorerCreateParams::FrameColor(const Color
 
 PackageExplorer::PackageExplorer(PackageExplorerCreateParams& createParams) : 
     ContainerControl(createParams.controlCreateParams), 
+    mainWindow(nullptr),
     package(nullptr), 
     treeView(nullptr), 
     child(nullptr), 
@@ -178,7 +180,24 @@ void PackageExplorer::TreeViewNodeClick(TreeViewNodeClickEventArgs& args)
         if (data)
         {
             Node* node = static_cast<Node*>(data);
-            contentView->ViewContent(node);
+            if (args.buttons == MouseButtons::lbutton)
+            {
+                contentView->ViewContent(node);
+            }
+            else if (args.buttons == MouseButtons::rbutton)
+            {
+                if (mainWindow)
+                {
+                    mainWindow->ClearClickActions();
+                    std::unique_ptr<ContextMenu> contextMenu(new ContextMenu());
+                    node->AddMenuItems(contextMenu.get(), mainWindow->ClickActions(), ContextMenuKind::treeView);
+                    if (contextMenu->HasMenuItems())
+                    {
+                        Point screenLoc = treeView->ClientToScreen(args.location);
+                        mainWindow->ShowContextMenu(contextMenu.release(), screenLoc);
+                    }
+                }
+            }
         }
     }
     catch (const std::exception& ex)

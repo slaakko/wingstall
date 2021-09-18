@@ -23,6 +23,20 @@ void OpenAction::Execute()
     }
 }
 
+AddAction::AddAction(MenuItem* menuItem_, Node* node_, NodeKind kind_) : ClickAction(menuItem_), node(node_), kind(kind_)
+{
+}
+
+void AddAction::Execute()
+{
+    MainWindow* mainWindow = node->GetMainWindow();
+    if (mainWindow)
+    {
+        mainWindow->HideContextMenu();
+        node->AddNew(kind);
+    }
+}
+
 RemoveAction::RemoveAction(MenuItem* menuItem_, Node* node_) : ClickAction(menuItem_), node(node_)
 {
 }

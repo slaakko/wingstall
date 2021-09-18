@@ -71,6 +71,7 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
     std::unique_ptr<SplitContainer> horizontalSplitContainer(new SplitContainer(SplitContainerCreateParams(SplitterOrientation::horizontal).SetDock(Dock::fill).SplitterDistance(500)));
     std::unique_ptr<PackageExplorer> packageExplorerPtr(new PackageExplorer(PackageExplorerCreateParams().SetDock(Dock::fill)));
     packageExplorer = packageExplorerPtr.get();
+    packageExplorer->SetMainWindow(this);
     horizontalSplitContainer->Pane1Container()->AddChild(packageExplorerPtr.release());
 
     std::unique_ptr<PackageContentView> packageContentViewPtr(new PackageContentView(PackageContentViewCreateParams().SetDock(Dock::fill)));
@@ -128,6 +129,16 @@ void MainWindow::AddListViewEventHandlers(ListView* listView)
     listView->ItemClick().AddHandler(this, &MainWindow::ListViewItemClick);
     listView->ItemRightClick().AddHandler(this, &MainWindow::ListViewItemRightClick);
     listView->ItemDoubleClick().AddHandler(this, &MainWindow::ListViewItemDoubleClick);
+}
+
+void MainWindow::AddTreeViewEventHandlers(TreeView* treeView)
+{
+    treeView->NodeClick().AddHandler(packageExplorer, &PackageExplorer::TreeViewNodeClick);
+}
+
+void MainWindow::ClearClickActions()
+{
+    clickActions.clear();
 }
 
 void MainWindow::OnKeyDown(KeyEventArgs& args)
@@ -196,9 +207,9 @@ void MainWindow::ListViewItemRightClick(ListViewItemEventArgs& args)
             if (data)
             {
                 Node* node = static_cast<Node*>(data);
-                clickActions.clear();
+                ClearClickActions();
                 std::unique_ptr<ContextMenu> contextMenu(new ContextMenu());
-                node->AddMenuItems(contextMenu.get(), clickActions);
+                node->AddMenuItems(contextMenu.get(), clickActions, ContextMenuKind::listView);
                 if (contextMenu->HasMenuItems())
                 {
                     Point screenLoc = view->ClientToScreen(args.location);

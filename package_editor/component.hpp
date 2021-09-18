@@ -26,6 +26,8 @@ public:
     std::unique_ptr<Node> RemoveChild(int index) override;
     void InsertBefore(int index, std::unique_ptr<Node>&& child);
     void InsertAfter(int index, std::unique_ptr<Node>&& child);
+    bool CanAdd() const { return true; }
+    void AddAddNewMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions) override;
 private:
     std::vector<std::unique_ptr<Component>> components;
 };

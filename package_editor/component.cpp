@@ -6,6 +6,7 @@
 #include <package_editor/component.hpp>
 #include <package_editor/error.hpp>
 #include <package_editor/main_window.hpp>
+#include <package_editor/action.hpp>
 #include <sngxml/xpath/XPathEvaluate.hpp>
 #include <soulng/util/Unicode.hpp>
 
@@ -125,6 +126,13 @@ void Components::InsertAfter(int index, std::unique_ptr<Node>&& child)
     {
         child.reset();
     }
+}
+
+void Components::AddAddNewMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions)
+{
+    std::unique_ptr<MenuItem> addNewComponentMenuItem(new MenuItem("Add New Component"));
+    clickActions.push_back(std::unique_ptr<ClickAction>(new AddAction(addNewComponentMenuItem.get(), this, NodeKind::component)));
+    contextMenu->AddMenuItem(addNewComponentMenuItem.release());
 }
 
 Component::Component() : Node(NodeKind::component, std::string())
