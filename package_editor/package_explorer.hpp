@@ -46,10 +46,12 @@ public:
     void SetPackage(Package* package_);
     void SetImageList(ImageList* imageList);
     void SetContentView(PackageContentView* contentView_);
+    void Open(Node* node);
 protected:
     void OnPaint(PaintEventArgs& args) override;
 private:
     void TreeViewNodeClick(TreeViewNodeClickEventArgs& args);
+    void TreeViewNodeDoubleClick(TreeViewNodeClickEventArgs& args);
     void MakeView();
     TreeViewCreateParams treeViewCreateParams;
     ImageList* imageList;

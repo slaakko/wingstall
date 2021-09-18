@@ -146,7 +146,6 @@ void PackageContentView::ViewContent(Node* node)
         framedChild = nullptr;
         child = nullptr;
     }
-    node->SetView(this);
     Control* view = node->CreateView(imageList);
     if (!view)
     {

@@ -33,11 +33,12 @@ public:
     void SetName(const std::string& name_);
     Node* Parent() const { return parent; }
     void SetParent(Node* parent_) { parent = parent_; }
-    PackageContentView* View() const;
-    void SetView(PackageContentView* view_) { view = view_; }
     MainWindow* GetMainWindow() const;
     TreeViewNode* GetTreeViewNode() const { return treeViewNode; }
     void SetTreeViewNode(TreeViewNode* treeViewNode_) { treeViewNode = treeViewNode_; }
+    void Explore();
+    void ViewContent();
+    void Open();
     virtual Package* GetPackage() const;
     virtual Control* CreateView(ImageList* imageList);
     virtual std::string ImageName() const;

@@ -125,6 +125,8 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
 void MainWindow::AddListViewEventHandlers(ListView* listView)
 {
     listView->ItemClick().AddHandler(this, &MainWindow::ListViewItemClick);
+    listView->ItemRightClick().AddHandler(this, &MainWindow::ListViewItemRightClick);
+    listView->ItemDoubleClick().AddHandler(this, &MainWindow::ListViewItemDoubleClick);
 }
 
 void MainWindow::ListViewItemClick(ListViewItemEventArgs& args)
@@ -136,6 +138,27 @@ void MainWindow::ListViewItemClick(ListViewItemEventArgs& args)
         {
             view->SetSelectedItem(args.item);
         }
+    }
+}
+
+void MainWindow::ListViewItemRightClick(ListViewItemEventArgs& args)
+{
+    if (args.item)
+    {
+        ListView* view = args.item->View();
+        if (view)
+        {
+            view->SetSelectedItem(args.item);
+        }
+    }
+}
+
+void MainWindow::ListViewItemDoubleClick(ListViewItemEventArgs& args)
+{
+    if (args.item && args.item->Data())
+    {
+        Node* node = static_cast<Node*>(args.item->Data());
+        node->Open();
     }
 }
 
@@ -171,6 +194,8 @@ void MainWindow::OpenPackageClick()
             std::string packageXMLFilePath = GetFullPath(filePath);
             std::unique_ptr<sngxml::dom::Document> packageDoc(sngxml::dom::ReadDocument(packageXMLFilePath));
             package.reset(new Package(packageXMLFilePath, packageDoc->DocumentElement()));
+            package->SetView(packageContentView);
+            package->SetExplorer(packageExplorer);
             packageExplorer->SetPackage(package.get());
         }
     }

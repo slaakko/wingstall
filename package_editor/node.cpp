@@ -5,6 +5,7 @@
 
 #include <package_editor/node.hpp>
 #include <package_editor/package_content_view.hpp>
+#include <package_editor/package_explorer.hpp>
 
 namespace wingstall { namespace package_editor {
 
@@ -16,28 +17,16 @@ Node::~Node()
 {
 }
 
-PackageContentView* Node::View() const
-{
-    if (view)
-    {
-        return view;
-    }
-    else
-    {
-        if (parent)
-        {
-            return parent->View();
-        }
-    }
-    return nullptr;
-}
-
 MainWindow* Node::GetMainWindow() const
 {
-    PackageContentView* view = View();
-    if (view)
+    Package* package = GetPackage();
+    if (package)
     {
-        return view->GetMainWindow();
+        PackageContentView* view = package->View();
+        if (view)
+        {
+            return view->GetMainWindow();
+        }
     }
     return nullptr;
 }
@@ -83,6 +72,38 @@ void Node::SetData(ListViewItem* item, ImageList* imageList)
             }
         }
     }
+}
+
+void Node::Explore()
+{
+    Package* package = GetPackage();
+    if (package)
+    {
+        PackageExplorer* explorer = package->Explorer();
+        if (explorer)
+        {
+            explorer->Open(this);
+        }
+    }
+}
+
+void Node::ViewContent()
+{
+    Package* package = GetPackage();
+    if (package)
+    {
+        PackageContentView* view = package->View();
+        if (view)
+        {
+            view->ViewContent(this);
+        }
+    }
+}
+
+void Node::Open()
+{
+    Explore();
+    ViewContent();
 }
 
 } } // wingstall::package_editor

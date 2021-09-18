@@ -325,6 +325,10 @@ void ListView::OnMouseDown(MouseEventArgs& args)
         {
             mouseDownItem = item;
         }
+        else
+        {
+            SetSelectedItem(nullptr);
+        }
         if (args.buttons == MouseButtons::lbutton)
         {
             ListViewColumnDivider* columnDivider = ColumnDividerAt(args.location);
@@ -379,7 +383,7 @@ void ListView::OnMouseDoubleClick(MouseEventArgs& args)
     try
     {
         ListViewItem* item = ItemAt(args.location);
-        if (item == mouseDownItem)
+        if (item)
         {
             ListViewItemEventArgs args(item);
             itemDoubleClick.Fire(args);
@@ -556,7 +560,8 @@ void ListViewColumn::Draw(Graphics& graphics, const PointF& origin)
     DrawString(graphics, name, view->GetFont(), origin, view->GetColumnHeaderTextBrush());
 }
 
-ListViewColumnDivider::ListViewColumnDivider(ListView* view_, ListViewColumn* column_) : view(view_), column(column_), location(), startCapturePos(), startColumnWidth(0), hasMouseCapture(false)
+ListViewColumnDivider::ListViewColumnDivider(ListView* view_, ListViewColumn* column_) : 
+    view(view_), column(column_), location(), startCapturePos(), startColumnWidth(0), hasMouseCapture(false)
 {
 }
 
@@ -699,7 +704,7 @@ void ListViewItem::Draw(Graphics& graphics, const PointF& origin)
         }
         bool clipped = false;
         Gdiplus::Region prevClip;
-        if (textWidths[index] > view->GetColumn(index).Width())
+        if (index < textWidths.size() && textWidths[index] > view->GetColumn(index).Width())
         {
             CheckGraphicsStatus(graphics.GetClip(&prevClip));
             clipped = true;

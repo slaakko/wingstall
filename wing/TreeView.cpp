@@ -320,7 +320,12 @@ void TreeView::SetSelectedNode(TreeViewNode* node)
             selectedNode->ResetSelected();
         }
         selectedNode = node;
-        SetTreeViewNodeStateChanged();
+        if (selectedNode)
+        {
+            selectedNode->SetSelected();
+            SetTreeViewNodeStateChanged();
+        }
+        Invalidate();
     }
 }
 

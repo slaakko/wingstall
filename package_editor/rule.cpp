@@ -5,6 +5,7 @@
 
 #include <package_editor/rule.hpp>
 #include <package_editor/error.hpp>
+#include <package_editor/main_window.hpp>
 #include <wing/ImageList.hpp>
 #include <sngxml/xpath/XPathEvaluate.hpp>
 #include <soulng/util/TextUtils.hpp>
@@ -46,6 +47,11 @@ TreeViewNode* Rules::ToTreeViewNode(TreeView* view)
 Control* Rules::CreateView(ImageList* imageList)
 {
     std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    MainWindow* mainWindow = GetMainWindow();
+    if (mainWindow)
+    {
+        mainWindow->AddListViewEventHandlers(listView.get());
+    }
     listView->SetDoubleBuffered();
     listView->SetImageList(imageList);
     listView->AddColumn("Kind", 200);

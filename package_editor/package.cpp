@@ -82,7 +82,7 @@ TreeViewNode* Properties::ToTreeViewNode(TreeView* view)
     return node;
 }
 
-Package::Package() : Node(NodeKind::package, std::string()), filePath()
+Package::Package() : Node(NodeKind::package, std::string()), filePath(), view(nullptr), explorer(nullptr)
 {
     properties.reset(new Properties());
     properties->SetParent(this);
@@ -97,7 +97,7 @@ Package::Package() : Node(NodeKind::package, std::string()), filePath()
 }
 
 Package::Package(const std::string& packageXMLFilePath, sngxml::dom::Element* root) : 
-    Node(NodeKind::package, std::string()), filePath(packageXMLFilePath)
+    Node(NodeKind::package, std::string()), filePath(packageXMLFilePath), view(nullptr), explorer(nullptr)
 {
     properties.reset(new Properties());
     properties->SetParent(this);

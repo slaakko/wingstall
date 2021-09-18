@@ -15,6 +15,9 @@
 
 namespace wingstall { namespace package_editor {
 
+class PackageContentView;
+class PackageExplorer;
+
 class Properties : public Node
 {
 public:
@@ -64,6 +67,10 @@ public:
     TreeViewNode* ToTreeViewNode(TreeView* view);
     Control* CreateView(ImageList* imageList)  override;
     Package* GetPackage() const override { return const_cast<Package*>(this); }
+    PackageContentView* View() const { return view; }
+    void SetView(PackageContentView* view_) { view = view_; }
+    PackageExplorer* Explorer() const { return explorer; }
+    void SetExplorer(PackageExplorer* explorer_) { explorer = explorer_; }
 private:
     std::string filePath;
     std::unique_ptr<Properties> properties;
@@ -71,6 +78,8 @@ private:
     std::unique_ptr<Environment> environment;
     std::unique_ptr<Links> links;
     std::unique_ptr<EngineVariables> engineVariables;
+    PackageContentView* view;
+    PackageExplorer* explorer;
 };
 
 } } // wingstall::package_editor

@@ -36,6 +36,8 @@ private:
     void ClosePackageClick();
     void ExitClick();
     void ListViewItemClick(ListViewItemEventArgs& args);
+    void ListViewItemRightClick(ListViewItemEventArgs& args);
+    void ListViewItemDoubleClick(ListViewItemEventArgs& args);
 };
 
 } } // wingstall::package_editor

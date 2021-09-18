@@ -133,6 +133,7 @@ void PackageExplorer::MakeView()
     treeView->SetDoubleBuffered();
     treeView->SetImageList(imageList);
     treeView->NodeClick().AddHandler(this, &PackageExplorer::TreeViewNodeClick);
+    treeView->NodeDoubleClick().AddHandler(this, &PackageExplorer::TreeViewNodeDoubleClick);
     std::unique_ptr<Control> paddedTreeView(new PaddedControl(PaddedControlCreateParams(treeViewPtr.release()).Defaults()));
     std::unique_ptr<Control> borderedTreeView(new BorderedControl(BorderedControlCreateParams(paddedTreeView.release()).SetBorderStyle(BorderStyle::single).
         NormalSingleBorderColor(frameColor)));
@@ -186,6 +187,25 @@ void PackageExplorer::TreeViewNodeClick(TreeViewNodeClickEventArgs& args)
     }
 }
 
+void PackageExplorer::TreeViewNodeDoubleClick(TreeViewNodeClickEventArgs& args)
+{
+    try
+    {
+        if (args.node->State() == TreeViewNodeState::collapsed)
+        {
+            args.node->ExpandAll();
+        }
+        else if (args.node->State() == TreeViewNodeState::expanded)
+        {
+            args.node->CollapseAll();
+        }
+    }
+    catch (const std::exception& ex)
+    {
+        ShowErrorMessageBox(Handle(), ex.what());
+    }
+}
+
 void PackageExplorer::OnPaint(PaintEventArgs& args)
 {
     try
@@ -197,6 +217,25 @@ void PackageExplorer::OnPaint(PaintEventArgs& args)
     catch (const std::exception& ex)
     {
         ShowErrorMessageBox(Handle(), ex.what());
+    }
+}
+
+void PackageExplorer::Open(Node* node)
+{
+    TreeViewNode* treeViewNode = node->GetTreeViewNode();
+    if (treeViewNode)
+    {
+        TreeViewNode* parentNode = treeViewNode->Parent();
+        while (parentNode)
+        {
+            parentNode->Expand();
+            parentNode = parentNode->Parent();
+        }
+        TreeView* treeView = treeViewNode->GetTreeView();
+        if (treeView)
+        {
+            treeView->SetSelectedNode(treeViewNode);
+        }
     }
 }
 
