@@ -118,6 +118,14 @@ void Node::Select()
             view->SetSelectedItem(listViewItem);
         }
     }
+    if (treeViewNode)
+    {
+        TreeView* treeView = treeViewNode->GetTreeView();
+        if (treeView)
+        {
+            treeView->SetSelectedNode(treeViewNode);
+        }
+    }
 }
 
 int Node::Count() const
