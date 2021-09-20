@@ -25,11 +25,13 @@ Padding DefaultListViewItemColumnPadding();
 Padding DefaultListViewColumnDividerPadding();
 Padding DefaultListViewImagePadding();
 
+class ListView;
 class ListViewItem;
 
 struct WING_API ListViewItemEventArgs
 {
-    ListViewItemEventArgs(ListViewItem* item_) : item(item_) {}
+    ListViewItemEventArgs(ListView* view_, ListViewItem* item_) : view(view_), item(item_) {}
+    ListView* view;
     ListViewItem* item;
     Point location;
 };

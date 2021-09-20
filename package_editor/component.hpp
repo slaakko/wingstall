@@ -23,10 +23,12 @@ public:
     int Count() const override;
     int IndexOf(const Node* child) const override;
     Node* GetNode(int index) const override;
+    bool HasNode(const std::string& name) const override;
     std::unique_ptr<Node> RemoveChild(int index) override;
     void InsertBefore(int index, std::unique_ptr<Node>&& child);
     void InsertAfter(int index, std::unique_ptr<Node>&& child);
-    bool CanAdd() const { return true; }
+    bool CanAdd() const override { return true; }
+    void AddNew(NodeKind kind) override;
     void AddAddNewMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions) override;
 private:
     std::vector<std::unique_ptr<Component>> components;
@@ -35,7 +37,7 @@ private:
 class Component : public Node
 {
 public:
-    Component();
+    Component(const std::string& name_);
     Component(const std::string& packageXMLFilePath, sngxml::dom::Element* element);
     TreeViewNode* ToTreeViewNode(TreeView* view);
     Control* CreateView(ImageList* imageList) override;
@@ -48,8 +50,13 @@ public:
     std::unique_ptr<Node> RemoveChild(int index) override;
     void InsertBefore(int index, std::unique_ptr<Node>&& child);
     void InsertAfter(int index, std::unique_ptr<Node>&& child);
+    bool CanAdd() const override { return true; }
+    bool CanEdit() const override { return true; }
     bool CanMoveUp(const Node* child) const override;
     bool CanMoveDown(const Node* child) const override;
+    void Edit() override;
+    void AddNew(NodeKind kind) override;
+    void AddAddNewMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions) override;
 private:
     std::vector<std::unique_ptr<Directory>> directories;
     std::vector<std::unique_ptr<File>> files;

@@ -172,6 +172,7 @@ UninstallWindow::UninstallWindow() : Window(WindowCreateParams().WindowStyle(Dia
     Size logSize(ScreenMetrics::Get().MMToHorizontalPixels(120), ScreenMetrics::Get().MMToHorizontalPixels(30));
     std::unique_ptr<LogView> logPtr(new LogView(TextViewCreateParams().Location(logLocation).SetSize(logSize)));
     log = logPtr.get();
+    log->SetFlag(ControlFlags::scrollSubject);
     std::unique_ptr<Control> scrollableLog(new ScrollableControl(ScrollableControlCreateParams(logPtr.release()).Defaults()));
     std::unique_ptr<Control> paddedLog(new PaddedControl(PaddedControlCreateParams(scrollableLog.release()).Location(logLocation).SetSize(PaddedSize(logSize, DefaultPadding()))));
     std::unique_ptr<Control> borderedLog(new BorderedControl(BorderedControlCreateParams(paddedLog.release()).SetBorderStyle(BorderStyle::single).Location(logLocation).

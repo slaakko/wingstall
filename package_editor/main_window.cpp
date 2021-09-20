@@ -26,7 +26,7 @@ std::string WingstallPackagesDir()
     return packagesDir;
 }
 
-MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package Editor").WindowClassName("wingstall.package_editor")),
+MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package Editor").WindowClassName("wingstall.package_editor.main_window")),
     newPackageMenuItem(nullptr),
     openPackageMenuItem(nullptr),
     closePackageMenuItem(nullptr),
@@ -85,6 +85,7 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
 
     std::unique_ptr<LogView> logViewPtr(new LogView(TextViewCreateParams().Defaults()));
     logView = logViewPtr.get();
+    logView->SetFlag(ControlFlags::scrollSubject);
     logView->SetDoubleBuffered();
     std::unique_ptr<Control> paddedLogView(new PaddedControl(PaddedControlCreateParams(logViewPtr.release()).Defaults()));
     std::unique_ptr<Control> scrollableLogView(new ScrollableControl(ScrollableControlCreateParams(paddedLogView.release()).SetDock(Dock::fill)));
@@ -122,6 +123,11 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
     packageExplorer->SetImageList(&imageList);
     packageContentView->SetImageList(&imageList);
 
+}
+
+MainWindow::~MainWindow()
+{
+    packageContentView->ViewContent(nullptr);
 }
 
 void MainWindow::AddListViewEventHandlers(ListView* listView)
@@ -199,7 +205,7 @@ void MainWindow::ListViewItemRightClick(ListViewItemEventArgs& args)
 {
     if (args.item)
     {
-        ListView* view = args.item->View();
+        ListView* view = args.view;
         if (view)
         {
             view->SetSelectedItem(args.item);
@@ -209,8 +215,27 @@ void MainWindow::ListViewItemRightClick(ListViewItemEventArgs& args)
                 Node* node = static_cast<Node*>(data);
                 ClearClickActions();
                 std::unique_ptr<ContextMenu> contextMenu(new ContextMenu());
-                node->AddMenuItems(contextMenu.get(), clickActions, ContextMenuKind::listView);
+                node->AddMenuItems(contextMenu.get(), clickActions, MenuItemsKind::allMenuItems);
                 if (contextMenu->HasMenuItems())
+                {
+                    Point screenLoc = view->ClientToScreen(args.location);
+                    ShowContextMenu(contextMenu.release(), screenLoc);
+                }
+            }
+        }
+    }
+    else
+    {
+        Node* node = packageExplorer->SelectedNode();
+        if (node)
+        {
+            ClearClickActions();
+            std::unique_ptr<ContextMenu> contextMenu(new ContextMenu());
+            node->AddMenuItems(contextMenu.get(), clickActions, MenuItemsKind::newMenuItems);
+            if (contextMenu->HasMenuItems())
+            {
+                ListView* view = args.view;
+                if (view)
                 {
                     Point screenLoc = view->ClientToScreen(args.location);
                     ShowContextMenu(contextMenu.release(), screenLoc);
@@ -246,6 +271,13 @@ void MainWindow::OpenPackageClick()
 {
     try
     {
+        bool cancel = false;
+        CancelArgs cancelArgs(cancel);
+        ExitView().Fire(cancelArgs);
+        if (cancelArgs.cancel)
+        {
+            return;
+        }
         std::vector<std::pair<std::string, std::string>> descriptionFilterPairs;
         descriptionFilterPairs.push_back(std::make_pair("Package Files (*.package.xml)", "*.package.xml"));
         descriptionFilterPairs.push_back(std::make_pair("XML Files (*.xml)", "*.xml"));
@@ -264,6 +296,10 @@ void MainWindow::OpenPackageClick()
             package->SetView(packageContentView);
             package->SetExplorer(packageExplorer);
             packageExplorer->SetPackage(package.get());
+            if (packageExplorer->SelectedNode())
+            {
+                packageExplorer->SelectedNode()->Open();
+            }
         }
     }
     catch (const std::exception& ex)

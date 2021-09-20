@@ -21,10 +21,4 @@ Panel::Panel(ControlCreateParams& createParams) : ContainerControl(MakePanelCrea
 {
 }
 
-void Panel::OnPaint(PaintEventArgs& args)
-{
-    args.graphics.Clear(BackgroundColor());
-    ContainerControl::OnPaint(args);
-}
-
 } // wing

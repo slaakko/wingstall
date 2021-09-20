@@ -224,6 +224,16 @@ bool ContainerControl::ProcessMessage(Message& msg)
     return false;
 }
 
+void ContainerControl::OnChildSizeChanged(ControlEventArgs& args)
+{
+    Control::OnChildSizeChanged(args);
+    Control* parentControl = ParentControl();
+    if (parentControl)
+    {
+        parentControl->FireChildSizeChanged(args);
+    }
+}
+
 void ContainerControl::OnChildContentChanged(ControlEventArgs& args)
 {
     Control::OnChildContentChanged(args);

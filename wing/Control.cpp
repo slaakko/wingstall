@@ -6,6 +6,7 @@
 #include <wing/Control.hpp>
 #include <wing/ContainerControl.hpp>
 #include <wing/ListBox.hpp>
+#include <wing/ComboBox.hpp>
 #include <wing/Menu.hpp>
 #include <wing/Window.hpp>
 #include <wing/Application.hpp>
@@ -141,6 +142,7 @@ Control::Control(ControlCreateParams& createParams) :
     {
         Create();
     }
+    SetScrollUnits(ScrollUnits(10, 10));
 }
 
 Control::~Control()
@@ -507,10 +509,19 @@ void Control::SetSize(const Size& newSize)
 {
     if (size != newSize)
     {
-        SetSizeInternal(newSize);
         if (handle)
         {
-            MoveWindow(location, size, true);
+            MoveWindow(location, newSize, true);
+        }
+        SetSizeInternal(newSize);
+        if (GetFlag(ControlFlags::scrollSubject))
+        {
+            Control* parentControl = ParentControl();
+            if (parentControl)
+            {
+                ControlEventArgs args(this);
+                parentControl->OnChildSizeChanged(args);
+            }
         }
     }
 }
@@ -1022,6 +1033,11 @@ bool Control::ProcessMessage(Message& msg)
                         {
                             ListBox* listBox = static_cast<ListBox*>(child);
                             listBox->SelectedIndexChangedInternal();
+                        }
+                        else if (child->IsComboBox())
+                        {
+                            ComboBox* comboBox = static_cast<ComboBox*>(child);
+                            comboBox->SelectedIndexChangedInternal();
                         }
                         msg.result = 0;
                         return true;
@@ -1693,6 +1709,11 @@ void Control::OnLocationChanged()
 void Control::OnSizeChanged()
 {
     sizeChanged.Fire();
+}
+
+void Control::OnChildSizeChanged(ControlEventArgs& args)
+{
+    childSizeChanged.Fire(args);
 }
 
 void Control::OnContentChanged()

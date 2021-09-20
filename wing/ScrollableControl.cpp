@@ -191,39 +191,16 @@ void ScrollableControl::OnChildContentLocationChanged(ControlEventArgs& args)
     SetScrollPos(SB_HORZ, hpos);
 }
 
+void ScrollableControl::OnChildSizeChanged(ControlEventArgs& args)
+{
+    Control::OnChildSizeChanged(args);
+    ChildSizeOrContentSizeChanged(args);
+}
+
 void ScrollableControl::OnChildContentSizeChanged(ControlEventArgs& args)
 {
-    Control::OnChildContentChanged(args);
-    scrolledChild = args.control;
-    scrollUnits = scrolledChild->GetScrollUnits();
-    Size clientSize = scrolledChild->GetSize();
-    Size contentSize = scrolledChild->ContentSize();
-    if (contentSize.Height > clientSize.Height)
-    {
-        vmin = 0;
-        vmax = contentSize.Height / scrollUnits.vertical;
-        vpage = clientSize.Height / scrollUnits.vertical;
-        SetScrollBarData(SB_VERT, vpage, vpos, vmin, vmax);
-        verticalScrollBarShown = true;
-    }
-    else
-    {
-        ShowScrollBar(Handle(), SB_VERT, false);        
-        verticalScrollBarShown = false;
-    }
-    if (contentSize.Width > clientSize.Width)
-    {
-        hmin = 0;
-        hmax = contentSize.Width / scrollUnits.horizontal;
-        hpage = clientSize.Width / scrollUnits.horizontal;
-        SetScrollBarData(SB_HORZ, hpage, hpos, hmin, hmax);
-        horizontalScrollBarShown = true;
-    }
-    else
-    {
-        ShowScrollBar(Handle(), SB_HORZ, false);
-        horizontalScrollBarShown = false;
-    }
+    Control::OnChildContentSizeChanged(args);
+    ChildSizeOrContentSizeChanged(args);
 }
 
 void ScrollableControl::OnChildGotFocus(ControlEventArgs& args)
@@ -398,10 +375,7 @@ void ScrollableControl::GetScrollBarData(int bar, int& page, int& pos, int& min,
 void ScrollableControl::ScrollChild(int xAmount, int yAmount)
 {
     scrolledChild->SetContentLocationInternal(Point(scrollUnits.horizontal * hpos, scrollUnits.vertical * vpos));
-    Rect updateRect = MakeUpdateRect(xAmount, yAmount);
-    HRGN hrgnUpdate = CreateRectRgn(updateRect.X, updateRect.Y, updateRect.X + updateRect.Width, updateRect.Y + updateRect.Height);
-    int result = ScrollWindowEx(scrolledChild->Handle(), xAmount, yAmount, nullptr, nullptr, hrgnUpdate, nullptr, SW_INVALIDATE);
-    DeleteObject(hrgnUpdate);
+    int result = ScrollWindowEx(scrolledChild->Handle(), xAmount, yAmount, nullptr, nullptr, nullptr, nullptr, SW_INVALIDATE | SW_SCROLLCHILDREN);
     if (scrolledChild->IsDoubleBuffered())
     {
         scrolledChild->Invalidate();
@@ -431,6 +405,40 @@ Rect ScrollableControl::MakeUpdateRect(int xAmount, int yAmount)
     Rect updateRect(loc, size);
     updateRect.Inflate(scrollUnits.horizontal, scrollUnits.vertical);
     return updateRect;
+}
+
+void ScrollableControl::ChildSizeOrContentSizeChanged(ControlEventArgs& args)
+{
+    scrolledChild = args.control;
+    scrollUnits = scrolledChild->GetScrollUnits();
+    Size clientSize = scrolledChild->GetSize();
+    Size contentSize = scrolledChild->ContentSize();
+    if (contentSize.Height > clientSize.Height)
+    {
+        vmin = 0;
+        vmax = contentSize.Height / scrollUnits.vertical;
+        vpage = clientSize.Height / scrollUnits.vertical;
+        SetScrollBarData(SB_VERT, vpage, vpos, vmin, vmax);
+        verticalScrollBarShown = true;
+    }
+    else
+    {
+        ShowScrollBar(Handle(), SB_VERT, false);
+        verticalScrollBarShown = false;
+    }
+    if (contentSize.Width > clientSize.Width)
+    {
+        hmin = 0;
+        hmax = contentSize.Width / scrollUnits.horizontal;
+        hpage = clientSize.Width / scrollUnits.horizontal;
+        SetScrollBarData(SB_HORZ, hpage, hpos, hmin, hmax);
+        horizontalScrollBarShown = true;
+    }
+    else
+    {
+        ShowScrollBar(Handle(), SB_HORZ, false);
+        horizontalScrollBarShown = false;
+    }
 }
 
 } // wing

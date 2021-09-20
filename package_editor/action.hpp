@@ -33,6 +33,15 @@ private:
     NodeKind kind;
 };
 
+class EditAction : public ClickAction
+{
+public:
+    EditAction(MenuItem* menuItem_, Node* node_);
+    void Execute() override;
+private:
+    Node* node;
+};
+
 class RemoveAction : public ClickAction
 {
 public:

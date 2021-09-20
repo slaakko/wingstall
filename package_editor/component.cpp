@@ -7,6 +7,8 @@
 #include <package_editor/error.hpp>
 #include <package_editor/main_window.hpp>
 #include <package_editor/action.hpp>
+#include <package_editor/component_dialog.hpp>
+#include <package_editor/add_directories_and_files_dialog.hpp>
 #include <sngxml/xpath/XPathEvaluate.hpp>
 #include <soulng/util/Unicode.hpp>
 
@@ -91,6 +93,15 @@ Node* Components::GetNode(int index) const
     return nullptr;
 }
 
+bool Components::HasNode(const std::string& name) const
+{
+    for (const auto& component : components)
+    {
+        if (component->Name() == name) return true;
+    }
+    return false;
+}
+
 std::unique_ptr<Node> Components::RemoveChild(int index)
 {
     if (index >= 0 && index < Count())
@@ -135,7 +146,40 @@ void Components::AddAddNewMenuItems(ContextMenu* contextMenu, std::vector<std::u
     contextMenu->AddMenuItem(addNewComponentMenuItem.release());
 }
 
-Component::Component() : Node(NodeKind::component, std::string())
+void Components::AddNew(NodeKind kind)
+{
+    if (kind == NodeKind::component)
+    {
+        ComponentDialog dialog("Add New Component");
+        MainWindow* mainWindow = GetMainWindow();
+        if (mainWindow)
+        {
+            if (dialog.ShowDialog(*mainWindow) == DialogResult::ok)
+            {
+                if (HasNode(dialog.ComponentName()))
+                {
+                    throw std::runtime_error("name not unique");
+                }
+                Component* component = new Component(dialog.ComponentName());
+                AddComponent(component);
+                Open();
+                TreeViewNode* componentsTreeViewNode = GetTreeViewNode();
+                if (componentsTreeViewNode)
+                {
+                    TreeView* treeView = componentsTreeViewNode->GetTreeView();
+                    if (treeView)
+                    {
+                        TreeViewNode* componentTreeViewNode = component->ToTreeViewNode(treeView);
+                        componentsTreeViewNode->AddChild(componentTreeViewNode);
+                        treeView->SetSelectedNode(componentsTreeViewNode);
+                    }
+                }
+            }
+        }
+    }
+}
+
+Component::Component(const std::string& name_) : Node(NodeKind::component, name_)
 {
 }
 
@@ -353,34 +397,74 @@ void Component::InsertAfter(int index, std::unique_ptr<Node>&& child)
 
 bool Component::CanMoveUp(const Node* child) const
 {
-    int nd = directories.size();
-    if (child->Kind() == NodeKind::directory)
-    {
-        int index = IndexOf(child);
-        return index > 0 && index < nd;
-    }
-    else if (child->Kind() == NodeKind::file)
-    {
-        int index = IndexOf(child);
-        return index - nd > 0 && index - nd < files.size();
-    }
     return false;
 }
 
 bool Component::CanMoveDown(const Node* child) const
 {
-    int nd = directories.size();
-    if (child->Kind() == NodeKind::directory)
-    {
-        int index = IndexOf(child);
-        return index >= 0 && index < nd - 1;
-    }
-    else if (child->Kind() == NodeKind::file)
-    {
-        int index = IndexOf(child);
-        return index - nd >= 0 && index - nd < files.size() - 1;
-    }
     return false;
+}
+
+void Component::Edit()
+{
+    ComponentDialog dialog("Edit Component");
+    MainWindow* mainWindow = GetMainWindow();
+    if (mainWindow)
+    {
+        std::string prevName = Name();
+        dialog.SetComponentName(Name());
+        if (dialog.ShowDialog(*mainWindow) == DialogResult::ok)
+        {
+            if (dialog.ComponentName() != prevName)
+            {
+                if (HasNode(dialog.ComponentName()))
+                {
+                    throw std::runtime_error("name not unique");
+                }
+                SetName(dialog.ComponentName());
+                Open();
+                TreeViewNode* componentTreeViewNode = GetTreeViewNode();
+                if (componentTreeViewNode)
+                {
+                    componentTreeViewNode->SetText(Name());
+                }
+            }
+        }
+    }
+}
+
+void Component::AddNew(NodeKind kind)
+{
+    if (kind == NodeKind::content)
+    {
+        AddDirectoriesAndFilesDialog dialog(this);
+        MainWindow* mainWindow = GetMainWindow();
+        if (mainWindow)
+        {
+            if (dialog.ShowDialog(*mainWindow) == DialogResult::ok)
+            {
+                Open();
+                TreeViewNode* componentsTreeViewNode = GetTreeViewNode();
+                if (componentsTreeViewNode)
+                {
+                    TreeView* treeView = componentsTreeViewNode->GetTreeView();
+                    if (treeView)
+                    {
+                        //TreeViewNode* componentTreeViewNode = component->ToTreeViewNode(treeView);
+                        //componentsTreeViewNode->AddChild(componentTreeViewNode);
+                        //treeView->SetSelectedNode(componentsTreeViewNode);
+                    }
+                }
+            }
+        }
+    }
+}
+
+void Component::AddAddNewMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions)
+{
+    std::unique_ptr<MenuItem> addMenuItem(new MenuItem("Add Directories and Files"));
+    clickActions.push_back(std::unique_ptr<ClickAction>(new AddAction(addMenuItem.get(), this, NodeKind::content)));
+    contextMenu->AddMenuItem(addMenuItem.release());
 }
 
 } } // wingstall::package_editor

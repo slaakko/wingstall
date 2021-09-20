@@ -47,6 +47,7 @@ using VisibleChangedEvent = Event;
 using EnabledChangedEvent = Event;
 using LocationChangedEvent = Event;
 using SizeChangedEvent = Event;
+using ChildSizeChangedEvent = EventWithArgs<ControlEventArgs>;
 using ContentChangedEvent = Event;
 using ChildContentChangedEvent = EventWithArgs<ControlEventArgs>;
 using ContentLocationChangedEvent = Event;
@@ -290,7 +291,8 @@ enum class ControlFlags : int
     lbuttonPressed = 1 << 9,
     mouseHoverTimerStarted = 1 << 10,
     keyDownHandled = 1 << 11,
-    menuWantsKeys = 1 << 12
+    menuWantsKeys = 1 << 12,
+    scrollSubject = 1 << 13
 };
 
 WING_API inline ControlFlags operator&(ControlFlags left, ControlFlags right)
@@ -324,7 +326,9 @@ public:
     virtual bool IsRadioButton() const { return false; }
     virtual bool IsTextBox() const { return false; }
     virtual bool IsListBox() const { return false; }
+    virtual bool IsComboBox() const { return false; }
     virtual bool IsTextView() const { return false; }
+    virtual bool IsPanel() const { return false; }
     virtual ContainerControl* GetContainerControl() const;
     Window* GetWindow() const;
     void AddChildVisual(Control* child);
@@ -354,6 +358,7 @@ public:
     EnabledChangedEvent& EnabledChanged() { return enabledChanged; }
     LocationChangedEvent& LocationChanged() { return locationChanged; }
     SizeChangedEvent& SizeChanged() { return sizeChanged; }
+    ChildSizeChangedEvent& ChildSizeChanged() { return childSizeChanged; }
     ContentChangedEvent& ContentChanged() { return contentChanged; }
     ChildContentChangedEvent& ChildContentChanged() { return childContentChanged; }
     ContentLocationChangedEvent& ContentLocationChanged() { return contentLocationChanged; }
@@ -472,6 +477,7 @@ public:
     void FireChildLostFocus(ControlEventArgs& args) { OnChildLostFocus(args); }
     void FireChildContentChanged(ControlEventArgs& args) { OnChildContentChanged(args); }
     void FireChildContentLocationChanged(ControlEventArgs& args) { OnChildContentLocationChanged(args); }
+    void FireChildSizeChanged(ControlEventArgs& args) { OnChildSizeChanged(args); }
     void FireChildContentSizeChanged(ControlEventArgs& args) { OnChildContentSizeChanged(args); }
     virtual void ScrollLineDown();
     virtual void ScrollLineUp();
@@ -502,6 +508,7 @@ protected:
     virtual void OnEnabledChanged();
     virtual void OnLocationChanged();
     virtual void OnSizeChanged();
+    virtual void OnChildSizeChanged(ControlEventArgs& args);
     virtual void OnContentChanged();
     virtual void OnChildContentChanged(ControlEventArgs& args);
     virtual void OnContentLocationChanged();
@@ -590,6 +597,7 @@ private:
     EnabledChangedEvent enabledChanged;
     LocationChangedEvent locationChanged;
     SizeChangedEvent sizeChanged;
+    ChildSizeChangedEvent childSizeChanged;
     ContentChangedEvent contentChanged;
     ChildContentChangedEvent childContentChanged;
     ContentLocationChangedEvent contentLocationChanged;

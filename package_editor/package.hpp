@@ -23,10 +23,11 @@ class Properties : public Node
 public:
     Properties();
     TreeViewNode* ToTreeViewNode(TreeView* view);
-    const std::string& TargetRootDir() const { return targetRootDir; }
+    Control* CreateView(ImageList* imageList) override;
     void SetSourceRootDir(const std::string& sourceRootDir_);
     const std::string& SourceRootDir() const { return sourceRootDir; }
     void SetTargetRootDir(const std::string& targetRootDir_);
+    const std::string& TargetRootDir() const { return targetRootDir; }
     const std::string& AppName() const { return appName; }
     void SetAppName(const std::string& appName_);
     const std::string& Publisher() const { return publisher; }

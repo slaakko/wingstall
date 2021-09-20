@@ -13,8 +13,7 @@ class WING_API Panel : public ContainerControl
 {
 public:
     Panel(ControlCreateParams& createParams);
-protected:
-    void OnPaint(PaintEventArgs& args) override;
+    bool IsPanel() const override { return true; }
 };
 
 } // wing

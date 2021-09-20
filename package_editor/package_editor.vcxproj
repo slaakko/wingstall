@@ -153,7 +153,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="action.cpp" />
+    <ClCompile Include="add_directories_and_files_dialog.cpp" />
     <ClCompile Include="component.cpp" />
+    <ClCompile Include="component_dialog.cpp" />
     <ClCompile Include="directory.cpp" />
     <ClCompile Include="engine_variable.cpp" />
     <ClCompile Include="environment.cpp" />
@@ -166,11 +168,14 @@
     <ClCompile Include="package.cpp" />
     <ClCompile Include="package_content_view.cpp" />
     <ClCompile Include="package_explorer.cpp" />
+    <ClCompile Include="properties_view.cpp" />
     <ClCompile Include="rule.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="action.hpp" />
+    <ClInclude Include="add_directories_and_files_dialog.hpp" />
     <ClInclude Include="component.hpp" />
+    <ClInclude Include="component_dialog.hpp" />
     <ClInclude Include="directory.hpp" />
     <ClInclude Include="environment.hpp" />
     <ClInclude Include="error.hpp" />
@@ -181,6 +186,7 @@
     <ClInclude Include="package.hpp" />
     <ClInclude Include="package_content_view.hpp" />
     <ClInclude Include="package_explorer.hpp" />
+    <ClInclude Include="properties_view.hpp" />
     <ClInclude Include="rule.hpp" />
     <ClInclude Include="engine_variable.hpp" />
   </ItemGroup>

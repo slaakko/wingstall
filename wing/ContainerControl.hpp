@@ -29,6 +29,7 @@ public:
     Control* GetLastEnabledTabStopControl() const override;
 protected:
     bool ProcessMessage(Message& msg) override;
+    void OnChildSizeChanged(ControlEventArgs& args) override;
     void OnChildContentChanged(ControlEventArgs& args) override;
     void OnChildContentLocationChanged(ControlEventArgs& args) override;
     void OnChildContentSizeChanged(ControlEventArgs& args) override;

@@ -6,7 +6,9 @@
 #include <package_editor/package.hpp>
 #include <package_editor/error.hpp>
 #include <package_editor/main_window.hpp>
+#include <package_editor/properties_view.hpp>
 #include <wing/ImageList.hpp>
+#include <wing/ScrollableControl.hpp>
 #include <sngxml/xpath/XPathEvaluate.hpp>
 #include <soulng/util/TextUtils.hpp>
 #include <soulng/util/Unicode.hpp>
@@ -80,6 +82,12 @@ TreeViewNode* Properties::ToTreeViewNode(TreeView* view)
         node->SetImageIndex(imageList->GetImageIndex("package.properties.bitmap"));
     }
     return node;
+}
+
+Control* Properties::CreateView(ImageList* imageList)
+{
+    std::unique_ptr<PropertiesView> viewPtr(new PropertiesView(GetPackage()));
+    return viewPtr.release();
 }
 
 Package::Package() : Node(NodeKind::package, std::string()), filePath(), view(nullptr), explorer(nullptr)

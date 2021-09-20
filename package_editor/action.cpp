@@ -18,8 +18,15 @@ void OpenAction::Execute()
     MainWindow* mainWindow = node->GetMainWindow();
     if (mainWindow)
     {
-        mainWindow->HideContextMenu();
-        node->Open();
+        try
+        {
+            mainWindow->HideContextMenu();
+            node->Open();
+        }
+        catch (const std::exception& ex)
+        {
+            ShowErrorMessageBox(mainWindow->Handle(), ex.what());
+        }
     }
 }
 
@@ -32,8 +39,36 @@ void AddAction::Execute()
     MainWindow* mainWindow = node->GetMainWindow();
     if (mainWindow)
     {
-        mainWindow->HideContextMenu();
-        node->AddNew(kind);
+        try
+        {
+            mainWindow->HideContextMenu();
+            node->AddNew(kind);
+        }
+        catch (const std::exception& ex)
+        {
+            ShowErrorMessageBox(mainWindow->Handle(), ex.what());
+        }
+    }
+}
+
+EditAction::EditAction(MenuItem* menuItem_, Node* node_) : ClickAction(menuItem_), node(node_)
+{
+}
+
+void EditAction::Execute()
+{
+    MainWindow* mainWindow = node->GetMainWindow();
+    if (mainWindow)
+    {
+        try
+        {
+            mainWindow->HideContextMenu();
+            node->Edit();
+        }
+        catch (const std::exception& ex)
+        {
+            ShowErrorMessageBox(mainWindow->Handle(), ex.what());
+        }
     }
 }
 
@@ -46,8 +81,15 @@ void RemoveAction::Execute()
     MainWindow* mainWindow = node->GetMainWindow();
     if (mainWindow)
     {
-        mainWindow->HideContextMenu();
-        node->Remove();
+        try
+        {
+            mainWindow->HideContextMenu();
+            node->Remove();
+        }
+        catch (const std::exception& ex)
+        {
+            ShowErrorMessageBox(mainWindow->Handle(), ex.what());
+        }
     }
 }
 
@@ -60,8 +102,15 @@ void MoveUpAction::Execute()
     MainWindow* mainWindow = node->GetMainWindow();
     if (mainWindow)
     {
-        mainWindow->HideContextMenu();
-        node->MoveUp();
+        try
+        {
+            mainWindow->HideContextMenu();
+            node->MoveUp();
+        }
+        catch (const std::exception& ex)
+        {
+            ShowErrorMessageBox(mainWindow->Handle(), ex.what());
+        }
     }
 }
 
@@ -74,8 +123,15 @@ void MoveDownAction::Execute()
     MainWindow* mainWindow = node->GetMainWindow();
     if (mainWindow)
     {
-        mainWindow->HideContextMenu();
-        node->MoveDown();
+        try
+        {
+            mainWindow->HideContextMenu();
+            node->MoveDown();
+        }
+        catch (const std::exception& ex)
+        {
+            ShowErrorMessageBox(mainWindow->Handle(), ex.what());
+        }
     }
 }
 

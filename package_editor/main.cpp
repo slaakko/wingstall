@@ -4,6 +4,7 @@
 // =================================
 
 #include <package_editor/main_window.hpp>
+#include <wing/Metrics.hpp>
 #include <soulng/util/Path.hpp>
 #include <soulng/util/Process.hpp>
 #include <wing/InitDone.hpp>

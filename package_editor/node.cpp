@@ -143,7 +143,17 @@ Node* Node::GetNode(int index) const
     return nullptr;
 }
 
+bool Node::HasNode(const std::string& name) const
+{
+    return false;
+}
+
 void Node::AddNew(NodeKind kind)
+{
+}
+
+
+void Node::Edit()
 {
 }
 
@@ -217,7 +227,7 @@ void Node::MoveUp()
                     p->InsertChildBefore(treeViewNode, before);
                     if (treeView)
                     {
-                        treeView->SetSelectedNode(treeViewNode);
+                        treeView->SetSelectedNode(p);
                     }
                 }
             }
@@ -247,7 +257,7 @@ void Node::MoveDown()
                     p->InsertChildAfter(treeViewNode, after);
                     if (treeView)
                     {
-                        treeView->SetSelectedNode(treeViewNode);
+                        treeView->SetSelectedNode(p);
                     }
                 }
             }
@@ -255,38 +265,51 @@ void Node::MoveDown()
     }
 }
 
-void Node::AddMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions, ContextMenuKind menuKind)
+void Node::AddMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions, MenuItemsKind menuItemsKind)
 {
-    if (menuKind == ContextMenuKind::treeView)
+    if (menuItemsKind == MenuItemsKind::newMenuItems)
     {
         if (CanAdd())
         {
             AddAddNewMenuItems(contextMenu, clickActions);
         }
     }
-    if (CanOpen())
+    else if (menuItemsKind == MenuItemsKind::allMenuItems)
     {
-        std::unique_ptr<MenuItem> openMenuItem(new MenuItem("Open"));
-        clickActions.push_back(std::unique_ptr<ClickAction>(new OpenAction(openMenuItem.get(), this)));
-        contextMenu->AddMenuItem(openMenuItem.release());
-    }
-    if (CanRemove())
-    {
-        std::unique_ptr<MenuItem> removeMenuItem(new MenuItem("Remove"));
-        clickActions.push_back(std::unique_ptr<ClickAction>(new RemoveAction(removeMenuItem.get(), this)));
-        contextMenu->AddMenuItem(removeMenuItem.release());
-    }
-    if (CanMoveUp())
-    {
-        std::unique_ptr<MenuItem> moveUpMenuItem(new MenuItem("Move Up"));
-        clickActions.push_back(std::unique_ptr<ClickAction>(new MoveUpAction(moveUpMenuItem.get(), this)));
-        contextMenu->AddMenuItem(moveUpMenuItem.release());
-    }
-    if (CanMoveDown())
-    {
-        std::unique_ptr<MenuItem> moveDownMenuItem(new MenuItem("Move Down"));
-        clickActions.push_back(std::unique_ptr<ClickAction>(new MoveDownAction(moveDownMenuItem.get(), this)));
-        contextMenu->AddMenuItem(moveDownMenuItem.release());
+        if (CanOpen())
+        {
+            std::unique_ptr<MenuItem> openMenuItem(new MenuItem("Open"));
+            clickActions.push_back(std::unique_ptr<ClickAction>(new OpenAction(openMenuItem.get(), this)));
+            contextMenu->AddMenuItem(openMenuItem.release());
+        }
+        if (CanAdd())
+        {
+            AddAddNewMenuItems(contextMenu, clickActions);
+        }
+        if (CanEdit())
+        {
+            std::unique_ptr<MenuItem> editMenuItem(new MenuItem("Edit"));
+            clickActions.push_back(std::unique_ptr<ClickAction>(new EditAction(editMenuItem.get(), this)));
+            contextMenu->AddMenuItem(editMenuItem.release());
+        }
+        if (CanRemove())
+        {
+            std::unique_ptr<MenuItem> removeMenuItem(new MenuItem("Remove"));
+            clickActions.push_back(std::unique_ptr<ClickAction>(new RemoveAction(removeMenuItem.get(), this)));
+            contextMenu->AddMenuItem(removeMenuItem.release());
+        }
+        if (CanMoveUp())
+        {
+            std::unique_ptr<MenuItem> moveUpMenuItem(new MenuItem("Move Up"));
+            clickActions.push_back(std::unique_ptr<ClickAction>(new MoveUpAction(moveUpMenuItem.get(), this)));
+            contextMenu->AddMenuItem(moveUpMenuItem.release());
+        }
+        if (CanMoveDown())
+        {
+            std::unique_ptr<MenuItem> moveDownMenuItem(new MenuItem("Move Down"));
+            clickActions.push_back(std::unique_ptr<ClickAction>(new MoveDownAction(moveDownMenuItem.get(), this)));
+            contextMenu->AddMenuItem(moveDownMenuItem.release());
+        }
     }
 }
 

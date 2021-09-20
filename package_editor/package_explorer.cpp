@@ -132,6 +132,7 @@ void PackageExplorer::MakeView()
     }
     std::unique_ptr<TreeView> treeViewPtr(new TreeView(treeViewCreateParams));
     treeView = treeViewPtr.get();
+    treeView->SetFlag(ControlFlags::scrollSubject);
     treeView->SetDoubleBuffered();
     treeView->SetImageList(imageList);
     treeView->NodeClick().AddHandler(this, &PackageExplorer::TreeViewNodeClick);
@@ -190,7 +191,7 @@ void PackageExplorer::TreeViewNodeClick(TreeViewNodeClickEventArgs& args)
                 {
                     mainWindow->ClearClickActions();
                     std::unique_ptr<ContextMenu> contextMenu(new ContextMenu());
-                    node->AddMenuItems(contextMenu.get(), mainWindow->ClickActions(), ContextMenuKind::treeView);
+                    node->AddMenuItems(contextMenu.get(), mainWindow->ClickActions(), MenuItemsKind::allMenuItems);
                     if (contextMenu->HasMenuItems())
                     {
                         Point screenLoc = treeView->ClientToScreen(args.location);
@@ -256,6 +257,24 @@ void PackageExplorer::Open(Node* node)
             treeView->SetSelectedNode(treeViewNode);
         }
     }
+}
+
+Node* PackageExplorer::SelectedNode()
+{
+    if (treeView)
+    {
+        TreeViewNode* selectedNode = treeView->SelectedNode();
+        if (selectedNode)
+        {
+            void* data = selectedNode->Data();
+            if (data)
+            {
+                Node* node = static_cast<Node*>(data);
+                return node;
+            }
+        }
+    }
+    return nullptr;
 }
 
 } } // wingstall::package_editor

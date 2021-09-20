@@ -49,6 +49,7 @@ public:
     void SetImageList(ImageList* imageList);
     void SetContentView(PackageContentView* contentView_);
     void Open(Node* node);
+    Node* SelectedNode();
     void TreeViewNodeClick(TreeViewNodeClickEventArgs& args);
 protected:
     void OnPaint(PaintEventArgs& args) override;

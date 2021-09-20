@@ -16,14 +16,18 @@ namespace wingstall { namespace package_editor {
 
 using namespace wing;
 
+using ExitViewEvent = EventWithArgs<CancelArgs>;
+
 class MainWindow : public Window
 {
 public:
     MainWindow();
+    ~MainWindow();
     void AddListViewEventHandlers(ListView* listView);
     void AddTreeViewEventHandlers(TreeView* treeView);
     void ClearClickActions();
     std::vector<std::unique_ptr<ClickAction>>& ClickActions() { return clickActions; }
+    ExitViewEvent& ExitView() { return exitView; }
 protected:
     void OnKeyDown(KeyEventArgs& args) override;
     void MouseUpNotification(MouseEventArgs& args) override;
@@ -32,6 +36,7 @@ private:
     MenuItem* openPackageMenuItem;
     MenuItem* closePackageMenuItem;
     MenuItem* exitMenuItem;
+    ExitViewEvent exitView;
     std::unique_ptr<Package> package;
     PackageExplorer* packageExplorer;
     PackageContentView* packageContentView;

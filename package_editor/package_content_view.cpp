@@ -4,6 +4,7 @@
 // =================================
 
 #include <package_editor/package_content_view.hpp>
+#include <package_editor/main_window.hpp>
 #include <wing/PaddedControl.hpp>
 #include <wing/BorderedControl.hpp>
 #include <wing/ScrollableControl.hpp>
@@ -139,25 +140,46 @@ void PackageContentView::OnPaint(PaintEventArgs& args)
 
 void PackageContentView::ViewContent(Node* node)
 {
-    if (framedChild)
+    if (node)
     {
-        framedChild->Hide();
-        RemoveChild(framedChild);
-        framedChild = nullptr;
-        child = nullptr;
+        bool cancel = false;
+        CancelArgs cancelArgs(cancel);
+        mainWindow->ExitView().Fire(cancelArgs);
+        if (cancelArgs.cancel)
+        {
+            return;
+        }
+        if (framedChild)
+        {
+            framedChild->Hide();
+            RemoveChild(framedChild);
+            framedChild = nullptr;
+            child = nullptr;
+        }
+        Control* view = node->CreateView(imageList);
+        if (!view)
+        {
+            view = new EmptyView();
+        }
+        std::unique_ptr<Control> framedView(MakeFramedControl(view));
+        AddChild(framedView.release());
     }
-    Control* view = node->CreateView(imageList);
-    if (!view)
+    else
     {
-        view = new EmptyView();
+        if (framedChild)
+        {
+            framedChild->Hide();
+            RemoveChild(framedChild);
+            framedChild = nullptr;
+            child = nullptr;
+        }
     }
-    std::unique_ptr<Control> framedView(MakeFramedControl(view));
-    AddChild(framedView.release());
 }
 
 Control* PackageContentView::MakeFramedControl(Control* child_)
 {
     child = child_;
+    child->SetFlag(ControlFlags::scrollSubject);
     PaddedControl* paddedControl = new PaddedControl(PaddedControlCreateParams(child).Defaults());
     BorderedControl* borderedControl = new BorderedControl(BorderedControlCreateParams(paddedControl).SetBorderStyle(BorderStyle::single).NormalSingleBorderColor(frameColor));
     ScrollableControl* scrollableControl = new ScrollableControl(ScrollableControlCreateParams(borderedControl).SetDock(Dock::fill));

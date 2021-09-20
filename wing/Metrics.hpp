@@ -79,6 +79,8 @@ public:
     void SetDefaultLabelSize(const Size& defaultLabelSize_) { defaultLabelSize = defaultLabelSize_; }
     const Size& DefaultTextBoxSize() const { return defaultTextBoxSize; }
     void SetDefaultTextBoxSize(const Size& defaultTextBoxSize_) { defaultTextBoxSize = defaultTextBoxSize_; }
+    const Size& DefaultComboBoxSize() const { return defaultComboBoxSize; }
+    void SetDefaultComboBoxSize(const Size& defaultComboBoxSize_) { defaultComboBoxSize = defaultComboBoxSize_; }
     const Size& DefaultListBoxSize() const { return defaultListBoxSize; }
     void SetDefaultListBoxSize(const Size& defaultListBoxSize_) { defaultListBoxSize = defaultListBoxSize_; }
     const Size& DefaultCheckBoxSize() const { return defaultCheckBoxSize; }
@@ -96,6 +98,8 @@ private:
     SizeElement defaultLabelSizeElement;
     Size defaultTextBoxSize;
     SizeElement defaultTextBoxSizeElement;
+    Size defaultComboBoxSize;
+    SizeElement defaultComboBoxSizeElement;
     Size defaultListBoxSize;
     SizeElement defaultListBoxSizeElement;
     Size defaultCheckBoxSize;

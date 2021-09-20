@@ -19,6 +19,7 @@ WindowManager::WindowManager()
     systemClassNames.insert("STATIC");
     systemClassNames.insert("EDIT");
     systemClassNames.insert("LISTBOX");
+    systemClassNames.insert("COMBOBOX");
 }
 
 bool WindowManager::IsSystemClassName(const std::string& windowClassName) const

@@ -352,7 +352,7 @@ void ListView::OnMouseUp(MouseEventArgs& args)
         ListViewItem* item = ItemAt(args.location);
         if (item == mouseDownItem)
         {
-            ListViewItemEventArgs itemArgs(item);
+            ListViewItemEventArgs itemArgs(this, item);
             if (args.buttons == MouseButtons::lbutton)
             {
                 itemClick.Fire(itemArgs);
@@ -386,7 +386,7 @@ void ListView::OnMouseDoubleClick(MouseEventArgs& args)
         ListViewItem* item = ItemAt(args.location);
         if (item)
         {
-            ListViewItemEventArgs args(item);
+            ListViewItemEventArgs args(this, item);
             itemDoubleClick.Fire(args);
         }
         mouseDownItem = nullptr;
@@ -415,7 +415,7 @@ void ListView::OnMouseLeave()
     {
         if (mouseEnterItem)
         {
-            ListViewItemEventArgs leaveItemArgs(mouseEnterItem);
+            ListViewItemEventArgs leaveItemArgs(this, mouseEnterItem);
             itemLeave.Fire(leaveItemArgs);
             mouseEnterItem = nullptr;
         }
@@ -435,7 +435,7 @@ void ListView::OnMouseMove(MouseEventArgs& args)
             mouseEnterItem = ItemAt(args.location);
             if (mouseEnterItem)
             {
-                ListViewItemEventArgs itemArgs(mouseEnterItem);
+                ListViewItemEventArgs itemArgs(this, mouseEnterItem);
                 itemEnter.Fire(itemArgs);
             }
         }
@@ -444,12 +444,12 @@ void ListView::OnMouseMove(MouseEventArgs& args)
             ListViewItem* item = ItemAt(args.location);
             if (item != mouseEnterItem)
             {
-                ListViewItemEventArgs leaveItemArgs(mouseEnterItem);
+                ListViewItemEventArgs leaveItemArgs(this, mouseEnterItem);
                 itemLeave.Fire(leaveItemArgs);
                 mouseEnterItem = item;
                 if (mouseEnterItem)
                 {
-                    ListViewItemEventArgs enterItemArgs(mouseEnterItem);
+                    ListViewItemEventArgs enterItemArgs(this, mouseEnterItem);
                     itemEnter.Fire(enterItemArgs);
                 }
             }

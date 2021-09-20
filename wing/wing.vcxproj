@@ -163,6 +163,7 @@
     <ClCompile Include="CheckBox.cpp" />
     <ClCompile Include="Clipboard.cpp" />
     <ClCompile Include="Color.cpp" />
+    <ClCompile Include="ComboBox.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="Container.cpp" />
@@ -222,6 +223,7 @@
     <ClInclude Include="CheckBox.hpp" />
     <ClInclude Include="Clipboard.hpp" />
     <ClInclude Include="Color.hpp" />
+    <ClInclude Include="ComboBox.hpp" />
     <ClInclude Include="Component.hpp" />
     <ClInclude Include="Console.hpp" />
     <ClInclude Include="Container.hpp" />
