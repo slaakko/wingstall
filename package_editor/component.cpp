@@ -11,10 +11,31 @@
 #include <package_editor/add_directories_and_files_dialog.hpp>
 #include <sngxml/xpath/XPathEvaluate.hpp>
 #include <soulng/util/Unicode.hpp>
+#include <algorithm>
 
 namespace wingstall { namespace package_editor {
 
 using namespace soulng::unicode;
+
+struct DirectoryByName
+{
+    bool operator()(const std::unique_ptr<Directory>& left, const std::unique_ptr<Directory>& right) const
+    {
+        std::u32string l = ToUtf32(left->Name());
+        std::u32string r = ToUtf32(right->Name());
+        return l < r;
+    }
+};
+
+struct FileByName
+{
+    bool operator()(const std::unique_ptr<File>& left, const std::unique_ptr<File>& right) const
+    {
+        std::u32string l = ToUtf32(left->Name());
+        std::u32string r = ToUtf32(right->Name());
+        return l < r;
+    }
+};
 
 Components::Components() : Node(NodeKind::components, "Components")
 {
@@ -146,6 +167,76 @@ void Components::AddAddNewMenuItems(ContextMenu* contextMenu, std::vector<std::u
     contextMenu->AddMenuItem(addNewComponentMenuItem.release());
 }
 
+Component* Components::GetDirectoryComponent(const std::u32string& directoryName) const
+{
+    auto it = directoryNameComponentMap.find(directoryName);
+    if (it != directoryNameComponentMap.cend())
+    {
+        return it->second;
+    }
+    return nullptr;
+}
+
+Component* Components::GetFileComponent(const std::u32string& fileName) const
+{
+    auto it = fileNameComponentMap.find(fileName);
+    if (it != fileNameComponentMap.cend())
+    {
+        return it->second;
+    }
+    return nullptr;
+}
+
+void Components::MapDirectoryComponent(const std::u32string& directoryName, Component* component)
+{
+    directoryNameComponentMap[directoryName] = component;
+}
+
+void Components::MapFileComponent(const std::u32string& fileName, Component* component)
+{
+    fileNameComponentMap[fileName] = component;
+}
+
+void Components::RemoveDirectoryName(const std::u32string& directoryName)
+{
+    directoryNameComponentMap.erase(directoryName);
+}
+
+void Components::RemoveFileName(const std::u32string& fileName)
+{
+    fileNameComponentMap.erase(fileName);
+}
+
+void Components::MakeDisjoint()
+{
+    std::vector<std::u32string> directoryNames;
+    std::vector<std::u32string> fileNames;
+    for (const std::unique_ptr<Component>& component : components)
+    {
+        component->FilterDirectories(directoryNames);
+        directoryNames = Merge(directoryNames, component->DirectoryNames());
+        component->FilterFiles(fileNames);
+        fileNames = Merge(fileNames, component->FileNames());
+    }
+}
+
+void Components::MakeMaps()
+{
+    for (const std::unique_ptr<Component>& component : components)
+    {
+        std::vector<std::u32string> directoryNames = component->DirectoryNames();
+        for (const std::u32string& directoryName : directoryNames)
+        {
+            directoryNameComponentMap[directoryName] = component.get();
+        }
+        std::vector<std::u32string> fileNames = component->FileNames();
+        for (const std::u32string& fileName : fileNames)
+        {
+            fileNameComponentMap[fileName] = component.get();
+        }
+    }
+}
+
 void Components::AddNew(NodeKind kind)
 {
     if (kind == NodeKind::component)
@@ -232,6 +323,7 @@ Component::Component(const std::string& packageXMLFilePath, sngxml::dom::Element
             }
         }
     }
+    Sort();
 }
 
 TreeViewNode* Component::ToTreeViewNode(TreeView* view)
@@ -341,34 +433,52 @@ Node* Component::GetNode(int index) const
 
 std::unique_ptr<Node> Component::RemoveChild(int index)
 {
-    int nd = directories.size();
-    if (index >= 0 && index < nd)
+    Node* parent = Parent();
+    if (parent && parent->Kind() == NodeKind::components)
     {
-        Directory* directory = directories[index].release();
-        directories.erase(directories.begin() + index);
-        return std::unique_ptr<Node>(directory);
-    }
-    else if (index >= nd && index < Count())
-    {
-        File* file = files[index].release();
-        files.erase(files.begin() + index - nd);
-        return std::unique_ptr<Node>(file);
+        Components* components = static_cast<Components*>(parent);
+        int nd = directories.size();
+        if (index >= 0 && index < nd)
+        {
+            Directory* directory = directories[index].release();
+            components->RemoveDirectoryName(ToUtf32(directory->Name()));
+            directories.erase(directories.begin() + index);
+            return std::unique_ptr<Node>(directory);
+        }
+        else if (index >= nd && index < Count())
+        {
+            File* file = files[index].release();
+            components->RemoveDirectoryName(ToUtf32(file->Name()));
+            files.erase(files.begin() + index - nd);
+            return std::unique_ptr<Node>(file);
+        }
     }
     return std::unique_ptr<Node>();
 }
 
 void Component::InsertBefore(int index, std::unique_ptr<Node>&& child)
 {
-    int nd = directories.size();
-    if (child->Kind() == NodeKind::directory && index >= 0 && index < nd)
+    Node* parent = Parent();
+    if (parent && parent->Kind() == NodeKind::components)
     {
-        Directory* directory = static_cast<Directory*>(child.release());
-        directories.insert(directories.begin() + index, std::unique_ptr<Directory>(directory));
-    }
-    else if (child->Kind() == NodeKind::file && index >= nd && index < Count())
-    {
-        File* file = static_cast<File*>(child.release());
-        files.insert(files.begin() + index - nd, std::unique_ptr<File>(file));
+        Components* components = static_cast<Components*>(parent);
+        int nd = directories.size();
+        if (child->Kind() == NodeKind::directory && index >= 0 && index < nd)
+        {
+            Directory* directory = static_cast<Directory*>(child.release());
+            components->MapDirectoryComponent(ToUtf32(directory->Name()), this);
+            directories.insert(directories.begin() + index, std::unique_ptr<Directory>(directory));
+        }
+        else if (child->Kind() == NodeKind::file && index >= nd && index < Count())
+        {
+            File* file = static_cast<File*>(child.release());
+            components->MapFileComponent(ToUtf32(file->Name()), this);
+            files.insert(files.begin() + index - nd, std::unique_ptr<File>(file));
+        }
+        else
+        {
+            child.reset();
+        }
     }
     else
     {
@@ -378,16 +488,27 @@ void Component::InsertBefore(int index, std::unique_ptr<Node>&& child)
 
 void Component::InsertAfter(int index, std::unique_ptr<Node>&& child)
 {
-    int nd = directories.size();
-    if (child->Kind() == NodeKind::directory && index >= 0 && index < nd)
+    Node* parent = Parent();
+    if (parent && parent->Kind() == NodeKind::components)
     {
-        Directory* directory = static_cast<Directory*>(child.release());
-        directories.insert(directories.begin() + index + 1, std::unique_ptr<Directory>(directory));
-    }
-    else if (child->Kind() == NodeKind::file && index >= nd && index < Count())
-    {
-        File* file = static_cast<File*>(child.release());
-        files.insert(files.begin() + index - nd + 1, std::unique_ptr<File>(file));
+        Components* components = static_cast<Components*>(parent);
+        int nd = directories.size();
+        if (child->Kind() == NodeKind::directory && index >= 0 && index < nd)
+        {
+            Directory* directory = static_cast<Directory*>(child.release());
+            components->MapDirectoryComponent(ToUtf32(directory->Name()), this);
+            directories.insert(directories.begin() + index + 1, std::unique_ptr<Directory>(directory));
+        }
+        else if (child->Kind() == NodeKind::file && index >= nd && index < Count())
+        {
+            File* file = static_cast<File*>(child.release());
+            components->MapFileComponent(ToUtf32(file->Name()), this);
+            files.insert(files.begin() + index - nd + 1, std::unique_ptr<File>(file));
+        }
+        else
+        {
+            child.reset();
+        }
     }
     else
     {
@@ -465,6 +586,60 @@ void Component::AddAddNewMenuItems(ContextMenu* contextMenu, std::vector<std::un
     std::unique_ptr<MenuItem> addMenuItem(new MenuItem("Add Directories and Files"));
     clickActions.push_back(std::unique_ptr<ClickAction>(new AddAction(addMenuItem.get(), this, NodeKind::content)));
     contextMenu->AddMenuItem(addMenuItem.release());
+}
+
+std::vector<std::u32string> Component::DirectoryNames() const
+{
+    std::vector<std::u32string> result;
+    for (const std::unique_ptr<Directory>& directory : directories)
+    {
+        result.push_back(ToUtf32(directory->Name()));
+    }
+    std::sort(result.begin(), result.end());
+    return result;
+}
+
+std::vector<std::u32string> Component::FileNames() const
+{
+    std::vector<std::u32string> result;
+    for (const std::unique_ptr<File>& file : files)
+    {
+        result.push_back(ToUtf32(file->Name()));
+    }
+    std::sort(result.begin(), result.end());
+    return result;
+}
+
+void Component::FilterDirectories(const std::vector<std::u32string>& exclude)
+{
+    std::vector<std::unique_ptr<Directory>> result;
+    for (std::unique_ptr<Directory>& directory : directories)
+    {
+        if (!std::binary_search(exclude.begin(), exclude.end(), ToUtf32(directory->Name())))
+        {
+            result.push_back(std::unique_ptr<Directory>(directory.release()));
+        }
+    }
+    std::swap(directories, result);
+}
+
+void Component::FilterFiles(const std::vector<std::u32string>& exclude)
+{
+    std::vector<std::unique_ptr<File>> result;
+    for (std::unique_ptr<File>& file : files)
+    {
+        if (!std::binary_search(exclude.begin(), exclude.end(), ToUtf32(file->Name())))
+        {
+            result.push_back(std::unique_ptr<File>(file.release()));
+        }
+    }
+    std::swap(files, result);
+}
+
+void Component::Sort()
+{
+    std::sort(directories.begin(), directories.end(), DirectoryByName());
+    std::sort(files.begin(), files.end(), FileByName());
 }
 
 } } // wingstall::package_editor

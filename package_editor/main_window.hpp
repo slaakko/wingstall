@@ -23,6 +23,7 @@ class MainWindow : public Window
 public:
     MainWindow();
     ~MainWindow();
+    ImageList* GetImageList() const { return const_cast<ImageList*>(&imageList); }
     void AddListViewEventHandlers(ListView* listView);
     void AddTreeViewEventHandlers(TreeView* treeView);
     void ClearClickActions();
@@ -32,6 +33,13 @@ protected:
     void OnKeyDown(KeyEventArgs& args) override;
     void MouseUpNotification(MouseEventArgs& args) override;
 private:
+    void NewPackageClick();
+    void OpenPackageClick();
+    void ClosePackageClick();
+    void ExitClick();
+    void ListViewItemClick(ListViewItemEventArgs& args);
+    void ListViewItemRightClick(ListViewItemEventArgs& args);
+    void ListViewItemDoubleClick(ListViewItemEventArgs& args);
     MenuItem* newPackageMenuItem;
     MenuItem* openPackageMenuItem;
     MenuItem* closePackageMenuItem;
@@ -44,13 +52,6 @@ private:
     ImageList imageList;
     bool showingDialog;
     std::vector<std::unique_ptr<ClickAction>> clickActions;
-    void NewPackageClick();
-    void OpenPackageClick();
-    void ClosePackageClick();
-    void ExitClick();
-    void ListViewItemClick(ListViewItemEventArgs& args);
-    void ListViewItemRightClick(ListViewItemEventArgs& args);
-    void ListViewItemDoubleClick(ListViewItemEventArgs& args);
 };
 
 } } // wingstall::package_editor

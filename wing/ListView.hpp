@@ -145,7 +145,7 @@ protected:
     void SetCursor() override;
     void Measure(Graphics& graphics);
 private:
-    void MeasureItems(Graphics& graphics);
+    void MeasureItems(Graphics& graphics, Size& contentSize);
     void DrawColumnHeader(Graphics& graphics, PointF& origin);
     void DrawItems(Graphics& graphics, PointF& origin);
     ListViewFlags flags;

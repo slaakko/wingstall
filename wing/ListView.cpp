@@ -302,11 +302,13 @@ void ListView::OnPaint(PaintEventArgs& args)
             SetMeasured();
             Measure(args.graphics);
         }
+        Size contentSize(0, 0);
         args.graphics.Clear(BackgroundColor());
         PointF origin;
-        MeasureItems(args.graphics);
+        MeasureItems(args.graphics, contentSize);
         DrawColumnHeader(args.graphics, origin);
         DrawItems(args.graphics, origin);
+        SetContentSize(contentSize);
         Control::OnPaint(args);
     }
     catch (const std::exception& ex)
@@ -501,15 +503,19 @@ void ListView::Measure(Graphics& graphics)
     ellipsisWidth = ellipsisRect.Width;
 }
 
-void ListView::MeasureItems(Graphics& graphics)
+void ListView::MeasureItems(Graphics& graphics, Size& contentSize)
 {
+    int maxWidth = 0;
     Point loc(itemPadding.left, charHeight + columnHeaderPadding.Vertical());
     for (const auto& item : items)
     {
         item->SetLocation(loc);
         item->Measure(graphics);
         loc.Y = loc.Y + item->GetSize().Height;
+        maxWidth = std::max(maxWidth, item->GetSize().Width);
     }
+    contentSize.Width = std::max(contentSize.Width, maxWidth);
+    contentSize.Height = std::max(contentSize.Height, loc.Y);
 }
 
 void ListView::DrawColumnHeader(Graphics& graphics, PointF& origin)

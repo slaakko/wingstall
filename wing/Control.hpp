@@ -33,6 +33,13 @@ struct WING_API CancelArgs
     bool& cancel;
 };
 
+struct WING_API SizeChangingEventArgs
+{
+    SizeChangingEventArgs(const Size& oldSize_, const Size& newSize_) : oldSize(oldSize_), newSize(newSize_) {}
+    Size oldSize;
+    Size newSize;
+};
+
 using ClickEvent = Event;
 using CreatedEvent = Event;
 using DestroyedEvent = Event;
@@ -47,6 +54,7 @@ using VisibleChangedEvent = Event;
 using EnabledChangedEvent = Event;
 using LocationChangedEvent = Event;
 using SizeChangedEvent = Event;
+using SizeChangingEvent = EventWithArgs<SizeChangingEventArgs>;
 using ChildSizeChangedEvent = EventWithArgs<ControlEventArgs>;
 using ContentChangedEvent = Event;
 using ChildContentChangedEvent = EventWithArgs<ControlEventArgs>;
@@ -358,6 +366,7 @@ public:
     EnabledChangedEvent& EnabledChanged() { return enabledChanged; }
     LocationChangedEvent& LocationChanged() { return locationChanged; }
     SizeChangedEvent& SizeChanged() { return sizeChanged; }
+    SizeChangingEvent& SizeChanging() { return sizeChanging; }
     ChildSizeChangedEvent& ChildSizeChanged() { return childSizeChanged; }
     ContentChangedEvent& ContentChanged() { return contentChanged; }
     ChildContentChangedEvent& ChildContentChanged() { return childContentChanged; }
@@ -508,6 +517,7 @@ protected:
     virtual void OnEnabledChanged();
     virtual void OnLocationChanged();
     virtual void OnSizeChanged();
+    virtual void OnSizeChanging(SizeChangingEventArgs& args);
     virtual void OnChildSizeChanged(ControlEventArgs& args);
     virtual void OnContentChanged();
     virtual void OnChildContentChanged(ControlEventArgs& args);
@@ -597,6 +607,7 @@ private:
     EnabledChangedEvent enabledChanged;
     LocationChangedEvent locationChanged;
     SizeChangedEvent sizeChanged;
+    SizeChangingEvent sizeChanging;
     ChildSizeChangedEvent childSizeChanged;
     ContentChangedEvent contentChanged;
     ChildContentChangedEvent childContentChanged;

@@ -143,6 +143,23 @@ void ContainerControl::DockChildren(Rect& parentRect)
     }
 }
 
+void ContainerControl::MoveChildren(int dx, int dy)
+{
+    Component* child = children.FirstChild();
+    while (child)
+    {
+        if (child->IsControl())
+        {
+            Control* childControl = static_cast<Control*>(child);
+            if (childControl->GetDock() == Dock::none)
+            {
+                childControl->MoveWindow(dx, dy);
+            }
+        }
+        child = child->NextSibling();
+    }
+}
+
 Control* ContainerControl::GetFirstEnabledTabStopControl() const
 {
     Component* child = children.FirstChild();
@@ -194,19 +211,7 @@ bool ContainerControl::ProcessMessage(Message& msg)
                 Rect parentRect(Point(), newSize);
                 int dx = newSize.Width - oldSize.Width;
                 int dy = newSize.Height - oldSize.Height;
-                Component* child = children.FirstChild();
-                while (child)
-                {
-                    if (child->IsControl())
-                    {
-                        Control* childControl = static_cast<Control*>(child);
-                        if (childControl->GetDock() == Dock::none)
-                        {
-                            childControl->MoveWindow(dx, dy);
-                        }
-                    }
-                    child = child->NextSibling();
-                }
+                MoveChildren(dx, dy);
                 SetSizeInternal(newSize);
                 DockChildren();
                 OnSizeChanged();
@@ -222,6 +227,14 @@ bool ContainerControl::ProcessMessage(Message& msg)
         }
     }
     return false;
+}
+
+void ContainerControl::OnSizeChanging(SizeChangingEventArgs& args)
+{
+    Control::OnSizeChanging(args);
+    int dx = args.newSize.Width - args.oldSize.Width;
+    int dy = args.newSize.Height - args.oldSize.Height;
+    MoveChildren(dx, dy);
 }
 
 void ContainerControl::OnChildSizeChanged(ControlEventArgs& args)

@@ -30,8 +30,18 @@ public:
     bool CanAdd() const override { return true; }
     void AddNew(NodeKind kind) override;
     void AddAddNewMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions) override;
+    void MakeDisjoint();
+    void MakeMaps();
+    Component* GetDirectoryComponent(const std::u32string& directoryName) const;
+    Component* GetFileComponent(const std::u32string& fileName) const;
+    void MapDirectoryComponent(const std::u32string& directoryName, Component* component);
+    void RemoveDirectoryName(const std::u32string& directoryName);
+    void MapFileComponent(const std::u32string& fileName, Component* component);
+    void RemoveFileName(const std::u32string& fileName);
 private:
     std::vector<std::unique_ptr<Component>> components;
+    std::map<std::u32string, Component*> directoryNameComponentMap;
+    std::map<std::u32string, Component*> fileNameComponentMap;
 };
 
 class Component : public Node
@@ -57,6 +67,11 @@ public:
     void Edit() override;
     void AddNew(NodeKind kind) override;
     void AddAddNewMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions) override;
+    std::vector<std::u32string> DirectoryNames() const;
+    std::vector<std::u32string> FileNames() const;
+    void FilterDirectories(const std::vector<std::u32string>& exclude);
+    void FilterFiles(const std::vector<std::u32string>& exclude);
+    void Sort();
 private:
     std::vector<std::unique_ptr<Directory>> directories;
     std::vector<std::unique_ptr<File>> files;

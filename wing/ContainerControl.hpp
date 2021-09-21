@@ -25,10 +25,12 @@ public:
     void InsertChildAfter(Control* child, Control* after);
     void DockChildren();
     void DockChildren(Rect& parentRect);
+    void MoveChildren(int dx, int dy);
     Control* GetFirstEnabledTabStopControl() const override;
     Control* GetLastEnabledTabStopControl() const override;
 protected:
     bool ProcessMessage(Message& msg) override;
+    void OnSizeChanging(SizeChangingEventArgs& args) override;
     void OnChildSizeChanged(ControlEventArgs& args) override;
     void OnChildContentChanged(ControlEventArgs& args) override;
     void OnChildContentLocationChanged(ControlEventArgs& args) override;

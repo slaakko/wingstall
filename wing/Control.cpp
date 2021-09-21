@@ -509,11 +509,13 @@ void Control::SetSize(const Size& newSize)
 {
     if (size != newSize)
     {
+        SizeChangingEventArgs sizeChangingArgs(size, newSize);
+        OnSizeChanging(sizeChangingArgs);
+        SetSizeInternal(newSize);
         if (handle)
         {
             MoveWindow(location, newSize, true);
         }
-        SetSizeInternal(newSize);
         if (GetFlag(ControlFlags::scrollSubject))
         {
             Control* parentControl = ParentControl();
@@ -1709,6 +1711,11 @@ void Control::OnLocationChanged()
 void Control::OnSizeChanged()
 {
     sizeChanged.Fire();
+}
+
+void Control::OnSizeChanging(SizeChangingEventArgs& args)
+{
+    sizeChanging.Fire(args);
 }
 
 void Control::OnChildSizeChanged(ControlEventArgs& args)

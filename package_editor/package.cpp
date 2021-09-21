@@ -226,6 +226,8 @@ Package::Package(const std::string& packageXMLFilePath, sngxml::dom::Element* ro
             }
         }
     }
+    components->MakeDisjoint();
+    components->MakeMaps();
     std::unique_ptr<sngxml::xpath::XPathObject> environmentObject = sngxml::xpath::Evaluate(U"environment", root);
     if (environmentObject)
     {
