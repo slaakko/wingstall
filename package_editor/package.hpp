@@ -58,13 +58,14 @@ private:
 class Package : public Node
 {
 public:
-    Package();
+    Package(const std::string& packageXMLFilePath);
     Package(const std::string& packageXMLFilePath, sngxml::dom::Element* root);
     const std::string& FilePath() const { return filePath; }
     Properties* GetProperties() const { return properties.get(); }
     Components* GetComponents() const { return components.get(); }
     Environment* GetEnvironment() const { return environment.get(); }
     Links* GetLinks() const { return links.get(); }
+    EngineVariables* GetEngineVariables() const { return engineVariables.get(); }
     TreeViewNode* ToTreeViewNode(TreeView* view);
     Control* CreateView(ImageList* imageList)  override;
     Package* GetPackage() const override { return const_cast<Package*>(this); }

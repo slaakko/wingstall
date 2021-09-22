@@ -49,6 +49,13 @@ public:
     std::string Value() const override;
 };
 
+class ProductIdVariable : public Variable
+{
+public:
+    ProductIdVariable();
+    std::string Value() const override;
+};
+
 class PublisherVariable : public Variable
 {
 public:

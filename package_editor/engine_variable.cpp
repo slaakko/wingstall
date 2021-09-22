@@ -8,6 +8,7 @@
 #include <package_editor/main_window.hpp>
 #include <wing/ImageList.hpp>
 #include <wing/Shell.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 namespace wingstall { namespace package_editor {
 
@@ -22,6 +23,9 @@ EngineVariables::EngineVariables() : Node(NodeKind::engineVariables, "Engine Var
     std::unique_ptr<EngineVariable> appVersion(new AppVersionVariable());
     appVersion->SetParent(this);
     engineVariables.push_back(std::move(appVersion));
+    std::unique_ptr<EngineVariable> productId(new ProductIdVariable());
+    productId->SetParent(this);
+    engineVariables.push_back(std::move(productId));
     std::unique_ptr<EngineVariable> publisher(new PublisherVariable());
     publisher->SetParent(this);
     engineVariables.push_back(std::move(publisher));
@@ -34,6 +38,20 @@ EngineVariables::EngineVariables() : Node(NodeKind::engineVariables, "Engine Var
     std::unique_ptr<EngineVariable> programFilesDir(new ProgramFilesDirVariable());
     programFilesDir->SetParent(this);
     engineVariables.push_back(std::move(programFilesDir));
+}
+
+void EngineVariables::Fetch()
+{
+    TreeViewNode* node = GetTreeViewNode();
+    TreeView* view = node->GetTreeView();
+    if (view)
+    {
+        node->RemoveChildren();
+        for (const auto& engineVariable : engineVariables)
+        {
+            node->AddChild(engineVariable->ToTreeViewNode(view));
+        }
+    }
 }
 
 TreeViewNode* EngineVariables::ToTreeViewNode(TreeView* view)
@@ -144,6 +162,24 @@ std::string AppVersionVariable::Value() const
     if (package)
     {
         return package->GetProperties()->Version();
+    }
+    else
+    {
+        return std::string();
+    }
+}
+
+ProductIdVariable::ProductIdVariable()
+{
+    SetName("PRODUCT_ID");
+}
+
+std::string ProductIdVariable::Value() const
+{
+    Package* package = GetPackage();
+    if (package)
+    {
+        return boost::uuids::to_string(package->GetProperties()->Id());
     }
     else
     {

@@ -18,6 +18,8 @@ using namespace wing;
 
 using ExitViewEvent = EventWithArgs<CancelArgs>;
 
+std::string WingstallPackagesDir();
+
 class MainWindow : public Window
 {
 public:

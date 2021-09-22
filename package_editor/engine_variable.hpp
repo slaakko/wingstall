@@ -15,6 +15,7 @@ class EngineVariables : public Node
 {
 public:
     EngineVariables();
+    void Fetch();
     TreeViewNode* ToTreeViewNode(TreeView* view);
     Control* CreateView(ImageList* imageList) override;
     std::string ImageName() const override { return "engine.variables.bitmap"; }
@@ -50,6 +51,13 @@ class AppVersionVariable : public EngineVariable
 {
 public:
     AppVersionVariable();
+    std::string Value() const override;
+};
+
+class ProductIdVariable : public EngineVariable
+{
+public:
+    ProductIdVariable();
     std::string Value() const override;
 };
 

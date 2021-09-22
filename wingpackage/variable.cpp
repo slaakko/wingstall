@@ -8,6 +8,7 @@
 #include <wing/Shell.hpp>
 #include <soulng/util/Path.hpp>
 #include <soulng/util/Unicode.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 namespace wingstall { namespace wingpackage {
 
@@ -103,6 +104,23 @@ std::string AppVersionVariable::Value() const
     }
 }
 
+ProductIdVariable::ProductIdVariable() : Variable("PRODUCT_ID")
+{
+}
+
+std::string ProductIdVariable::Value() const
+{
+    Package* package = GetPackage();
+    if (package)
+    {
+        return boost::uuids::to_string(package->Id()); 
+    }
+    else
+    {
+        return Variable::Value();
+    }
+}
+
 PublisherVariable::PublisherVariable() : Variable("PUBLISHER")
 {
 }
@@ -174,6 +192,7 @@ Variables::Variables() : Node(NodeKind::variables, "variables")
     AddVariable(new PreinstallDirVariable());
     AddVariable(new AppNameVariable());
     AddVariable(new AppVersionVariable());
+    AddVariable(new ProductIdVariable());
     AddVariable(new PublisherVariable());
     AddVariable(new StartMenuProgramsFolderVariable());
     AddVariable(new DesktopFolderVariable());

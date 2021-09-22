@@ -90,7 +90,7 @@ Control* Properties::CreateView(ImageList* imageList)
     return viewPtr.release();
 }
 
-Package::Package() : Node(NodeKind::package, std::string()), filePath(), view(nullptr), explorer(nullptr)
+Package::Package(const std::string& packageXMLFilePath) : Node(NodeKind::package, std::string()), filePath(packageXMLFilePath), view(nullptr), explorer(nullptr)
 {
     properties.reset(new Properties());
     properties->SetParent(this);

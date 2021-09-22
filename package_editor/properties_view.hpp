@@ -15,6 +15,8 @@ namespace wingstall { namespace package_editor {
 
 using namespace wing;
 
+bool IsValidPath(const std::string& text);
+
 class Package;
 class MainWindow;
 

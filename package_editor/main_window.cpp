@@ -4,6 +4,7 @@
 // =================================
 
 #include <package_editor/main_window.hpp>
+#include <package_editor/new_package_dialog.hpp>
 #include <wing/Dialog.hpp>
 #include <wing/LogView.hpp>
 #include <wing/PaddedControl.hpp>
@@ -13,6 +14,7 @@
 #include <soulng/util/Path.hpp>
 #include <soulng/util/Unicode.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/uuid/random_generator.hpp>
 
 namespace wingstall { namespace package_editor {
 
@@ -258,10 +260,32 @@ void MainWindow::ListViewItemDoubleClick(ListViewItemEventArgs& args)
 
 void MainWindow::NewPackageClick()
 {
-    // todo
     try
     {
-
+        bool cancel = false;
+        CancelArgs cancelArgs(cancel);
+        ExitView().Fire(cancelArgs);
+        if (cancelArgs.cancel)
+        {
+            return;
+        }
+        NewPackageDialog dialog;
+        if (dialog.ShowDialog(*this) == DialogResult::ok)
+        {
+            ClosePackageClick();
+            package.reset(new Package(dialog.GetPackageFilePath()));
+            package->SetName(dialog.GetPackageName());
+            package->SetView(packageContentView);
+            package->SetExplorer(packageExplorer);
+            packageExplorer->SetPackage(package.get());
+            package->Open();
+            package->GetProperties()->SetSourceRootDir(Path::GetDirectoryName(package->FilePath()));
+            package->GetProperties()->SetTargetRootDir("C:/" + Path::GetFileNameWithoutExtension(package->FilePath()));
+            package->GetProperties()->SetAppName(Path::GetFileNameWithoutExtension(package->FilePath()));
+            package->GetProperties()->SetVersion("1.0");
+            package->GetProperties()->SetId(boost::uuids::random_generator()());
+            package->GetEngineVariables()->Fetch();
+        }
     }
     catch (const std::exception& ex)
     {
@@ -309,7 +333,6 @@ void MainWindow::OpenPackageClick()
 
 void MainWindow::ClosePackageClick()
 {
-    
     try
     {
         package.reset();

@@ -17,6 +17,7 @@
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/uuid/random_generator.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/filesystem.hpp>
 
 namespace wingstall { namespace package_editor {
 
@@ -54,6 +55,8 @@ PropertiesView::PropertiesView(Package* package_) :
     ContainerControl(ControlCreateParams().BackgroundColor(DefaultControlBackgroundColor()).WindowClassName("wingstall.package_editor.properties_view").SetDock(Dock::fill)),
     package(package_), mainWindow(package->GetMainWindow()), exitHandlerId(-1), compressionComboBox(nullptr), dirty(false), initializing(true)
 {
+    bool enableApplyButton = false;
+
     SetDoubleBuffered();
     Size s = GetSize();
     defaultControlSpacing = ScreenMetrics::Get().DefaultControlSpacing();
@@ -73,6 +76,10 @@ PropertiesView::PropertiesView(Package* package_) :
     Size sourceRootDirTextBoxSize(textBoxSize);
     std::unique_ptr<TextBox> sourceRootDirTextBoxPtr(new TextBox(TextBoxCreateParams().Location(sourceRootDirTextBoxLoc).Text(package->GetProperties()->SourceRootDir()).SetSize(sourceRootDirTextBoxSize).
         SetAnchors(static_cast<Anchors>(Anchors::top | Anchors::left))));
+    if (!boost::filesystem::exists(package->GetProperties()->SourceRootDir()))
+    {
+        enableApplyButton = true;
+    }
     sourceRootDirTextBox = sourceRootDirTextBoxPtr.get();
     sourceRootDirTextBox->TextChanged().AddHandler(this, &PropertiesView::EnableApply);
     std::unique_ptr<PaddedControl> paddedSourceRootDirTextBoxPtr(new PaddedControl(PaddedControlCreateParams(sourceRootDirTextBoxPtr.release()).SetSize(PaddedSize(sourceRootDirTextBoxSize, DefaultPadding())).
@@ -104,6 +111,10 @@ PropertiesView::PropertiesView(Package* package_) :
 
     Point targetRootDirTextBoxLoc(16, 16 + 16 + 24 + 24 + 24);
     Size targetRootDirTextBoxSize(textBoxSize);
+    if (package->GetProperties()->TargetRootDir().empty())
+    {
+        enableApplyButton = true;
+    }
     std::unique_ptr<TextBox> targetRootDirTextBoxPtr(new TextBox(TextBoxCreateParams().Location(targetRootDirTextBoxLoc).Text(package->GetProperties()->TargetRootDir()).SetSize(targetRootDirTextBoxSize).
         SetAnchors(static_cast<Anchors>(Anchors::top | Anchors::left))));
     targetRootDirTextBox = targetRootDirTextBoxPtr.get();
@@ -252,6 +263,11 @@ PropertiesView::PropertiesView(Package* package_) :
     dirty = false;
     initializing = false;
     applyButton->Disable();
+    if (enableApplyButton)
+    {
+        dirty = true;
+        applyButton->Enable();
+    }
 }
 
 PropertiesView::~PropertiesView()
@@ -324,6 +340,7 @@ void PropertiesView::ApplyButtonClick()
 {
     if (CheckApplyChanges())
     {
+        boost::filesystem::create_directories(MakeNativeBoostPath(sourceRootDirTextBox->Text()));
         package->GetProperties()->SetSourceRootDir(sourceRootDirTextBox->Text());
         package->GetProperties()->SetTargetRootDir(targetRootDirTextBox->Text());
         package->GetProperties()->SetAppName(appNameTextBox->Text());
@@ -334,6 +351,7 @@ void PropertiesView::ApplyButtonClick()
         package->GetProperties()->SetIncludeUninstaller(includeUninstallerCheckBox->Checked());
         package->GetProperties()->SetId(boost::lexical_cast<boost::uuids::uuid>(productIdTextBox->Text()));
         package->GetComponents()->RemoveUnexistingDirectoriesAndFiles();
+        package->GetEngineVariables()->Fetch();
         applyButton->Disable();
         dirty = false;
     }
