@@ -218,6 +218,7 @@ void MainWindow::ListViewItemRightClick(ListViewItemEventArgs& args)
                 node->AddMenuItems(contextMenu.get(), clickActions, MenuItemsKind::allMenuItems);
                 if (contextMenu->HasMenuItems())
                 {
+                    view->TranslateContentLocation(args.location);
                     Point screenLoc = view->ClientToScreen(args.location);
                     ShowContextMenu(contextMenu.release(), screenLoc);
                 }
@@ -237,6 +238,7 @@ void MainWindow::ListViewItemRightClick(ListViewItemEventArgs& args)
                 ListView* view = args.view;
                 if (view)
                 {
+                    view->TranslateContentLocation(args.location); 
                     Point screenLoc = view->ClientToScreen(args.location);
                     ShowContextMenu(contextMenu.release(), screenLoc);
                 }
@@ -296,10 +298,7 @@ void MainWindow::OpenPackageClick()
             package->SetView(packageContentView);
             package->SetExplorer(packageExplorer);
             packageExplorer->SetPackage(package.get());
-            if (packageExplorer->SelectedNode())
-            {
-                packageExplorer->SelectedNode()->Open();
-            }
+            package->Open();
         }
     }
     catch (const std::exception& ex)
@@ -313,7 +312,6 @@ void MainWindow::ClosePackageClick()
     
     try
     {
-        // todo
         package.reset();
         packageExplorer->SetPackage(package.get());
     }

@@ -30,10 +30,11 @@ class ListViewItem;
 
 struct WING_API ListViewItemEventArgs
 {
-    ListViewItemEventArgs(ListView* view_, ListViewItem* item_) : view(view_), item(item_) {}
+    ListViewItemEventArgs(ListView* view_, ListViewItem* item_) : view(view_), item(item_), control(false) {}
     ListView* view;
     ListViewItem* item;
     Point location;
+    bool control;
 };
 
 using ListViewItemClickEvent = EventWithArgs<ListViewItemEventArgs>;
@@ -56,7 +57,9 @@ struct WING_API ListViewCreateParams
     ListViewCreateParams& SetSize(Size size_);
     ListViewCreateParams& SetAnchors(Anchors anchors_);
     ListViewCreateParams& SetDock(Dock dock_);
+    ListViewCreateParams& AllowMultiselect(bool allow);
     ControlCreateParams controlCreateParams;
+    bool allowMultiselect;
     std::string fontFamilyName;
     float fontSize;
     Color listViewColumnTextColor;
@@ -77,7 +80,7 @@ class ListViewColumnDivider;
 
 enum class ListViewFlags : int
 {
-    none = 0, measured = 1 << 0
+    none = 0, measured = 1 << 0, allowMultiselect = 1 << 1
 };
 
 inline ListViewFlags operator|(ListViewFlags left, ListViewFlags right)
@@ -99,6 +102,10 @@ class WING_API ListView : public Control
 {
 public:
     ListView(ListViewCreateParams& createParams);
+    bool GetListViewFlag(ListViewFlags flag) const { return (flags & flag) != ListViewFlags::none; }
+    void SetListViewFlag(ListViewFlags flag) { flags = (flags | flag); }
+    void ResetListViewFlag(ListViewFlags flag) { flags = (flags & ~flag); }
+    bool AllowMultiselect() const { return GetListViewFlag(ListViewFlags::allowMultiselect); }
     void AddColumn(const std::string& name, int width);
     const ListViewColumn& GetColumn(int columnIndex) const;
     ListViewColumn& GetColumn(int columnIndex);
@@ -127,6 +134,8 @@ public:
     float EllipsisWidth() const { return ellipsisWidth; }
     ListViewItem* SelectedItem() const { return selectedItem; }
     void SetSelectedItem(ListViewItem* selectedItem_);
+    std::vector<ListViewItem*> GetSelectedItems() const;
+    void ResetSelectedItems();
     ListViewItem* ItemAt(const Point& location) const;
     ListViewColumnDivider* ColumnDividerAt(const Point& location) const;
     ListViewItemClickEvent& ItemClick() { return itemClick; }
@@ -135,6 +144,7 @@ public:
     ListViewItemEnterEvent& ItemEnter() { return itemEnter; }
     ListViewItemLeaveEvent& ItemLeave() { return itemLeave; }
 protected:
+    void OnSizeChanged() override;
     void OnPaint(PaintEventArgs& args) override;
     void OnMouseDown(MouseEventArgs& args) override;
     void OnMouseUp(MouseEventArgs& args) override;

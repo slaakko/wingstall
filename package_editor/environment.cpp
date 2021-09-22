@@ -178,7 +178,7 @@ std::unique_ptr<Node> Environment::RemoveChild(int index)
     else if (index >= ne && index < Count())
     {
         PathDirectory* pathDirectory = pathDirectories[index - ne].release();
-        pathDirectories.erase(pathDirectories.begin() + index - ne);
+        pathDirectories.erase(pathDirectories.begin() + (index - ne));
         return std::unique_ptr<Node>(pathDirectory);
     }
     return std::unique_ptr<Node>();

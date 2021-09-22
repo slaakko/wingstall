@@ -83,6 +83,7 @@ Padding DefaultListViewImagePadding()
 
 ListViewCreateParams::ListViewCreateParams() : 
     controlCreateParams(),
+    allowMultiselect(false),
     fontFamilyName(DefaultListViewFontFamilyName()),
     fontSize(DefaultListViewFontSize()),
     listViewColumnTextColor(DefaultListViewColumnTextColor()),
@@ -169,6 +170,12 @@ ListViewCreateParams& ListViewCreateParams::SetDock(Dock dock_)
     return *this;
 }
 
+ListViewCreateParams& ListViewCreateParams::AllowMultiselect(bool allow)
+{
+    allowMultiselect = allow;
+    return *this;
+}
+
 ListView::ListView(ListViewCreateParams& createParams) : 
     Control(createParams.controlCreateParams), 
     flags(ListViewFlags::none), 
@@ -194,6 +201,10 @@ ListView::ListView(ListViewCreateParams& createParams) :
     arrowCursor(LoadStandardCursor(StandardCursorId::arrow)),
     columnSizeCursor(Application::GetResourceManager().GetCursor("column.size.wing.cursor"))
 {
+    if (createParams.allowMultiselect)
+    {
+        SetListViewFlag(ListViewFlags::allowMultiselect);
+    }
     stringFormat.SetAlignment(StringAlignment::StringAlignmentNear);
     stringFormat.SetLineAlignment(StringAlignment::StringAlignmentNear);
     std::u16string familyName = ToUtf16(createParams.fontFamilyName);
@@ -253,6 +264,10 @@ ListViewItem& ListView::GetItem(int itemIndex)
 
 void ListView::SetSelectedItem(ListViewItem* selectedItem_)
 {
+    if (AllowMultiselect())
+    {
+        ResetSelectedItems();
+    }
     if (selectedItem != selectedItem_)
     {
         if (selectedItem)
@@ -263,6 +278,33 @@ void ListView::SetSelectedItem(ListViewItem* selectedItem_)
         if (selectedItem)
         {
             selectedItem->SetSelected();
+        }
+    }
+}
+
+std::vector<ListViewItem*> ListView::GetSelectedItems() const
+{
+    std::vector<ListViewItem*> result;
+    for (const std::unique_ptr<ListViewItem>& item : items)
+    {
+        if (item->IsSelected())
+        {
+            result.push_back(item.get());
+        }
+    }
+    return result;
+}
+
+void ListView::ResetSelectedItems()
+{
+    for (const std::unique_ptr<ListViewItem>& item : items)
+    {
+        if (item.get() != SelectedItem())
+        {
+            if (item->IsSelected())
+            {
+                item->ResetSelected();
+            }
         }
     }
 }
@@ -291,6 +333,12 @@ ListViewColumnDivider* ListView::ColumnDividerAt(const Point& location) const
         }
     }
     return nullptr;
+}
+
+void ListView::OnSizeChanged()
+{
+    Control::OnSizeChanged();
+    SetContentLocation(Point(0, 0));
 }
 
 void ListView::OnPaint(PaintEventArgs& args)
@@ -355,8 +403,15 @@ void ListView::OnMouseUp(MouseEventArgs& args)
         if (item == mouseDownItem)
         {
             ListViewItemEventArgs itemArgs(this, item);
-            if (args.buttons == MouseButtons::lbutton)
+            if ((args.buttons & MouseButtons::lbutton) != MouseButtons::none)
             {
+                if (AllowMultiselect())
+                {
+                    if ((args.buttons & MouseButtons::control) != MouseButtons::none)
+                    {
+                        itemArgs.control = true;
+                    }
+                }
                 itemClick.Fire(itemArgs);
             }
             else if (args.buttons == MouseButtons::rbutton)

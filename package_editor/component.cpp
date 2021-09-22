@@ -10,7 +10,9 @@
 #include <package_editor/component_dialog.hpp>
 #include <package_editor/add_directories_and_files_dialog.hpp>
 #include <sngxml/xpath/XPathEvaluate.hpp>
+#include <soulng/util/Path.hpp>
 #include <soulng/util/Unicode.hpp>
+#include <boost/filesystem.hpp>
 #include <algorithm>
 
 namespace wingstall { namespace package_editor {
@@ -205,6 +207,14 @@ void Components::RemoveDirectoryName(const std::u32string& directoryName)
 void Components::RemoveFileName(const std::u32string& fileName)
 {
     fileNameComponentMap.erase(fileName);
+}
+
+void Components::RemoveUnexistingDirectoriesAndFiles()
+{
+    for (const std::unique_ptr<Component>& component : components)
+    {
+        component->RemoveUnexistingDirectoriesAndFiles();
+    }
 }
 
 void Components::MakeDisjoint()
@@ -447,9 +457,9 @@ std::unique_ptr<Node> Component::RemoveChild(int index)
         }
         else if (index >= nd && index < Count())
         {
-            File* file = files[index].release();
+            File* file = files[index - nd].release();
             components->RemoveDirectoryName(ToUtf32(file->Name()));
-            files.erase(files.begin() + index - nd);
+            files.erase(files.begin() + (index - nd));
             return std::unique_ptr<Node>(file);
         }
     }
@@ -564,16 +574,27 @@ void Component::AddNew(NodeKind kind)
         {
             if (dialog.ShowDialog(*mainWindow) == DialogResult::ok)
             {
+                std::vector<std::u32string> selectedDirectories;
+                std::vector<std::u32string> selectedFiles;
+                dialog.GetSelectedDirectoriesAndFiles(selectedDirectories, selectedFiles);
+                AddDirectoriesAndFiles(selectedDirectories, selectedFiles);
                 Open();
-                TreeViewNode* componentsTreeViewNode = GetTreeViewNode();
-                if (componentsTreeViewNode)
+                Node* parent = Parent();
+                if (parent && parent->Kind() == NodeKind::components)
                 {
-                    TreeView* treeView = componentsTreeViewNode->GetTreeView();
-                    if (treeView)
+                    Components* components = static_cast<Components*>(parent);
+                    TreeViewNode* componentsTreeViewNode = parent->GetTreeViewNode();
+                    if (componentsTreeViewNode)
                     {
-                        //TreeViewNode* componentTreeViewNode = component->ToTreeViewNode(treeView);
-                        //componentsTreeViewNode->AddChild(componentTreeViewNode);
-                        //treeView->SetSelectedNode(componentsTreeViewNode);
+                        TreeView* view = componentsTreeViewNode->GetTreeView();
+                        if (view)
+                        {
+                            componentsTreeViewNode->RemoveChildren();
+                            for (const auto& component : components->GetComponents())
+                            {
+                                componentsTreeViewNode->AddChild(component->ToTreeViewNode(view));
+                            }
+                        }
                     }
                 }
             }
@@ -612,34 +633,131 @@ std::vector<std::u32string> Component::FileNames() const
 
 void Component::FilterDirectories(const std::vector<std::u32string>& exclude)
 {
-    std::vector<std::unique_ptr<Directory>> result;
-    for (std::unique_ptr<Directory>& directory : directories)
+    Node* parent = Parent();
+    if (parent && parent->Kind() == NodeKind::components)
     {
-        if (!std::binary_search(exclude.begin(), exclude.end(), ToUtf32(directory->Name())))
+        Components* components = static_cast<Components*>(parent);
+        std::vector<std::unique_ptr<Directory>> result;
+        for (std::unique_ptr<Directory>& directory : directories)
         {
-            result.push_back(std::unique_ptr<Directory>(directory.release()));
+            std::u32string directoryName = ToUtf32(directory->Name());
+            if (!std::binary_search(exclude.begin(), exclude.end(), directoryName))
+            {
+                result.push_back(std::unique_ptr<Directory>(directory.release()));
+            }
+            else
+            {
+                components->RemoveDirectoryName(directoryName);
+            }
         }
+        std::swap(directories, result);
     }
-    std::swap(directories, result);
 }
 
 void Component::FilterFiles(const std::vector<std::u32string>& exclude)
 {
-    std::vector<std::unique_ptr<File>> result;
-    for (std::unique_ptr<File>& file : files)
+    Node* parent = Parent();
+    if (parent && parent->Kind() == NodeKind::components)
     {
-        if (!std::binary_search(exclude.begin(), exclude.end(), ToUtf32(file->Name())))
+        Components* components = static_cast<Components*>(parent);
+        std::vector<std::unique_ptr<File>> result;
+        for (std::unique_ptr<File>& file : files)
         {
-            result.push_back(std::unique_ptr<File>(file.release()));
+            std::u32string fileName = ToUtf32(file->Name());
+            if (!std::binary_search(exclude.begin(), exclude.end(), fileName))
+            {
+                result.push_back(std::unique_ptr<File>(file.release()));
+            }
+            else
+            {
+                components->RemoveFileName(fileName);
+            }
+        }
+        std::swap(files, result);
+    }
+}
+
+void Component::Map(const std::vector<std::u32string>& directoryNames, const std::vector<std::u32string>& fileNames)
+{
+    Node* parent = Parent();
+    if (parent && parent->Kind() == NodeKind::components)
+    {
+        Components* components = static_cast<Components*>(parent);
+        for (const std::u32string& directoryName : directoryNames)
+        {
+            components->MapDirectoryComponent(directoryName, this);
+        }
+        for (const std::u32string& fileName : fileNames)
+        {
+            components->MapFileComponent(fileName, this);
         }
     }
-    std::swap(files, result);
 }
 
 void Component::Sort()
 {
     std::sort(directories.begin(), directories.end(), DirectoryByName());
     std::sort(files.begin(), files.end(), FileByName());
+}
+
+void Component::RemoveUnexistingDirectoriesAndFiles()
+{
+    std::vector<std::u32string> directoriesToRemove;
+    std::vector<std::u32string> filesToRemove;
+    Package* package = GetPackage();
+    if (package)
+    {
+        std::string sourceRootDir = package->GetProperties()->SourceRootDir();
+        for (const auto& directory : directories)
+        {
+            boost::filesystem::path p(MakeNativeBoostPath(Path::Combine(sourceRootDir, directory->Name())));
+            if (!boost::filesystem::exists(p))
+            {
+                directoriesToRemove.push_back(ToUtf32(directory->Name()));
+            }
+        }
+        for (const auto& file : files)
+        {
+            boost::filesystem::path p(MakeNativeBoostPath(Path::Combine(sourceRootDir, file->Name())));
+            if (!boost::filesystem::exists(p))
+            {
+                filesToRemove.push_back(ToUtf32(file->Name()));
+            }
+        }
+        FilterDirectories(directoriesToRemove);
+        FilterFiles(filesToRemove);
+    }
+}
+
+void Component::AddDirectoriesAndFiles(const std::vector<std::u32string>& directoryNames, const std::vector<std::u32string>& fileNames)
+{
+    for (const std::u32string& directoryName : directoryNames)
+    {
+        AddDirectory(new Directory(ToUtf8(directoryName)));
+    }
+    for (const std::u32string& fileName : fileNames)
+    {
+        AddFile(new File(ToUtf8(fileName)));
+    }
+    Sort();
+    Node* parent = Parent();
+    if (parent && parent->Kind() == NodeKind::components)
+    {
+        std::vector<std::u32string> allDirectoryNames = DirectoryNames();
+        std::vector<std::u32string> allFileNames = FileNames();
+        Components* components = static_cast<Components*>(parent);
+        int n = components->GetComponents().size();
+        for (int i = 0; i < n; ++i)
+        {
+            Component* component = components->GetComponents()[i].get();
+            if (component != this)
+            {
+                component->FilterDirectories(allDirectoryNames);
+                component->FilterFiles(allFileNames);
+            }
+        }
+        Map(allDirectoryNames, allFileNames);
+    }
 }
 
 } } // wingstall::package_editor

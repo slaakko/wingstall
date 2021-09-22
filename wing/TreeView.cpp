@@ -453,6 +453,12 @@ void TreeView::OnPaint(PaintEventArgs& args)
     }
 }
 
+void TreeView::OnSizeChanged()
+{
+    Control::OnSizeChanged();
+    SetContentLocation(Point(0, 0));
+}
+
 void TreeView::OnNodeClick(TreeViewNodeClickEventArgs& args)
 {
     nodeClick.Fire(args);

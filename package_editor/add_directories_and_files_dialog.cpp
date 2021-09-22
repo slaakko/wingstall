@@ -5,6 +5,7 @@
 
 #include <package_editor/add_directories_and_files_dialog.hpp>
 #include <package_editor/main_window.hpp>
+#include <wing/Label.hpp>
 #include <wing/Metrics.hpp>
 #include <wing/Panel.hpp>
 #include <wing/PaddedControl.hpp>
@@ -85,6 +86,11 @@ AddDirectoriesAndFilesDialog::AddDirectoriesAndFilesDialog(wingstall::package_ed
     Window(WindowCreateParams().Text("Add Directories and Files").SetSize(Size(ScreenMetrics::Get().MMToHorizontalPixels(160), ScreenMetrics::Get().MMToVerticalPixels(100)))),
     component(component_)
 {
+    if (component->GetPackage()->GetProperties()->SourceRootDir().empty())
+    {
+        throw std::runtime_error("Package | Properties | source root directory is empty");
+    }
+
     SetCaretDisabled();
 
     MainWindow* mainWindow = component->GetMainWindow();
@@ -104,7 +110,7 @@ AddDirectoriesAndFilesDialog::AddDirectoriesAndFilesDialog(wingstall::package_ed
     Panel* panel = panelPtr.get();
     AddChild(panelPtr.release());
 
-    std::unique_ptr<ListView> listViewPtr(new ListView(ListViewCreateParams().Defaults()));
+    std::unique_ptr<ListView> listViewPtr(new ListView(ListViewCreateParams().AllowMultiselect(true)));
     listView = listViewPtr.get();
     listView->SetFlag(ControlFlags::scrollSubject);
     listView->SetDoubleBuffered();
@@ -117,6 +123,11 @@ AddDirectoriesAndFilesDialog::AddDirectoriesAndFilesDialog(wingstall::package_ed
     AddChild(borderedListViewPtr.release());
 
     Size panelSize = panel->GetSize();
+
+    Point labelLoc(24, 8);
+    std::unique_ptr<Label> sourceRootDirLabelPtr(new Label(LabelCreateParams().Location(labelLoc).Text(GetFullPath(component->GetPackage()->GetProperties()->SourceRootDir()))));
+    panel->AddChild(sourceRootDirLabelPtr.release());
+
     int x = panelSize.Width - defaultButtonSize.Width - defaultControlSpacing.Width;
     int y = panelSize.Height - defaultButtonSize.Height - defaultControlSpacing.Height;
 
@@ -141,6 +152,23 @@ AddDirectoriesAndFilesDialog::AddDirectoriesAndFilesDialog(wingstall::package_ed
     AddListViewEventHandlers();
 }
 
+void AddDirectoriesAndFilesDialog::GetSelectedDirectoriesAndFiles(std::vector<std::u32string>& selectedDirectories, std::vector<std::u32string>& selectedFiles) const
+{
+    std::vector<ListViewItem*> selectedItems = listView->GetSelectedItems();
+    for (ListViewItem* item : selectedItems)
+    {
+        DialogListViewItemData* itemData = static_cast<DialogListViewItemData*>(item->Data());
+        if (itemData->kind == DialogListViewItemData::Kind::directory)
+        {
+            selectedDirectories.push_back(directoryNames[itemData->index]);
+        }
+        else if (itemData->kind == DialogListViewItemData::Kind::file)
+        {
+            selectedFiles.push_back(fileNames[itemData->index]);
+        }
+    }
+}
+
 void AddDirectoriesAndFilesDialog::AddDirectoriesAndFiles()
 {
     Node* parent = component->Parent();
@@ -149,16 +177,16 @@ void AddDirectoriesAndFilesDialog::AddDirectoriesAndFiles()
         Components* components = static_cast<Components*>(parent);
         if (components)
         {
-            std::vector<std::u32string> directoryNames;
-            std::vector<std::u32string> fileNames;
             Package* package = component->GetPackage();
             if (package)
             {
                 GetDirectoriesAndFiles(package->GetProperties()->SourceRootDir(), directoryNames, fileNames);
                 directoryNames = Filter(directoryNames, component->DirectoryNames());
                 fileNames = Filter(fileNames, component->FileNames());
-                for (const std::u32string& directoryName : directoryNames)
+                int nd = directoryNames.size();
+                for (int i = 0; i < nd; ++i)
                 {
+                    const std::u32string& directoryName = directoryNames[i];
                     std::string dirName = ToUtf8(directoryName);
                     wingstall::package_editor::Component* dirComponent = components->GetDirectoryComponent(directoryName);
                     if (dirComponent && dirComponent != component)
@@ -168,9 +196,14 @@ void AddDirectoriesAndFilesDialog::AddDirectoriesAndFiles()
                     ListViewItem* item = listView->AddItem();
                     item->SetImageIndex(imageList->GetImageIndex("folder.closed.bitmap"));
                     item->SetColumnValue(0, dirName);
+                    DialogListViewItemData* itemData = new DialogListViewItemData(DialogListViewItemData::Kind::directory, i);
+                    data.push_back(std::unique_ptr<DialogListViewItemData>(itemData));
+                    item->SetData(itemData);
                 }
-                for (const std::u32string& fileName : fileNames)
+                int nf = fileNames.size();
+                for (int i = 0; i < nf; ++i)
                 {
+                    const std::u32string& fileName = fileNames[i];
                     std::string fName = ToUtf8(fileName);
                     wingstall::package_editor::Component* fileComponent = components->GetFileComponent(fileName);
                     if (fileComponent && fileComponent != component)
@@ -180,6 +213,9 @@ void AddDirectoriesAndFilesDialog::AddDirectoriesAndFiles()
                     ListViewItem* item = listView->AddItem();
                     item->SetImageIndex(imageList->GetImageIndex("file.bitmap"));
                     item->SetColumnValue(0, fName);
+                    DialogListViewItemData* itemData = new DialogListViewItemData(DialogListViewItemData::Kind::file, i);
+                    data.push_back(std::unique_ptr<DialogListViewItemData>(itemData));
+                    item->SetData(itemData);
                 }
             }
         }
@@ -189,24 +225,38 @@ void AddDirectoriesAndFilesDialog::AddDirectoriesAndFiles()
 void AddDirectoriesAndFilesDialog::AddListViewEventHandlers()
 {
     listView->ItemClick().AddHandler(this, &AddDirectoriesAndFilesDialog::ListViewItemClick);
-    listView->ItemRightClick().AddHandler(this, &AddDirectoriesAndFilesDialog::ListViewItemRightClick);
     listView->ItemDoubleClick().AddHandler(this, &AddDirectoriesAndFilesDialog::ListViewItemDoubleClick);
 }
  
 void AddDirectoriesAndFilesDialog::ListViewItemClick(ListViewItemEventArgs& args)
 {
-
-}
-
-void AddDirectoriesAndFilesDialog::ListViewItemRightClick(ListViewItemEventArgs& args)
-{
-
+    if (args.item && args.view)
+    {
+        if (args.control)
+        {
+            if (args.item->IsSelected())
+            {
+                args.item->ResetSelected();
+            }
+            else
+            {
+                args.item->SetSelected();
+            }
+        }
+        else
+        {
+            args.view->SetSelectedItem(args.item);
+        }
+    }
 }
 
 void AddDirectoriesAndFilesDialog::ListViewItemDoubleClick(ListViewItemEventArgs& args)
 {
-
+    if (args.item && args.view)
+    {
+        args.view->SetSelectedItem(args.item);
+    }
+    SetDialogResult(DialogResult::ok);
 }
-
 
 } } // wingstall::package_editor

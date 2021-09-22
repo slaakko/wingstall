@@ -52,7 +52,7 @@ bool IsValidProductId(const std::string& text)
 
 PropertiesView::PropertiesView(Package* package_) :
     ContainerControl(ControlCreateParams().BackgroundColor(DefaultControlBackgroundColor()).WindowClassName("wingstall.package_editor.properties_view").SetDock(Dock::fill)),
-    package(package_), mainWindow(package->GetMainWindow()), exitHandlerId(-1), compressionComboBox(nullptr), dirty(false)
+    package(package_), mainWindow(package->GetMainWindow()), exitHandlerId(-1), compressionComboBox(nullptr), dirty(false), initializing(true)
 {
     SetDoubleBuffered();
     Size s = GetSize();
@@ -71,7 +71,7 @@ PropertiesView::PropertiesView(Package* package_) :
 
     Size textBoxSize(ScreenMetrics::Get().MMToHorizontalPixels(80), defaultTextBoxSize.Height + 4);
     Size sourceRootDirTextBoxSize(textBoxSize);
-    std::unique_ptr<TextBox> sourceRootDirTextBoxPtr(new TextBox(TextBoxCreateParams().Location(sourceRootDirTextBoxLoc).Text(package->GetProperties()->TargetRootDir()).SetSize(sourceRootDirTextBoxSize).
+    std::unique_ptr<TextBox> sourceRootDirTextBoxPtr(new TextBox(TextBoxCreateParams().Location(sourceRootDirTextBoxLoc).Text(package->GetProperties()->SourceRootDir()).SetSize(sourceRootDirTextBoxSize).
         SetAnchors(static_cast<Anchors>(Anchors::top | Anchors::left))));
     sourceRootDirTextBox = sourceRootDirTextBoxPtr.get();
     sourceRootDirTextBox->TextChanged().AddHandler(this, &PropertiesView::EnableApply);
@@ -86,6 +86,16 @@ PropertiesView::PropertiesView(Package* package_) :
         SetAnchors(static_cast<Anchors>(Anchors::top | Anchors::left))));
     selectSourceRootDirButton->Click().AddHandler(this, &PropertiesView::SelectSourceRootDir);
     AddChild(selectSourceRootDirButton.release());
+
+    Point sourceRootDirRelativeCheckBoxLoc(16 + 16 + 16 + ScreenMetrics::Get().MMToHorizontalPixels(80) + 24, 16 + 24 + 4);
+    std::unique_ptr<CheckBox> sourceRootDirRelativeCheckBoxPtr(new CheckBox(CheckBoxCreateParams().SetAnchors(static_cast<Anchors>(Anchors::left | Anchors::top)).Text("Relative Path").Location(sourceRootDirRelativeCheckBoxLoc)));
+    sourceRootDirRelativeCheckBox = sourceRootDirRelativeCheckBoxPtr.get();
+    sourceRootDirRelativeCheckBox->CheckedChanged().AddHandler(this, &PropertiesView::SourceRootDirRelativeCheckBoxCheckedChanged);
+    if (Path::IsRelative(package->GetProperties()->SourceRootDir()))
+    {
+        sourceRootDirRelativeCheckBox->SetChecked(true);
+    }
+    AddChild(sourceRootDirRelativeCheckBoxPtr.release());
 
     Point targetRootDirLabelLoc(16, 16 + 16 + 24 + 24);
     std::unique_ptr<Label> targetRootDirLabelPtr(new Label(LabelCreateParams().Text("Target Root Directory:").Location(targetRootDirLabelLoc).
@@ -225,7 +235,7 @@ PropertiesView::PropertiesView(Package* package_) :
     Point applyButtonLocation(ScreenMetrics::Get().MMToHorizontalPixels(100), 16 + 16 + 16 + 16 + 16 + 16 + 16 + 16 + 16 + 16 + 24 + 24 + 24 + 24 + 24 + 24 + 24 + 24 + 24 + 24 + 24 + 24 + 24 + 24 + 24);
 
     std::unique_ptr<Button> applyButtonPtr(new Button(ControlCreateParams().Location(applyButtonLocation).Text("Apply").SetSize(defaultButtonSize).
-        SetAnchors(static_cast<Anchors>(Anchors::right | Anchors::bottom))));
+        SetAnchors(static_cast<Anchors>(Anchors::left | Anchors::top))));
     applyButton = applyButtonPtr.get();
     applyButton->Click().AddHandler(this, &PropertiesView::ApplyButtonClick);
     AddChild(applyButtonPtr.release());
@@ -240,6 +250,7 @@ PropertiesView::PropertiesView(Package* package_) :
     }
 
     dirty = false;
+    initializing = false;
     applyButton->Disable();
 }
 
@@ -322,6 +333,7 @@ void PropertiesView::ApplyButtonClick()
         package->GetProperties()->SetIconFilePath(iconFilePathTextBox->Text());
         package->GetProperties()->SetIncludeUninstaller(includeUninstallerCheckBox->Checked());
         package->GetProperties()->SetId(boost::lexical_cast<boost::uuids::uuid>(productIdTextBox->Text()));
+        package->GetComponents()->RemoveUnexistingDirectoriesAndFiles();
         applyButton->Disable();
         dirty = false;
     }
@@ -336,10 +348,20 @@ void PropertiesView::SelectSourceRootDir()
     MainWindow* mainWindow = package->GetMainWindow();
     if (mainWindow)
     {
-        std::string sourceRootDir = SelectDirectory(nullptr, "C:/");
+        std::string sourceRootDir = Path::MakeCanonical(SelectDirectory(nullptr, "C:/"));
         if (!sourceRootDir.empty())
         {
+            initializing = true;
+            if (Path::IsRelative(sourceRootDir))
+            {
+                sourceRootDirRelativeCheckBox->SetChecked(true);
+            }
+            else
+            {
+                sourceRootDirRelativeCheckBox->SetChecked(false);
+            }
             sourceRootDirTextBox->SetText(Path::MakeCanonical(sourceRootDir));
+            initializing = false;
         }
     }
 }
@@ -348,6 +370,30 @@ void PropertiesView::CreateProductId()
 {
     boost::uuids::uuid newProductId = boost::uuids::random_generator()();
     productIdTextBox->SetText(boost::lexical_cast<std::string>(newProductId));
+}
+
+void PropertiesView::SourceRootDirRelativeCheckBoxCheckedChanged()
+{
+    if (initializing) return;
+    std::string referenceDirPath = Path::GetDirectoryName(package->FilePath());
+    if (sourceRootDirRelativeCheckBox->Checked())
+    {
+        std::string absoluteDirPath = sourceRootDirTextBox->Text();
+        if (Path::IsAbsolute(absoluteDirPath))
+        {
+            std::string relativeDirPath = MakeRelativeDirPath(absoluteDirPath, referenceDirPath);
+            sourceRootDirTextBox->SetText(relativeDirPath);
+        }
+    }
+    else
+    {
+        std::string relativeDirPath = sourceRootDirTextBox->Text();
+        if (Path::IsRelative(relativeDirPath))
+        {
+            std::string absoluteDirPath = GetFullPath(Path::Combine(referenceDirPath, relativeDirPath));
+            sourceRootDirTextBox->SetText(absoluteDirPath);
+        }
+    }
 }
 
 void PropertiesView::Exit(CancelArgs& args)
@@ -368,6 +414,7 @@ void PropertiesView::Exit(CancelArgs& args)
                     args.cancel = true;
                     return;
                 }
+                applyButton->DoClick();
             }
             else if (result == MessageBoxResult::no)
             {

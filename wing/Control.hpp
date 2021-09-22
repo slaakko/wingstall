@@ -492,13 +492,11 @@ public:
     virtual void ScrollLineUp();
     virtual Control* GetFirstEnabledTabStopControl() const;
     virtual Control* GetLastEnabledTabStopControl() const;
-    void TranslateContentLocationInternal(Point& location) { TranslateContentLocation(location); }
-    void TranslateMousePosInternal(Point& location) { TranslateMousePos(location); }
-protected:
-    virtual bool IsDecoratorControl() const { return false; }
     virtual void TranslateChildGraphics(Graphics& graphics);
     virtual void TranslateMousePos(Point& location);
     virtual void TranslateContentLocation(Point& location);
+protected:
+    virtual bool IsDecoratorControl() const { return false; }
     virtual void CreateCaret();
     virtual bool ProcessMessage(Message& msg);
     virtual void OnPaint(PaintEventArgs& args);

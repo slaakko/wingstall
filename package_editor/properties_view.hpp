@@ -33,6 +33,8 @@ private:
     void ApplyButtonClick();
     void SelectSourceRootDir();
     void CreateProductId();
+    void SourceRootDirRelativeCheckBoxCheckedChanged();
+    bool initializing;
     Package* package;
     MainWindow* mainWindow;
     int exitHandlerId;
@@ -40,6 +42,7 @@ private:
     Size defaultControlSpacing;
     ComboBox* compressionComboBox;
     CheckBox* includeUninstallerCheckBox;
+    CheckBox* sourceRootDirRelativeCheckBox;
     Button* applyButton;
     TextBox* sourceRootDirTextBox;
     TextBox* targetRootDirTextBox;

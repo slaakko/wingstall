@@ -194,6 +194,7 @@ void PackageExplorer::TreeViewNodeClick(TreeViewNodeClickEventArgs& args)
                     node->AddMenuItems(contextMenu.get(), mainWindow->ClickActions(), MenuItemsKind::allMenuItems);
                     if (contextMenu->HasMenuItems())
                     {
+                        treeView->TranslateContentLocation(args.location);
                         Point screenLoc = treeView->ClientToScreen(args.location);
                         mainWindow->ShowContextMenu(contextMenu.release(), screenLoc);
                     }

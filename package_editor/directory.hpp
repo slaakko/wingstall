@@ -14,7 +14,7 @@ class Content;
 class Directory : public Node
 {
 public:
-    Directory();
+    Directory(const std::string& name_);
     Directory(const std::string& packageXMLFilePath, sngxml::dom::Element* element);
     std::string ImageName() const override { return "folder.closed.bitmap"; }
     TreeViewNode* ToTreeViewNode(TreeView* view);

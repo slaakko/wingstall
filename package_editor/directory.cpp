@@ -14,7 +14,7 @@ namespace wingstall { namespace package_editor {
 
 using namespace soulng::unicode;
 
-Directory::Directory() : Node(NodeKind::directory, std::string())
+Directory::Directory(const std::string& name_) : Node(NodeKind::directory, name_)
 {
     rules.reset(new Rules());
     rules->SetParent(this);

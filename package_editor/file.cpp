@@ -12,7 +12,7 @@ namespace wingstall { namespace package_editor {
 
 using namespace soulng::unicode;
 
-File::File() : Node(NodeKind::file, std::string())
+File::File(const std::string& name_) : Node(NodeKind::file, name_)
 {
 }
 

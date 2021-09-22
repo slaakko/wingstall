@@ -17,6 +17,7 @@ class Components : public Node
 public:
     Components();
     void AddComponent(Component* component);
+    const std::vector<std::unique_ptr<Component>>& GetComponents() const { return components; }
     TreeViewNode* ToTreeViewNode(TreeView* view);
     Control* CreateView(ImageList* imageList) override;
     std::string ImageName() const override { return "components.bitmap"; }
@@ -38,6 +39,7 @@ public:
     void RemoveDirectoryName(const std::u32string& directoryName);
     void MapFileComponent(const std::u32string& fileName, Component* component);
     void RemoveFileName(const std::u32string& fileName);
+    void RemoveUnexistingDirectoriesAndFiles();
 private:
     std::vector<std::unique_ptr<Component>> components;
     std::map<std::u32string, Component*> directoryNameComponentMap;
@@ -71,8 +73,11 @@ public:
     std::vector<std::u32string> FileNames() const;
     void FilterDirectories(const std::vector<std::u32string>& exclude);
     void FilterFiles(const std::vector<std::u32string>& exclude);
+    void Map(const std::vector<std::u32string>& directoryNames, const std::vector<std::u32string>& fileNames);
     void Sort();
+    void RemoveUnexistingDirectoriesAndFiles();
 private:
+    void AddDirectoriesAndFiles(const std::vector<std::u32string>& directoryNames, const std::vector<std::u32string>& fileNames);
     std::vector<std::unique_ptr<Directory>> directories;
     std::vector<std::unique_ptr<File>> files;
 };

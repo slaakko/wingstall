@@ -173,6 +173,7 @@ public:
     const Padding& NodeImagePadding() const { return nodeImagePadding; }
 protected:
     void OnPaint(PaintEventArgs& args) override;
+    void OnSizeChanged() override;
     virtual void OnNodeClick(TreeViewNodeClickEventArgs& args);
     virtual void OnNodeDoubleClick(TreeViewNodeClickEventArgs& args);
     virtual void OnNodeEnter(TreeViewNodeEventArgs& args);
