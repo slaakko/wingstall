@@ -6,6 +6,9 @@
 #include <package_editor/environment.hpp>
 #include <package_editor/error.hpp>
 #include <package_editor/main_window.hpp>
+#include <package_editor/action.hpp>
+#include <package_editor/environment_variable_dialog.hpp>
+#include <package_editor/path_directory_dialog.hpp>
 #include <wing/ImageList.hpp>
 #include <sngxml/xpath/XPathEvaluate.hpp>
 #include <soulng/util/Unicode.hpp>
@@ -254,6 +257,97 @@ bool Environment::CanMoveDown(const Node* child) const
     return false;
 }
 
+bool Environment::HasEnvironmentVariable(const std::string& name) const
+{
+    for (const auto& environmentVariable : environmentVariables)
+    {
+        if (environmentVariable->Name() == name) return true;
+    }
+    return false;
+}
+
+bool Environment::HasPathDirectory(const std::string& value) const
+{
+    for (const auto& pathDirectory : pathDirectories)
+    {
+        if (pathDirectory->Value() == value) return true;
+    }
+    return false;
+}
+
+void Environment::AddNew(NodeKind kind)
+{
+    MainWindow* mainWindow = GetMainWindow();
+    if (mainWindow)
+    {
+        if (kind == NodeKind::environmentVariable)
+        {
+            EnvironmentVariableDialog dialog("Add New Environment Variable");
+            if (dialog.ShowDialog(*mainWindow) == DialogResult::ok)
+            {
+                std::unique_ptr<EnvironmentVariable> environmentVariablePtr(new EnvironmentVariable());
+                EnvironmentVariable* environemntVariable = environmentVariablePtr.get();
+                dialog.GetData(environemntVariable);
+                if (HasEnvironmentVariable(environemntVariable->Name()))
+                {
+                    throw std::runtime_error("name not unique");
+                }
+                AddEnvironentVariable(environmentVariablePtr.release());
+                Open();
+                TreeViewNode* environmentTreeViewNode = GetTreeViewNode();
+                if (environmentTreeViewNode)
+                {
+                    TreeView* treeView = environmentTreeViewNode->GetTreeView();
+                    if (treeView)
+                    {
+                        TreeViewNode* environmentVariableTreeViewNode = environemntVariable->ToTreeViewNode(treeView);
+                        environmentTreeViewNode->AddChild(environmentVariableTreeViewNode);
+                        treeView->SetSelectedNode(environmentTreeViewNode);
+                    }
+                }
+            }
+        }
+        else if (kind == NodeKind::pathDirectory)
+        {
+            PathDirectoryDialog dialog("Add New PATH directory");
+            if (dialog.ShowDialog(*mainWindow) == DialogResult::ok)
+            {
+                std::unique_ptr<PathDirectory> pathDirectoryPtr(new PathDirectory());
+                PathDirectory* pathDirectory = pathDirectoryPtr.get();
+                dialog.GetData(pathDirectory);
+                if (HasPathDirectory(pathDirectory->Value()))
+                {
+                    throw std::runtime_error("path not unique");
+                }
+                AddPathDirectory(pathDirectoryPtr.release());
+                Open();
+                TreeViewNode* environmentTreeViewNode = GetTreeViewNode();
+                if (environmentTreeViewNode)
+                {
+                    TreeView* treeView = environmentTreeViewNode->GetTreeView();
+                    if (treeView)
+                    {
+                        TreeViewNode* pathDirectoryTreeViewNode = pathDirectory->ToTreeViewNode(treeView);
+                        environmentTreeViewNode->AddChild(pathDirectoryTreeViewNode);
+                        treeView->SetSelectedNode(environmentTreeViewNode);
+                    }
+                }
+            }
+        }
+    }
+}
+
+void Environment::AddAddNewMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions)
+{
+    std::unique_ptr<MenuItem> addNewEnvironmentVariableMenuItem(new MenuItem("Add New Environment Variable"));
+    clickActions.push_back(std::unique_ptr<ClickAction>(new AddAction(addNewEnvironmentVariableMenuItem.get(), this, NodeKind::environmentVariable)));
+    contextMenu->AddMenuItem(addNewEnvironmentVariableMenuItem.release());
+
+    std::unique_ptr<MenuItem> addNewPathDirectoryMenuItem(new MenuItem("Add New PATH directory"));
+    clickActions.push_back(std::unique_ptr<ClickAction>(new AddAction(addNewPathDirectoryMenuItem.get(), this, NodeKind::pathDirectory)));
+    contextMenu->AddMenuItem(addNewPathDirectoryMenuItem.release());
+}
+
 EnvironmentVariable::EnvironmentVariable() : Node(NodeKind::environmentVariable, std::string())
 {
 }
@@ -272,12 +366,17 @@ EnvironmentVariable::EnvironmentVariable(const std::string& packageXMLFilePath, 
     std::u32string valueAttr = element->GetAttribute(U"value");
     if (!valueAttr.empty())
     {
-        value = ToUtf8(valueAttr);
+        SetValue(ToUtf8(valueAttr));
     }
     else
     {
         throw PackageXMLException("'variable' element has no 'value' attribute", packageXMLFilePath, element);
     }
+}
+
+void EnvironmentVariable::SetValue(const std::string& value_)
+{
+    value = value_;
 }
 
 void EnvironmentVariable::SetData(ListViewItem* item, ImageList* imageList)
@@ -299,21 +398,59 @@ TreeViewNode* EnvironmentVariable::ToTreeViewNode(TreeView* view)
     return node;
 }
 
+void EnvironmentVariable::Edit()
+{
+    EnvironmentVariableDialog dialog("Edit Environment Variable");
+    MainWindow* mainWindow = GetMainWindow();
+    if (mainWindow)
+    {
+        Node* parent = Parent();
+        if (parent && parent->Kind() == NodeKind::environment)
+        {
+            Environment* environment = static_cast<Environment*>(parent);
+            std::string prevName = Name();
+            dialog.SetData(this);
+            if (dialog.ShowDialog(*mainWindow) == DialogResult::ok)
+            {
+                if (dialog.EnvironmentVariableName() != prevName)
+                {
+                    if (environment->HasEnvironmentVariable(dialog.EnvironmentVariableName()))
+                    {
+                        throw std::runtime_error("name not unique");
+                    }
+                }
+                dialog.GetData(this);
+                environment->Open();
+                TreeViewNode* environmentVariableTreeViewNode = GetTreeViewNode();
+                if (environmentVariableTreeViewNode)
+                {
+                    environmentVariableTreeViewNode->SetText(Name() + "=" + Value());
+                }
+            }
+        }
+    }
+}
+
 PathDirectory::PathDirectory() : Node(NodeKind::pathDirectory, std::string())
 {
 }
 
-PathDirectory::PathDirectory(const std::string& packageXMLFilePath, sngxml::dom::Element* element) : Node(NodeKind::pathDirectory, "Path Directory")
+PathDirectory::PathDirectory(const std::string& packageXMLFilePath, sngxml::dom::Element* element) : Node(NodeKind::pathDirectory, "PATH Directory")
 {
     std::u32string valueAttr = element->GetAttribute(U"value");
     if (!valueAttr.empty())
     {
-        value = ToUtf8(valueAttr);
+        SetValue(ToUtf8(valueAttr));
     }
     else
     {
         throw PackageXMLException("'pathDirectory' element has no 'value' attribute", packageXMLFilePath, element);
     }
+}
+
+void PathDirectory::SetValue(const std::string& value_)
+{
+    value = value_;
 }
 
 TreeViewNode* PathDirectory::ToTreeViewNode(TreeView* view)
@@ -333,6 +470,39 @@ void PathDirectory::SetData(ListViewItem* item, ImageList* imageList)
 {
     Node::SetData(item, imageList);
     item->SetColumnValue(1, value);
+}
+
+void PathDirectory::Edit()
+{
+    PathDirectoryDialog dialog("Edit PATH Directory");
+    MainWindow* mainWindow = GetMainWindow();
+    if (mainWindow)
+    {
+        Node* parent = Parent();
+        if (parent && parent->Kind() == NodeKind::environment)
+        {
+            Environment* environment = static_cast<Environment*>(parent);
+            std::string prevValue = Value();
+            dialog.SetData(this);
+            if (dialog.ShowDialog(*mainWindow) == DialogResult::ok)
+            {
+                if (dialog.PathDirectoryValue() != prevValue)
+                {
+                    if (environment->HasPathDirectory(dialog.PathDirectoryValue()))
+                    {
+                        throw std::runtime_error("path not unique");
+                    }
+                }
+                dialog.GetData(this);
+                environment->Open();
+                TreeViewNode* pathDirectoryTreeViewNode = GetTreeViewNode();
+                if (pathDirectoryTreeViewNode)
+                {
+                    pathDirectoryTreeViewNode->SetText(Value());
+                }
+            }
+        }
+    }
 }
 
 } } // wingstall::package_editor

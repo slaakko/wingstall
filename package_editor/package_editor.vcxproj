@@ -159,9 +159,11 @@
     <ClCompile Include="directory.cpp" />
     <ClCompile Include="engine_variable.cpp" />
     <ClCompile Include="environment.cpp" />
+    <ClCompile Include="environment_variable_dialog.cpp" />
     <ClCompile Include="error.cpp" />
     <ClCompile Include="file.cpp" />
     <ClCompile Include="links.cpp" />
+    <ClCompile Include="link_directory_dialog.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_window.cpp" />
     <ClCompile Include="new_package_dialog.cpp" />
@@ -169,8 +171,10 @@
     <ClCompile Include="package.cpp" />
     <ClCompile Include="package_content_view.cpp" />
     <ClCompile Include="package_explorer.cpp" />
+    <ClCompile Include="path_directory_dialog.cpp" />
     <ClCompile Include="properties_view.cpp" />
     <ClCompile Include="rule.cpp" />
+    <ClCompile Include="rule_dialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="action.hpp" />
@@ -179,18 +183,22 @@
     <ClInclude Include="component_dialog.hpp" />
     <ClInclude Include="directory.hpp" />
     <ClInclude Include="environment.hpp" />
+    <ClInclude Include="environment_variable_dialog.hpp" />
     <ClInclude Include="error.hpp" />
     <ClInclude Include="file.hpp" />
     <ClInclude Include="links.hpp" />
+    <ClInclude Include="link_directory_dialog.hpp" />
     <ClInclude Include="main_window.hpp" />
     <ClInclude Include="new_package_dialog.hpp" />
     <ClInclude Include="node.hpp" />
     <ClInclude Include="package.hpp" />
     <ClInclude Include="package_content_view.hpp" />
     <ClInclude Include="package_explorer.hpp" />
+    <ClInclude Include="path_directory_dialog.hpp" />
     <ClInclude Include="properties_view.hpp" />
     <ClInclude Include="rule.hpp" />
     <ClInclude Include="engine_variable.hpp" />
+    <ClInclude Include="rule_dialog.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

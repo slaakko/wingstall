@@ -31,6 +31,11 @@ public:
     void InsertAfter(int index, std::unique_ptr<Node>&& child);
     bool CanMoveUp(const Node* child) const override;
     bool CanMoveDown(const Node* child) const override;
+    bool HasEnvironmentVariable(const std::string& name) const;
+    bool HasPathDirectory(const std::string& value) const;
+    bool CanAdd() const override { return true; }
+    void AddNew(NodeKind kind) override;
+    void AddAddNewMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions) override;
 private:
     std::vector<std::unique_ptr<EnvironmentVariable>> environmentVariables;
     std::vector<std::unique_ptr<PathDirectory>> pathDirectories;
@@ -41,9 +46,15 @@ class EnvironmentVariable : public Node
 public:
     EnvironmentVariable();
     EnvironmentVariable(const std::string& packageXMLFilePath, sngxml::dom::Element* element);
+    const std::string& Value() const { return value; }
+    void SetValue(const std::string& value_);
     std::string ImageName() const override { return "environment.var.bitmap"; }
     void SetData(ListViewItem* item, ImageList* imageList) override;
     TreeViewNode* ToTreeViewNode(TreeView* view);
+    bool CanOpen() const override { return false; }
+    bool CanEdit() const override { return true; }
+    void Edit() override;
+    void DefaultAction() override { return Edit(); }
 private:
     std::string value;
 };
@@ -53,9 +64,15 @@ class PathDirectory : public Node
 public:
     PathDirectory();
     PathDirectory(const std::string& packageXMLFilePath, sngxml::dom::Element* element);
+    const std::string& Value() const { return value; }
+    void SetValue(const std::string& value_);
     std::string ImageName() const override { return "path.directory.bitmap"; }
     void SetData(ListViewItem* item, ImageList* imageList) override;
     TreeViewNode* ToTreeViewNode(TreeView* view);
+    bool CanOpen() const override { return false; }
+    bool CanEdit() const override { return true; }
+    void Edit() override;
+    void DefaultAction() override { return Edit(); }
 private:
     std::string value;
 };

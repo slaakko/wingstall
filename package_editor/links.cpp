@@ -4,6 +4,8 @@
 // =================================
 
 #include <package_editor/links.hpp>
+#include <package_editor/link_directory_dialog.hpp>
+#include <package_editor/action.hpp>
 #include <package_editor/error.hpp>
 #include <package_editor/main_window.hpp>
 #include <wing/ImageList.hpp>
@@ -180,6 +182,15 @@ Node* LinkDirectories::GetNode(int index) const
     return nullptr;
 }
 
+bool LinkDirectories::HasNode(const std::string& name) const
+{
+    for (const auto& linkDirectory : linkDirectories)
+    {
+        if (linkDirectory->Path() == name) return true;
+    }
+    return false;
+}
+
 std::unique_ptr<Node> LinkDirectories::RemoveChild(int index)
 {
     if (index >= 0 && index < Count())
@@ -217,6 +228,48 @@ void LinkDirectories::InsertAfter(int index, std::unique_ptr<Node>&& child)
     }
 }
 
+void LinkDirectories::AddNew(NodeKind kind)
+{
+    MainWindow* mainWindow = GetMainWindow();
+    if (mainWindow)
+    {
+        if (kind == NodeKind::linkDirectory)
+        {
+            LinkDirectoryDialog dialog("Add New Link Directory");
+            if (dialog.ShowDialog(*mainWindow) == DialogResult::ok)
+            {
+                std::unique_ptr<LinkDirectory> linkDirectoryPtr(new LinkDirectory());
+                LinkDirectory* linkDirectory = linkDirectoryPtr.get();
+                dialog.GetData(linkDirectory);
+                if (HasNode(linkDirectory->Path()))
+                {
+                    throw std::runtime_error("path not unique");
+                }
+                AddLinkDirectory(linkDirectoryPtr.release());
+                Open();
+                TreeViewNode* linkDirectoriesTreeViewNode = GetTreeViewNode();
+                if (linkDirectoriesTreeViewNode)
+                {
+                    TreeView* treeView = linkDirectoriesTreeViewNode->GetTreeView();
+                    if (treeView)
+                    {
+                        TreeViewNode* linkDirectoryTreeViewNode = linkDirectory->ToTreeViewNode(treeView);
+                        linkDirectoriesTreeViewNode->AddChild(linkDirectoryTreeViewNode);
+                        treeView->SetSelectedNode(linkDirectoryTreeViewNode);
+                    }
+                }
+            }
+        }
+    }
+}
+
+void LinkDirectories::AddAddNewMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions)
+{
+    std::unique_ptr<MenuItem> addNewLinkDirectoryMenuItem(new MenuItem("Add New Link Directory"));
+    clickActions.push_back(std::unique_ptr<ClickAction>(new AddAction(addNewLinkDirectoryMenuItem.get(), this, NodeKind::linkDirectory)));
+    contextMenu->AddMenuItem(addNewLinkDirectoryMenuItem.release());
+}
+
 LinkDirectory::LinkDirectory() : Node(NodeKind::linkDirectory, "Link Directory")
 {
 }
@@ -226,7 +279,7 @@ LinkDirectory::LinkDirectory(const std::string& packageXMLFilePath, sngxml::dom:
     std::u32string pathAttr = element->GetAttribute(U"path");
     if (!pathAttr.empty())
     {
-        path = ToUtf8(pathAttr);
+        SetPath(ToUtf8(pathAttr));
     }
     else
     {
@@ -247,10 +300,48 @@ TreeViewNode* LinkDirectory::ToTreeViewNode(TreeView* view)
     return node;
 }
 
+void LinkDirectory::SetPath(const std::string& path_)
+{
+    path = path_;
+}
+
 void LinkDirectory::SetData(ListViewItem* item, ImageList* imageList)
 {
     Node::SetData(item, imageList);
     item->SetColumnValue(0, path);
+}
+
+void LinkDirectory::Edit()
+{
+    LinkDirectoryDialog dialog("Edit Link Directory");
+    MainWindow* mainWindow = GetMainWindow();
+    if (mainWindow)
+    {
+        Node* parent = Parent();
+        if (parent && parent->Kind() == NodeKind::linkDirectories)
+        {
+            LinkDirectories* linkDirectories = static_cast<LinkDirectories*>(parent);
+            std::string prevValue = Path();
+            dialog.SetData(this);
+            if (dialog.ShowDialog(*mainWindow) == DialogResult::ok)
+            {
+                if (dialog.PathDirectoryValue() != prevValue)
+                {
+                    if (linkDirectories->HasNode(dialog.PathDirectoryValue()))
+                    {
+                        throw std::runtime_error("path not unique");
+                    }
+                }
+                dialog.GetData(this);
+                linkDirectories->Open();
+                TreeViewNode* linkDirectoryTreeViewNode = GetTreeViewNode();
+                if (linkDirectoryTreeViewNode)
+                {
+                    linkDirectoryTreeViewNode->SetText(Path());
+                }
+            }
+        }
+    }
 }
 
 Shortcuts::Shortcuts() : Node(NodeKind::shortcuts, "Shortcuts")

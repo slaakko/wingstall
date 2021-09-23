@@ -197,11 +197,6 @@ void Node::Remove()
         }
         p->RemoveChild(index);
         p->Open();
-        Node* prev = p->GetNode(index);
-        if (prev)
-        {
-            prev->Select();
-        }
     }
 }
 

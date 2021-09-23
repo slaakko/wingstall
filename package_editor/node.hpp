@@ -46,6 +46,7 @@ public:
     void ViewContent();
     void Open();
     void Select();
+    virtual void DefaultAction() { return Open(); }
     virtual Package* GetPackage() const;
     virtual Control* CreateView(ImageList* imageList);
     virtual std::string ImageName() const;

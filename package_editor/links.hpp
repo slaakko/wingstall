@@ -39,9 +39,13 @@ public:
     int Count() const override;
     int IndexOf(const Node* child) const override;
     Node* GetNode(int index) const override;
+    bool HasNode(const std::string& name) const override;
     std::unique_ptr<Node> RemoveChild(int index) override;
     void InsertBefore(int index, std::unique_ptr<Node>&& child);
     void InsertAfter(int index, std::unique_ptr<Node>&& child);
+    bool CanAdd() const override { return true; }
+    void AddNew(NodeKind kind) override;
+    void AddAddNewMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions) override;
 private:
     std::vector<std::unique_ptr<LinkDirectory>> linkDirectories;
 };
@@ -51,9 +55,15 @@ class LinkDirectory : public Node
 public:
     LinkDirectory();
     LinkDirectory(const std::string& packageXMLFilePath, sngxml::dom::Element* element);
+    const std::string& Path() const { return path; }
+    void SetPath(const std::string& path_);
     TreeViewNode* ToTreeViewNode(TreeView* view);
     std::string ImageName() const override { return"linked.folder.closed.bitmap"; }
     void SetData(ListViewItem* item, ImageList* imageList) override;
+    bool CanOpen() const override { return false; }
+    bool CanEdit() const override { return true; }
+    void Edit() override;
+    void DefaultAction() override { return Edit(); }
 private:
     std::string path;
 };
