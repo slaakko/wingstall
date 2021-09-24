@@ -175,6 +175,7 @@
     <ClCompile Include="properties_view.cpp" />
     <ClCompile Include="rule.cpp" />
     <ClCompile Include="rule_dialog.cpp" />
+    <ClCompile Include="shortcut_dialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="action.hpp" />
@@ -199,6 +200,7 @@
     <ClInclude Include="rule.hpp" />
     <ClInclude Include="engine_variable.hpp" />
     <ClInclude Include="rule_dialog.hpp" />
+    <ClInclude Include="shortcut_dialog.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

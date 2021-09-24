@@ -51,10 +51,11 @@ public:
     std::string ImageName() const override { return "environment.var.bitmap"; }
     void SetData(ListViewItem* item, ImageList* imageList) override;
     TreeViewNode* ToTreeViewNode(TreeView* view);
+    bool Leaf() const override { return true; }
     bool CanOpen() const override { return false; }
     bool CanEdit() const override { return true; }
     void Edit() override;
-    void DefaultAction() override { return Edit(); }
+    void DefaultAction() override { Edit(); }
 private:
     std::string value;
 };
@@ -69,10 +70,11 @@ public:
     std::string ImageName() const override { return "path.directory.bitmap"; }
     void SetData(ListViewItem* item, ImageList* imageList) override;
     TreeViewNode* ToTreeViewNode(TreeView* view);
+    bool Leaf() const override { return true; }
     bool CanOpen() const override { return false; }
     bool CanEdit() const override { return true; }
     void Edit() override;
-    void DefaultAction() override { return Edit(); }
+    void DefaultAction() override { Edit(); }
 private:
     std::string value;
 };

@@ -31,7 +31,7 @@ LinkDirectoryDialog::LinkDirectoryDialog(const std::string& caption) :
     AddChild(pathLabelPtr.release());
 
     Point pathTextBoxLoc(16, 16 + 24);
-    Size textBoxSize(ScreenMetrics::Get().MMToHorizontalPixels(60), defaultTextBoxSize.Height + 4);
+    Size textBoxSize(ScreenMetrics::Get().MMToHorizontalPixels(100), defaultTextBoxSize.Height + 4);
     std::unique_ptr<TextBox> pathTextBoxPtr(new TextBox(TextBoxCreateParams().Location(pathTextBoxLoc).SetSize(textBoxSize).SetAnchors(static_cast<Anchors>(Anchors::top | Anchors::left))));
     pathTextBox = pathTextBoxPtr.get();
     pathTextBox->TextChanged().AddHandler(this, &LinkDirectoryDialog::CheckValid);

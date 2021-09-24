@@ -212,13 +212,29 @@ void PackageExplorer::TreeViewNodeDoubleClick(TreeViewNodeClickEventArgs& args)
 {
     try
     {
-        if (args.node->State() == TreeViewNodeState::collapsed)
+        TreeViewNode* treeViewNode = args.node;
+        if (treeViewNode)
         {
-            args.node->ExpandAll();
-        }
-        else if (args.node->State() == TreeViewNodeState::expanded)
-        {
-            args.node->CollapseAll();
+            Node* node = nullptr;
+            if (treeViewNode->Data())
+            {
+                node = static_cast<Node*>(treeViewNode->Data());
+            }
+            if (node && node->Leaf())
+            {
+                node->DefaultAction();
+            }
+            else
+            {
+                if (treeViewNode->State() == TreeViewNodeState::collapsed)
+                {
+                    treeViewNode->ExpandAll();
+                }
+                else if (treeViewNode->State() == TreeViewNodeState::expanded)
+                {
+                    treeViewNode->CollapseAll();
+                }
+            }
         }
     }
     catch (const std::exception& ex)

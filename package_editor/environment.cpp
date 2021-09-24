@@ -94,8 +94,8 @@ Control* Environment::CreateView(ImageList* imageList)
     }
     listView->SetDoubleBuffered();
     listView->SetImageList(imageList);
-    listView->AddColumn("Name", 200);
-    listView->AddColumn("Value", 200);
+    listView->AddColumn("Name", 400);
+    listView->AddColumn("Value", 400);
     for (const auto& environmentVariable : environmentVariables)
     {
         ListViewItem* item = listView->AddItem();
@@ -309,7 +309,7 @@ void Environment::AddNew(NodeKind kind)
         }
         else if (kind == NodeKind::pathDirectory)
         {
-            PathDirectoryDialog dialog("Add New PATH directory");
+            PathDirectoryDialog dialog("Add New PATH Directory");
             if (dialog.ShowDialog(*mainWindow) == DialogResult::ok)
             {
                 std::unique_ptr<PathDirectory> pathDirectoryPtr(new PathDirectory());
@@ -343,7 +343,7 @@ void Environment::AddAddNewMenuItems(ContextMenu* contextMenu, std::vector<std::
     clickActions.push_back(std::unique_ptr<ClickAction>(new AddAction(addNewEnvironmentVariableMenuItem.get(), this, NodeKind::environmentVariable)));
     contextMenu->AddMenuItem(addNewEnvironmentVariableMenuItem.release());
 
-    std::unique_ptr<MenuItem> addNewPathDirectoryMenuItem(new MenuItem("Add New PATH directory"));
+    std::unique_ptr<MenuItem> addNewPathDirectoryMenuItem(new MenuItem("Add New PATH Directory"));
     clickActions.push_back(std::unique_ptr<ClickAction>(new AddAction(addNewPathDirectoryMenuItem.get(), this, NodeKind::pathDirectory)));
     contextMenu->AddMenuItem(addNewPathDirectoryMenuItem.release());
 }

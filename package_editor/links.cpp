@@ -5,6 +5,7 @@
 
 #include <package_editor/links.hpp>
 #include <package_editor/link_directory_dialog.hpp>
+#include <package_editor/shortcut_dialog.hpp>
 #include <package_editor/action.hpp>
 #include <package_editor/error.hpp>
 #include <package_editor/main_window.hpp>
@@ -142,7 +143,7 @@ Control* LinkDirectories::CreateView(ImageList* imageList)
     }
     listView->SetDoubleBuffered();
     listView->SetImageList(imageList);
-    listView->AddColumn("Path", 200);
+    listView->AddColumn("Path", 400);
     for (const auto& linkDirectory : linkDirectories)
     {
         ListViewItem* item = listView->AddItem();
@@ -381,8 +382,8 @@ Control* Shortcuts::CreateView(ImageList* imageList)
     }
     listView->SetDoubleBuffered();
     listView->SetImageList(imageList);
-    listView->AddColumn("Link File Path", 200);
-    listView->AddColumn("Path", 200);
+    listView->AddColumn("Link File Path", 400);
+    listView->AddColumn("Path", 400);
     for (const auto& shortcut : shortcuts)
     {
         ListViewItem* item = listView->AddItem();
@@ -422,6 +423,18 @@ Node* Shortcuts::GetNode(int index) const
     return nullptr;
 }
 
+bool Shortcuts::HasNode(const std::string& name) const
+{
+    for (const auto& shortcut : shortcuts)
+    {
+        if (shortcut->LinkFilePath() == name)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 std::unique_ptr<Node> Shortcuts::RemoveChild(int index)
 {
     if (index >= 0 && index < Count())
@@ -457,6 +470,48 @@ void Shortcuts::InsertAfter(int index, std::unique_ptr<Node>&& child)
     {
         child.reset();
     }
+}
+
+void Shortcuts::AddNew(NodeKind kind)
+{
+    MainWindow* mainWindow = GetMainWindow();
+    if (mainWindow)
+    {
+        if (kind == NodeKind::shortcut)
+        {
+            ShortcutDialog dialog("Add New Shortcut");
+            if (dialog.ShowDialog(*mainWindow) == DialogResult::ok)
+            {
+                std::unique_ptr<Shortcut> shortcutPtr(new Shortcut());
+                Shortcut* shortcut = shortcutPtr.get();
+                dialog.GetData(shortcut);
+                if (HasNode(shortcut->LinkFilePath()))
+                {
+                    throw std::runtime_error("link file path not unique");
+                }
+                AddShortcut(shortcutPtr.release());
+                Open();
+                TreeViewNode* shortcutsTreeViewNode = GetTreeViewNode();
+                if (shortcutsTreeViewNode)
+                {
+                    TreeView* treeView = shortcutsTreeViewNode->GetTreeView();
+                    if (treeView)
+                    {
+                        TreeViewNode* shortcutTreeViewNode = shortcut->ToTreeViewNode(treeView);
+                        shortcutsTreeViewNode->AddChild(shortcutTreeViewNode);
+                        treeView->SetSelectedNode(shortcutsTreeViewNode);
+                    }
+                }
+            }
+        }
+    }
+}
+
+void Shortcuts::AddAddNewMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions)
+{
+    std::unique_ptr<MenuItem> addNewShortcutMenuItem(new MenuItem("Add New Shortcut"));
+    clickActions.push_back(std::unique_ptr<ClickAction>(new AddAction(addNewShortcutMenuItem.get(), this, NodeKind::shortcut)));
+    contextMenu->AddMenuItem(addNewShortcutMenuItem.release());
 }
 
 Shortcut::Shortcut() : Node(NodeKind::shortcut, "Shortcut"), iconIndex(0)
@@ -501,7 +556,7 @@ Shortcut::Shortcut(const std::string& packageXMLFilePath, sngxml::dom::Element* 
     std::u32string iconPathAttr = element->GetAttribute(U"iconPath");
     if (!iconPathAttr.empty())
     {
-        iconPath = ToUtf8(iconPathAttr);
+        iconFilePath = ToUtf8(iconPathAttr);
     }
     std::u32string iconIndexAttr = element->GetAttribute(U"iconIndex");
     if (!iconIndexAttr.empty())
@@ -528,6 +583,70 @@ void Shortcut::SetData(ListViewItem* item, ImageList* imageList)
     Node::SetData(item, imageList);
     item->SetColumnValue(0, linkFilePath);
     item->SetColumnValue(1, path);
+}
+
+void Shortcut::SetLinkFilePath(const std::string& linkFilePath_)
+{
+    linkFilePath = linkFilePath_;
+}
+
+void Shortcut::SetPath(const std::string& path_)
+{
+    path = path_;
+}
+
+void Shortcut::SetArguments(const std::string& arguments_)
+{
+    arguments = arguments_;
+}
+
+void Shortcut::SetWorkingDirectory(const std::string& workingDirectory_)
+{
+    workingDirectory = workingDirectory_;
+}
+
+void Shortcut::SetDescription(const std::string& description_)
+{
+    description = description_;
+}
+
+void Shortcut::SetIconFilePath(const std::string& iconFilePath_)
+{
+    iconFilePath = iconFilePath_;
+}
+
+void Shortcut::Edit()
+{
+    ShortcutDialog dialog("Edit Shortcut");
+    MainWindow* mainWindow = GetMainWindow();
+    if (mainWindow)
+    {
+        Node* parent = Parent();
+        if (parent && parent->Kind() == NodeKind::shortcuts)
+        {
+            Shortcuts* shortcuts = static_cast<Shortcuts*>(parent);
+            std::string prevValue = LinkFilePath();
+            dialog.SetData(this);
+            if (dialog.ShowDialog(*mainWindow) == DialogResult::ok)
+            {
+                if (dialog.LinkFilePath() != prevValue)
+                {
+                    if (shortcuts->HasNode(dialog.LinkFilePath()))
+                    {
+                        throw std::runtime_error("link file path not unique");
+                    }
+                }
+                dialog.GetData(this);
+                shortcuts->Open();
+                TreeViewNode* shortcutTreeViewNode = GetTreeViewNode();
+                if (shortcutTreeViewNode)
+                {
+                    shortcutTreeViewNode->SetText(LinkFilePath());
+                }
+            }
+        }
+    }
+
 }
 
 } } // wingstall::package_editor

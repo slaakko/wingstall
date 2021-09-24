@@ -31,6 +31,9 @@ public:
     std::string ImageName() const override { return "engine.variable.bitmap"; }
     void SetData(ListViewItem* item, ImageList* imageList) override;
     virtual std::string Value() const = 0;
+    bool Leaf() const override { return true; }
+    bool CanOpen() const override { return false; }
+    void DefaultAction() override { Parent()->Open(); }
 };
 
 class TargetRootDirVariable : public EngineVariable

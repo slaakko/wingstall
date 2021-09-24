@@ -46,6 +46,7 @@ public:
     void ViewContent();
     void Open();
     void Select();
+    virtual bool Leaf() const { return false; }
     virtual void DefaultAction() { return Open(); }
     virtual Package* GetPackage() const;
     virtual Control* CreateView(ImageList* imageList);

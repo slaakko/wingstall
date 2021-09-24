@@ -60,10 +60,11 @@ public:
     TreeViewNode* ToTreeViewNode(TreeView* view);
     std::string ImageName() const override { return"linked.folder.closed.bitmap"; }
     void SetData(ListViewItem* item, ImageList* imageList) override;
+    bool Leaf() const override { return true; }
     bool CanOpen() const override { return false; }
     bool CanEdit() const override { return true; }
     void Edit() override;
-    void DefaultAction() override { return Edit(); }
+    void DefaultAction() override { Edit(); }
 private:
     std::string path;
 };
@@ -79,9 +80,13 @@ public:
     int Count() const override;
     int IndexOf(const Node* child) const override;
     Node* GetNode(int index) const override;
+    bool HasNode(const std::string& name) const override;
     std::unique_ptr<Node> RemoveChild(int index) override;
     void InsertBefore(int index, std::unique_ptr<Node>&& child);
     void InsertAfter(int index, std::unique_ptr<Node>&& child);
+    bool CanAdd() const override { return true; }
+    void AddNew(NodeKind kind) override;
+    void AddAddNewMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions) override;
 private:
     std::vector<std::unique_ptr<Shortcut>> shortcuts;
 };
@@ -94,13 +99,32 @@ public:
     TreeViewNode* ToTreeViewNode(TreeView* view);
     std::string ImageName() const override { return"shortcut.bitmap"; }
     void SetData(ListViewItem* item, ImageList* imageList) override;
+    const std::string& LinkFilePath() const { return linkFilePath; }
+    void SetLinkFilePath(const std::string& linkFilePath_);
+    const std::string& Path() const { return path; }
+    void SetPath(const std::string& path_);
+    const std::string& Arguments() const { return arguments; }
+    void SetArguments(const std::string& arguments_);
+    const std::string& WorkingDirectory() const { return workingDirectory; }
+    void SetWorkingDirectory(const std::string& workingDirectory_);
+    const std::string& Description() const { return description; }
+    void SetDescription(const std::string& description_);
+    const std::string& IconFilePath() const { return iconFilePath; }
+    void SetIconFilePath(const std::string& iconFilePath_);
+    int IconIndex() const { return iconIndex; }
+    void SetIconIndex(int iconIndex_) { iconIndex = iconIndex_; }
+    bool Leaf() const override { return true; }
+    bool CanOpen() const override { return false; }
+    bool CanEdit() const override { return true; }
+    void Edit() override;
+    void DefaultAction() override { Edit(); }
 private:
     std::string linkFilePath;
     std::string path;
     std::string arguments;
     std::string workingDirectory;
     std::string description;
-    std::string iconPath;
+    std::string iconFilePath;
     int iconIndex;
 };
 

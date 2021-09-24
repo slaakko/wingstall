@@ -81,8 +81,8 @@ Control* EngineVariables::CreateView(ImageList* imageList)
     }
     listView->SetDoubleBuffered();
     listView->SetImageList(imageList);
-    listView->AddColumn("Name", 200);
-    listView->AddColumn("Value", 200);
+    listView->AddColumn("Name", 400);
+    listView->AddColumn("Value", 400);
     for (const auto& engineVariable : engineVariables)
     {
         ListViewItem* item = listView->AddItem();

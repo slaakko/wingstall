@@ -19,6 +19,8 @@ public:
     File(const std::string& name_);
     File(const std::string& packageXMLFilePath, sngxml::dom::Element* element);
     std::string ImageName() const override { return "file.bitmap"; }
+    bool Leaf() const override { return true; }
+    bool CanOpen() const override { return false; }
     TreeViewNode* ToTreeViewNode(TreeView* view);
 };
 

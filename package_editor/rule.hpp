@@ -79,6 +79,7 @@ public:
     void AddAddNewMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions) override;
     bool CanEdit() const override { return true; }
     void Edit() override;
+    void DefaultAction() override { Edit(); }
 private:
     RuleKind ruleKind;
     PathKind pathKind;
