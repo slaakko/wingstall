@@ -293,7 +293,6 @@ void Environment::AddNew(NodeKind kind)
                     throw std::runtime_error("name not unique");
                 }
                 AddEnvironentVariable(environmentVariablePtr.release());
-                Open();
                 TreeViewNode* environmentTreeViewNode = GetTreeViewNode();
                 if (environmentTreeViewNode)
                 {
@@ -305,6 +304,7 @@ void Environment::AddNew(NodeKind kind)
                         treeView->SetSelectedNode(environmentTreeViewNode);
                     }
                 }
+                OpenAndExpand();
             }
         }
         else if (kind == NodeKind::pathDirectory)
@@ -320,7 +320,6 @@ void Environment::AddNew(NodeKind kind)
                     throw std::runtime_error("path not unique");
                 }
                 AddPathDirectory(pathDirectoryPtr.release());
-                Open();
                 TreeViewNode* environmentTreeViewNode = GetTreeViewNode();
                 if (environmentTreeViewNode)
                 {
@@ -332,6 +331,7 @@ void Environment::AddNew(NodeKind kind)
                         treeView->SetSelectedNode(environmentTreeViewNode);
                     }
                 }
+                OpenAndExpand();
             }
         }
     }
@@ -420,7 +420,7 @@ void EnvironmentVariable::Edit()
                     }
                 }
                 dialog.GetData(this);
-                environment->Open();
+                environment->OpenAndExpand();
                 TreeViewNode* environmentVariableTreeViewNode = GetTreeViewNode();
                 if (environmentVariableTreeViewNode)
                 {
@@ -494,7 +494,7 @@ void PathDirectory::Edit()
                     }
                 }
                 dialog.GetData(this);
-                environment->Open();
+                environment->OpenAndExpand();
                 TreeViewNode* pathDirectoryTreeViewNode = GetTreeViewNode();
                 if (pathDirectoryTreeViewNode)
                 {

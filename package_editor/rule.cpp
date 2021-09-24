@@ -148,7 +148,6 @@ void Rules::AddNew(NodeKind kind)
                 Rule* rule = new Rule();
                 ruleDialog.GetData(rule);
                 AddRule(rule);
-                Open();
                 TreeViewNode* rulesTreeViewNode = GetTreeViewNode();
                 if (rulesTreeViewNode)
                 {
@@ -160,6 +159,7 @@ void Rules::AddNew(NodeKind kind)
                         treeView->SetSelectedNode(rulesTreeViewNode);
                     }
                 }
+                OpenAndExpand();
             }
         }
     }
@@ -470,6 +470,11 @@ void Rule::InsertAfter(int index, std::unique_ptr<Node>&& child)
     }
 }
 
+bool Rule::Leaf() const
+{
+    return rules.empty();
+}
+
 bool Rule::CanAdd() const
 {
     if (ruleKind == RuleKind::include && pathKind == PathKind::dir)
@@ -492,7 +497,6 @@ void Rule::AddNew(NodeKind kind)
                 Rule* rule = new Rule();
                 ruleDialog.GetData(rule);
                 AddRule(rule);
-                Open();
                 TreeViewNode* rulesTreeViewNode = GetTreeViewNode();
                 if (rulesTreeViewNode)
                 {
@@ -504,6 +508,7 @@ void Rule::AddNew(NodeKind kind)
                         treeView->SetSelectedNode(rulesTreeViewNode);
                     }
                 }
+                OpenAndExpand();
             }
         }
     }
@@ -529,7 +534,7 @@ void Rule::Edit()
             Node* parent = Parent();
             if (parent)
             {
-                parent->Open();
+                parent->OpenAndExpand();
             }
             TreeViewNode* ruleTreeViewNode = GetTreeViewNode();
             if (ruleTreeViewNode)

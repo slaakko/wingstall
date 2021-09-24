@@ -108,6 +108,16 @@ void Node::Open()
     ViewContent();
 }
 
+void Node::OpenAndExpand()
+{
+    Open();
+    TreeViewNode* treeViewNode = GetTreeViewNode();
+    if (treeViewNode && !treeViewNode->Children().IsEmpty())
+    {
+        treeViewNode->Expand();
+    }
+}
+
 void Node::Select()
 {
     if (listViewItem)
@@ -262,19 +272,26 @@ void Node::MoveDown()
 
 void Node::AddMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions, MenuItemsKind menuItemsKind)
 {
-    if (menuItemsKind == MenuItemsKind::newMenuItems)
+    if ((menuItemsKind & MenuItemsKind::newMenuItems) != MenuItemsKind::none)
     {
         if (CanAdd())
         {
             AddAddNewMenuItems(contextMenu, clickActions);
         }
     }
-    else if (menuItemsKind == MenuItemsKind::allMenuItems)
+    else if ((menuItemsKind & MenuItemsKind::allMenuItems) != MenuItemsKind::none)
     {
         if (CanOpen())
         {
             std::unique_ptr<MenuItem> openMenuItem(new MenuItem("Open"));
-            clickActions.push_back(std::unique_ptr<ClickAction>(new OpenAction(openMenuItem.get(), this)));
+            if ((menuItemsKind & MenuItemsKind::treeView) != MenuItemsKind::none)
+            {
+                clickActions.push_back(std::unique_ptr<ClickAction>(new OpenAndExpandAction(openMenuItem.get(), this)));
+            }
+            else
+            {
+                clickActions.push_back(std::unique_ptr<ClickAction>(new OpenAction(openMenuItem.get(), this)));
+            }
             contextMenu->AddMenuItem(openMenuItem.release());
         }
         if (CanAdd())

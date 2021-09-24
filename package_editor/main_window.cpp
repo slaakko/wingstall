@@ -254,7 +254,7 @@ void MainWindow::ListViewItemDoubleClick(ListViewItemEventArgs& args)
     if (args.item && args.item->Data())
     {
         Node* node = static_cast<Node*>(args.item->Data());
-        node->DefaultAction();
+        node->ExecuteDefaultAction();
     }
 }
 

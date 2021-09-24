@@ -33,7 +33,7 @@ public:
     virtual std::string Value() const = 0;
     bool Leaf() const override { return true; }
     bool CanOpen() const override { return false; }
-    void DefaultAction() override { Parent()->Open(); }
+    void ExecuteDefaultAction() override { Parent()->Open(); }
 };
 
 class TargetRootDirVariable : public EngineVariable

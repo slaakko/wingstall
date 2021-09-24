@@ -191,7 +191,7 @@ void PackageExplorer::TreeViewNodeClick(TreeViewNodeClickEventArgs& args)
                 {
                     mainWindow->ClearClickActions();
                     std::unique_ptr<ContextMenu> contextMenu(new ContextMenu());
-                    node->AddMenuItems(contextMenu.get(), mainWindow->ClickActions(), MenuItemsKind::allMenuItems);
+                    node->AddMenuItems(contextMenu.get(), mainWindow->ClickActions(), static_cast<MenuItemsKind>(MenuItemsKind::allMenuItems | MenuItemsKind::treeView));
                     if (contextMenu->HasMenuItems())
                     {
                         treeView->TranslateContentLocation(args.location);
@@ -222,7 +222,7 @@ void PackageExplorer::TreeViewNodeDoubleClick(TreeViewNodeClickEventArgs& args)
             }
             if (node && node->Leaf())
             {
-                node->DefaultAction();
+                node->ExecuteDefaultAction();
             }
             else
             {

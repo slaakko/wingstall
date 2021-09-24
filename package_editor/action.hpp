@@ -14,6 +14,15 @@ using namespace wing;
 class Node;
 enum class NodeKind;
 
+class OpenAndExpandAction : public ClickAction
+{
+public:
+    OpenAndExpandAction(MenuItem* menuItem_, Node* node_);
+    void Execute() override;
+private:
+    Node* node;
+};
+
 class OpenAction : public ClickAction
 {
 public:

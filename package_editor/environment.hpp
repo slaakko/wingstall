@@ -55,7 +55,7 @@ public:
     bool CanOpen() const override { return false; }
     bool CanEdit() const override { return true; }
     void Edit() override;
-    void DefaultAction() override { Edit(); }
+    void ExecuteDefaultAction() override { Edit(); }
 private:
     std::string value;
 };
@@ -74,7 +74,7 @@ public:
     bool CanOpen() const override { return false; }
     bool CanEdit() const override { return true; }
     void Edit() override;
-    void DefaultAction() override { Edit(); }
+    void ExecuteDefaultAction() override { Edit(); }
 private:
     std::string value;
 };

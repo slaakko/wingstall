@@ -263,7 +263,6 @@ void Components::AddNew(NodeKind kind)
                 }
                 Component* component = new Component(dialog.ComponentName());
                 AddComponent(component);
-                Open();
                 TreeViewNode* componentsTreeViewNode = GetTreeViewNode();
                 if (componentsTreeViewNode)
                 {
@@ -275,6 +274,7 @@ void Components::AddNew(NodeKind kind)
                         treeView->SetSelectedNode(componentsTreeViewNode);
                     }
                 }
+                OpenAndExpand();
             }
         }
     }
@@ -578,7 +578,6 @@ void Component::AddNew(NodeKind kind)
                 std::vector<std::u32string> selectedFiles;
                 dialog.GetSelectedDirectoriesAndFiles(selectedDirectories, selectedFiles);
                 AddDirectoriesAndFiles(selectedDirectories, selectedFiles);
-                Open();
                 Node* parent = Parent();
                 if (parent && parent->Kind() == NodeKind::components)
                 {
@@ -597,6 +596,7 @@ void Component::AddNew(NodeKind kind)
                         }
                     }
                 }
+                OpenAndExpand();
             }
         }
     }

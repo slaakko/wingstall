@@ -64,7 +64,7 @@ public:
     bool CanOpen() const override { return false; }
     bool CanEdit() const override { return true; }
     void Edit() override;
-    void DefaultAction() override { Edit(); }
+    void ExecuteDefaultAction() override { Edit(); }
 private:
     std::string path;
 };
@@ -117,7 +117,7 @@ public:
     bool CanOpen() const override { return false; }
     bool CanEdit() const override { return true; }
     void Edit() override;
-    void DefaultAction() override { Edit(); }
+    void ExecuteDefaultAction() override { Edit(); }
 private:
     std::string linkFilePath;
     std::string path;

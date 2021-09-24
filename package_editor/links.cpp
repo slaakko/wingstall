@@ -247,7 +247,6 @@ void LinkDirectories::AddNew(NodeKind kind)
                     throw std::runtime_error("path not unique");
                 }
                 AddLinkDirectory(linkDirectoryPtr.release());
-                Open();
                 TreeViewNode* linkDirectoriesTreeViewNode = GetTreeViewNode();
                 if (linkDirectoriesTreeViewNode)
                 {
@@ -259,6 +258,7 @@ void LinkDirectories::AddNew(NodeKind kind)
                         treeView->SetSelectedNode(linkDirectoryTreeViewNode);
                     }
                 }
+                OpenAndExpand();
             }
         }
     }
@@ -334,7 +334,7 @@ void LinkDirectory::Edit()
                     }
                 }
                 dialog.GetData(this);
-                linkDirectories->Open();
+                linkDirectories->OpenAndExpand();
                 TreeViewNode* linkDirectoryTreeViewNode = GetTreeViewNode();
                 if (linkDirectoryTreeViewNode)
                 {
@@ -490,7 +490,6 @@ void Shortcuts::AddNew(NodeKind kind)
                     throw std::runtime_error("link file path not unique");
                 }
                 AddShortcut(shortcutPtr.release());
-                Open();
                 TreeViewNode* shortcutsTreeViewNode = GetTreeViewNode();
                 if (shortcutsTreeViewNode)
                 {
@@ -502,6 +501,7 @@ void Shortcuts::AddNew(NodeKind kind)
                         treeView->SetSelectedNode(shortcutsTreeViewNode);
                     }
                 }
+                OpenAndExpand();
             }
         }
     }
@@ -637,7 +637,7 @@ void Shortcut::Edit()
                     }
                 }
                 dialog.GetData(this);
-                shortcuts->Open();
+                shortcuts->OpenAndExpand();
                 TreeViewNode* shortcutTreeViewNode = GetTreeViewNode();
                 if (shortcutTreeViewNode)
                 {

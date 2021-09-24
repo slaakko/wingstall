@@ -9,6 +9,27 @@
 
 namespace wingstall { namespace package_editor {
 
+OpenAndExpandAction::OpenAndExpandAction(MenuItem* menuItem_, Node* node_) : ClickAction(menuItem_), node(node_)
+{
+}
+
+void OpenAndExpandAction::Execute()
+{
+    MainWindow* mainWindow = node->GetMainWindow();
+    if (mainWindow)
+    {
+        try
+        {
+            mainWindow->HideContextMenu();
+            node->OpenAndExpand();
+        }
+        catch (const std::exception& ex)
+        {
+            ShowErrorMessageBox(mainWindow->Handle(), ex.what());
+        }
+    }
+}
+
 OpenAction::OpenAction(MenuItem* menuItem_, Node* node_) : ClickAction(menuItem_), node(node_)
 {
 }

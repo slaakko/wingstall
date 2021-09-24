@@ -20,10 +20,25 @@ enum class NodeKind : int
     engineVariables, engineVariable
 };
 
-enum class MenuItemsKind 
+enum class MenuItemsKind : int
 {
-    allMenuItems, newMenuItems
+    none = 0, newMenuItems = 1 << 1, allMenuItems = 1 << 2, treeView = 1 << 3
 };
+
+inline MenuItemsKind operator|(MenuItemsKind left, MenuItemsKind right)
+{
+    return MenuItemsKind(int(left) | int(right));
+}
+
+inline MenuItemsKind operator&(MenuItemsKind left, MenuItemsKind right)
+{
+    return MenuItemsKind(int(left) & int(right));
+}
+
+inline MenuItemsKind operator~(MenuItemsKind kind)
+{
+    return MenuItemsKind(~int(kind));
+}
 
 class Package;
 class PackageContentView;
@@ -45,9 +60,10 @@ public:
     void Explore();
     void ViewContent();
     void Open();
+    void OpenAndExpand();
     void Select();
     virtual bool Leaf() const { return false; }
-    virtual void DefaultAction() { return Open(); }
+    virtual void ExecuteDefaultAction() { return Open(); }
     virtual Package* GetPackage() const;
     virtual Control* CreateView(ImageList* imageList);
     virtual std::string ImageName() const;
