@@ -10,6 +10,7 @@
 #include <wing/ImageList.hpp>
 #include <wing/ScrollableControl.hpp>
 #include <sngxml/xpath/XPathEvaluate.hpp>
+#include <soulng/util/Path.hpp>
 #include <soulng/util/TextUtils.hpp>
 #include <soulng/util/Unicode.hpp>
 #include <boost/uuid/uuid_io.hpp>
@@ -276,6 +277,12 @@ Package::Package(const std::string& packageXMLFilePath, sngxml::dom::Element* ro
     }
     engineVariables.reset(new EngineVariables());
     engineVariables->SetParent(this);
+}
+
+std::string Package::BinFolderPath() const
+{
+    std::string packageFolderPath = Path::GetDirectoryName(filePath);
+    return Path::Combine(packageFolderPath, "bin");
 }
 
 TreeViewNode* Package::ToTreeViewNode(TreeView* view) 

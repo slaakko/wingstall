@@ -10,6 +10,7 @@
 #include <package_editor/rule_dialog.hpp>
 #include <wing/ImageList.hpp>
 #include <sngxml/xpath/XPathEvaluate.hpp>
+#include <soulng/rex/Match.hpp>
 #include <soulng/util/TextUtils.hpp>
 #include <soulng/util/Unicode.hpp>
 
@@ -17,7 +18,6 @@ namespace wingstall { namespace package_editor {
 
 using namespace soulng::unicode;
 using namespace soulng::util;
-
 
 Rules::Rules() : Node(NodeKind::rules, "Rules")
 {
@@ -172,15 +172,34 @@ void Rules::AddAddNewMenuItems(ContextMenu* contextMenu, std::vector<std::unique
     contextMenu->AddMenuItem(addNewRuleMenuItem.release());
 }
 
-Rule::Rule() : Node(NodeKind::rule, std::string()), ruleKind(), pathKind(), cascade(false)
+int Rules::RuleCount() const
+{
+    return rules.size();
+}
+
+Rule* Rules::GetRule(int index) const
+{
+    return rules[index].get();
+}
+
+Rule* Rules::GetRule(const std::string& name) const
+{
+    for (const auto& rule : rules)
+    {
+        if (rule->Value() == name) return rule.get();
+    }
+    return nullptr;
+}
+
+Rule::Rule() : Node(NodeKind::rule, std::string()), ruleKind(), pathKind(), cascade(false), compiled(false)
 {
 }
 
-Rule::Rule(const std::string& namePattern_, RuleKind ruleKind_, PathKind pathKind_) : Node(NodeKind::rule, namePattern_), ruleKind(ruleKind_), pathKind(pathKind_), cascade(false)
+Rule::Rule(const std::string& namePattern_, RuleKind ruleKind_, PathKind pathKind_) : Node(NodeKind::rule, namePattern_), ruleKind(ruleKind_), pathKind(pathKind_), cascade(false), compiled(false)
 {
 }
 
-Rule::Rule(const std::string& packageXMLFilePath, sngxml::dom::Element* element) : Node(NodeKind::rule, std::string()), ruleKind(), pathKind(), cascade(false)
+Rule::Rule(const std::string& packageXMLFilePath, sngxml::dom::Element* element) : Node(NodeKind::rule, std::string()), ruleKind(), pathKind(), cascade(false), compiled(false)
 {
     if (element->Name() == U"exclude")
     {
@@ -531,6 +550,7 @@ void Rule::Edit()
         if (dialog.ShowDialog(*mainWindow) == DialogResult::ok)
         {
             dialog.GetData(this);
+            compiled = false;
             Node* parent = Parent();
             if (parent)
             {
@@ -543,6 +563,43 @@ void Rule::Edit()
             }
         }
     }
+}
+
+int Rule::RuleCount() const
+{
+    return rules.size();
+}
+
+Rule* Rule::GetRule(int index) const
+{
+    return rules[index].get();
+}
+
+Rule* Rule::GetRule(const std::string& name) const
+{
+    for (const auto& rule : rules)
+    {
+        if (rule->Value() == name) return rule.get();
+    }
+    return nullptr;
+}
+
+bool Rule::Matches(const std::u32string& name) 
+{
+    if (!compiled)
+    {
+        Package* package = GetPackage();
+        if (package)
+        {
+            nfa = soulng::rex::CompileFilePattern(package->GetContext(), ToUtf32(Value()));
+            compiled = true;
+        }
+    }
+    if (compiled)
+    {
+        return soulng::rex::PatternMatch(name, nfa);
+    }
+    return false;
 }
 
 } } // wingstall::package_editor

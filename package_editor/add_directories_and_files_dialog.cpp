@@ -13,10 +13,7 @@
 #include <wing/Button.hpp>
 #include <wing/ScrollableControl.hpp>
 #include <soulng/util/Path.hpp>
-#include <soulng/util/TextUtils.hpp>
 #include <soulng/util/Unicode.hpp>
-#include <boost/filesystem/directory.hpp>
-#include <algorithm>
 
 namespace wingstall { namespace package_editor {
 
@@ -26,60 +23,6 @@ using namespace soulng::unicode;
 Color DefaultAddDirectoriesAndFilesDialogListViewBorderColor()
 {
     return Color(204, 206, 219);
-}
-
-void GetDirectoriesAndFiles(const std::string& dirPath, std::vector<std::u32string>& directories, std::vector<std::u32string>& files)
-{
-    boost::filesystem::path nativeDirPath = MakeNativeBoostPath(dirPath);
-    boost::system::error_code ec;
-    boost::filesystem::directory_iterator it(nativeDirPath, ec);
-    if (ec)
-    {
-        throw std::runtime_error("cannot iterate directory '" + dirPath + "': " + PlatformStringToUtf8(ec.message()));
-    }
-    while (it != boost::filesystem::directory_iterator())
-    {
-        if (it->status().type() == boost::filesystem::file_type::regular_file)
-        {
-            std::wstring str = it->path().native();
-            std::u16string s((const char16_t*)str.c_str());
-            std::u32string fileName = ToUtf32(Path::GetFileName(GetFullPath(ToUtf8(s))));
-            files.push_back(fileName);
-        }
-        else if (it->status().type() == boost::filesystem::file_type::directory_file)
-        {
-            if (!it->path().filename_is_dot() && !it->path().filename_is_dot_dot())
-            {
-                std::wstring str = it->path().native();
-                std::u16string s((const char16_t*)str.c_str());
-                std::u32string dirName = ToUtf32(Path::GetFileName(GetFullPath(ToUtf8(s))));
-                directories.push_back(dirName);
-            }
-        }
-        ++it;
-    }
-    std::sort(files.begin(), files.end());
-    std::sort(directories.begin(), directories.end());
-}
-
-std::vector<std::u32string> Filter(const std::vector<std::u32string>& names, const std::vector<std::u32string>& exclude)
-{
-    std::vector<std::u32string> result;
-    for (const std::u32string& name : names)
-    {
-        if (!std::binary_search(exclude.cbegin(), exclude.cend(), name))
-        {
-            result.push_back(name);
-        }
-    }
-    return result;
-}
-
-std::vector<std::u32string> Merge(const std::vector<std::u32string>& left, const std::vector<std::u32string>& right)
-{
-    std::vector<std::u32string> result;
-    std::merge(left.begin(), left.end(), right.begin(), right.end(), std::back_inserter(result));
-    return result;
 }
 
 AddDirectoriesAndFilesDialog::AddDirectoriesAndFilesDialog(wingstall::package_editor::Component* component_) : 

@@ -709,7 +709,8 @@ void TreeView::HideToolTipWindow()
 }
 
 TreeViewNode::TreeViewNode(const std::string& text_) : 
-    text(text_), treeView(nullptr), children(this), state(TreeViewNodeState::collapsed), flags(TreeViewNodeFlags::none), data(nullptr), location(), size(), childRect(), index(-1), imageIndex(-1)
+    text(text_), treeView(nullptr), children(this), state(TreeViewNodeState::collapsed), flags(TreeViewNodeFlags::none), data(nullptr), location(), size(), childRect(), index(-1), 
+    imageIndex(-1), expandedImageIndex(-1)
 {
 }
 
@@ -1349,6 +1350,21 @@ void TreeViewNode::SetImageIndex(int imageIndex_)
     }
 }
 
+void TreeViewNode::SetExpandedImageIndex(int expandedImageIndex_)
+{
+    if (expandedImageIndex != expandedImageIndex_)
+    {
+        expandedImageIndex = expandedImageIndex_;
+        TreeView* view = GetTreeView();
+        if (view)
+        {
+            view->SetTreeViewNodeStateChanged();
+            view->SetChanged();
+            view->Invalidate();
+        }
+    }
+}
+
 void TreeViewNode::OnMouseDown(MouseEventArgs& args)
 {
     if ((args.buttons & MouseButtons::lbutton) != MouseButtons::none)
@@ -1448,7 +1464,15 @@ void TreeViewNode::DrawImage(TreeView* view, Graphics& graphics, Point& loc)
     ImageList* imageList = view->GetImageList();
     if (imageList)
     {
-        Bitmap* image = imageList->GetImage(imageIndex);
+        int imgIndex = imageIndex;
+        if (state == TreeViewNodeState::expanded)
+        {
+            if (expandedImageIndex != -1)
+            {
+                imgIndex = expandedImageIndex;
+            }
+        }
+        Bitmap* image = imageList->GetImage(imgIndex);
         if (image)
         {
             int imageWidth = image->GetWidth();

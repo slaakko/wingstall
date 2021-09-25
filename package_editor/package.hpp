@@ -11,6 +11,7 @@
 #include <package_editor/engine_variable.hpp>
 #include <wingpackage/component.hpp>
 #include <sngxml/dom/Element.hpp>
+#include <soulng/rex/Context.hpp>
 #include <boost/uuid/uuid.hpp>
 
 namespace wingstall { namespace package_editor {
@@ -61,6 +62,7 @@ public:
     Package(const std::string& packageXMLFilePath);
     Package(const std::string& packageXMLFilePath, sngxml::dom::Element* root);
     const std::string& FilePath() const { return filePath; }
+    std::string BinFolderPath() const;
     Properties* GetProperties() const { return properties.get(); }
     Components* GetComponents() const { return components.get(); }
     Environment* GetEnvironment() const { return environment.get(); }
@@ -73,6 +75,7 @@ public:
     void SetView(PackageContentView* view_) { view = view_; }
     PackageExplorer* Explorer() const { return explorer; }
     void SetExplorer(PackageExplorer* explorer_) { explorer = explorer_; }
+    soulng::rex::Context& GetContext() { return context; }
 private:
     std::string filePath;
     std::unique_ptr<Properties> properties;
@@ -82,6 +85,7 @@ private:
     std::unique_ptr<EngineVariables> engineVariables;
     PackageContentView* view;
     PackageExplorer* explorer;
+    soulng::rex::Context context;
 };
 
 } } // wingstall::package_editor

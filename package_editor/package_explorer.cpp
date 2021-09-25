@@ -5,6 +5,7 @@
 
 #include <package_editor/package_explorer.hpp>
 #include <package_editor/package_content_view.hpp>
+#include <package_editor/path_bar.hpp>
 #include <package_editor/main_window.hpp>
 #include <wing/BorderedControl.hpp>
 #include <wing/PaddedControl.hpp>

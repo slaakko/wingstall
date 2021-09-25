@@ -156,6 +156,7 @@ void PackageContentView::ViewContent(Node* node)
             framedChild = nullptr;
             child = nullptr;
         }
+        node->ResetDirectoryPath();
         Control* view = node->CreateView(imageList);
         if (!view)
         {

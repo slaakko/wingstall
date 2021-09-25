@@ -311,6 +311,7 @@ public:
     const std::string& ToolTip() const { return toolTip; }
     void SetToolTip(const std::string& toolTip_);
     void SetImageIndex(int imageIndex_);
+    void SetExpandedImageIndex(int expandedImageIndex_);
 protected:
     virtual void OnMouseDown(MouseEventArgs& args);
     virtual void OnMouseUp(MouseEventArgs& args);
@@ -332,6 +333,7 @@ private:
     Rect childRect;
     int index;
     int imageIndex;
+    int expandedImageIndex;
 };
 
 } // wing

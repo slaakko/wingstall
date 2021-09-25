@@ -7,6 +7,7 @@
 #define WINGSTALL_PACKAGE_EDITOR_RULE_INCLUDED
 #include <package_editor/node.hpp>
 #include <sngxml/dom/Element.hpp>
+#include <soulng/rex/Nfa.hpp>
 #include <wing/TreeView.hpp>
 
 namespace wingstall { namespace package_editor {
@@ -32,6 +33,9 @@ public:
     bool CanAdd() const override { return true; }
     void AddNew(NodeKind kind) override;
     void AddAddNewMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions) override;
+    int RuleCount() const override;
+    Rule* GetRule(int index) const override;
+    Rule* GetRule(const std::string& name) const override;
 private:
     std::vector<std::unique_ptr<Rule>> rules;
 };
@@ -81,12 +85,18 @@ public:
     bool CanEdit() const override { return true; }
     void Edit() override;
     void ExecuteDefaultAction() override { Edit(); }
+    int RuleCount() const override;
+    Rule* GetRule(int index) const override;
+    Rule* GetRule(const std::string& name) const override;
+    bool Matches(const std::u32string& name);
 private:
     RuleKind ruleKind;
     PathKind pathKind;
     bool cascade;
     std::vector<std::unique_ptr<Rule>> rules;
     std::string value;
+    bool compiled;
+    soulng::rex::Nfa nfa;
 };
 
 } } // wingstall::package_editor

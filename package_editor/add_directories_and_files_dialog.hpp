@@ -15,9 +15,6 @@ namespace wingstall { namespace package_editor {
 using namespace wing;
 
 Color DefaultAddDirectoriesAndFilesDialogListViewBorderColor();
-void GetDirectoriesAndFiles(const std::string& dirPath, std::vector<std::u32string>& directories, std::vector<std::u32string>& files);
-std::vector<std::u32string> Filter(const std::vector<std::u32string>& names, const std::vector<std::u32string>& exclude);
-std::vector<std::u32string> Merge(const std::vector<std::u32string>& left, const std::vector<std::u32string>& right);
 
 struct DialogListViewItemData
 {

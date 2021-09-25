@@ -7,8 +7,72 @@
 #include <package_editor/package_content_view.hpp>
 #include <package_editor/package_explorer.hpp>
 #include <package_editor/action.hpp>
+#include <package_editor/main_window.hpp>
+#include <package_editor/path_bar.hpp>
+#include <soulng/util/Path.hpp>
+#include <soulng/util/TextUtils.hpp>
+#include <soulng/util/Unicode.hpp>
+#include <boost/filesystem/directory.hpp>
+#include <algorithm>
 
 namespace wingstall { namespace package_editor {
+
+using namespace soulng::util;
+using namespace soulng::unicode;
+
+void GetDirectoriesAndFiles(const std::string& dirPath, std::vector<std::u32string>& directories, std::vector<std::u32string>& files)
+{
+    boost::filesystem::path nativeDirPath = MakeNativeBoostPath(dirPath);
+    boost::system::error_code ec;
+    boost::filesystem::directory_iterator it(nativeDirPath, ec);
+    if (ec)
+    {
+        throw std::runtime_error("cannot iterate directory '" + dirPath + "': " + PlatformStringToUtf8(ec.message()));
+    }
+    while (it != boost::filesystem::directory_iterator())
+    {
+        if (it->status().type() == boost::filesystem::file_type::regular_file)
+        {
+            std::wstring str = it->path().native();
+            std::u16string s((const char16_t*)str.c_str());
+            std::u32string fileName = ToUtf32(Path::GetFileName(GetFullPath(ToUtf8(s))));
+            files.push_back(fileName);
+        }
+        else if (it->status().type() == boost::filesystem::file_type::directory_file)
+        {
+            if (!it->path().filename_is_dot() && !it->path().filename_is_dot_dot())
+            {
+                std::wstring str = it->path().native();
+                std::u16string s((const char16_t*)str.c_str());
+                std::u32string dirName = ToUtf32(Path::GetFileName(GetFullPath(ToUtf8(s))));
+                directories.push_back(dirName);
+            }
+        }
+        ++it;
+    }
+    std::sort(files.begin(), files.end());
+    std::sort(directories.begin(), directories.end());
+}
+
+std::vector<std::u32string> Filter(const std::vector<std::u32string>& names, const std::vector<std::u32string>& exclude)
+{
+    std::vector<std::u32string> result;
+    for (const std::u32string& name : names)
+    {
+        if (!std::binary_search(exclude.cbegin(), exclude.cend(), name))
+        {
+            result.push_back(name);
+        }
+    }
+    return result;
+}
+
+std::vector<std::u32string> Merge(const std::vector<std::u32string>& left, const std::vector<std::u32string>& right)
+{
+    std::vector<std::u32string> result;
+    std::merge(left.begin(), left.end(), right.begin(), right.end(), std::back_inserter(result));
+    return result;
+}
 
 Node::Node(NodeKind kind_, const std::string& name_) : kind(kind_), name(name_), parent(nullptr), treeViewNode(nullptr), listViewItem(nullptr)
 {
@@ -89,6 +153,19 @@ void Node::Explore()
     }
 }
 
+void Node::ResetDirectoryPath()
+{
+    MainWindow* mainWindow = GetMainWindow();
+    if (mainWindow)
+    {
+        PathBar* pathBar = mainWindow->GetPathBar();
+        if (pathBar)
+        {
+            pathBar->SetDirectoryPath(std::string());
+        }
+    }
+}
+
 void Node::ViewContent()
 {
     Package* package = GetPackage();
@@ -158,10 +235,13 @@ bool Node::HasNode(const std::string& name) const
     return false;
 }
 
-void Node::AddNew(NodeKind kind)
+void Node::AddNode(Node* node)
 {
 }
 
+void Node::AddNew(NodeKind kind)
+{
+}
 
 void Node::Edit()
 {
@@ -354,6 +434,175 @@ bool Node::CanMoveDown(const Node* child) const
 {
     int index = IndexOf(child);
     return index >= 0 && index < Count() - 1;
+}
+
+std::string Node::DirectoryPath() const
+{
+    return parent->DirectoryPath();
+}
+
+bool Node::IncludeDirectory(const std::u32string& directoryName) const
+{
+    bool include = true;
+    bool matched = false;
+    int n = RuleCount();
+    for (int i = 0; i < n; ++i)
+    {
+        Rule* rule = GetRule(i);
+        if (rule->GetPathKind() == PathKind::dir)
+        {
+            if ((rule->GetRuleKind() == RuleKind::include) && rule->Matches(directoryName))
+            {
+                include = true;
+                matched = true;
+            }
+            else if ((rule->GetRuleKind() == RuleKind::exclude) && rule->Matches(directoryName))
+            {
+                include = false;
+                matched = true;
+            }
+        }
+    }
+    Node* p = parent;
+    while (p && !matched)
+    {
+        int n = p->RuleCount();
+        for (int i = 0; i < n; ++i)
+        {
+            Rule* rule = p->GetRule(i);
+            if (rule->GetPathKind() == PathKind::dir)
+            {
+                if (rule->Cascade())
+                {
+                    if ((rule->GetRuleKind() == RuleKind::include) && rule->Matches(directoryName))
+                    {
+                        include = true;
+                        matched = true;
+                    }
+                    else if ((rule->GetRuleKind() == RuleKind::exclude) && rule->Matches(directoryName))
+                    {
+                        include = false;
+                        matched = true;
+                    }
+                }
+            }
+        }
+        p = p->Parent();
+    }
+    return include;
+}
+
+bool Node::IncludeFile(const std::u32string& fileName) const
+{
+    bool include = true;
+    bool matched = false;
+    int n = RuleCount();
+    for (int i = 0; i < n; ++i)
+    {
+        Rule* rule = GetRule(i);
+        if (rule->GetPathKind() == PathKind::file)
+        {
+            if (rule->GetRuleKind() == RuleKind::include && rule->Matches(fileName))
+            {
+                include = true;
+                matched = true;
+            }
+            else if (rule->GetRuleKind() == RuleKind::exclude && rule->Matches(fileName))
+            {
+                include = false;
+                matched = true;
+            }
+        }
+    }
+    Node* p = parent;
+    while (p && !matched)
+    {
+        int n = p->RuleCount();
+        for (int i = 0; i < n; ++i)
+        {
+            Rule* rule = p->GetRule(i);
+            if (rule->GetPathKind() == PathKind::file)
+            {
+                if (rule->Cascade())
+                {
+                    if (rule->GetRuleKind() == RuleKind::include && rule->Matches(fileName))
+                    {
+                        include = true;
+                        matched = true;
+                    }
+                    else if (rule->GetRuleKind() == RuleKind::exclude && rule->Matches(fileName))
+                    {
+                        include = false;
+                        matched = true;
+                    }
+                }
+            }
+        }
+        p = p->Parent();
+    }
+    return include;
+}
+
+Control* Node::CreateContentView(ImageList* imageList)
+{
+    std::string directoryPath = DirectoryPath();
+    std::unique_ptr<ListView> listViewPtr(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    ListView* listView = listViewPtr.get();
+    listView->SetFlag(ControlFlags::scrollSubject);
+    listView->SetDoubleBuffered();
+    listView->SetImageList(imageList);
+    listView->AddColumn("Name", 400);
+    MainWindow* mainWindow = GetMainWindow();
+    if (mainWindow)
+    {
+        mainWindow->AddListViewEventHandlers(listView);
+        PathBar* pathBar = mainWindow->GetPathBar();
+        pathBar->SetDirectoryPath(directoryPath);
+    }
+    TreeViewNode* treeViewNode = GetTreeViewNode();
+    if (treeViewNode)
+    {
+        treeViewNode->RemoveChildren();
+    }
+    std::vector<std::u32string> directories;
+    std::vector<std::u32string> files;
+    GetDirectoriesAndFiles(directoryPath, directories, files);
+    for (const std::u32string& directory : directories)
+    {
+        std::unique_ptr<ContentDirectory> contentDirectory(new ContentDirectory(ToUtf8(directory)));
+        ListViewItem* item = listView->AddItem();
+        if (!IncludeDirectory(directory))
+        {
+            item->SetFlag(ListViewItemFlags::disabled);
+            contentDirectory->Disable();
+        }
+        contentDirectory->SetData(item, imageList);
+        if (treeViewNode && !contentDirectory->IsDisabled())
+        {
+            TreeViewNode* childNode = new TreeViewNode(contentDirectory->Name());
+            childNode->SetImageIndex(imageList->GetImageIndex("folder.closed.bitmap"));
+            childNode->SetExpandedImageIndex(imageList->GetImageIndex("folder.opened.bitmap"));
+            contentDirectory->SetTreeViewNode(childNode);
+            childNode->SetData(contentDirectory.get());
+            treeViewNode->AddChild(childNode);
+            SetTreeViewNode(treeViewNode);
+            treeViewNode->SetData(this);
+        }
+        AddNode(contentDirectory.release());
+    }
+    for (const std::u32string& file : files)
+    {
+        std::unique_ptr<ContentFile> contentFile(new ContentFile(ToUtf8(file)));
+        ListViewItem* item = listView->AddItem();
+        if (!IncludeFile(file))
+        {
+            item->SetFlag(ListViewItemFlags::disabled);
+            contentFile->Disable();
+        }
+        contentFile->SetData(item, imageList);
+        AddNode(contentFile.release());
+    }
+    return listViewPtr.release();
 }
 
 } } // wingstall::package_editor

@@ -8,10 +8,12 @@
 #include <package_editor/main_window.hpp>
 #include <wing/ImageList.hpp>
 #include <sngxml/xpath/XPathEvaluate.hpp>
+#include <soulng/util/Path.hpp>
 #include <soulng/util/Unicode.hpp>
 
 namespace wingstall { namespace package_editor {
 
+using namespace soulng::util;
 using namespace soulng::unicode;
 
 Directory::Directory(const std::string& name_) : Node(NodeKind::directory, name_)
@@ -67,6 +69,7 @@ TreeViewNode* Directory::ToTreeViewNode(TreeView* view)
     if (imageList)
     {
         node->SetImageIndex(imageList->GetImageIndex("folder.closed.bitmap"));
+        node->SetExpandedImageIndex(imageList->GetImageIndex("folder.opened.bitmap"));
     }
     node->AddChild(rules->ToTreeViewNode(view));
     node->AddChild(content->ToTreeViewNode(view));
@@ -83,7 +86,7 @@ Control* Directory::CreateView(ImageList* imageList)
     }
     listView->SetDoubleBuffered();
     listView->SetImageList(imageList);
-    listView->AddColumn("Name", 200);
+    listView->AddColumn("Name", 400);
     ListViewItem* rulesItem = listView->AddItem();
     rules->SetData(rulesItem, imageList);
     ListViewItem* contentItem = listView->AddItem();
@@ -91,21 +94,30 @@ Control* Directory::CreateView(ImageList* imageList)
     return listView.release();
 }
 
-Content::Content() : Node(NodeKind::content, "Content") 
+std::string Directory::DirectoryPath() const
 {
+    std::string sourceRootDir = "C:/";
+    Package* package = GetPackage();
+    if (package && package->GetProperties())
+    {
+        sourceRootDir = package->GetProperties()->SourceRootDir();
+    }
+    return GetFullPath(Path::Combine(sourceRootDir, Name()));
 }
 
-TreeViewNode* Content::ToTreeViewNode(TreeView* view)
+int Directory::RuleCount() const
 {
-    TreeViewNode* node = new TreeViewNode("Content");
-    SetTreeViewNode(node);
-    node->SetData(this);
-    ImageList* imageList = view->GetImageList();
-    if (imageList)
-    {
-        node->SetImageIndex(imageList->GetImageIndex("document.collection.bitmap"));
-    }
-    return node;
+    return rules->RuleCount();
+}
+
+Rule* Directory::GetRule(int index) const
+{
+    return rules->GetRule(index);
+}
+
+Rule* Directory::GetRule(const std::string& name) const
+{
+    return rules->GetRule(name);
 }
 
 } } // wingstall::package_editor

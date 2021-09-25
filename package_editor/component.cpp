@@ -367,7 +367,7 @@ Control* Component::CreateView(ImageList* imageList)
     }
     listView->SetDoubleBuffered();
     listView->SetImageList(imageList);
-    listView->AddColumn("Name", 200);
+    listView->AddColumn("Name", 400);
     for (const auto& directory : directories)
     {
         ListViewItem* item = listView->AddItem();

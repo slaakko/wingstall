@@ -5,11 +5,14 @@
 
 #include <package_editor/main_window.hpp>
 #include <package_editor/new_package_dialog.hpp>
+#include <package_editor/path_bar.hpp>
+#include <wing/BorderedControl.hpp>
 #include <wing/Dialog.hpp>
 #include <wing/LogView.hpp>
 #include <wing/PaddedControl.hpp>
 #include <wing/ScrollableControl.hpp>
 #include <wing/SplitContainer.hpp>
+#include <wing/StatusBar.hpp>
 #include <sngxml/dom/Parser.hpp>
 #include <soulng/util/Path.hpp>
 #include <soulng/util/Unicode.hpp>
@@ -54,9 +57,17 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
     openPackageMenuItem->Click().AddHandler(this, &MainWindow::OpenPackageClick);
     fileMenuItem->AddMenuItem(openPackageMenuItemPtr.release());
 
+    std::unique_ptr<MenuItem> savePackageMenuItemPtr(new MenuItem("&Save Package"));
+    savePackageMenuItem = savePackageMenuItemPtr.get();
+    savePackageMenuItem->SetShortcut(Keys::controlModifier | Keys::s);
+    savePackageMenuItem->Click().AddHandler(this, &MainWindow::SavePackageClick);
+    savePackageMenuItem->Disable();
+    fileMenuItem->AddMenuItem(savePackageMenuItemPtr.release());
+
     std::unique_ptr<MenuItem> closePackageMenuItemPtr(new MenuItem("&Close Package"));
     closePackageMenuItem = closePackageMenuItemPtr.get();
     closePackageMenuItem->Click().AddHandler(this, &MainWindow::ClosePackageClick);
+    closePackageMenuItem->Disable();
     fileMenuItem->AddMenuItem(closePackageMenuItemPtr.release());
 
     std::unique_ptr<MenuItem> exitMenuItemPtr(new MenuItem("E&xit"));
@@ -66,7 +77,66 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
 
     menuBar->AddMenuItem(fileMenuItem.release());
 
+    std::unique_ptr<MenuItem> editMenuItem(new MenuItem("&Edit"));
+
+    std::unique_ptr<MenuItem> editSettingsMenuItemPtr(new MenuItem("&Settings..."));
+    editSettingsMenuItem = editSettingsMenuItemPtr.get();
+    editSettingsMenuItem->Click().AddHandler(this, &MainWindow::EditSettingsClick);
+    editMenuItem->AddMenuItem(editSettingsMenuItemPtr.release());
+
+    menuBar->AddMenuItem(editMenuItem.release());
+
+    std::unique_ptr<MenuItem> buildMenuItem(new MenuItem("&Build"));
+
+    std::unique_ptr<MenuItem> buildPackageMenuItemPtr(new MenuItem("&Build Package"));
+    buildPackageMenuItem = buildPackageMenuItemPtr.get();
+    buildPackageMenuItem->SetShortcut(Keys::f5);
+    buildPackageMenuItem->Click().AddHandler(this, &MainWindow::BuildPackageClick);
+    buildPackageMenuItem->Disable();
+    buildMenuItem->AddMenuItem(buildPackageMenuItemPtr.release());
+
+    std::unique_ptr<MenuItem> openBinFolderMenuItemPtr(new MenuItem("&Open Bin Folder"));
+    openBinFolderMenuItem = openBinFolderMenuItemPtr.get();
+    openBinFolderMenuItem->SetShortcut(Keys::f7);
+    openBinFolderMenuItem->Click().AddHandler(this, &MainWindow::OpenBinFolderClick);
+    openBinFolderMenuItem->Disable();
+    buildMenuItem->AddMenuItem(openBinFolderMenuItemPtr.release());
+
+    menuBar->AddMenuItem(buildMenuItem.release());
+
     AddChild(menuBar.release());
+
+    std::unique_ptr<ToolBar> toolBarPtr(MakeToolBar());
+    ToolBar* toolBar = toolBarPtr.get();
+    std::unique_ptr<Control> borderedToolBar(new BorderedControl(BorderedControlCreateParams(toolBarPtr.release()).SetBorderStyle(BorderStyle::single).
+        NormalSingleBorderColor(DefaultToolBarBorderColor()).FocusedSingleBorderColor(DefaultToolBarBorderColor()).SetSize(toolBar->GetSize()).SetDock(Dock::top)));
+
+    std::unique_ptr<ToolButton> saveToolButtonPtr(new ToolButton(ToolButtonCreateParams().ToolBitMapName("save.bitmap").SetPadding(Padding(8, 8, 8, 8)).SetToolTip("Save Package (Ctrl+S)")));
+    saveToolButton = saveToolButtonPtr.get();
+    saveToolButton->Click().AddHandler(this, &MainWindow::SavePackageClick);
+    saveToolButton->Disable();
+    toolBar->AddToolButton(saveToolButtonPtr.release());
+
+    std::unique_ptr<ToolButton> buildToolButtonPtr(new ToolButton(ToolButtonCreateParams().ToolBitMapName("build.bitmap").SetPadding(Padding(6, 6, 6, 6)).SetToolTip("Build Package (F5)")));
+    buildToolButton = buildToolButtonPtr.get();
+    buildToolButton->Click().AddHandler(this, &MainWindow::BuildPackageClick);
+    buildToolButton->Disable();
+    toolBar->AddToolButton(buildToolButtonPtr.release());
+
+    std::unique_ptr<ToolButton> openBinFolderToolButtonPtr(new ToolButton(ToolButtonCreateParams().ToolBitMapName("folder.opened.bitmap").SetPadding(Padding(6, 6, 6, 6)).SetToolTip("Open Bin Folder (F7)")));
+    openBinFolderToolButton = openBinFolderToolButtonPtr.get();
+    openBinFolderToolButton->Click().AddHandler(this, &MainWindow::OpenBinFolderClick);
+    openBinFolderToolButton->Disable();
+    toolBar->AddToolButton(openBinFolderToolButtonPtr.release());
+
+    AddChild(borderedToolBar.release());
+
+    std::unique_ptr<PathBar> pathBarPtr(new PathBar(PathBarCreateParams(&imageList).Defaults()));
+    pathBar = pathBarPtr.get();
+    std::unique_ptr<PaddedControl> paddedPathBar(new PaddedControl(PaddedControlCreateParams(pathBarPtr.release()).Defaults()));
+    std::unique_ptr<BorderedControl> borderedPathBar(new BorderedControl(BorderedControlCreateParams(paddedPathBar.release()).SetSize(Size(0, 30)).SetDock(Dock::top).
+        NormalSingleBorderColor(DefaultPathBarFrameColor())));
+    AddChild(borderedPathBar.release());
 
     std::unique_ptr<SplitContainer> verticalSplitContainer(new SplitContainer(SplitContainerCreateParams(SplitterOrientation::vertical).SetDock(Dock::fill)));
 
@@ -107,8 +177,10 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
     imageList.AddImage("delete.file.bitmap");
     imageList.AddImage("delete.file.cascade.bitmap");
     imageList.AddImage("folder.closed.bitmap");
+    imageList.AddDisabledImage("folder.closed.bitmap");
     imageList.AddImage("folder.opened.bitmap");
     imageList.AddImage("file.bitmap");
+    imageList.AddDisabledImage("file.bitmap");
     imageList.AddImage("rules.bitmap");
     imageList.AddImage("document.collection.bitmap");
     imageList.AddImage("package.properties.bitmap");
@@ -125,6 +197,8 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
     packageExplorer->SetImageList(&imageList);
     packageContentView->SetImageList(&imageList);
 
+    std::unique_ptr<StatusBar> statusBarPtr(new StatusBar(StatusBarCreateParams().Defaults()));
+    AddChild(statusBarPtr.release());
 }
 
 MainWindow::~MainWindow()
@@ -285,6 +359,7 @@ void MainWindow::NewPackageClick()
             package->GetProperties()->SetVersion("1.0");
             package->GetProperties()->SetId(boost::uuids::random_generator()());
             package->GetEngineVariables()->Fetch();
+            SetCommandStatus();
         }
     }
     catch (const std::exception& ex)
@@ -323,6 +398,7 @@ void MainWindow::OpenPackageClick()
             package->SetExplorer(packageExplorer);
             packageExplorer->SetPackage(package.get());
             package->Open();
+            SetCommandStatus();
         }
     }
     catch (const std::exception& ex)
@@ -337,6 +413,45 @@ void MainWindow::ClosePackageClick()
     {
         package.reset();
         packageExplorer->SetPackage(package.get());
+        SetCommandStatus();
+    }
+    catch (const std::exception& ex)
+    {
+        ShowErrorMessageBox(Handle(), ex.what());
+    }
+}
+
+void MainWindow::SavePackageClick()
+{
+    try
+    {
+        // todo
+        SetCommandStatus();
+    }
+    catch (const std::exception& ex)
+    {
+        ShowErrorMessageBox(Handle(), ex.what());
+    }
+}
+
+void MainWindow::BuildPackageClick()
+{
+    try
+    {
+        // todo
+        SetCommandStatus();
+    }
+    catch (const std::exception& ex)
+    {
+        ShowErrorMessageBox(Handle(), ex.what());
+    }
+}
+
+void MainWindow::OpenBinFolderClick()
+{
+    try
+    {
+        // todo
     }
     catch (const std::exception& ex)
     {
@@ -356,5 +471,43 @@ void MainWindow::ExitClick()
         ShowErrorMessageBox(Handle(), ex.what());
     }
 }
+
+void MainWindow::EditSettingsClick()
+{
+    try
+    {
+        // todo
+    }
+    catch (const std::exception& ex)
+    {
+        ShowErrorMessageBox(Handle(), ex.what());
+    }
+}
+
+void MainWindow::SetCommandStatus()
+{
+    if (package)
+    {
+        savePackageMenuItem->Enable();
+        saveToolButton->Enable();
+        closePackageMenuItem->Enable();
+        buildPackageMenuItem->Enable();
+        buildToolButton->Enable();
+        if (boost::filesystem::exists(package->BinFolderPath()))
+        {
+            openBinFolderMenuItem->Enable();
+        }
+    }
+    else
+    {
+        savePackageMenuItem->Disable();
+        saveToolButton->Disable();
+        closePackageMenuItem->Disable();
+        buildPackageMenuItem->Disable();
+        buildToolButton->Disable();
+        openBinFolderMenuItem->Disable();
+    }
+}
+
 
 } } // wingstall::package_editor
