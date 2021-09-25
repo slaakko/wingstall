@@ -61,6 +61,7 @@ class Package : public Node
 public:
     Package(const std::string& packageXMLFilePath);
     Package(const std::string& packageXMLFilePath, sngxml::dom::Element* root);
+    std::string PathComponentName() const override { return "Package"; }
     const std::string& FilePath() const { return filePath; }
     std::string BinFolderPath() const;
     Properties* GetProperties() const { return properties.get(); }

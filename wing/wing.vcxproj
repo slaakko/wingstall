@@ -194,6 +194,7 @@
     <ClCompile Include="Metrics.cpp" />
     <ClCompile Include="PaddedControl.cpp" />
     <ClCompile Include="Panel.cpp" />
+    <ClCompile Include="PathView.cpp" />
     <ClCompile Include="ProgressBar.cpp" />
     <ClCompile Include="RadioButton.cpp" />
     <ClCompile Include="Registry.cpp" />
@@ -254,6 +255,7 @@
     <ClInclude Include="Metrics.hpp" />
     <ClInclude Include="PaddedControl.hpp" />
     <ClInclude Include="Panel.hpp" />
+    <ClInclude Include="PathView.hpp" />
     <ClInclude Include="ProgressBar.hpp" />
     <ClInclude Include="RadioButton.hpp" />
     <ClInclude Include="Registry.hpp" />

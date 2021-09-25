@@ -185,6 +185,7 @@ void PackageExplorer::TreeViewNodeClick(TreeViewNodeClickEventArgs& args)
             if (args.buttons == MouseButtons::lbutton)
             {
                 contentView->ViewContent(node);
+                node->SetCurrentPathNode();
             }
             else if (args.buttons == MouseButtons::rbutton)
             {

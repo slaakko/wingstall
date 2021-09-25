@@ -133,8 +133,9 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
 
     std::unique_ptr<PathBar> pathBarPtr(new PathBar(PathBarCreateParams(&imageList).Defaults()));
     pathBar = pathBarPtr.get();
-    std::unique_ptr<PaddedControl> paddedPathBar(new PaddedControl(PaddedControlCreateParams(pathBarPtr.release()).Defaults()));
-    std::unique_ptr<BorderedControl> borderedPathBar(new BorderedControl(BorderedControlCreateParams(paddedPathBar.release()).SetSize(Size(0, 30)).SetDock(Dock::top).
+    pathBar->GetParentPathSelector()->Click().AddHandler(this, &MainWindow::ParentPathSelectorClick);
+    pathBar->GetPathView()->PathComponentSelected().AddHandler(this, &MainWindow::PathComponentSelected);
+    std::unique_ptr<BorderedControl> borderedPathBar(new BorderedControl(BorderedControlCreateParams(pathBarPtr.release()).SetSize(Size(0, 32)).SetDock(Dock::top).
         NormalSingleBorderColor(DefaultPathBarFrameColor())));
     AddChild(borderedPathBar.release());
 
@@ -145,10 +146,12 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
     packageExplorer = packageExplorerPtr.get();
     packageExplorer->SetMainWindow(this);
     horizontalSplitContainer->Pane1Container()->AddChild(packageExplorerPtr.release());
+    packageExplorer->SizeChanged().AddHandler(this, &MainWindow::PackageExplorerSizeChanged);
 
     std::unique_ptr<PackageContentView> packageContentViewPtr(new PackageContentView(PackageContentViewCreateParams().SetDock(Dock::fill)));
     packageContentView = packageContentViewPtr.get();
     packageContentView->SetMainWindow(this);
+    packageContentView->SizeChanged().AddHandler(this, &MainWindow::PackageContentViewSizeChanged);
     horizontalSplitContainer->Pane2Container()->AddChild(packageContentViewPtr.release());
 
     packageExplorer->SetContentView(packageContentView);
@@ -193,6 +196,7 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
     imageList.AddImage("engine.variables.bitmap");
     imageList.AddImage("engine.variable.bitmap");
     imageList.AddImage("xml.file.bitmap");
+    imageList.AddImage("up.arrow.bitmap");
 
     packageExplorer->SetImageList(&imageList);
     packageContentView->SetImageList(&imageList);
@@ -265,6 +269,32 @@ void MainWindow::MouseUpNotification(MouseEventArgs& args)
     }
 }
 
+void MainWindow::PackageExplorerSizeChanged()
+{
+    Size packageExplorerSize = packageExplorer->GetSize();
+    pathBar->SetDirectoryPathViewWidth(packageExplorerSize.Width);
+}
+
+void MainWindow::PackageContentViewSizeChanged()
+{
+    Size packageContentViewSize = packageContentView->GetSize();
+    pathBar->SetPathViewMaxWidth(packageContentViewSize.Width);
+}
+
+void MainWindow::PathComponentSelected(PathComponentArgs& args)
+{
+    PathComponent* pathComponent = args.pathComponent;
+    if (pathComponent)
+    {
+        void* data = pathComponent->Data();
+        if (data)
+        {
+            Node* node = static_cast<Node*>(data);
+            node->Open();
+        }
+    }
+}
+
 void MainWindow::ListViewItemClick(ListViewItemEventArgs& args)
 {
     if (args.item)
@@ -329,6 +359,19 @@ void MainWindow::ListViewItemDoubleClick(ListViewItemEventArgs& args)
     {
         Node* node = static_cast<Node*>(args.item->Data());
         node->ExecuteDefaultAction();
+    }
+}
+
+void MainWindow::ParentPathSelectorClick()
+{
+    Node* selectedNode = packageExplorer->SelectedNode();
+    if (selectedNode)
+    {
+        Node* parent = selectedNode->Parent();
+        if (parent)
+        {
+            parent->Open();
+        }
     }
 }
 

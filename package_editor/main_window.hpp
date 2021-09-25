@@ -12,6 +12,7 @@
 #include <wing/ImageList.hpp>
 #include <wing/Menu.hpp>
 #include <wing/Window.hpp>
+#include <wing/PathView.hpp>
 
 namespace wingstall { namespace package_editor {
 
@@ -48,9 +49,13 @@ private:
     void ExitClick();
     void EditSettingsClick();
     void SetCommandStatus();
+    void PackageExplorerSizeChanged();
+    void PackageContentViewSizeChanged();
+    void PathComponentSelected(PathComponentArgs& args);
     void ListViewItemClick(ListViewItemEventArgs& args);
     void ListViewItemRightClick(ListViewItemEventArgs& args);
     void ListViewItemDoubleClick(ListViewItemEventArgs& args);
+    void ParentPathSelectorClick();
     ToolButton* saveToolButton;
     ToolButton* buildToolButton;
     ToolButton* openBinFolderToolButton;

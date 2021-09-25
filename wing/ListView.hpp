@@ -83,17 +83,17 @@ enum class ListViewFlags : int
     none = 0, measured = 1 << 0, allowMultiselect = 1 << 1
 };
 
-inline ListViewFlags operator|(ListViewFlags left, ListViewFlags right)
+WING_API inline ListViewFlags operator|(ListViewFlags left, ListViewFlags right)
 {
     return ListViewFlags(int(left) | int(right));
 }
 
-inline ListViewFlags operator&(ListViewFlags left, ListViewFlags right)
+WING_API inline ListViewFlags operator&(ListViewFlags left, ListViewFlags right)
 {
     return ListViewFlags(int(left) & int(right));
 }
 
-inline ListViewFlags operator~(ListViewFlags flags)
+WING_API inline ListViewFlags operator~(ListViewFlags flags)
 {
     return ListViewFlags(~int(flags));
 }

@@ -58,6 +58,7 @@ public:
     NodeKind Kind() const { return kind; }
     const std::string& Name() const { return name; }
     void SetName(const std::string& name_);
+    virtual std::string PathComponentName() const { return Name(); }
     Node* Parent() const { return parent; }
     void SetParent(Node* parent_) { parent = parent_; }
     MainWindow* GetMainWindow();
@@ -66,6 +67,7 @@ public:
     void Explore();
     void ResetDirectoryPath();
     void ViewContent();
+    void SetCurrentPathNode();
     void Open();
     void OpenAndExpand();
     void Select();

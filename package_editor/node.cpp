@@ -179,10 +179,24 @@ void Node::ViewContent()
     }
 }
 
+void Node::SetCurrentPathNode()
+{
+    MainWindow* mainWindow = GetMainWindow();
+    if (mainWindow)
+    {
+        PathBar* pathBar = mainWindow->GetPathBar();
+        if (pathBar)
+        {
+            pathBar->SetCurrentNode(this);
+        }
+    }
+}
+
 void Node::Open()
 {
     Explore();
     ViewContent();
+    SetCurrentPathNode();
 }
 
 void Node::OpenAndExpand()

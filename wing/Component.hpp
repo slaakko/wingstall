@@ -31,6 +31,7 @@ public:
     virtual bool IsStatusBarSpringItem() const { return false; }
     virtual bool IsIconListView() const { return false; }
     virtual bool IsIconListViewItem() const { return false; }
+    virtual bool IsPathComponent() const { return false; }
     Container* GetContainer() const { return container; }
     void SetContainer(Container* container_) { container = container_; }
     Component* NextSibling() const { return nextSibling; }
