@@ -410,6 +410,7 @@ PathBar::PathBar(PathBarCreateParams& createParams)  : ContainerControl(createPa
     AddChild(pathDividerPtr2.release());
     std::unique_ptr<PathView> pathViewPtr(new PathView(PathViewCreateParams().SetDock(Dock::left)));
     pathView = pathViewPtr.get();
+    pathView->SetDoubleBuffered();
     AddChild(pathViewPtr.release());
 }
 

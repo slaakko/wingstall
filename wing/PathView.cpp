@@ -313,16 +313,16 @@ void PathView::OnMouseUp(MouseEventArgs& args)
 
 void PathView::OnMouseMove(MouseEventArgs& args)
 {
+    if (mouseOverComponent)
+    {
+        mouseOverComponent->SetState(PathComponentState::idle);
+        mouseOverComponent = nullptr;
+    }
     PathComponent* pathComponent = PathComponentAt(args.location);
     if (pathComponent)
     {
         pathComponent->SetState(PathComponentState::mouseOver);
         mouseOverComponent = pathComponent;
-    }
-    else if (mouseOverComponent)
-    {
-        mouseOverComponent->SetState(PathComponentState::idle);
-        mouseOverComponent = nullptr;
     }
 }
 
