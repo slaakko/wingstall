@@ -340,7 +340,13 @@ void PropertiesView::ApplyButtonClick()
 {
     if (CheckApplyChanges())
     {
-        boost::filesystem::create_directories(MakeNativeBoostPath(sourceRootDirTextBox->Text()));
+        if (!sourceRootDirTextBox->Text().empty())
+        {
+            if (Path::IsAbsolute(sourceRootDirTextBox->Text()))
+            {
+                boost::filesystem::create_directories(MakeNativeBoostPath(sourceRootDirTextBox->Text()));
+            }
+        }
         package->GetProperties()->SetSourceRootDir(sourceRootDirTextBox->Text());
         package->GetProperties()->SetTargetRootDir(targetRootDirTextBox->Text());
         package->GetProperties()->SetAppName(appNameTextBox->Text());

@@ -455,7 +455,10 @@ void MainWindow::ClosePackageClick()
     try
     {
         package.reset();
+        pathBar->SetCurrentNode(nullptr);
+        pathBar->SetDirectoryPath(std::string());
         packageExplorer->SetPackage(package.get());
+        packageContentView->ViewContent(nullptr);
         SetCommandStatus();
     }
     catch (const std::exception& ex)
