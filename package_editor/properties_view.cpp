@@ -56,7 +56,7 @@ PropertiesView::PropertiesView(Package* package_) :
     package(package_), mainWindow(package->GetMainWindow()), exitHandlerId(-1), compressionComboBox(nullptr), dirty(false), initializing(true)
 {
     bool enableApplyButton = false;
-
+    ResetCaretDisabled();
     SetDoubleBuffered();
     Size s = GetSize();
     defaultControlSpacing = ScreenMetrics::Get().DefaultControlSpacing();
@@ -268,10 +268,19 @@ PropertiesView::PropertiesView(Package* package_) :
         dirty = true;
         applyButton->Enable();
     }
+
+    if (mainWindow)
+    {
+        KeyPreviewMethod keypreview;
+        keypreview.SetHandlerFunction(this, &PropertiesView::KeyPreview);
+        mainWindow->SetKeyPreviewMethod(keypreview);
+        Application::SetActiveWindow(mainWindow);
+    }
 }
 
 PropertiesView::~PropertiesView()
 {
+    Application::SetActiveWindow(nullptr);
     if (mainWindow)
     {
         if (exitHandlerId != -1)
@@ -279,6 +288,20 @@ PropertiesView::~PropertiesView()
             mainWindow->ExitView().RemoveHandler(exitHandlerId);
             exitHandlerId = -1;
         }
+    }
+}
+
+void PropertiesView::KeyPreview(Keys keys, bool& handled)
+{
+    if (keys == Keys::tab)
+    {
+        mainWindow->FocusNext();
+        handled = true;
+    }
+    else if (keys == (Keys::shiftModifier | Keys::tab))
+    {
+        mainWindow->FocusPrev();
+        handled = true;
     }
 }
 
@@ -422,6 +445,8 @@ void PropertiesView::SourceRootDirRelativeCheckBoxCheckedChanged()
 
 void PropertiesView::Exit(CancelArgs& args)
 {
+    Application::SetActiveWindow(nullptr);
+    mainWindow->SetFocusedControl(nullptr);
     if (dirty)
     {
         MessageBoxResult result = MessageBox::Show("Apply changes?", "Package | Properties", this, MB_YESNOCANCEL);

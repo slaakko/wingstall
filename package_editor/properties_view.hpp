@@ -36,6 +36,7 @@ private:
     void SelectSourceRootDir();
     void CreateProductId();
     void SourceRootDirRelativeCheckBoxCheckedChanged();
+    void KeyPreview(Keys keys, bool& handled);
     bool initializing;
     Package* package;
     MainWindow* mainWindow;

@@ -417,7 +417,8 @@ void ScrollableControl::ChildSizeOrContentSizeChanged(ControlEventArgs& args)
     {
         vmin = 0;
         vmax = 1;
-        if (scrollUnits.vertical)
+        vpage = 1;
+        if (scrollUnits.vertical > 0)
         {
             vmax = contentSize.Height / scrollUnits.vertical;
             vpage = clientSize.Height / scrollUnits.vertical;
@@ -434,7 +435,8 @@ void ScrollableControl::ChildSizeOrContentSizeChanged(ControlEventArgs& args)
     {
         hmin = 0;
         hmax = 1;
-        if (scrollUnits.horizontal)
+        hpage = 1;
+        if (scrollUnits.horizontal > 0)
         {
             hmax = contentSize.Width / scrollUnits.horizontal;
             hpage = clientSize.Width / scrollUnits.horizontal;

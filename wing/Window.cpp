@@ -711,7 +711,6 @@ void Window::OnGotFocus()
 void Window::OnLostFocus()
 {
     ContainerControl::OnLostFocus();
-    Application::SetActiveWindow(nullptr);
 }
 
 void Window::OnWindowStateChanged()
