@@ -9,6 +9,7 @@
 #include <package_editor/properties_view.hpp>
 #include <wing/ImageList.hpp>
 #include <wing/ScrollableControl.hpp>
+#include <sngxml/dom/Document.hpp>
 #include <sngxml/xpath/XPathEvaluate.hpp>
 #include <soulng/util/Path.hpp>
 #include <soulng/util/TextUtils.hpp>
@@ -17,6 +18,8 @@
 #include <boost/uuid/nil_generator.hpp>
 #include <boost/uuid/random_generator.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/filesystem.hpp>
+#include <fstream>
 
 namespace wingstall { namespace package_editor {
 
@@ -25,6 +28,31 @@ using namespace soulng::util;
 
 Properties::Properties() : Node(NodeKind::properties, "Properties"), compression(wingstall::wingpackage::Compression::none), includeUninstaller(true), id(boost::uuids::nil_uuid())
 {
+}
+
+void Properties::SetAttributes(sngxml::dom::Element* packageElement)
+{
+    packageElement->SetAttribute(U"sourceRootDir", ToUtf32(sourceRootDir));
+    packageElement->SetAttribute(U"targetRootDir", ToUtf32(targetRootDir));
+    packageElement->SetAttribute(U"appName", ToUtf32(appName));
+    if (!publisher.empty())
+    {
+        packageElement->SetAttribute(U"publisher", ToUtf32(publisher));
+    }
+    if (!version.empty())
+    {
+        packageElement->SetAttribute(U"version", ToUtf32(version));
+    }
+    packageElement->SetAttribute(U"compression", ToUtf32(wingpackage::CompressionStr(compression)));
+    if (!iconFilePath.empty())
+    {
+        packageElement->SetAttribute(U"iconFilePath", ToUtf32(iconFilePath));
+    }
+    packageElement->SetAttribute(U"includeUninstaller", includeUninstaller ? U"true" : U"false");
+    if (!id.is_nil())
+    {
+        packageElement->SetAttribute(U"id", ToUtf32(boost::uuids::to_string(id)));
+    }
 }
 
 void Properties::SetSourceRootDir(const std::string& sourceRootDir_)
@@ -91,7 +119,7 @@ Control* Properties::CreateView(ImageList* imageList)
     return viewPtr.release();
 }
 
-Package::Package(const std::string& packageXMLFilePath) : Node(NodeKind::package, std::string()), filePath(packageXMLFilePath), view(nullptr), explorer(nullptr)
+Package::Package(const std::string& packageXMLFilePath) : Node(NodeKind::package, std::string()), filePath(packageXMLFilePath), view(nullptr), explorer(nullptr), dirty(false)
 {
     properties.reset(new Properties());
     properties->SetParent(this);
@@ -106,7 +134,7 @@ Package::Package(const std::string& packageXMLFilePath) : Node(NodeKind::package
 }
 
 Package::Package(const std::string& packageXMLFilePath, sngxml::dom::Element* root) : 
-    Node(NodeKind::package, std::string()), filePath(packageXMLFilePath), view(nullptr), explorer(nullptr)
+    Node(NodeKind::package, std::string()), filePath(packageXMLFilePath), view(nullptr), explorer(nullptr), dirty(false)
 {
     properties.reset(new Properties());
     properties->SetParent(this);
@@ -277,6 +305,35 @@ Package::Package(const std::string& packageXMLFilePath, sngxml::dom::Element* ro
     }
     engineVariables.reset(new EngineVariables());
     engineVariables->SetParent(this);
+}
+
+void Package::Save()
+{
+    sngxml::dom::Document packageDoc;
+    packageDoc.AppendChild(std::unique_ptr<sngxml::dom::Node>(ToXml())); 
+    std::string directory = Path::GetDirectoryName(filePath);
+    boost::filesystem::create_directories(directory);
+    std::ofstream file(filePath);
+    CodeFormatter formatter(file); 
+    formatter.SetIndentSize(1);
+    packageDoc.Write(formatter);
+    dirty = false;
+}
+
+void Package::SetDirty()
+{
+    dirty = true;
+}
+
+sngxml::dom::Element* Package::ToXml() const
+{
+    sngxml::dom::Element* element = new sngxml::dom::Element(U"package");
+    element->SetAttribute(U"name", ToUtf32(Name()));
+    properties->SetAttributes(element);
+    components->AddElements(element);
+    element->AppendChild(std::unique_ptr<sngxml::dom::Node>(environment->ToXml()));
+    element->AppendChild(std::unique_ptr<sngxml::dom::Node>(links->ToXml()));
+    return element;
 }
 
 std::string Package::BinFolderPath() const

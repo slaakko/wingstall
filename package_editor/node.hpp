@@ -9,6 +9,7 @@
 #include <wing/ListView.hpp>
 #include <wing/TreeView.hpp>
 #include <wing/Menu.hpp>
+#include <sngxml/dom/Element.hpp>
 
 namespace wingstall {namespace package_editor {
 
@@ -72,7 +73,7 @@ public:
     void OpenAndExpand();
     void Select();
     virtual bool Leaf() const { return false; }
-    virtual void ExecuteDefaultAction() { return Open(); }
+    virtual void ExecuteDefaultAction();
     virtual Package* GetPackage() const;
     virtual Control* CreateView(ImageList* imageList);
     virtual std::string ImageName() const;
@@ -87,6 +88,8 @@ public:
     virtual bool HasNode(const std::string& name) const;
     virtual void AddNode(Node* node);
     virtual void AddNew(NodeKind kind);
+    virtual void AddRule(Rule* rule);
+    virtual Node* GetRuleContainerNode() { return nullptr; }
     virtual void Edit();
     virtual std::unique_ptr<Node> RemoveChild(int index);
     virtual void InsertBefore(int index, std::unique_ptr<Node>&& child);
@@ -96,6 +99,8 @@ public:
     virtual bool CanEdit() const { return false; }
     virtual bool CanMoveUp(const Node* child) const;
     virtual bool CanMoveDown(const Node* child) const;
+    virtual bool CanExclude() const { return false; }
+    virtual bool CanInclude() const { return false; }
     virtual std::string DirectoryPath() const;
     virtual int RuleCount() const { return 0; }
     virtual Rule* GetRule(int index) const { return nullptr; }

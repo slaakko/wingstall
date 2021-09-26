@@ -23,10 +23,29 @@ Rules::Rules() : Node(NodeKind::rules, "Rules")
 {
 }
 
+void Rules::AddElements(sngxml::dom::Element* directoryElement)
+{
+    for (const auto& rule : rules)
+    {
+        directoryElement->AppendChild(std::unique_ptr<sngxml::dom::Node>(rule->ToXml()));
+    }
+}
+
 void Rules::AddRule(Rule* rule)
 {
     rule->SetParent(this);
     rules.push_back(std::unique_ptr<Rule>(rule));
+    TreeViewNode* rulesTreeViewNode = GetTreeViewNode();
+    if (rulesTreeViewNode)
+    {
+        TreeView* treeView = rulesTreeViewNode->GetTreeView();
+        if (treeView)
+        {
+            TreeViewNode* ruleTreeViewNode = rule->ToTreeViewNode(treeView);
+            rulesTreeViewNode->AddChild(ruleTreeViewNode);
+            treeView->SetSelectedNode(rulesTreeViewNode);
+        }
+    }
 }
 
 TreeViewNode* Rules::ToTreeViewNode(TreeView* view)
@@ -145,20 +164,14 @@ void Rules::AddNew(NodeKind kind)
             RuleDialog ruleDialog("Add New Rule");
             if (ruleDialog.ShowDialog(*mainWindow) == DialogResult::ok)
             {
+                Package* package = GetPackage();
+                if (package)
+                {
+                    package->SetDirty();
+                }
                 Rule* rule = new Rule();
                 ruleDialog.GetData(rule);
                 AddRule(rule);
-                TreeViewNode* rulesTreeViewNode = GetTreeViewNode();
-                if (rulesTreeViewNode)
-                {
-                    TreeView* treeView = rulesTreeViewNode->GetTreeView();
-                    if (treeView)
-                    {
-                        TreeViewNode* ruleTreeViewNode = rule->ToTreeViewNode(treeView);
-                        rulesTreeViewNode->AddChild(ruleTreeViewNode);
-                        treeView->SetSelectedNode(rulesTreeViewNode);
-                    }
-                }
                 OpenAndExpand();
             }
         }
@@ -170,6 +183,9 @@ void Rules::AddAddNewMenuItems(ContextMenu* contextMenu, std::vector<std::unique
     std::unique_ptr<MenuItem> addNewRuleMenuItem(new MenuItem("Add New Rule"));
     clickActions.push_back(std::unique_ptr<ClickAction>(new AddAction(addNewRuleMenuItem.get(), this, NodeKind::rule)));
     contextMenu->AddMenuItem(addNewRuleMenuItem.release());
+    std::unique_ptr<MenuItem> addVSRulesMenuItem(new MenuItem("Add Visual C++ Source Directory Rules"));
+    clickActions.push_back(std::unique_ptr<ClickAction>(new AddVSRulesAction(addVSRulesMenuItem.get(), this)));
+    contextMenu->AddMenuItem(addVSRulesMenuItem.release());
 }
 
 int Rules::RuleCount() const
@@ -195,8 +211,25 @@ Rule::Rule() : Node(NodeKind::rule, std::string()), ruleKind(), pathKind(), casc
 {
 }
 
-Rule::Rule(const std::string& namePattern_, RuleKind ruleKind_, PathKind pathKind_) : Node(NodeKind::rule, namePattern_), ruleKind(ruleKind_), pathKind(pathKind_), cascade(false), compiled(false)
+Rule::Rule(const std::string& namePattern_, RuleKind ruleKind_, PathKind pathKind_) : Node(NodeKind::rule, std::string()), ruleKind(ruleKind_), pathKind(pathKind_), cascade(false), compiled(false)
 {
+    if (ruleKind == RuleKind::exclude)
+    {
+        SetName("Exclude");
+    }
+    else if (ruleKind == RuleKind::include)
+    {
+        SetName("Include");
+    }
+    if (pathKind == PathKind::dir)
+    {
+        SetName(Name() + " Directory");
+    }
+    else if (pathKind == PathKind::file)
+    {
+        SetName(Name() + " File");
+    }
+    SetValue(namePattern_);
 }
 
 Rule::Rule(const std::string& packageXMLFilePath, sngxml::dom::Element* element) : Node(NodeKind::rule, std::string()), ruleKind(), pathKind(), cascade(false), compiled(false)
@@ -275,6 +308,37 @@ Rule::Rule(const std::string& packageXMLFilePath, sngxml::dom::Element* element)
             }
         }
     }
+}
+
+sngxml::dom::Element* Rule::ToXml() const
+{
+    std::u32string name;
+    if (ruleKind == RuleKind::exclude)
+    {
+        name = U"exclude";
+    }
+    else if (ruleKind == RuleKind::include)
+    {
+        name = U"include";
+    }
+    sngxml::dom::Element* element = new sngxml::dom::Element(name);
+    if (pathKind == PathKind::dir)
+    {
+        element->SetAttribute(U"dir", ToUtf32(Value()));
+    }
+    else if (pathKind == PathKind::file)
+    {
+        element->SetAttribute(U"file", ToUtf32(Value()));
+    }
+    if (cascade)
+    {
+        element->SetAttribute(U"cascade", U"true");
+    }
+    for (const auto& rule : rules)
+    {
+        element->AppendChild(std::unique_ptr<sngxml::dom::Node>(rule->ToXml()));
+    }
+    return element;
 }
 
 void Rule::SetValue(const std::string& value_)
@@ -383,6 +447,17 @@ void Rule::AddRule(Rule* rule)
 {
     rule->SetParent(this);
     rules.push_back(std::unique_ptr<Rule>(rule));
+    TreeViewNode* thisViewNode = GetTreeViewNode();
+    if (thisViewNode)
+    {
+        TreeView* treeView = thisViewNode->GetTreeView();
+        if (treeView)
+        {
+            TreeViewNode* ruleTreeViewNode = rule->ToTreeViewNode(treeView);
+            thisViewNode->AddChild(ruleTreeViewNode);
+            treeView->SetSelectedNode(thisViewNode);
+        }
+    }
 }
 
 void Rule::RemoveRules()
@@ -513,20 +588,14 @@ void Rule::AddNew(NodeKind kind)
             RuleDialog ruleDialog("Add New Rule");
             if (ruleDialog.ShowDialog(*mainWindow) == DialogResult::ok)
             {
+                Package* package = GetPackage();
+                if (package)
+                {
+                    package->SetDirty();
+                }
                 Rule* rule = new Rule();
                 ruleDialog.GetData(rule);
                 AddRule(rule);
-                TreeViewNode* rulesTreeViewNode = GetTreeViewNode();
-                if (rulesTreeViewNode)
-                {
-                    TreeView* treeView = rulesTreeViewNode->GetTreeView();
-                    if (treeView)
-                    {
-                        TreeViewNode* ruleTreeViewNode = rule->ToTreeViewNode(treeView);
-                        rulesTreeViewNode->AddChild(ruleTreeViewNode);
-                        treeView->SetSelectedNode(rulesTreeViewNode);
-                    }
-                }
                 OpenAndExpand();
             }
         }
@@ -549,6 +618,11 @@ void Rule::Edit()
         dialog.SetData(this);
         if (dialog.ShowDialog(*mainWindow) == DialogResult::ok)
         {
+            Package* package = GetPackage();
+            if (package)
+            {
+                package->SetDirty();
+            }
             dialog.GetData(this);
             compiled = false;
             Node* parent = Parent();
@@ -600,6 +674,34 @@ bool Rule::Matches(const std::u32string& name)
         return soulng::rex::PatternMatch(name, nfa);
     }
     return false;
+}
+
+Rule* MakeExcludeDebugDirRule()
+{
+    Rule* rule = new Rule("Debug", RuleKind::exclude, PathKind::dir);
+    rule->SetCascade(true);
+    return rule;
+}
+
+Rule* MakeExcludeReleaseDirRule()
+{
+    Rule* rule = new Rule("Release", RuleKind::exclude, PathKind::dir);
+    rule->SetCascade(true);
+    return rule;
+}
+
+Rule* MakeExcludeX64DirRule()
+{
+    Rule* rule = new Rule("x64", RuleKind::exclude, PathKind::dir);
+    rule->SetCascade(true);
+    return rule;
+}
+
+Rule* MakeExcludeVSDirRule()
+{
+    Rule* rule = new Rule(".vs", RuleKind::exclude, PathKind::dir);
+    rule->SetCascade(true);
+    return rule;
 }
 
 } } // wingstall::package_editor

@@ -156,4 +156,97 @@ void MoveDownAction::Execute()
     }
 }
 
+AddVSRulesAction::AddVSRulesAction(MenuItem* menuItem_, Node* node_) : ClickAction(menuItem_), node(node_)
+{
+}
+
+void AddVSRulesAction::Execute()
+{
+    MainWindow* mainWindow = node->GetMainWindow();
+    if (mainWindow)
+    {
+        try
+        {
+            mainWindow->HideContextMenu();
+            if (node && node->Kind() == NodeKind::rules)
+            {
+                Rules* rules = static_cast<Rules*>(node);
+                rules->AddRule(MakeExcludeDebugDirRule());
+                rules->AddRule(MakeExcludeReleaseDirRule());
+                rules->AddRule(MakeExcludeX64DirRule());
+                rules->AddRule(MakeExcludeVSDirRule());
+                rules->OpenAndExpand();
+            }
+        }
+        catch (const std::exception& ex)
+        {
+            ShowErrorMessageBox(mainWindow->Handle(), ex.what());
+        }
+    }
+}
+
+ExcludeAction::ExcludeAction(MenuItem* menuItem_, Node* node_) : ClickAction(menuItem_), node(node_)
+{
+}
+
+void ExcludeAction::Execute()
+{
+    MainWindow* mainWindow = node->GetMainWindow();
+    if (mainWindow)
+    {
+        try
+        {
+            mainWindow->HideContextMenu();
+            if (node)
+            {
+                if (node->Kind() == NodeKind::contentDirectory)
+                {
+                    ContentDirectory* contentDirectory = static_cast<ContentDirectory*>(node);
+                    Node* ruleContainerNode = contentDirectory->Parent()->GetRuleContainerNode();
+                    if (ruleContainerNode)
+                    {
+                        ruleContainerNode->AddRule(new Rule(contentDirectory->Name(), RuleKind::exclude, PathKind::dir));
+                        contentDirectory->Parent()->OpenAndExpand();
+                    }
+                }
+                else if (node->Kind() == NodeKind::contentFile)
+                {
+                    ContentFile* contentFile = static_cast<ContentFile*>(node);
+                    Node* ruleContainerNode = contentFile->Parent()->GetRuleContainerNode();
+                    if (ruleContainerNode)
+                    {
+                        ruleContainerNode->AddRule(new Rule(contentFile->Name(), RuleKind::exclude, PathKind::file));
+                        contentFile->Parent()->OpenAndExpand();
+                    }
+                }
+            }
+        }
+        catch (const std::exception& ex)
+        {
+            ShowErrorMessageBox(mainWindow->Handle(), ex.what());
+        }
+    }
+}
+
+IncludeAction::IncludeAction(MenuItem* menuItem_, Node* node_) : ClickAction(menuItem_), node(node_)
+{
+}
+
+void IncludeAction::Execute()
+{
+    MainWindow* mainWindow = node->GetMainWindow();
+    if (mainWindow)
+    {
+        try
+        {
+            mainWindow->HideContextMenu();
+            // todo
+        }
+        catch (const std::exception& ex)
+        {
+            ShowErrorMessageBox(mainWindow->Handle(), ex.what());
+        }
+    }
+}
+
 } } // wingstall::package_editor

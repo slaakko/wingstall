@@ -39,6 +39,7 @@ public:
 protected:
     void OnKeyDown(KeyEventArgs& args) override;
     void MouseUpNotification(MouseEventArgs& args) override;
+    void OnWindowClosing(CancelArgs& args) override;
 private:
     void NewPackageClick();
     void OpenPackageClick();
@@ -76,6 +77,7 @@ private:
     ImageList imageList;
     bool showingDialog;
     std::vector<std::unique_ptr<ClickAction>> clickActions;
+    bool canceled;
 };
 
 } } // wingstall::package_editor

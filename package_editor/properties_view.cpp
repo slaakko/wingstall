@@ -383,6 +383,7 @@ void PropertiesView::ApplyButtonClick()
         package->GetEngineVariables()->Fetch();
         applyButton->Disable();
         dirty = false;
+        package->SetDirty();
     }
     else
     {

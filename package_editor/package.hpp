@@ -23,6 +23,7 @@ class Properties : public Node
 {
 public:
     Properties();
+    void SetAttributes(sngxml::dom::Element* packageElement);
     TreeViewNode* ToTreeViewNode(TreeView* view);
     Control* CreateView(ImageList* imageList) override;
     void SetSourceRootDir(const std::string& sourceRootDir_);
@@ -61,6 +62,10 @@ class Package : public Node
 public:
     Package(const std::string& packageXMLFilePath);
     Package(const std::string& packageXMLFilePath, sngxml::dom::Element* root);
+    void Save();
+    bool IsDirty() const { return dirty; }
+    void SetDirty();
+    sngxml::dom::Element* ToXml() const;
     std::string PathComponentName() const override { return "Package"; }
     const std::string& FilePath() const { return filePath; }
     std::string BinFolderPath() const;
@@ -87,6 +92,7 @@ private:
     PackageContentView* view;
     PackageExplorer* explorer;
     soulng::rex::Context context;
+    bool dirty;
 };
 
 } } // wingstall::package_editor

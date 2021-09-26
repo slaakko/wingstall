@@ -24,6 +24,7 @@ public:
     int RuleCount() const override;
     Rule* GetRule(int index) const override;
     Rule* GetRule(const std::string& name) const override;
+    Node* GetRuleContainerNode() override;
     void Clear();
     void AddNode(Node* node) override;
 private:
@@ -43,6 +44,7 @@ public:
     int RuleCount() const override;
     Rule* GetRule(int index) const override;
     Rule* GetRule(const std::string& name) const override;
+    Node* GetRuleContainerNode() override;
     void Clear();
     void AddNode(Node* node) override;
     bool CanDisable() const { return true; }
@@ -50,6 +52,8 @@ public:
     void Enable() override { enabled = true; }
     void Disable() override { enabled = false; }
     bool CanOpen() const override;
+    bool CanExclude() const override;
+    bool CanInclude() const override;
 private:
     std::vector<std::unique_ptr<ContentDirectory>> contentDirectories;
     std::vector<std::unique_ptr<ContentFile>> contentFiles;
@@ -67,6 +71,8 @@ public:
     void Disable() override { enabled = false; }
     bool CanOpen() const override { return false; } 
     void ExecuteDefaultAction() override { Parent()->Open(); }
+    bool CanExclude() const override;
+    bool CanInclude() const override;
 private:
     bool enabled;
 };

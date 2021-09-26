@@ -462,6 +462,24 @@ void PathBar::SetCurrentNode(Node* currentNode)
     }
 }
 
+void PathBar::Show()
+{
+    directoryPathView->Show();
+    pathDivider1->Show();
+    parentPathSelector->Show();
+    pathDivider2->Show();
+    pathView->Show();
+}
+
+void PathBar::Hide()
+{
+    directoryPathView->Hide(); 
+    pathDivider1->Hide();
+    parentPathSelector->Hide();
+    pathDivider2->Hide();
+    pathView->Hide();
+}
+
 void PathBar::OnPaint(PaintEventArgs& args)
 {
     if (directoryPathView)

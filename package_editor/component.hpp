@@ -16,6 +16,7 @@ class Components : public Node
 {
 public:
     Components();
+    void AddElements(sngxml::dom::Element* packageElement);
     void AddComponent(Component* component);
     const std::vector<std::unique_ptr<Component>>& GetComponents() const { return components; }
     TreeViewNode* ToTreeViewNode(TreeView* view);
@@ -51,6 +52,7 @@ class Component : public Node
 public:
     Component(const std::string& name_);
     Component(const std::string& packageXMLFilePath, sngxml::dom::Element* element);
+    sngxml::dom::Element* ToXml() const;
     TreeViewNode* ToTreeViewNode(TreeView* view);
     Control* CreateView(ImageList* imageList) override;
     void AddDirectory(Directory* directory);

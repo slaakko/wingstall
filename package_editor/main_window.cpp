@@ -13,6 +13,7 @@
 #include <wing/ScrollableControl.hpp>
 #include <wing/SplitContainer.hpp>
 #include <wing/StatusBar.hpp>
+#include <wing/MessageBox.hpp>
 #include <sngxml/dom/Parser.hpp>
 #include <soulng/util/Path.hpp>
 #include <soulng/util/Unicode.hpp>
@@ -39,7 +40,8 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
     packageExplorer(nullptr),
     packageContentView(nullptr),
     logView(nullptr),
-    showingDialog(false)
+    showingDialog(false),
+    canceled(false)
 {
     std::unique_ptr<MenuBar> menuBar(new MenuBar());
 
@@ -203,6 +205,8 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
 
     std::unique_ptr<StatusBar> statusBarPtr(new StatusBar(StatusBarCreateParams().Defaults()));
     AddChild(statusBarPtr.release());
+
+    SetCommandStatus();
 }
 
 MainWindow::~MainWindow()
@@ -266,6 +270,16 @@ void MainWindow::MouseUpNotification(MouseEventArgs& args)
     catch (const std::exception& ex)
     {
         ShowErrorMessageBox(Handle(), ex.what());
+    }
+}
+
+void MainWindow::OnWindowClosing(CancelArgs& args)
+{
+    ClosePackageClick();
+    if (canceled)
+    {
+        canceled = false;
+        args.cancel = true;
     }
 }
 
@@ -390,18 +404,24 @@ void MainWindow::NewPackageClick()
         if (dialog.ShowDialog(*this) == DialogResult::ok)
         {
             ClosePackageClick();
+            if (canceled)
+            {
+                canceled = false;
+                return;
+            }
             package.reset(new Package(dialog.GetPackageFilePath()));
             package->SetName(dialog.GetPackageName());
             package->SetView(packageContentView);
             package->SetExplorer(packageExplorer);
             packageExplorer->SetPackage(package.get());
             package->Open();
-            package->GetProperties()->SetSourceRootDir(Path::GetDirectoryName(package->FilePath()));
-            package->GetProperties()->SetTargetRootDir("C:/" + Path::GetFileNameWithoutExtension(package->FilePath()));
-            package->GetProperties()->SetAppName(Path::GetFileNameWithoutExtension(package->FilePath()));
+            package->GetProperties()->SetSourceRootDir(GetFullPath("C:/"));
+            package->GetProperties()->SetTargetRootDir("C:/" + dialog.GetPackageName());
+            package->GetProperties()->SetAppName(dialog.GetPackageName());
             package->GetProperties()->SetVersion("1.0");
             package->GetProperties()->SetId(boost::uuids::random_generator()());
             package->GetEngineVariables()->Fetch();
+            package->SetDirty();
             SetCommandStatus();
         }
     }
@@ -434,6 +454,11 @@ void MainWindow::OpenPackageClick()
         if (selected)
         {
             ClosePackageClick();
+            if (canceled)
+            {
+                canceled = false;
+                return;
+            }
             std::string packageXMLFilePath = GetFullPath(filePath);
             std::unique_ptr<sngxml::dom::Document> packageDoc(sngxml::dom::ReadDocument(packageXMLFilePath));
             package.reset(new Package(packageXMLFilePath, packageDoc->DocumentElement()));
@@ -454,6 +479,30 @@ void MainWindow::ClosePackageClick()
 {
     try
     {
+        bool cancel = false;
+        CancelArgs cancelArgs(cancel);
+        ExitView().Fire(cancelArgs);
+        if (cancelArgs.cancel)
+        {
+            canceled = true;
+            return;
+        }
+        if (package)
+        {
+            if (package->IsDirty())
+            {
+                MessageBoxResult result = wing::MessageBox::Show("Save package?", "Package '" + package->Name() + "' has been modified", this, MB_YESNOCANCEL);
+                if (result == MessageBoxResult::cancel)
+                {
+                    canceled = true;
+                    return;
+                }
+                else if (result == MessageBoxResult::yes)
+                {
+                    package->Save();
+                }
+            }
+        }
         package.reset();
         pathBar->SetCurrentNode(nullptr);
         pathBar->SetDirectoryPath(std::string());
@@ -465,13 +514,17 @@ void MainWindow::ClosePackageClick()
     {
         ShowErrorMessageBox(Handle(), ex.what());
     }
+    canceled = false;
 }
 
 void MainWindow::SavePackageClick()
 {
     try
     {
-        // todo
+        if (package)
+        {
+            package->Save();
+        }
         SetCommandStatus();
     }
     catch (const std::exception& ex)
@@ -507,9 +560,14 @@ void MainWindow::OpenBinFolderClick()
 
 void MainWindow::ExitClick()
 {
-    // todo
     try
     {
+        ClosePackageClick();
+        if (canceled)
+        {
+            canceled = false;
+            return;
+        }
         Close();
     }
     catch (const std::exception& ex)
@@ -543,6 +601,7 @@ void MainWindow::SetCommandStatus()
         {
             openBinFolderMenuItem->Enable();
         }
+        pathBar->Show();
     }
     else
     {
@@ -552,6 +611,7 @@ void MainWindow::SetCommandStatus()
         buildPackageMenuItem->Disable();
         buildToolButton->Disable();
         openBinFolderMenuItem->Disable();
+        pathBar->Hide();
     }
 }
 

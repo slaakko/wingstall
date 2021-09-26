@@ -20,6 +20,7 @@ class Links : public Node
 public:
     Links();
     Links(const std::string& packageXMLFilePath, sngxml::dom::Element* element);
+    sngxml::dom::Element* ToXml() const;
     TreeViewNode* ToTreeViewNode(TreeView* view);
     Control* CreateView(ImageList* imageList) override;
     std::string ImageName() const override { return "links.bitmap"; }
@@ -32,6 +33,7 @@ class LinkDirectories : public Node
 {
 public:
     LinkDirectories();
+    void AddElements(sngxml::dom::Element* parentElement);
     void AddLinkDirectory(LinkDirectory* linkDirectory);
     TreeViewNode* ToTreeViewNode(TreeView* view);
     Control* CreateView(ImageList* imageList) override;
@@ -55,6 +57,7 @@ class LinkDirectory : public Node
 public:
     LinkDirectory();
     LinkDirectory(const std::string& packageXMLFilePath, sngxml::dom::Element* element);
+    sngxml::dom::Element* ToXml() const;
     const std::string& Path() const { return path; }
     void SetPath(const std::string& path_);
     TreeViewNode* ToTreeViewNode(TreeView* view);
@@ -73,6 +76,7 @@ class Shortcuts : public Node
 {
 public:
     Shortcuts();
+    void AddElements(sngxml::dom::Element* parentElement);
     void AddShortcut(Shortcut* shortcut);
     TreeViewNode* ToTreeViewNode(TreeView* view);
     Control* CreateView(ImageList* imageList) override;
@@ -96,6 +100,7 @@ class Shortcut : public Node
 public:
     Shortcut();
     Shortcut(const std::string& packageXMLFilePath, sngxml::dom::Element* element);
+    sngxml::dom::Element* ToXml() const;
     TreeViewNode* ToTreeViewNode(TreeView* view);
     std::string ImageName() const override { return"shortcut.bitmap"; }
     void SetData(ListViewItem* item, ImageList* imageList) override;

@@ -229,6 +229,14 @@ void Node::Select()
     }
 }
 
+void Node::ExecuteDefaultAction()
+{
+    if (CanOpen())
+    {
+        Open();
+    }
+}
+
 int Node::Count() const
 {
     return 0;
@@ -254,6 +262,10 @@ void Node::AddNode(Node* node)
 }
 
 void Node::AddNew(NodeKind kind)
+{
+}
+
+void Node::AddRule(Rule* rule)
 {
 }
 
@@ -415,6 +427,18 @@ void Node::AddMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<Cl
             std::unique_ptr<MenuItem> moveDownMenuItem(new MenuItem("Move Down"));
             clickActions.push_back(std::unique_ptr<ClickAction>(new MoveDownAction(moveDownMenuItem.get(), this)));
             contextMenu->AddMenuItem(moveDownMenuItem.release());
+        }
+        if (CanExclude())
+        {
+            std::unique_ptr<MenuItem> excludeMenuItem(new MenuItem("Exclude"));
+            clickActions.push_back(std::unique_ptr<ClickAction>(new ExcludeAction(excludeMenuItem.get(), this)));
+            contextMenu->AddMenuItem(excludeMenuItem.release());
+        }
+        if (CanInclude())
+        {
+            std::unique_ptr<MenuItem> includeMenuItem(new MenuItem("Include"));
+            clickActions.push_back(std::unique_ptr<ClickAction>(new IncludeAction(includeMenuItem.get(), this)));
+            contextMenu->AddMenuItem(includeMenuItem.release());
         }
     }
 }

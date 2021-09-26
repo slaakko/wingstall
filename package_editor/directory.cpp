@@ -60,6 +60,14 @@ Directory::Directory(const std::string& packageXMLFilePath, sngxml::dom::Element
     }
 }
 
+sngxml::dom::Element* Directory::ToXml() const
+{
+    sngxml::dom::Element* element = new sngxml::dom::Element(U"directory");
+    element->SetAttribute(U"name", ToUtf32(Name()));
+    rules->AddElements(element);
+    return element;
+}
+
 TreeViewNode* Directory::ToTreeViewNode(TreeView* view)
 {
     TreeViewNode* node = new TreeViewNode(Name());
@@ -118,6 +126,11 @@ Rule* Directory::GetRule(int index) const
 Rule* Directory::GetRule(const std::string& name) const
 {
     return rules->GetRule(name);
+}
+
+Node* Directory::GetRuleContainerNode()
+{
+    return rules.get();
 }
 
 } } // wingstall::package_editor

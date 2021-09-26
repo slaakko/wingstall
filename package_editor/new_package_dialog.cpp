@@ -116,7 +116,7 @@ std::string NewPackageDialog::GetPackageFilePath() const
 {
     if (locationTextBox->Text().empty()) return std::string();
     if (packageNameTextBox->Text().empty()) return std::string();
-    return GetFullPath(Path::Combine(Path::Combine(locationTextBox->Text(), packageNameTextBox->Text()), packageNameTextBox->Text() + ".xml"));
+    return GetFullPath(Path::Combine(Path::Combine(locationTextBox->Text(), packageNameTextBox->Text()), packageNameTextBox->Text() + ".package.xml"));
 }
 
 std::string NewPackageDialog::GetPackageName() const

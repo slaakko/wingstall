@@ -43,6 +43,14 @@ Components::Components() : Node(NodeKind::components, "Components")
 {
 }
 
+void Components::AddElements(sngxml::dom::Element* packageElement)
+{
+    for (const auto& component : components)
+    {
+        packageElement->AppendChild(std::unique_ptr<sngxml::dom::Node>(component->ToXml()));
+    }
+}
+
 void Components::AddComponent(Component* component)
 {
     component->SetParent(this);
@@ -261,6 +269,11 @@ void Components::AddNew(NodeKind kind)
                 {
                     throw std::runtime_error("name not unique");
                 }
+                Package* package = GetPackage();
+                if (package)
+                {
+                    package->SetDirty();
+                }
                 Component* component = new Component(dialog.ComponentName());
                 AddComponent(component);
                 TreeViewNode* componentsTreeViewNode = GetTreeViewNode();
@@ -334,6 +347,21 @@ Component::Component(const std::string& packageXMLFilePath, sngxml::dom::Element
         }
     }
     Sort();
+}
+
+sngxml::dom::Element* Component::ToXml() const
+{
+    sngxml::dom::Element* element = new sngxml::dom::Element(U"component");
+    element->SetAttribute(U"name", ToUtf32(Name()));
+    for (const auto& directory : directories)
+    {
+        element->AppendChild(std::unique_ptr<sngxml::dom::Node>(directory->ToXml()));
+    }
+    for (const auto& file : files)
+    {
+        element->AppendChild(std::unique_ptr<sngxml::dom::Node>(file->ToXml()));
+    }
+    return element;
 }
 
 TreeViewNode* Component::ToTreeViewNode(TreeView* view)
@@ -552,6 +580,11 @@ void Component::Edit()
                 {
                     throw std::runtime_error("name not unique");
                 }
+                Package* package = GetPackage();
+                if (package)
+                {
+                    package->SetDirty();
+                }
                 SetName(dialog.ComponentName());
                 Open();
                 TreeViewNode* componentTreeViewNode = GetTreeViewNode();
@@ -574,6 +607,11 @@ void Component::AddNew(NodeKind kind)
         {
             if (dialog.ShowDialog(*mainWindow) == DialogResult::ok)
             {
+                Package* package = GetPackage();
+                if (package)
+                {
+                    package->SetDirty();
+                }
                 std::vector<std::u32string> selectedDirectories;
                 std::vector<std::u32string> selectedFiles;
                 dialog.GetSelectedDirectoriesAndFiles(selectedDirectories, selectedFiles);

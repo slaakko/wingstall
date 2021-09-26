@@ -72,6 +72,14 @@ Links::Links(const std::string& packageXMLFilePath, sngxml::dom::Element* elemen
     }
 }
 
+sngxml::dom::Element* Links::ToXml() const
+{
+    sngxml::dom::Element* element = new sngxml::dom::Element(U"links");
+    linkDirectories->AddElements(element);
+    shortcuts->AddElements(element);
+    return element;
+}
+
 TreeViewNode* Links::ToTreeViewNode(TreeView* view)
 {
     TreeViewNode* node = new TreeViewNode("Links");
@@ -108,6 +116,14 @@ Control* Links::CreateView(ImageList* imageList)
 
 LinkDirectories::LinkDirectories() : Node(NodeKind::linkDirectories, "Link Directories")
 {
+}
+
+void LinkDirectories::AddElements(sngxml::dom::Element* parentElement)
+{
+    for (const auto& linkDirectory : linkDirectories)
+    {
+        parentElement->AppendChild(std::unique_ptr<sngxml::dom::Node>(linkDirectory->ToXml()));
+    }
 }
 
 void LinkDirectories::AddLinkDirectory(LinkDirectory* linkDirectory)
@@ -246,6 +262,11 @@ void LinkDirectories::AddNew(NodeKind kind)
                 {
                     throw std::runtime_error("path not unique");
                 }
+                Package* package = GetPackage();
+                if (package)
+                {
+                    package->SetDirty();
+                }
                 AddLinkDirectory(linkDirectoryPtr.release());
                 TreeViewNode* linkDirectoriesTreeViewNode = GetTreeViewNode();
                 if (linkDirectoriesTreeViewNode)
@@ -286,6 +307,13 @@ LinkDirectory::LinkDirectory(const std::string& packageXMLFilePath, sngxml::dom:
     {
         throw PackageXMLException("'linkDirectory' element has no 'path' attribute", packageXMLFilePath, element);
     }
+}
+
+sngxml::dom::Element* LinkDirectory::ToXml() const
+{
+    sngxml::dom::Element* element = new sngxml::dom::Element(U"linkDirectory");
+    element->SetAttribute(U"path", ToUtf32(path));
+    return element;
 }
 
 TreeViewNode* LinkDirectory::ToTreeViewNode(TreeView* view)
@@ -333,6 +361,11 @@ void LinkDirectory::Edit()
                         throw std::runtime_error("path not unique");
                     }
                 }
+                Package* package = GetPackage();
+                if (package)
+                {
+                    package->SetDirty();
+                }
                 dialog.GetData(this);
                 linkDirectories->OpenAndExpand();
                 TreeViewNode* linkDirectoryTreeViewNode = GetTreeViewNode();
@@ -347,6 +380,14 @@ void LinkDirectory::Edit()
 
 Shortcuts::Shortcuts() : Node(NodeKind::shortcuts, "Shortcuts")
 {
+}
+
+void Shortcuts::AddElements(sngxml::dom::Element* parentElement)
+{
+    for (const auto& shortcut : shortcuts)
+    {
+        parentElement->AppendChild(std::unique_ptr<sngxml::dom::Node>(shortcut->ToXml()));
+    }
 }
 
 void Shortcuts::AddShortcut(Shortcut* shortcut)
@@ -489,6 +530,11 @@ void Shortcuts::AddNew(NodeKind kind)
                 {
                     throw std::runtime_error("link file path not unique");
                 }
+                Package* package = GetPackage();
+                if (package)
+                {
+                    package->SetDirty();
+                }
                 AddShortcut(shortcutPtr.release());
                 TreeViewNode* shortcutsTreeViewNode = GetTreeViewNode();
                 if (shortcutsTreeViewNode)
@@ -565,6 +611,31 @@ Shortcut::Shortcut(const std::string& packageXMLFilePath, sngxml::dom::Element* 
     }
 }
 
+sngxml::dom::Element* Shortcut::ToXml() const
+{
+    sngxml::dom::Element* element = new sngxml::dom::Element(U"link");
+    element->SetAttribute(U"linkFilePath", ToUtf32(linkFilePath));
+    element->SetAttribute(U"path", ToUtf32(path));
+    if (!arguments.empty())
+    {
+        element->SetAttribute(U"arguments", ToUtf32(arguments));
+    }
+    if (!workingDirectory.empty())
+    {
+        element->SetAttribute(U"workingDirectory", ToUtf32(workingDirectory));
+    }
+    if (!description.empty())
+    {
+        element->SetAttribute(U"description", ToUtf32(description));
+    }
+    if (!iconFilePath.empty())
+    {
+        element->SetAttribute(U"iconPath", ToUtf32(iconFilePath));
+    }
+    element->SetAttribute(U"iconIndex", ToUtf32(std::to_string(iconIndex)));
+    return element;
+}
+
 TreeViewNode* Shortcut::ToTreeViewNode(TreeView* view)
 {
     TreeViewNode* node = new TreeViewNode(linkFilePath);
@@ -635,6 +706,11 @@ void Shortcut::Edit()
                     {
                         throw std::runtime_error("link file path not unique");
                     }
+                }
+                Package* package = GetPackage();
+                if (package)
+                {
+                    package->SetDirty();
                 }
                 dialog.GetData(this);
                 shortcuts->OpenAndExpand();

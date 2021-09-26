@@ -63,6 +63,20 @@ Environment::Environment(const std::string& packageXMLFilePath, sngxml::dom::Ele
     }
 }
 
+sngxml::dom::Element* Environment::ToXml() const
+{
+    sngxml::dom::Element* element = new sngxml::dom::Element(U"environment");
+    for (const auto& environmentVariable : environmentVariables)
+    {
+        element->AppendChild(std::unique_ptr<sngxml::dom::Node>(environmentVariable->ToXml()));
+    }
+    for (const auto& pathDirectory : pathDirectories)
+    {
+        element->AppendChild(std::unique_ptr<sngxml::dom::Node>(pathDirectory->ToXml()));
+    }
+    return element;
+}
+
 TreeViewNode* Environment::ToTreeViewNode(TreeView* view)
 {
     TreeViewNode* node = new TreeViewNode("Environment");
@@ -292,6 +306,11 @@ void Environment::AddNew(NodeKind kind)
                 {
                     throw std::runtime_error("name not unique");
                 }
+                Package* package = GetPackage();
+                if (package)
+                {
+                    package->SetDirty();
+                }
                 AddEnvironentVariable(environmentVariablePtr.release());
                 TreeViewNode* environmentTreeViewNode = GetTreeViewNode();
                 if (environmentTreeViewNode)
@@ -318,6 +337,11 @@ void Environment::AddNew(NodeKind kind)
                 if (HasPathDirectory(pathDirectory->Value()))
                 {
                     throw std::runtime_error("path not unique");
+                }
+                Package* package = GetPackage();
+                if (package)
+                {
+                    package->SetDirty();
                 }
                 AddPathDirectory(pathDirectoryPtr.release());
                 TreeViewNode* environmentTreeViewNode = GetTreeViewNode();
@@ -374,6 +398,14 @@ EnvironmentVariable::EnvironmentVariable(const std::string& packageXMLFilePath, 
     }
 }
 
+sngxml::dom::Element* EnvironmentVariable::ToXml() const
+{
+    sngxml::dom::Element* element = new sngxml::dom::Element(U"variable");
+    element->SetAttribute(U"name", ToUtf32(Name()));
+    element->SetAttribute(U"value", ToUtf32(Value()));
+    return element;
+}
+
 void EnvironmentVariable::SetValue(const std::string& value_)
 {
     value = value_;
@@ -419,6 +451,11 @@ void EnvironmentVariable::Edit()
                         throw std::runtime_error("name not unique");
                     }
                 }
+                Package* package = GetPackage();
+                if (package)
+                {
+                    package->SetDirty();
+                }
                 dialog.GetData(this);
                 environment->OpenAndExpand();
                 TreeViewNode* environmentVariableTreeViewNode = GetTreeViewNode();
@@ -446,6 +483,13 @@ PathDirectory::PathDirectory(const std::string& packageXMLFilePath, sngxml::dom:
     {
         throw PackageXMLException("'pathDirectory' element has no 'value' attribute", packageXMLFilePath, element);
     }
+}
+
+sngxml::dom::Element* PathDirectory::ToXml() const
+{
+    sngxml::dom::Element* element = new sngxml::dom::Element(U"pathDirectory");
+    element->SetAttribute(U"value", ToUtf32(Value()));
+    return element;
 }
 
 void PathDirectory::SetValue(const std::string& value_)
@@ -492,6 +536,11 @@ void PathDirectory::Edit()
                     {
                         throw std::runtime_error("path not unique");
                     }
+                }
+                Package* package = GetPackage();
+                if (package)
+                {
+                    package->SetDirty();
                 }
                 dialog.GetData(this);
                 environment->OpenAndExpand();

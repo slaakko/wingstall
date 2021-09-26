@@ -29,6 +29,13 @@ File::File(const std::string& packageXMLFilePath, sngxml::dom::Element* element)
     }
 }
 
+sngxml::dom::Element* File::ToXml() const
+{
+    sngxml::dom::Element* element = new sngxml::dom::Element(U"file");
+    element->SetAttribute(U"name", ToUtf32(Name()));
+    return element;
+}
+
 TreeViewNode* File::ToTreeViewNode(TreeView* view)
 {
     TreeViewNode* node = new TreeViewNode(Name());

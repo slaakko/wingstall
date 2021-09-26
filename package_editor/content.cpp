@@ -95,6 +95,16 @@ Rule* Content::GetRule(const std::string& name) const
     return nullptr;
 }
 
+Node* Content::GetRuleContainerNode()
+{
+    Node* parent = Parent();
+    if (parent)
+    {
+        return parent->GetRuleContainerNode();
+    }
+    return nullptr;
+}
+
 ContentDirectory::ContentDirectory(const std::string& name_) : Node(NodeKind::contentDirectory, name_), enabled(true)
 {
 }
@@ -178,6 +188,30 @@ Rule* ContentDirectory::GetRule(const std::string& name) const
     return nullptr;
 }
 
+Node* ContentDirectory::GetRuleContainerNode()
+{
+    Node* parent = Parent();
+    if (parent)
+    {
+        Node* parentRuleContainerNode = parent->GetRuleContainerNode();
+        if (parentRuleContainerNode)
+        {
+            Rule* ruleContainerNode = parentRuleContainerNode->GetRule(Name());
+            if (ruleContainerNode)
+            {
+                return ruleContainerNode;
+            }
+            else
+            {
+                ruleContainerNode = new Rule(Name(), RuleKind::include, PathKind::dir);
+                parentRuleContainerNode->AddRule(ruleContainerNode);
+                return ruleContainerNode;
+            }
+        }
+    }
+    return nullptr;
+}
+
 void ContentDirectory::AddNode(Node* node)
 {
     if (node->Kind() == NodeKind::contentDirectory)
@@ -195,8 +229,28 @@ bool ContentDirectory::CanOpen() const
     return !IsDisabled();
 }
 
+bool ContentDirectory::CanExclude() const
+{
+    return !IsDisabled();
+}
+
+bool ContentDirectory::CanInclude() const
+{
+    return IsDisabled();
+}
+
 ContentFile::ContentFile(const std::string& name_) : Node(NodeKind::contentFile, name_), enabled(true)
 {
+}
+
+bool ContentFile::CanExclude() const
+{
+    return !IsDisabled();
+}
+
+bool ContentFile::CanInclude() const
+{
+    return IsDisabled();
 }
 
 } } // wingstall::package_editor

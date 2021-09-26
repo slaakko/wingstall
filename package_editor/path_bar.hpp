@@ -124,6 +124,8 @@ public:
     ParentPathSelector* GetParentPathSelector() const { return parentPathSelector; }
     PathView* GetPathView() const { return pathView; }
     void SetCurrentNode(Node* currentNode);
+    void Show();
+    void Hide();
 protected:
     void OnPaint(PaintEventArgs& args) override;
     void OnSizeChanged() override;

@@ -20,7 +20,8 @@ class Rules : public Node
 {
 public:
     Rules();
-    void AddRule(Rule* rule);
+    void AddElements(sngxml::dom::Element* directoryElement);
+    void AddRule(Rule* rule) override;
     std::string ImageName() const override { return "rules.bitmap"; }
     TreeViewNode* ToTreeViewNode(TreeView* view);
     Control* CreateView(ImageList* imageList) override;
@@ -56,6 +57,7 @@ public:
     Rule();
     Rule(const std::string& namePattern_, RuleKind ruleKind_, PathKind pathKind_);
     Rule(const std::string& packageXMLFilePath, sngxml::dom::Element* element);
+    sngxml::dom::Element* ToXml() const;
     std::string Text() const;
     TreeViewNode* ToTreeViewNode(TreeView* view);
     Control* CreateView(ImageList* imageList) override;
@@ -65,7 +67,7 @@ public:
     void SetPathKind(PathKind pathKind_) { pathKind = pathKind_; }
     bool Cascade() const { return cascade; }
     void SetCascade(bool cascade_) { cascade = cascade_; }
-    void AddRule(Rule* rule);
+    void AddRule(Rule* rule) override;
     void RemoveRules();
     std::string ImageName() const override;
     std::string CascadeStr() const;
@@ -98,6 +100,11 @@ private:
     bool compiled;
     soulng::rex::Nfa nfa;
 };
+
+Rule* MakeExcludeDebugDirRule();
+Rule* MakeExcludeReleaseDirRule();
+Rule* MakeExcludeX64DirRule();
+Rule* MakeExcludeVSDirRule();
 
 } } // wingstall::package_editor
 

@@ -78,6 +78,33 @@ private:
     Node* node;
 };
 
+class AddVSRulesAction : public ClickAction
+{
+public:
+    AddVSRulesAction(MenuItem* menuItem_, Node* node_);
+    void Execute() override;
+private:
+    Node* node;
+};
+
+class ExcludeAction : public ClickAction
+{
+public:
+    ExcludeAction(MenuItem* menuItem_, Node* node_);
+    void Execute() override;
+private:
+    Node* node;
+};
+
+class IncludeAction : public ClickAction
+{
+public:
+    IncludeAction(MenuItem* menuItem_, Node* node_);
+    void Execute() override;
+private:
+    Node* node;
+};
+
 } } // wingstall::package_editor
 
 #endif // WINGSTALL_PACKAGE_EDITOR_ACTION_INCLUDED

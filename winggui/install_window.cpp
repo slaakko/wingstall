@@ -224,7 +224,7 @@ InstallWindow::InstallWindow() : Window(WindowCreateParams().WindowStyle(DialogW
     AddChild(containingDirLabelPtr.release());
 
     Point containingDirTextBoxLocation(16, 16 + defaultControlSpacing.Height + 16);
-    Size containingDirTextBoxSize(ScreenMetrics::Get().MMToHorizontalPixels(120), defaultTextBoxSize.Height);
+    Size containingDirTextBoxSize(ScreenMetrics::Get().MMToHorizontalPixels(120), defaultTextBoxSize.Height + 4);
     std::unique_ptr<TextBox> containingDirTextBoxPtr(new TextBox(TextBoxCreateParams().Defaults()));
     containingDirTextBox = containingDirTextBoxPtr.get();
     containingDirTextBox->TextChanged().AddHandler(this, &InstallWindow::ContainingDirTextBoxTextChanged);
@@ -251,7 +251,7 @@ InstallWindow::InstallWindow() : Window(WindowCreateParams().WindowStyle(DialogW
     AddChild(installationDirLabelPtr.release());
 
     Point installationDirTextBoxLocation(16, 16 + defaultControlSpacing.Height + 16 + 16 + 24 + 24);
-    Size installationDirTextBoxSize(ScreenMetrics::Get().MMToHorizontalPixels(120), defaultTextBoxSize.Height);
+    Size installationDirTextBoxSize(ScreenMetrics::Get().MMToHorizontalPixels(120), defaultTextBoxSize.Height + 4);
     std::unique_ptr<TextBox> installationDirTextBoxPtr(new TextBox(TextBoxCreateParams().Defaults()));
     installationDirTextBox = installationDirTextBoxPtr.get();
     std::unique_ptr<Control> paddedInstallationDirTextBox(new PaddedControl(PaddedControlCreateParams(installationDirTextBoxPtr.release()).
