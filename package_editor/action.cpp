@@ -240,7 +240,29 @@ void IncludeAction::Execute()
         try
         {
             mainWindow->HideContextMenu();
-            // todo
+            if (node)
+            {
+                if (node->Kind() == NodeKind::contentDirectory)
+                {
+                    ContentDirectory* contentDirectory = static_cast<ContentDirectory*>(node);
+                    Node* ruleContainerNode = contentDirectory->Parent()->GetRuleContainerNode();
+                    if (ruleContainerNode)
+                    {
+                        ruleContainerNode->AddRule(new Rule(contentDirectory->Name(), RuleKind::include, PathKind::dir));
+                        contentDirectory->Parent()->OpenAndExpand();
+                    }
+                }
+                else if (node->Kind() == NodeKind::contentFile)
+                {
+                    ContentFile* contentFile = static_cast<ContentFile*>(node);
+                    Node* ruleContainerNode = contentFile->Parent()->GetRuleContainerNode();
+                    if (ruleContainerNode)
+                    {
+                        ruleContainerNode->AddRule(new Rule(contentFile->Name(), RuleKind::include, PathKind::file));
+                        contentFile->Parent()->OpenAndExpand();
+                    }
+                }
+            }
         }
         catch (const std::exception& ex)
         {
