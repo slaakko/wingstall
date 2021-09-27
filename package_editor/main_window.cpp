@@ -12,7 +12,6 @@
 #include <wing/PaddedControl.hpp>
 #include <wing/ScrollableControl.hpp>
 #include <wing/SplitContainer.hpp>
-#include <wing/StatusBar.hpp>
 #include <wing/MessageBox.hpp>
 #include <sngxml/dom/Parser.hpp>
 #include <soulng/util/Path.hpp>
@@ -97,7 +96,7 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
     buildPackageMenuItem->Disable();
     buildMenuItem->AddMenuItem(buildPackageMenuItemPtr.release());
 
-    std::unique_ptr<MenuItem> openBinFolderMenuItemPtr(new MenuItem("&Open Bin Folder"));
+    std::unique_ptr<MenuItem> openBinFolderMenuItemPtr(new MenuItem("&Open Bin Directory"));
     openBinFolderMenuItem = openBinFolderMenuItemPtr.get();
     openBinFolderMenuItem->SetShortcut(Keys::f7);
     openBinFolderMenuItem->Click().AddHandler(this, &MainWindow::OpenBinFolderClick);
@@ -125,7 +124,7 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
     buildToolButton->Disable();
     toolBar->AddToolButton(buildToolButtonPtr.release());
 
-    std::unique_ptr<ToolButton> openBinFolderToolButtonPtr(new ToolButton(ToolButtonCreateParams().ToolBitMapName("folder.opened.bitmap").SetPadding(Padding(6, 6, 6, 6)).SetToolTip("Open Bin Folder (F7)")));
+    std::unique_ptr<ToolButton> openBinFolderToolButtonPtr(new ToolButton(ToolButtonCreateParams().ToolBitMapName("folder.opened.bitmap").SetPadding(Padding(6, 6, 6, 6)).SetToolTip("Open Bin Directory (F7)")));
     openBinFolderToolButton = openBinFolderToolButtonPtr.get();
     openBinFolderToolButton->Click().AddHandler(this, &MainWindow::OpenBinFolderClick);
     openBinFolderToolButton->Disable();
@@ -204,6 +203,34 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
     packageContentView->SetImageList(&imageList);
 
     std::unique_ptr<StatusBar> statusBarPtr(new StatusBar(StatusBarCreateParams().Defaults()));
+    StatusBar* statusBar = statusBarPtr.get();
+
+    std::unique_ptr<StatusBarTextItem> packageFilePathLabelStatusBarItemPtr(new StatusBarTextItem(StatusBarTextItemCreateParams().Text("Package File Path:")));
+    packageFilePathLabelStatusBarItem = packageFilePathLabelStatusBarItemPtr.get();
+    packageFilePathLabelStatusBarItem->SetVisible(false);
+    statusBar->AddItem(packageFilePathLabelStatusBarItemPtr.release());
+    std::unique_ptr<StatusBarTextItem> packageFilePathStatusBarItemPtr(new StatusBarTextItem(StatusBarTextItemCreateParams().BorderStyle(StatusBarItemBorderStyle::sunken)));
+    packageFilePathStatusBarItem = packageFilePathStatusBarItemPtr.get();
+    packageFilePathStatusBarItem->SetVisible(false);
+    statusBar->AddItem(packageFilePathStatusBarItemPtr.release());
+
+    std::unique_ptr<StatusBarTextItem> packageBuildProgressLabelStatusBarItemPtr(new StatusBarTextItem(StatusBarTextItemCreateParams().Text("Package Build Progress:")));
+    packageBuildProgressLabelStatusBarItem = packageBuildProgressLabelStatusBarItemPtr.get();
+    packageBuildProgressLabelStatusBarItem->SetVisible(false);
+    statusBar->AddItem(packageBuildProgressLabelStatusBarItemPtr.release());
+    std::unique_ptr<ProgressBar> progressBarPtr(new ProgressBar(ProgressBarCreateParams().Defaults()));
+    buildProgressBar = progressBarPtr.get();
+    buildProgressBar->SetSize(Size(300, 24));
+    buildProgressBar->Hide();
+    std::unique_ptr<StatusBarControlItem> buildProgressStatusBarItemPtr(new StatusBarControlItem(StatusBarControlItemCreateParams(progressBarPtr.release()).Defaults()));
+    buildProgressStatusBarItem = buildProgressStatusBarItemPtr.get();
+    buildProgressStatusBarItem->SetVisible(false);
+    statusBar->AddItem(buildProgressStatusBarItemPtr.release());
+    std::unique_ptr<StatusBarTextItem> packageBuildProgressPerceStatusBarItemPtr(new StatusBarTextItem(StatusBarTextItemCreateParams().BorderStyle(StatusBarItemBorderStyle::sunken).MaxTextLength(3)));
+    packageBuildProgressPerceStatusBarItem = packageBuildProgressPerceStatusBarItemPtr.get();
+    packageBuildProgressPerceStatusBarItem->SetVisible(false);
+    statusBar->AddItem(packageBuildProgressPerceStatusBarItemPtr.release());
+
     AddChild(statusBarPtr.release());
 
     SetCommandStatus();
@@ -229,6 +256,56 @@ void MainWindow::AddTreeViewEventHandlers(TreeView* treeView)
 void MainWindow::ClearClickActions()
 {
     clickActions.clear();
+}
+
+void MainWindow::ShowPackageFilePathStatusItems()
+{
+    packageFilePathLabelStatusBarItem->SetVisible(true);
+    packageFilePathStatusBarItem->SetVisible(true);
+}
+
+void MainWindow::HidePackageFilePathStatusItems()
+{
+    packageFilePathLabelStatusBarItem->SetVisible(false);
+    packageFilePathLabelStatusBarItem->SetVisible(false);
+}
+
+void MainWindow::EnableSave()
+{
+    saveToolButton->Enable();
+    savePackageMenuItem->Enable();
+}
+
+void MainWindow::DisableSave()
+{
+    saveToolButton->Disable();
+    savePackageMenuItem->Disable();
+}
+
+void MainWindow::ShowPackageBuildProgressStatusItems()
+{
+    packageBuildProgressLabelStatusBarItem->SetVisible(true);
+    buildProgressStatusBarItem->SetVisible(true);
+    buildProgressBar->Show();
+    packageBuildProgressPerceStatusBarItem->SetVisible(true);
+}
+
+void MainWindow::HidePackageBuildProgressStatusItems()
+{
+    packageBuildProgressLabelStatusBarItem->SetVisible(false);
+    buildProgressStatusBarItem->SetVisible(false);
+    buildProgressBar->Hide();
+    packageBuildProgressPerceStatusBarItem->SetVisible(false);
+}
+
+void MainWindow::BeginBuild()
+{
+    ShowPackageBuildProgressStatusItems();
+}
+
+void MainWindow::EndBuild()
+{
+    HidePackageBuildProgressStatusItems();
 }
 
 void MainWindow::OnKeyDown(KeyEventArgs& args)
@@ -410,6 +487,8 @@ void MainWindow::NewPackageClick()
                 return;
             }
             package.reset(new Package(dialog.GetPackageFilePath()));
+            packageFilePathStatusBarItem->SetText(dialog.GetPackageFilePath());
+            ShowPackageFilePathStatusItems();
             package->SetName(dialog.GetPackageName());
             package->SetView(packageContentView);
             package->SetExplorer(packageExplorer);
@@ -462,6 +541,8 @@ void MainWindow::OpenPackageClick()
             std::string packageXMLFilePath = GetFullPath(filePath);
             std::unique_ptr<sngxml::dom::Document> packageDoc(sngxml::dom::ReadDocument(packageXMLFilePath));
             package.reset(new Package(packageXMLFilePath, packageDoc->DocumentElement()));
+            packageFilePathStatusBarItem->SetText(packageXMLFilePath);
+            ShowPackageFilePathStatusItems();
             package->SetView(packageContentView);
             package->SetExplorer(packageExplorer);
             packageExplorer->SetPackage(package.get());
@@ -504,6 +585,8 @@ void MainWindow::ClosePackageClick()
             }
         }
         package.reset();
+        packageFilePathStatusBarItem->SetText(std::string());
+        HidePackageFilePathStatusItems();
         pathBar->SetCurrentNode(nullptr);
         pathBar->SetDirectoryPath(std::string());
         packageExplorer->SetPackage(package.get());
@@ -592,8 +675,14 @@ void MainWindow::SetCommandStatus()
 {
     if (package)
     {
-        savePackageMenuItem->Enable();
-        saveToolButton->Enable();
+        if (package->IsDirty())
+        {
+            EnableSave();
+        }
+        else
+        {
+            DisableSave();
+        }
         closePackageMenuItem->Enable();
         buildPackageMenuItem->Enable();
         buildToolButton->Enable();

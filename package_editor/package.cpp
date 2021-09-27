@@ -307,8 +307,14 @@ Package::Package(const std::string& packageXMLFilePath, sngxml::dom::Element* ro
     engineVariables->SetParent(this);
 }
 
+bool Package::CanSave() const
+{
+    return IsDirty();
+}
+
 void Package::Save()
 {
+    MainWindow* mainWindow = GetMainWindow();
     sngxml::dom::Document packageDoc;
     packageDoc.AppendChild(std::unique_ptr<sngxml::dom::Node>(ToXml())); 
     std::string directory = Path::GetDirectoryName(filePath);
@@ -318,10 +324,59 @@ void Package::Save()
     formatter.SetIndentSize(1);
     packageDoc.Write(formatter);
     dirty = false;
+    if (mainWindow)
+    {
+        mainWindow->DisableSave();
+    }
+}
+
+bool Package::CanBuild() const
+{
+    return true;
+    // todo
+}
+
+void Package::Build()
+{
+    MainWindow* mainWindow = GetMainWindow();
+    try
+    {
+        if (mainWindow)
+        {
+            mainWindow->BeginBuild();
+        }
+        // todo
+        if (mainWindow)
+        {
+            mainWindow->EndBuild();
+        }
+    }
+    catch (...)
+    {
+        if (mainWindow)
+        {
+            mainWindow->EndBuild();
+        }
+        throw;
+    }
+}
+
+void Package::Close()
+{
+    MainWindow* mainWindow = GetMainWindow();
+    if (mainWindow)
+    {
+        mainWindow->ClosePackageClick();
+    }
 }
 
 void Package::SetDirty()
 {
+    MainWindow* mainWindow = GetMainWindow();
+    if (mainWindow)
+    {
+        mainWindow->EnableSave();
+    }
     dirty = true;
 }
 

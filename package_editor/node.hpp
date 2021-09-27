@@ -101,6 +101,14 @@ public:
     virtual bool CanMoveDown(const Node* child) const;
     virtual bool CanExclude() const { return false; }
     virtual bool CanInclude() const { return false; }
+    virtual bool CanSave() const { return false; }
+    virtual bool CanBuild() const { return false; }
+    virtual bool CanClose() const { return false; }
+    virtual bool CanClear() const { return false; }
+    virtual void Save();
+    virtual void Build();
+    virtual void Close();
+    virtual void Clear();
     virtual std::string DirectoryPath() const;
     virtual int RuleCount() const { return 0; }
     virtual Rule* GetRule(int index) const { return nullptr; }

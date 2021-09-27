@@ -188,6 +188,34 @@ void Rules::AddAddNewMenuItems(ContextMenu* contextMenu, std::vector<std::unique
     contextMenu->AddMenuItem(addVSRulesMenuItem.release());
 }
 
+bool Rules::CanClear() const
+{
+    return !rules.empty();
+}
+
+void Rules::Clear()
+{
+    if (!rules.empty())
+    {
+        TreeViewNode* rulesTreeViewNode = GetTreeViewNode();
+        if (rulesTreeViewNode)
+        {
+            TreeView* treeView = rulesTreeViewNode->GetTreeView();
+            if (treeView)
+            {
+                rulesTreeViewNode->RemoveChildren();
+            }
+        }
+        rules.clear();
+        Parent()->OpenAndExpand();
+        Package* package = GetPackage();
+        if (package)
+        {
+            package->SetDirty();
+        }
+    }
+}
+
 int Rules::RuleCount() const
 {
     return rules.size();

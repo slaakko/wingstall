@@ -34,6 +34,8 @@ public:
     bool CanAdd() const override { return true; }
     void AddNew(NodeKind kind) override;
     void AddAddNewMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions) override;
+    bool CanClear() const override;
+    void Clear() override;
     int RuleCount() const override;
     Rule* GetRule(int index) const override;
     Rule* GetRule(const std::string& name) const override;

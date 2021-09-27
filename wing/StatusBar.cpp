@@ -357,6 +357,11 @@ StatusBar::StatusBar(StatusBarCreateParams& createParams) :
 void StatusBar::AddItem(StatusBarItem* item)
 {
     items.AddChild(item);
+    if (item->IsStatusBarControlItem())
+    {
+        StatusBarControlItem* controlItem = static_cast<StatusBarControlItem*>(item);
+        items.AddChild(controlItem->GetControl());
+    }
     SetChanged();
     Invalidate();
 }
@@ -497,7 +502,7 @@ void StatusBar::DrawItems(Graphics& graphics)
         if (child->IsStatusBarItem())
         {
             StatusBarItem* item = static_cast<StatusBarItem*>(child);
-            if (!item->IsEmpty())
+            if (!item->IsEmpty() && item->IsVisible())
             {
                 item->Draw(graphics);
             }
@@ -506,12 +511,25 @@ void StatusBar::DrawItems(Graphics& graphics)
     }
 }
 
-StatusBarItem::StatusBarItem() : Component()
+StatusBarItem::StatusBarItem() : Component(), visible(true)
 {
 }
 
 StatusBarItem::~StatusBarItem()
 {
+}
+
+void StatusBarItem::SetVisible(bool visible_)
+{
+    if (visible != visible_)
+    {
+        visible = visible_;
+        StatusBar* statusBar = GetStatusBar();
+        if (statusBar)
+        {
+            statusBar->Invalidate();
+        }
+    }
 }
 
 void StatusBarItem::SetLocation(const Point& location_)
@@ -705,6 +723,44 @@ void StatusBarTextItem::DrawBorder(Graphics& graphics, Pen* outerTopLeftPen, Pen
 
 StatusBarSpringItem::StatusBarSpringItem() : StatusBarItem()
 {
+}
+
+StatusBarControlItemCreateParams::StatusBarControlItemCreateParams(Control* control_) : control(control_), borderStyle(StatusBarItemBorderStyle::flat)
+{
+}
+
+StatusBarControlItemCreateParams& StatusBarControlItemCreateParams::Defaults()
+{
+    return *this;
+}
+
+StatusBarControlItemCreateParams& StatusBarControlItemCreateParams::BorderStyle(StatusBarItemBorderStyle borderStyle_)
+{
+    borderStyle = borderStyle_;
+    return *this;
+}
+
+StatusBarControlItem::StatusBarControlItem(StatusBarControlItemCreateParams& createParams) : StatusBarItem(), borderStyle(createParams.borderStyle), control(createParams.control)
+{
+}
+
+void StatusBarControlItem::Measure(Graphics& graphics)
+{
+    Size sz = control->GetSize();
+    Padding itemPadding;
+    StatusBar* statusBar = GetStatusBar();
+    if (statusBar)
+    {
+        itemPadding = statusBar->StatusBarItemPadding();
+        sz.Height = statusBar->CharHeight();
+    }
+    SetSize(sz);
+}
+
+void StatusBarControlItem::SetLocation(const Point& location_)
+{
+    StatusBarItem::SetLocation(location_);
+    control->SetLocation(location_);
 }
 
 } // wing

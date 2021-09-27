@@ -206,6 +206,11 @@ void ExcludeAction::Execute()
                     if (ruleContainerNode)
                     {
                         ruleContainerNode->AddRule(new Rule(contentDirectory->Name(), RuleKind::exclude, PathKind::dir));
+                        Package* package = ruleContainerNode->GetPackage();
+                        if (package)
+                        {
+                            package->SetDirty();
+                        }
                         contentDirectory->Parent()->OpenAndExpand();
                     }
                 }
@@ -216,6 +221,11 @@ void ExcludeAction::Execute()
                     if (ruleContainerNode)
                     {
                         ruleContainerNode->AddRule(new Rule(contentFile->Name(), RuleKind::exclude, PathKind::file));
+                        Package* package = ruleContainerNode->GetPackage();
+                        if (package)
+                        {
+                            package->SetDirty();
+                        }
                         contentFile->Parent()->OpenAndExpand();
                     }
                 }
@@ -249,6 +259,11 @@ void IncludeAction::Execute()
                     if (ruleContainerNode)
                     {
                         ruleContainerNode->AddRule(new Rule(contentDirectory->Name(), RuleKind::include, PathKind::dir));
+                        Package* package = ruleContainerNode->GetPackage();
+                        if (package)
+                        {
+                            package->SetDirty();
+                        }
                         contentDirectory->Parent()->OpenAndExpand();
                     }
                 }
@@ -259,6 +274,11 @@ void IncludeAction::Execute()
                     if (ruleContainerNode)
                     {
                         ruleContainerNode->AddRule(new Rule(contentFile->Name(), RuleKind::include, PathKind::file));
+                        Package* package = ruleContainerNode->GetPackage();
+                        if (package)
+                        {
+                            package->SetDirty();
+                        }
                         contentFile->Parent()->OpenAndExpand();
                     }
                 }
@@ -270,5 +290,102 @@ void IncludeAction::Execute()
         }
     }
 }
+
+SaveAction::SaveAction(MenuItem* menuItem_, Node* node_) : ClickAction(menuItem_), node(node_)
+{
+}
+
+void SaveAction::Execute()
+{
+    MainWindow* mainWindow = node->GetMainWindow();
+    if (mainWindow)
+    {
+        try
+        {
+            mainWindow->HideContextMenu();
+            if (node)
+            {
+                node->Save();
+            }
+        }
+        catch (const std::exception& ex)
+        {
+            ShowErrorMessageBox(mainWindow->Handle(), ex.what());
+        }
+    }
+}
+
+BuildAction::BuildAction(MenuItem* menuItem_, Node* node_) : ClickAction(menuItem_), node(node_)
+{
+}
+
+void BuildAction::Execute()
+{
+    MainWindow* mainWindow = node->GetMainWindow();
+    if (mainWindow)
+    {
+        try
+        {
+            mainWindow->HideContextMenu();
+            if (node)
+            {
+                node->Build();
+            }
+        }
+        catch (const std::exception& ex)
+        {
+            ShowErrorMessageBox(mainWindow->Handle(), ex.what());
+        }
+    }
+}
+
+CloseAction::CloseAction(MenuItem* menuItem_, Node* node_) : ClickAction(menuItem_), node(node_)
+{
+}
+
+void CloseAction::Execute()
+{
+    MainWindow* mainWindow = node->GetMainWindow();
+    if (mainWindow)
+    {
+        try
+        {
+            mainWindow->HideContextMenu();
+            if (node)
+            {
+                node->Close();
+            }
+        }
+        catch (const std::exception& ex)
+        {
+            ShowErrorMessageBox(mainWindow->Handle(), ex.what());
+        }
+    }
+}
+
+ClearAction::ClearAction(MenuItem* menuItem_, Node* node_) : ClickAction(menuItem_), node(node_)
+{
+}
+
+void ClearAction::Execute()
+{
+    MainWindow* mainWindow = node->GetMainWindow();
+    if (mainWindow)
+    {
+        try
+        {
+            mainWindow->HideContextMenu();
+            if (node)
+            {
+                node->Clear();
+            }
+        }
+        catch (const std::exception& ex)
+        {
+            ShowErrorMessageBox(mainWindow->Handle(), ex.what());
+        }
+    }
+}
+
 
 } } // wingstall::package_editor

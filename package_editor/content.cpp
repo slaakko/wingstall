@@ -205,6 +205,11 @@ Node* ContentDirectory::GetRuleContainerNode()
             {
                 ruleContainerNode = new Rule(Name(), RuleKind::include, PathKind::dir);
                 parentRuleContainerNode->AddRule(ruleContainerNode);
+                Package* package = ruleContainerNode->GetPackage();
+                if (package)
+                {
+                    package->SetDirty();
+                }
                 return ruleContainerNode;
             }
         }

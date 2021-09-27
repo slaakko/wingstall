@@ -29,6 +29,7 @@ public:
     virtual bool IsStatusBar() const { return false; }
     virtual bool IsStatusBarItem() const { return false; }
     virtual bool IsStatusBarSpringItem() const { return false; }
+    virtual bool IsStatusBarControlItem() const { return false; }
     virtual bool IsIconListView() const { return false; }
     virtual bool IsIconListViewItem() const { return false; }
     virtual bool IsPathComponent() const { return false; }

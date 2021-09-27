@@ -13,6 +13,8 @@
 #include <wing/Menu.hpp>
 #include <wing/Window.hpp>
 #include <wing/PathView.hpp>
+#include <wing/StatusBar.hpp>
+#include <wing/ProgressBar.hpp>
 
 namespace wingstall { namespace package_editor {
 
@@ -36,6 +38,15 @@ public:
     void ClearClickActions();
     std::vector<std::unique_ptr<ClickAction>>& ClickActions() { return clickActions; }
     ExitViewEvent& ExitView() { return exitView; }
+    void ShowPackageFilePathStatusItems();
+    void HidePackageFilePathStatusItems();
+    void EnableSave();
+    void DisableSave();
+    void ShowPackageBuildProgressStatusItems();
+    void HidePackageBuildProgressStatusItems();
+    void BeginBuild();
+    void EndBuild();
+    void ClosePackageClick();
 protected:
     void OnKeyDown(KeyEventArgs& args) override;
     void MouseUpNotification(MouseEventArgs& args) override;
@@ -43,7 +54,6 @@ protected:
 private:
     void NewPackageClick();
     void OpenPackageClick();
-    void ClosePackageClick();
     void SavePackageClick();
     void BuildPackageClick();
     void OpenBinFolderClick();
@@ -68,6 +78,12 @@ private:
     MenuItem* exitMenuItem;
     MenuItem* editSettingsMenuItem;
     MenuItem* openBinFolderMenuItem;
+    StatusBarTextItem* packageFilePathLabelStatusBarItem;
+    StatusBarTextItem* packageFilePathStatusBarItem;
+    StatusBarTextItem* packageBuildProgressLabelStatusBarItem;
+    StatusBarControlItem* buildProgressStatusBarItem;
+    ProgressBar* buildProgressBar;
+    StatusBarTextItem* packageBuildProgressPerceStatusBarItem;
     ExitViewEvent exitView;
     std::unique_ptr<Package> package;
     PathBar* pathBar;

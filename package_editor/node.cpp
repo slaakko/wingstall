@@ -440,6 +440,30 @@ void Node::AddMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<Cl
             clickActions.push_back(std::unique_ptr<ClickAction>(new IncludeAction(includeMenuItem.get(), this)));
             contextMenu->AddMenuItem(includeMenuItem.release());
         }
+        if (CanSave())
+        {
+            std::unique_ptr<MenuItem> saveMenuItem(new MenuItem("Save"));
+            clickActions.push_back(std::unique_ptr<ClickAction>(new SaveAction(saveMenuItem.get(), this)));
+            contextMenu->AddMenuItem(saveMenuItem.release());
+        }
+        if (CanBuild())
+        {
+            std::unique_ptr<MenuItem> buildMenuItem(new MenuItem("Build"));
+            clickActions.push_back(std::unique_ptr<ClickAction>(new BuildAction(buildMenuItem.get(), this)));
+            contextMenu->AddMenuItem(buildMenuItem.release());
+        }
+        if (CanClose())
+        {
+            std::unique_ptr<MenuItem> closeMenuItem(new MenuItem("Close"));
+            clickActions.push_back(std::unique_ptr<ClickAction>(new CloseAction(closeMenuItem.get(), this)));
+            contextMenu->AddMenuItem(closeMenuItem.release());
+        }
+        if (CanClear())
+        {
+            std::unique_ptr<MenuItem> clearMenuItem(new MenuItem("Clear"));
+            clickActions.push_back(std::unique_ptr<ClickAction>(new ClearAction(clearMenuItem.get(), this)));
+            contextMenu->AddMenuItem(clearMenuItem.release());
+        }
     }
 }
 
@@ -472,6 +496,22 @@ bool Node::CanMoveDown(const Node* child) const
 {
     int index = IndexOf(child);
     return index >= 0 && index < Count() - 1;
+}
+
+void Node::Save()
+{
+}
+
+void Node::Build()
+{
+}
+
+void Node::Close()
+{
+}
+
+void Node::Clear()
+{
 }
 
 std::string Node::DirectoryPath() const

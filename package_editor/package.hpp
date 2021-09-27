@@ -62,7 +62,12 @@ class Package : public Node
 public:
     Package(const std::string& packageXMLFilePath);
     Package(const std::string& packageXMLFilePath, sngxml::dom::Element* root);
-    void Save();
+    bool CanSave() const override;
+    void Save() override;
+    bool CanBuild() const override;
+    void Build() override;
+    bool CanClose() const override { return true; }
+    void Close() override;
     bool IsDirty() const { return dirty; }
     void SetDirty();
     sngxml::dom::Element* ToXml() const;

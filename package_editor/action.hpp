@@ -105,6 +105,42 @@ private:
     Node* node;
 };
 
+class SaveAction : public ClickAction
+{
+public:
+    SaveAction(MenuItem* menuItem_, Node* node_);
+    void Execute() override;
+private:
+    Node* node;
+};
+
+class BuildAction : public ClickAction
+{
+public:
+    BuildAction(MenuItem* menuItem_, Node* node_);
+    void Execute() override;
+private:
+    Node* node;
+};
+
+class CloseAction : public ClickAction
+{
+public:
+    CloseAction(MenuItem* menuItem_, Node* node_);
+    void Execute() override;
+private:
+    Node* node;
+};
+
+class ClearAction : public ClickAction
+{
+public:
+    ClearAction(MenuItem* menuItem_, Node* node_);
+    void Execute() override;
+private:
+    Node* node;
+};
+
 } } // wingstall::package_editor
 
 #endif // WINGSTALL_PACKAGE_EDITOR_ACTION_INCLUDED

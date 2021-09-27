@@ -192,14 +192,17 @@ public:
     virtual bool IsEmpty() const { return false; }
     virtual void Measure(Graphics& graphics);
     virtual void Draw(Graphics& graphics);
+    bool IsVisible() const { return visible; }
+    void SetVisible(bool visible_);
     StatusBar* GetStatusBar() const;
     const Point& Location() const { return location; }
-    void SetLocation(const Point& location_);
+    virtual void SetLocation(const Point& location_);
     const Size& GetSize() const { return size; }
     void SetSize(const Size& size_);
 private:
     Point location;
     Size size;
+    bool visible;
 };
 
 enum class StatusBarItemBorderStyle : int
@@ -244,6 +247,28 @@ class WING_API StatusBarSpringItem : public StatusBarItem
 public:
     StatusBarSpringItem();
     bool IsStatusBarSpringItem() const override { return true; }
+};
+
+struct WING_API StatusBarControlItemCreateParams
+{
+    StatusBarControlItemCreateParams(Control* control_);
+    StatusBarControlItemCreateParams& Defaults();
+    StatusBarControlItemCreateParams& BorderStyle(StatusBarItemBorderStyle borderStyle_);
+    StatusBarItemBorderStyle borderStyle;
+    Control* control;
+};
+
+class WING_API StatusBarControlItem : public StatusBarItem
+{
+public:
+    StatusBarControlItem(StatusBarControlItemCreateParams& createParams);
+    void Measure(Graphics& graphics) override;
+    bool IsStatusBarControlItem() const override { return true; }
+    Control* GetControl() const { return control; }
+    void SetLocation(const Point& location_) override;
+private:
+    StatusBarItemBorderStyle borderStyle;
+    Control* control;
 };
 
 } // wing
