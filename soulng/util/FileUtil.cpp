@@ -15,13 +15,24 @@
 
 namespace soulng { namespace util {
 
+void CoutCopyFileObserver::WriteLine(const std::string& line)
+{
+    std::cout << line << std::endl;
+}
+
 void CopyFile(const std::string& source, const std::string& dest, bool force, bool makeDir, bool verbose)
+{
+    CoutCopyFileObserver observer;
+    CopyFile(source, dest, force, makeDir, verbose, &observer);
+}
+
+void CopyFile(const std::string& source, const std::string& dest, bool force, bool makeDir, bool verbose, CopyFileObserver* observer)
 {
     if (!boost::filesystem::exists(source))
     {
-        if (verbose)
+        if (verbose && observer)
         {
-            std::cout << "source file '" + source + "' does not exist" << std::endl;
+            observer->WriteLine("source file '" + source + "' does not exist");
         }
         return;
     }
@@ -37,6 +48,10 @@ void CopyFile(const std::string& source, const std::string& dest, bool force, bo
     if (force || !boost::filesystem::exists(dest) || boost::filesystem::last_write_time(source) > boost::filesystem::last_write_time(dest))
     {
         int64_t size = boost::filesystem::file_size(source);
+        if (observer)
+        {
+            observer->FileCopyProgress(0, size);
+        }
         {
             FileStream sourceFile(source, OpenMode::read | OpenMode::binary);
             BufferedStream bufferedSource(sourceFile);
@@ -48,6 +63,10 @@ void CopyFile(const std::string& source, const std::string& dest, bool force, bo
             {
                 uint8_t x = reader.ReadByte();
                 writer.Write(x);
+                if (observer)
+                {
+                    observer->FileCopyProgress(i, size);
+                }
             }
         }
         boost::system::error_code ec;
@@ -56,9 +75,9 @@ void CopyFile(const std::string& source, const std::string& dest, bool force, bo
         {
             throw std::runtime_error("could not set write time of file '" + dest + "': " + PlatformStringToUtf8(ec.message()));
         }
-        if (verbose)
+        if (verbose && observer)
         {
-            std::cout << source << " -> " << dest << std::endl;
+            observer->WriteLine(source + " -> " + dest);
         }
     }
 }

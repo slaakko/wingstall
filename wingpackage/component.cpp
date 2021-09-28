@@ -136,6 +136,11 @@ void Component::Read(Streams& streams)
 
 void Component::WriteIndex(BinaryStreamWriter& writer)
 {
+    Package* package = GetPackage();
+    if (package)
+    {
+        package->CheckInterrupted();
+    }
     Node::WriteIndex(writer);
     int32_t numDirectories = directories.size();
     writer.Write(numDirectories);
@@ -180,6 +185,11 @@ void Component::ReadIndex(BinaryStreamReader& reader)
 
 void Component::WriteData(BinaryStreamWriter& writer)
 {
+    Package* package = GetPackage();
+    if (package)
+    {
+        package->CheckInterrupted();
+    }
     for (const auto& directory : directories)
     {
         directory->WriteData(writer);

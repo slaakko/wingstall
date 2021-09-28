@@ -119,7 +119,7 @@ Control* Properties::CreateView(ImageList* imageList)
     return viewPtr.release();
 }
 
-Package::Package(const std::string& packageXMLFilePath) : Node(NodeKind::package, std::string()), filePath(packageXMLFilePath), view(nullptr), explorer(nullptr), dirty(false)
+Package::Package(const std::string& packageXMLFilePath) : Node(NodeKind::package, std::string()), filePath(packageXMLFilePath), view(nullptr), explorer(nullptr), dirty(false), building(false)
 {
     properties.reset(new Properties());
     properties->SetParent(this);
@@ -134,7 +134,7 @@ Package::Package(const std::string& packageXMLFilePath) : Node(NodeKind::package
 }
 
 Package::Package(const std::string& packageXMLFilePath, sngxml::dom::Element* root) : 
-    Node(NodeKind::package, std::string()), filePath(packageXMLFilePath), view(nullptr), explorer(nullptr), dirty(false)
+    Node(NodeKind::package, std::string()), filePath(packageXMLFilePath), view(nullptr), explorer(nullptr), dirty(false), building(false)
 {
     properties.reset(new Properties());
     properties->SetParent(this);
@@ -338,26 +338,11 @@ bool Package::CanBuild() const
 
 void Package::Build()
 {
+    building = true;
     MainWindow* mainWindow = GetMainWindow();
-    try
+    if (mainWindow)
     {
-        if (mainWindow)
-        {
-            mainWindow->BeginBuild();
-        }
-        // todo
-        if (mainWindow)
-        {
-            mainWindow->EndBuild();
-        }
-    }
-    catch (...)
-    {
-        if (mainWindow)
-        {
-            mainWindow->EndBuild();
-        }
-        throw;
+        mainWindow->StartBuild();
     }
 }
 
@@ -380,6 +365,11 @@ void Package::SetDirty()
     dirty = true;
 }
 
+void Package::ResetBuilding()
+{
+    building = false;
+}
+
 sngxml::dom::Element* Package::ToXml() const
 {
     sngxml::dom::Element* element = new sngxml::dom::Element(U"package");
@@ -391,10 +381,10 @@ sngxml::dom::Element* Package::ToXml() const
     return element;
 }
 
-std::string Package::BinFolderPath() const
+std::string Package::BinDirectoryPath() const
 {
-    std::string packageFolderPath = Path::GetDirectoryName(filePath);
-    return Path::Combine(packageFolderPath, "bin");
+    std::string packageDirectoryPath = Path::GetDirectoryName(filePath);
+    return Path::Combine(packageDirectoryPath, "bin");
 }
 
 TreeViewNode* Package::ToTreeViewNode(TreeView* view) 

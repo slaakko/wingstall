@@ -443,6 +443,11 @@ sngxml::dom::Element* Links::ToXml() const
 
 void Links::WriteIndex(BinaryStreamWriter& writer)
 {
+    Package* package = GetPackage();
+    if (package)
+    {
+        package->CheckInterrupted();
+    }
     Node::WriteIndex(writer);
     int32_t numLinkDirectories = linkDirectories.size();
     writer.Write(numLinkDirectories);

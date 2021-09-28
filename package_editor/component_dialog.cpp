@@ -29,7 +29,8 @@ bool IsValidComponentName(const std::string& name)
     return true;
 }
 
-ComponentDialog::ComponentDialog(const std::string& caption_) : Window(WindowCreateParams().Text(caption_).WindowClassName("wingstall.package_editor.component_dialog").
+ComponentDialog::ComponentDialog(const std::string& caption_) : 
+    Window(WindowCreateParams().Text(caption_).WindowClassName("wingstall.package_editor.component_dialog").
     WindowStyle(DialogWindowStyle()).WindowClassBackgroundColor(DefaultControlWindowClassBackgroundColor()).BackgroundColor(DefaultControlBackgroundColor()).
     Location(DefaultLocation()).SetSize(Size(ScreenMetrics::Get().MMToHorizontalPixels(100), ScreenMetrics::Get().MMToVerticalPixels(60)))),
     okButton(nullptr),

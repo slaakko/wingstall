@@ -3,7 +3,7 @@
 // Distributed under the MIT license
 // =================================
 
-#include <wingstall/make_setup.hpp>
+#include <wingpackage/make_setup.hpp>
 #include <wingpackage/package.hpp>
 #include <wingstall_config/config.hpp>
 #include <sngxml/dom/Element.hpp>
@@ -26,10 +26,15 @@
 #include <iostream>
 #include <stdexcept>
 
-namespace wingstall {
+namespace wingstall { namespace wingpackage {
 
 using namespace soulng::util;
 using namespace soulng::unicode;
+
+void CoutLogger::WriteLine(const std::string& line) 
+{
+    std::cout << line << std::endl;
+}
 
 std::string BoostIncludeDir()
 {
@@ -82,19 +87,25 @@ std::string SetupIconResourceName()
     return "setup_icon";
 }
 
-void MakeMainFile(const std::string& packageBinFilePath, bool verbose);
+void MakeMainFile(const std::string& packageBinFilePath, bool verbose, Logger* logger);
 
 void MakeDataFile(const std::string& packageBinFilePath, const std::string& appName, const std::string& appVersion, const std::string& compression, const std::string& defaultContainingDirPath,
-    const std::string& installDirName, int64_t uncompressedPackageSize, bool verbose);
+    const std::string& installDirName, int64_t uncompressedPackageSize, bool verbose, Logger* logger);
 
-void MakeProjectFile(const std::string& packageBinFilePath, bool verbose);
+void MakeProjectFile(const std::string& packageBinFilePath, bool verbose, Logger* logger);
 
 void MakeSetup(const std::string& packageBinFilePath, bool verbose)
 {
+    CoutLogger coutLogger;
+    MakeSetup(packageBinFilePath, verbose, &coutLogger);
+}
+
+void MakeSetup(const std::string& packageBinFilePath, bool verbose, Logger* logger)
+{
     std::string packageInfoFilePath = Path::ChangeExtension(packageBinFilePath, ".info.xml");
-    if (verbose)
+    if (verbose && logger)
     {
-        std::cout << "> " << packageInfoFilePath << std::endl;
+        logger->WriteLine("> " + packageInfoFilePath);
     }
     std::unique_ptr<sngxml::dom::Document> packageInfoDoc = sngxml::dom::ReadDocument(packageInfoFilePath);
     std::unique_ptr<sngxml::xpath::XPathObject> packageInfoObject = sngxml::xpath::Evaluate(U"/packageInfo", packageInfoDoc.get());
@@ -113,48 +124,48 @@ void MakeSetup(const std::string& packageBinFilePath, bool verbose)
                     std::u32string appNameAttr = element->GetAttribute(U"appName");
                     if (appNameAttr.empty())
                     {
-                        throw std::runtime_error("root element has no 'appName' attribute in package info document '" + packageInfoFilePath + "' line " + 
+                        throw std::runtime_error("root element has no 'appName' attribute in package info document '" + packageInfoFilePath + "' line " +
                             std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
                     }
                     std::string appName = ToUtf8(appNameAttr);
                     std::u32string appVersionAttr = element->GetAttribute(U"appVersion");
                     if (appVersionAttr.empty())
                     {
-                        throw std::runtime_error("root element has no 'appVersion' attribute in package info document '" + packageInfoFilePath + "' line " + 
+                        throw std::runtime_error("root element has no 'appVersion' attribute in package info document '" + packageInfoFilePath + "' line " +
                             std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
                     }
                     std::string appVersion = ToUtf8(appVersionAttr);
                     std::u32string compressionAttr = element->GetAttribute(U"compression");
                     if (compressionAttr.empty())
                     {
-                        throw std::runtime_error("root element has no 'compression' attribute in package info document '" + packageInfoFilePath + "' line " + 
+                        throw std::runtime_error("root element has no 'compression' attribute in package info document '" + packageInfoFilePath + "' line " +
                             std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
                     }
                     std::string compression = ToUtf8(compressionAttr);
                     std::u32string defaultContainingDirPathAttr = element->GetAttribute(U"defaultContainingDirPath");
                     if (defaultContainingDirPathAttr.empty())
                     {
-                        throw std::runtime_error("root element has no 'defaultContainingDirPath' attribute in package info document '" + packageInfoFilePath + "' line " + 
+                        throw std::runtime_error("root element has no 'defaultContainingDirPath' attribute in package info document '" + packageInfoFilePath + "' line " +
                             std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
                     }
                     std::string defaultContainingDirPath = ToUtf8(defaultContainingDirPathAttr);
                     std::u32string installDirNameAttr = element->GetAttribute(U"installDirName");
                     if (installDirNameAttr.empty())
                     {
-                        throw std::runtime_error("root element has no 'installDirName' attribute in package info document '" + packageInfoFilePath + "' line " + 
+                        throw std::runtime_error("root element has no 'installDirName' attribute in package info document '" + packageInfoFilePath + "' line " +
                             std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
                     }
                     std::string installDirName = ToUtf8(installDirNameAttr);
                     std::u32string uncompressedPackageSizeAttr = element->GetAttribute(U"uncompressedPackageSize");
                     if (uncompressedPackageSizeAttr.empty())
                     {
-                        throw std::runtime_error("root element has no 'uncompressedPackageSize' attribute in package info document '" + packageInfoFilePath + "' line " + 
+                        throw std::runtime_error("root element has no 'uncompressedPackageSize' attribute in package info document '" + packageInfoFilePath + "' line " +
                             std::to_string(element->GetSourcePos().line) + ", column " + std::to_string(element->GetSourcePos().col));
                     }
                     int64_t uncompressedPackageSize = boost::lexical_cast<int64_t>(ToUtf8(uncompressedPackageSizeAttr));
-                    MakeDataFile(packageBinFilePath, appName, appVersion, compression, defaultContainingDirPath, installDirName, uncompressedPackageSize, verbose);
-                    MakeMainFile(packageBinFilePath, verbose);
-                    MakeProjectFile(packageBinFilePath, verbose);
+                    MakeDataFile(packageBinFilePath, appName, appVersion, compression, defaultContainingDirPath, installDirName, uncompressedPackageSize, verbose, logger);
+                    MakeMainFile(packageBinFilePath, verbose, logger);
+                    MakeProjectFile(packageBinFilePath, verbose, logger);
                 }
             }
             else
@@ -165,7 +176,7 @@ void MakeSetup(const std::string& packageBinFilePath, bool verbose)
     }
 }
 
-void MakeMainFile(const std::string& packageBinFilePath, bool verbose)
+void MakeMainFile(const std::string& packageBinFilePath, bool verbose, Logger* logger)
 {
     std::string mainFileBasePath = GetFullPath(Path::Combine(Path::Combine(Path::GetDirectoryName(GetFullPath(packageBinFilePath)), "program"), "main"));
     std::string directoryPath = Path::GetDirectoryName(mainFileBasePath);
@@ -234,7 +245,7 @@ void MakeMainFile(const std::string& packageBinFilePath, bool verbose)
     sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::defaultContainingDirPath, new StringItem(setup::DefaultContainingDirPath()));");
     sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::compression, new IntegerItem(static_cast<int64_t>(setup::Compression())));");
     sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::dataSource, new IntegerItem(static_cast<int64_t>(DataSource::memory)));");
-    sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::packageDataAddress, new IntegerItem(reinterpret_cast<int64_t>(packageResource.Data())));"); 
+    sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::packageDataAddress, new IntegerItem(reinterpret_cast<int64_t>(packageResource.Data())));");
     sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::compressedPackageSize, new IntegerItem(packageResource.Size()));");
     sourceFormatter.WriteLine("SetInfoItem(InfoItemKind::uncompressedPackageSize, new IntegerItem(setup::UncompressedPackageSize()));");
     sourceFormatter.WriteLine("Icon& setupIcon = Application::GetResourceManager().GetIcon(setup::SetupIconResourceName());");
@@ -258,14 +269,14 @@ void MakeMainFile(const std::string& packageBinFilePath, bool verbose)
     sourceFormatter.WriteLine("}");
     sourceFormatter.WriteLine();
 
-    if (verbose)
+    if (verbose && logger)
     {
-        std::cout << "==> " << sourceFilePath << std::endl;
+        logger->WriteLine("==> " + sourceFilePath);
     }
 }
 
-void MakeDataFile(const std::string& packageBinFilePath, const std::string& appName, const std::string& appVersion, const std::string& compression, const std::string& defaultContainingDirPath, 
-    const std::string& installDirName, int64_t uncompressedPackageSize, bool verbose)
+void MakeDataFile(const std::string& packageBinFilePath, const std::string& appName, const std::string& appVersion, const std::string& compression, const std::string& defaultContainingDirPath,
+    const std::string& installDirName, int64_t uncompressedPackageSize, bool verbose, Logger* logger)
 {
     std::string wingstallRootDir = WingstallRoot();
     std::string compressedUnicodeDBFilePath = soulng::unicode::CharacterTable::Instance().DeflateFilePath();
@@ -297,9 +308,9 @@ void MakeDataFile(const std::string& packageBinFilePath, const std::string& appN
     std::ofstream sourceFile(sourceFilePath);
     CodeFormatter sourceFormatter(sourceFile);
     int64_t size = boost::filesystem::file_size(packageBinFilePath);
-    if (verbose)
+    if (verbose && logger)
     {
-        std::cout << "> " << packageBinFilePath << std::endl;
+        logger->WriteLine("> " + packageBinFilePath);
     }
 
     headerFormatter.WriteLine("#ifndef DATA_H");
@@ -410,15 +421,15 @@ void MakeDataFile(const std::string& packageBinFilePath, const std::string& appN
     sourceFormatter.WriteLine("} // setup");
     sourceFormatter.WriteLine();
 
-    if (verbose)
+    if (verbose && logger)
     {
-        std::cout << "==> " << headerFilePath << std::endl;
-        std::cout << "==> " << sourceFilePath << std::endl;
-        std::cout << "==> " << resourceFilePath << std::endl;
+        logger->WriteLine("==> " + headerFilePath);
+        logger->WriteLine("==> " + sourceFilePath);
+        logger->WriteLine("==> " + resourceFilePath);
     }
 }
 
-void MakeProjectFile(const std::string& packageBinFilePath, bool verbose)
+void MakeProjectFile(const std::string& packageBinFilePath, bool verbose, Logger* logger)
 {
     boost::uuids::uuid projectGuid = boost::uuids::random_generator()();
     std::string projectGuidStr = "{" + boost::lexical_cast<std::string>(projectGuid) + "}";
@@ -815,10 +826,10 @@ void MakeProjectFile(const std::string& packageBinFilePath, bool verbose)
     projectDoc.AppendChild(std::unique_ptr<sngxml::dom::Node>(projectElement));
     projectDoc.Write(formatter);
 
-    if (verbose)
+    if (verbose && logger)
     {
-        std::cout << "==> " << projectFilePath << std::endl;
+        logger->WriteLine("==> " + projectFilePath);
     }
 }
 
-} // namespace wingstall
+} } // namespace wingstall::wingpackage

@@ -5,7 +5,7 @@
 
 #include <wingpackage/package.hpp>
 #include <wingpackage/path_matcher.hpp>
-#include <wingstall/make_setup.hpp>
+#include <wingpackage/make_setup.hpp>
 #include <wing/InitDone.hpp>
 #include <wing/Environment.hpp>
 #include <sngxml/xpath/InitDone.hpp>
@@ -49,7 +49,7 @@ enum class Command
 
 std::string WingstallVersionStr()
 {
-    return "1.1.0";
+    return "2.0.0";
 }
 
 void PrintHelp()
@@ -396,7 +396,7 @@ int main(int argc, const char** argv)
             }
             if (verbose)
             {
-                wingstall::MakeSetup(packageBinFilePath, verbose);
+                wingstall::wingpackage::MakeSetup(packageBinFilePath, verbose);
             }
             if (verbose)
             {

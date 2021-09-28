@@ -141,6 +141,11 @@ void Directory::SetFlag(DirectoryFlags flag, bool value)
 
 void Directory::WriteData(BinaryStreamWriter& writer)
 {
+    Package* package = GetPackage();
+    if (package)
+    {
+        package->CheckInterrupted();
+    }
     for (const auto& directory : directories)
     {
         directory->WriteData(writer);

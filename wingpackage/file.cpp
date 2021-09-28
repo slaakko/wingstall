@@ -66,6 +66,11 @@ void File::ReadIndex(BinaryStreamReader& reader)
 
 void File::WriteData(BinaryStreamWriter& writer)
 {
+    Package* package = GetPackage();
+    if (package)
+    {
+        package->CheckInterrupted();
+    }
     Sha1 sha1;
     std::string filePath = Path(GetSourceRootDir());
     FileStream fileStream(filePath, OpenMode::read | OpenMode::binary);
@@ -87,7 +92,6 @@ void File::WriteData(BinaryStreamWriter& writer)
     }
     hash = sha1.GetDigest();
     writer.Write(hash);
-    Package* package = GetPackage();
     if (package)
     {
         package->IncrementFileContentPosition(size);

@@ -6,6 +6,10 @@
 #include <package_editor/main_window.hpp>
 #include <package_editor/new_package_dialog.hpp>
 #include <package_editor/path_bar.hpp>
+#include <package_editor/about_dialog.hpp>
+#include <package_editor/edit_configuration_dialog.hpp>
+#include <wingstall_config/config.hpp>
+#include <wingstall_config/build.props.hpp>
 #include <wing/BorderedControl.hpp>
 #include <wing/Dialog.hpp>
 #include <wing/LogView.hpp>
@@ -80,10 +84,10 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
 
     std::unique_ptr<MenuItem> editMenuItem(new MenuItem("&Edit"));
 
-    std::unique_ptr<MenuItem> editSettingsMenuItemPtr(new MenuItem("&Settings..."));
-    editSettingsMenuItem = editSettingsMenuItemPtr.get();
-    editSettingsMenuItem->Click().AddHandler(this, &MainWindow::EditSettingsClick);
-    editMenuItem->AddMenuItem(editSettingsMenuItemPtr.release());
+    std::unique_ptr<MenuItem> editConfigurationMenuItemPtr(new MenuItem("&Configuration..."));
+    editConfigurationMenuItem = editConfigurationMenuItemPtr.get();
+    editConfigurationMenuItem->Click().AddHandler(this, &MainWindow::EditConfigurationClick);
+    editMenuItem->AddMenuItem(editConfigurationMenuItemPtr.release());
 
     menuBar->AddMenuItem(editMenuItem.release());
 
@@ -96,14 +100,40 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
     buildPackageMenuItem->Disable();
     buildMenuItem->AddMenuItem(buildPackageMenuItemPtr.release());
 
-    std::unique_ptr<MenuItem> openBinFolderMenuItemPtr(new MenuItem("&Open Bin Directory"));
-    openBinFolderMenuItem = openBinFolderMenuItemPtr.get();
-    openBinFolderMenuItem->SetShortcut(Keys::f7);
-    openBinFolderMenuItem->Click().AddHandler(this, &MainWindow::OpenBinFolderClick);
-    openBinFolderMenuItem->Disable();
-    buildMenuItem->AddMenuItem(openBinFolderMenuItemPtr.release());
+    std::unique_ptr<MenuItem> openBinDirectoryMenuItemPtr(new MenuItem("&Open Bin Directory"));
+    openBinDirectoryMenuItem = openBinDirectoryMenuItemPtr.get();
+    openBinDirectoryMenuItem->SetShortcut(Keys::f7);
+    openBinDirectoryMenuItem->Click().AddHandler(this, &MainWindow::OpenBinDirectoryClick);
+    openBinDirectoryMenuItem->Disable();
+    buildMenuItem->AddMenuItem(openBinDirectoryMenuItemPtr.release());
+
+    std::unique_ptr<MenuItem> cancelBuildMenuItemPtr(new MenuItem("&Cancel Build"));
+    cancelBuildMenuItem = cancelBuildMenuItemPtr.get();
+    cancelBuildMenuItem->SetShortcut(Keys::controlModifier | Keys::f4);
+    cancelBuildMenuItem->Click().AddHandler(this, &MainWindow::CancelBuildClick);
+    cancelBuildMenuItem->Disable();
+    buildMenuItem->AddMenuItem(cancelBuildMenuItemPtr.release());
 
     menuBar->AddMenuItem(buildMenuItem.release());
+
+    std::unique_ptr<MenuItem> helpMenuItem(new MenuItem("&Help"));
+
+    std::unique_ptr<MenuItem> homepageMenuItemPtr(new MenuItem("&Homepage"));
+    homepageMenuItem = homepageMenuItemPtr.get();
+    homepageMenuItem->Click().AddHandler(this, &MainWindow::HomepageClick);
+    helpMenuItem->AddMenuItem(homepageMenuItemPtr.release());
+
+    std::unique_ptr<MenuItem> localDocumentationMenuItemPtr(new MenuItem("&Local Documentation"));
+    localDocumentationMenuItem = localDocumentationMenuItemPtr.get();
+    localDocumentationMenuItem->Click().AddHandler(this, &MainWindow::LocalDocumentationClick);
+    helpMenuItem->AddMenuItem(localDocumentationMenuItemPtr.release());
+
+    std::unique_ptr<MenuItem> aboutMenuItemPtr(new MenuItem("&About..."));
+    aboutMenuItem = aboutMenuItemPtr.get();
+    aboutMenuItem->Click().AddHandler(this, &MainWindow::AboutClick);
+    helpMenuItem->AddMenuItem(aboutMenuItemPtr.release());
+
+    menuBar->AddMenuItem(helpMenuItem.release());
 
     AddChild(menuBar.release());
 
@@ -124,11 +154,17 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
     buildToolButton->Disable();
     toolBar->AddToolButton(buildToolButtonPtr.release());
 
-    std::unique_ptr<ToolButton> openBinFolderToolButtonPtr(new ToolButton(ToolButtonCreateParams().ToolBitMapName("folder.opened.bitmap").SetPadding(Padding(6, 6, 6, 6)).SetToolTip("Open Bin Directory (F7)")));
-    openBinFolderToolButton = openBinFolderToolButtonPtr.get();
-    openBinFolderToolButton->Click().AddHandler(this, &MainWindow::OpenBinFolderClick);
-    openBinFolderToolButton->Disable();
-    toolBar->AddToolButton(openBinFolderToolButtonPtr.release());
+    std::unique_ptr<ToolButton> cancelBuildToolButtonPtr(new ToolButton(ToolButtonCreateParams().ToolBitMapName("cancel.build.bitmap").SetPadding(Padding(6, 6, 6, 6)).SetToolTip("Cancel Build (Ctrl+F4)")));
+    cancelBuildToolButton = cancelBuildToolButtonPtr.get();
+    cancelBuildToolButton->Click().AddHandler(this, &MainWindow::CancelBuildClick);
+    cancelBuildToolButton->Disable();
+    toolBar->AddToolButton(cancelBuildToolButtonPtr.release());
+
+    std::unique_ptr<ToolButton> openBinDirectoryToolButtonPtr(new ToolButton(ToolButtonCreateParams().ToolBitMapName("folder.opened.bitmap").SetPadding(Padding(6, 6, 6, 6)).SetToolTip("Open Bin Directory (F7)")));
+    openBinDirectoryToolButton = openBinDirectoryToolButtonPtr.get();
+    openBinDirectoryToolButton->Click().AddHandler(this, &MainWindow::OpenBinDirectoryClick);
+    openBinDirectoryToolButton->Disable();
+    toolBar->AddToolButton(openBinDirectoryToolButtonPtr.release());
 
     AddChild(borderedToolBar.release());
 
@@ -204,8 +240,9 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
 
     std::unique_ptr<StatusBar> statusBarPtr(new StatusBar(StatusBarCreateParams().Defaults()));
     StatusBar* statusBar = statusBarPtr.get();
+    statusBar->SetDoubleBuffered();
 
-    std::unique_ptr<StatusBarTextItem> packageFilePathLabelStatusBarItemPtr(new StatusBarTextItem(StatusBarTextItemCreateParams().Text("Package File Path:")));
+    std::unique_ptr<StatusBarTextItem> packageFilePathLabelStatusBarItemPtr(new StatusBarTextItem(StatusBarTextItemCreateParams().Text("File Path:")));
     packageFilePathLabelStatusBarItem = packageFilePathLabelStatusBarItemPtr.get();
     packageFilePathLabelStatusBarItem->SetVisible(false);
     statusBar->AddItem(packageFilePathLabelStatusBarItemPtr.release());
@@ -214,12 +251,13 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
     packageFilePathStatusBarItem->SetVisible(false);
     statusBar->AddItem(packageFilePathStatusBarItemPtr.release());
 
-    std::unique_ptr<StatusBarTextItem> packageBuildProgressLabelStatusBarItemPtr(new StatusBarTextItem(StatusBarTextItemCreateParams().Text("Package Build Progress:")));
+    std::unique_ptr<StatusBarTextItem> packageBuildProgressLabelStatusBarItemPtr(new StatusBarTextItem(StatusBarTextItemCreateParams().Text("Build Progress:")));
     packageBuildProgressLabelStatusBarItem = packageBuildProgressLabelStatusBarItemPtr.get();
     packageBuildProgressLabelStatusBarItem->SetVisible(false);
     statusBar->AddItem(packageBuildProgressLabelStatusBarItemPtr.release());
     std::unique_ptr<ProgressBar> progressBarPtr(new ProgressBar(ProgressBarCreateParams().Defaults()));
     buildProgressBar = progressBarPtr.get();
+    buildProgressBar->SetDoubleBuffered();
     buildProgressBar->SetSize(Size(300, 24));
     buildProgressBar->Hide();
     std::unique_ptr<StatusBarControlItem> buildProgressStatusBarItemPtr(new StatusBarControlItem(StatusBarControlItemCreateParams(progressBarPtr.release()).Defaults()));
@@ -238,6 +276,13 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
 
 MainWindow::~MainWindow()
 {
+    if (buildThread)
+    {
+        if (buildThread->joinable())
+        {
+            buildThread->join();
+        }
+    }
     packageContentView->ViewContent(nullptr);
 }
 
@@ -298,14 +343,37 @@ void MainWindow::HidePackageBuildProgressStatusItems()
     packageBuildProgressPerceStatusBarItem->SetVisible(false);
 }
 
-void MainWindow::BeginBuild()
+void MainWindow::StartBuild()
 {
+    if (buildThread)
+    {
+        if (buildThread->joinable())
+        {
+            buildThread->join();
+        }
+    }
+    if (package->IsDirty())
+    {
+        package->Save();
+    }
     ShowPackageBuildProgressStatusItems();
+    buildTask.reset(new BuildTask(this));
+    buildThread.reset(new std::thread(RunBuildTask, buildTask.get()));
+}
+
+void MainWindow::CancelBuildClick()
+{
+    if (buildTask)
+    {
+        buildTask->Cancel();
+    }
 }
 
 void MainWindow::EndBuild()
 {
     HidePackageBuildProgressStatusItems();
+    package->ResetBuilding();
+    SetCommandStatus();
 }
 
 void MainWindow::OnKeyDown(KeyEventArgs& args)
@@ -600,6 +668,12 @@ void MainWindow::ClosePackageClick()
     canceled = false;
 }
 
+void MainWindow::SetBuildProgressPercent(int percent)
+{
+    buildProgressBar->SetProgressPercent(percent);
+    packageBuildProgressPerceStatusBarItem->SetText(std::to_string(percent) + "%");
+}
+
 void MainWindow::SavePackageClick()
 {
     try
@@ -620,7 +694,7 @@ void MainWindow::BuildPackageClick()
 {
     try
     {
-        // todo
+        package->Build();
         SetCommandStatus();
     }
     catch (const std::exception& ex)
@@ -629,11 +703,20 @@ void MainWindow::BuildPackageClick()
     }
 }
 
-void MainWindow::OpenBinFolderClick()
+void MainWindow::OpenBinDirectoryClick()
 {
     try
     {
-        // todo
+        std::string binDirectoryFilePath = package->BinDirectoryPath();
+#pragma warning(disable:4311)
+#pragma warning(disable:4302)
+        if (reinterpret_cast<int>(ShellExecuteA(Handle(), "open", binDirectoryFilePath.c_str(), nullptr, nullptr, SW_SHOWNORMAL)) < 32)
+        {
+            throw std::runtime_error("shell execute failed");
+        }
+#pragma warning(default:4311)
+#pragma warning(default:4302)
+
     }
     catch (const std::exception& ex)
     {
@@ -659,11 +742,64 @@ void MainWindow::ExitClick()
     }
 }
 
-void MainWindow::EditSettingsClick()
+void MainWindow::EditConfigurationClick()
 {
     try
     {
-        // todo
+        std::unique_ptr<sngxml::dom::Document> configDoc = wingstall::config::ConfigurationDocument();
+        std::string boostIncludeDir = MakeNativePath(wingstall::config::BoostIncludeDir(configDoc.get()));
+        std::string boostLibDir = MakeNativePath(wingstall::config::BoostLibDir(configDoc.get()));
+        std::string vcVarsPath = MakeNativePath(wingstall::config::VCVarsFilePath(configDoc.get()));
+        EditConfigurationDialog dialog(boostIncludeDir, boostLibDir, vcVarsPath);
+        if (dialog.ShowDialog(*this) == DialogResult::ok)
+        {
+            dialog.GetData(boostIncludeDir, boostLibDir, vcVarsPath);
+            wingstall::config::SetBoostIncludeDir(configDoc.get(), boostIncludeDir);
+            wingstall::config::SetBoostLibDir(configDoc.get(), boostLibDir);
+            wingstall::config::SetVCVarsFilePath(configDoc.get(), vcVarsPath);
+            wingstall::config::SaveConfiguration(configDoc.get());
+            wingstall::config::MakeBuildPropsFile(boostIncludeDir, boostLibDir);
+            ShowMessageBox(Handle(), "Information", "Configuration saved");
+        }
+    }
+    catch (const std::exception& ex)
+    {
+        ShowErrorMessageBox(Handle(), ex.what());
+    }
+}
+
+void MainWindow::HomepageClick()
+{
+    try
+    {
+        std::string homePage = "http://slaakko.github.io/wingstall/";
+        ShellExecuteA(Handle(), "open", homePage.c_str(), nullptr, nullptr, SW_SHOW);
+    }
+    catch (const std::exception& ex)
+    {
+        ShowErrorMessageBox(Handle(), ex.what());
+    }
+}
+
+void MainWindow::LocalDocumentationClick()
+{
+    try
+    {
+        std::string indexFilePath = GetFullPath(Path::Combine(WingstallRoot(), "doc/index.html"));
+        ShellExecuteA(Handle(), "open", indexFilePath.c_str(), nullptr, nullptr, SW_SHOW);
+    }
+    catch (const std::exception& ex)
+    {
+        ShowErrorMessageBox(Handle(), ex.what());
+    }
+}
+
+void MainWindow::AboutClick()
+{
+    try
+    {
+        AboutDialog dialog;
+        dialog.ShowDialog(*this);
     }
     catch (const std::exception& ex)
     {
@@ -686,11 +822,36 @@ void MainWindow::SetCommandStatus()
         closePackageMenuItem->Enable();
         buildPackageMenuItem->Enable();
         buildToolButton->Enable();
-        if (boost::filesystem::exists(package->BinFolderPath()))
+        if (boost::filesystem::exists(package->BinDirectoryPath()))
         {
-            openBinFolderMenuItem->Enable();
+            openBinDirectoryMenuItem->Enable();
+            openBinDirectoryToolButton->Enable();
         }
         pathBar->Show();
+        if (package->Building())
+        {
+            buildPackageMenuItem->Disable();
+            cancelBuildMenuItem->Enable();
+            cancelBuildToolButton->Enable();
+            buildToolButton->Disable();
+            closePackageMenuItem->Disable();
+            openBinDirectoryMenuItem->Disable();
+            savePackageMenuItem->Disable();
+            saveToolButton->Disable();
+            newPackageMenuItem->Disable();
+            openPackageMenuItem->Disable();
+            exitMenuItem->Disable();
+        }
+        else
+        {
+            buildPackageMenuItem->Enable();
+            buildToolButton->Enable();
+            cancelBuildMenuItem->Disable();
+            cancelBuildToolButton->Disable();
+            newPackageMenuItem->Enable();
+            openPackageMenuItem->Enable();
+            exitMenuItem->Enable();
+        }
     }
     else
     {
@@ -699,10 +860,11 @@ void MainWindow::SetCommandStatus()
         closePackageMenuItem->Disable();
         buildPackageMenuItem->Disable();
         buildToolButton->Disable();
-        openBinFolderMenuItem->Disable();
+        cancelBuildMenuItem->Disable();
+        cancelBuildToolButton->Disable();
+        openBinDirectoryMenuItem->Disable();
         pathBar->Hide();
     }
 }
-
 
 } } // wingstall::package_editor

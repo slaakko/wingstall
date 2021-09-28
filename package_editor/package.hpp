@@ -70,10 +70,12 @@ public:
     void Close() override;
     bool IsDirty() const { return dirty; }
     void SetDirty();
+    bool Building() const { return building; }
+    void ResetBuilding();
     sngxml::dom::Element* ToXml() const;
     std::string PathComponentName() const override { return "Package"; }
     const std::string& FilePath() const { return filePath; }
-    std::string BinFolderPath() const;
+    std::string BinDirectoryPath() const;
     Properties* GetProperties() const { return properties.get(); }
     Components* GetComponents() const { return components.get(); }
     Environment* GetEnvironment() const { return environment.get(); }
@@ -98,6 +100,7 @@ private:
     PackageExplorer* explorer;
     soulng::rex::Context context;
     bool dirty;
+    bool building;
 };
 
 } } // wingstall::package_editor

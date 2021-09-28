@@ -134,7 +134,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories></AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -156,7 +157,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories></AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -168,6 +170,7 @@
     <ClInclude Include="info.hpp" />
     <ClInclude Include="installation_component.hpp" />
     <ClInclude Include="links.hpp" />
+    <ClInclude Include="make_setup.hpp" />
     <ClInclude Include="node.hpp" />
     <ClInclude Include="package.hpp" />
     <ClInclude Include="path_matcher.hpp" />
@@ -185,6 +188,7 @@
     <ClCompile Include="info.cpp" />
     <ClCompile Include="installation_component.cpp" />
     <ClCompile Include="links.cpp" />
+    <ClCompile Include="make_setup.cpp" />
     <ClCompile Include="node.cpp" />
     <ClCompile Include="package.cpp" />
     <ClCompile Include="path_matcher.cpp" />

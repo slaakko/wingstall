@@ -1,4 +1,4 @@
-<package appName="Wingstall" compression="deflate" iconFilePath="$TARGET_ROOT_DIR$/icon/package.ico" id="17e24c2e-5ddf-4b18-b4ee-1d66182ab193" includeUninstaller="true" name="wingstall" publisher="Seppo Laakko" sourceRootDir="../.." targetRootDir="C:/wingstall" version="1.1.0">
+<package appName="Wingstall" compression="deflate" iconFilePath="$TARGET_ROOT_DIR$/icon/package.ico" id="17e24c2e-5ddf-4b18-b4ee-1d66182ab193" includeUninstaller="true" name="wingstall" publisher="Seppo Laakko" sourceRootDir="../.." targetRootDir="C:/wingstall" version="2.0.0">
  <component name="binaries">
   <directory name="bin"/>
  </component>
@@ -60,6 +60,9 @@
   <directory name="wingstall">
    <exclude dir="x64"/>
   </directory>
+  <directory name="wingstall_config">
+   <exclude dir="x64"/>
+  </directory>
   <directory name="wnginst">
    <exclude dir="x64"/>
   </directory>
@@ -99,5 +102,9 @@
   <variable name="WINGSTALL_ROOT" value="$TARGET_ROOT_DIR$"/>
   <pathDirectory value="$TARGET_ROOT_DIR$/bin"/>
  </environment>
- <links/>
+ <links>
+  <linkDirectory path="$START_MENU_PROGRAMS_FOLDER$/Wingstall"/>
+  <link description="Wingstall Package Editor" iconIndex="0" iconPath="$TARGET_ROOT_DIR$/icon/package.ico" linkFilePath="$START_MENU_PROGRAMS_FOLDER$/Wingstall/Wingstall Package Editor.lnk" path="$TARGET_ROOT_DIR$/bin/package_editor.exe"/>
+  <link description="Wingstall Package Editor" iconIndex="0" iconPath="$TARGET_ROOT_DIR$/icon/package.ico" linkFilePath="$DESKTOP_FOLDER$/Wingstall Package Editor.lnk" path="$TARGET_ROOT_DIR$/bin/package_editor.exe"/>
+ </links>
 </package>

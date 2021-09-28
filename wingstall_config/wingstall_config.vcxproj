@@ -155,9 +155,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="api.hpp" />
+    <ClInclude Include="build.props.hpp" />
     <ClInclude Include="config.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="build.props.cpp" />
     <ClCompile Include="config.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

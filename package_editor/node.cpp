@@ -378,6 +378,11 @@ void Node::MoveDown()
 
 void Node::AddMenuItems(ContextMenu* contextMenu, std::vector<std::unique_ptr<ClickAction>>& clickActions, MenuItemsKind menuItemsKind)
 {
+    Package* package = GetPackage();
+    if (package->Building())
+    {
+        return;
+    }
     if ((menuItemsKind & MenuItemsKind::newMenuItems) != MenuItemsKind::none)
     {
         if (CanAdd())

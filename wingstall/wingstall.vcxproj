@@ -153,10 +153,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="make_setup.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="make_setup.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

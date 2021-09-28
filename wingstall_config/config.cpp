@@ -87,4 +87,41 @@ std::unique_ptr<sngxml::dom::Document> ConfigurationDocument()
     return std::unique_ptr<sngxml::dom::Document>();
 }
 
+std::string BoostIncludeDir(sngxml::dom::Document* configDocument)
+{
+    return ToUtf8(configDocument->DocumentElement()->GetAttribute(U"boostIncludeDir"));
+}
+
+std::string BoostLibDir(sngxml::dom::Document* configDocument)
+{
+    return ToUtf8(configDocument->DocumentElement()->GetAttribute(U"boostLibDir"));
+}
+
+std::string VCVarsFilePath(sngxml::dom::Document* configDocument)
+{
+    return ToUtf8(configDocument->DocumentElement()->GetAttribute(U"vcVarsFilePath"));
+}
+
+void SetBoostIncludeDir(sngxml::dom::Document* configDocument, const std::string& boostIncludeDir)
+{
+    configDocument->DocumentElement()->SetAttribute(U"boostIncludeDir", ToUtf32(boostIncludeDir));
+}
+
+void SetBoostLibDir(sngxml::dom::Document* configDocument, const std::string& boostLibDir)
+{
+    configDocument->DocumentElement()->SetAttribute(U"boostLibDir", ToUtf32(boostLibDir));
+}
+
+void SetVCVarsFilePath(sngxml::dom::Document* configDocument, const std::string& vcVarsFilePath)
+{
+    configDocument->DocumentElement()->SetAttribute(U"vcVarsFilePath", ToUtf32(vcVarsFilePath));
+}
+
+void SaveConfiguration(sngxml::dom::Document* configDocument)
+{
+    std::ofstream configFile(ConfigFilePath());
+    CodeFormatter formatter(configFile);
+    configDocument->Write(formatter);
+}
+
 } } // namespace wingstall::config

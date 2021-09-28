@@ -9,12 +9,14 @@
 #include <package_editor/package_explorer.hpp>
 #include <package_editor/package_content_view.hpp>
 #include <package_editor/tool_bar.hpp>
+#include <package_editor/build.hpp>
 #include <wing/ImageList.hpp>
 #include <wing/Menu.hpp>
 #include <wing/Window.hpp>
 #include <wing/PathView.hpp>
 #include <wing/StatusBar.hpp>
 #include <wing/ProgressBar.hpp>
+#include <thread>
 
 namespace wingstall { namespace package_editor {
 
@@ -44,9 +46,13 @@ public:
     void DisableSave();
     void ShowPackageBuildProgressStatusItems();
     void HidePackageBuildProgressStatusItems();
-    void BeginBuild();
+    void StartBuild();
+    void CancelBuildClick();
     void EndBuild();
     void ClosePackageClick();
+    Package* GetPackage() const { return package.get(); }
+    LogView* GetLog() const { return logView; }
+    void SetBuildProgressPercent(int percent);
 protected:
     void OnKeyDown(KeyEventArgs& args) override;
     void MouseUpNotification(MouseEventArgs& args) override;
@@ -56,9 +62,12 @@ private:
     void OpenPackageClick();
     void SavePackageClick();
     void BuildPackageClick();
-    void OpenBinFolderClick();
+    void OpenBinDirectoryClick();
     void ExitClick();
-    void EditSettingsClick();
+    void EditConfigurationClick();
+    void HomepageClick();
+    void LocalDocumentationClick();
+    void AboutClick();
     void SetCommandStatus();
     void PackageExplorerSizeChanged();
     void PackageContentViewSizeChanged();
@@ -69,15 +78,20 @@ private:
     void ParentPathSelectorClick();
     ToolButton* saveToolButton;
     ToolButton* buildToolButton;
-    ToolButton* openBinFolderToolButton;
+    ToolButton* cancelBuildToolButton;
+    ToolButton* openBinDirectoryToolButton;
     MenuItem* newPackageMenuItem;
     MenuItem* openPackageMenuItem;
     MenuItem* savePackageMenuItem;
     MenuItem* buildPackageMenuItem;
+    MenuItem* cancelBuildMenuItem;
     MenuItem* closePackageMenuItem;
     MenuItem* exitMenuItem;
-    MenuItem* editSettingsMenuItem;
-    MenuItem* openBinFolderMenuItem;
+    MenuItem* editConfigurationMenuItem;
+    MenuItem* openBinDirectoryMenuItem;
+    MenuItem* homepageMenuItem;
+    MenuItem* localDocumentationMenuItem;
+    MenuItem* aboutMenuItem;
     StatusBarTextItem* packageFilePathLabelStatusBarItem;
     StatusBarTextItem* packageFilePathStatusBarItem;
     StatusBarTextItem* packageBuildProgressLabelStatusBarItem;
@@ -94,6 +108,8 @@ private:
     bool showingDialog;
     std::vector<std::unique_ptr<ClickAction>> clickActions;
     bool canceled;
+    std::unique_ptr<BuildTask> buildTask;
+    std::unique_ptr<std::thread> buildThread;
 };
 
 } } // wingstall::package_editor

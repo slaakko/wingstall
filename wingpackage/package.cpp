@@ -588,6 +588,7 @@ void Package::ReadIndex(const std::string& filePath)
 
 void Package::WriteIndex(BinaryStreamWriter& writer)
 {
+    CheckInterrupted();
     Node::WriteIndex(writer);
     writer.Write(sourceRootDir);
     writer.Write(targetRootDir);
@@ -672,6 +673,11 @@ void Package::ReadIndex(BinaryStreamReader& reader)
 
 void Package::WriteData(BinaryStreamWriter& writer)
 {
+    Package* package = GetPackage();
+    if (package)
+    {
+        package->CheckInterrupted();
+    }
     for (const auto& component : components)
     {
         component->WriteData(writer);
@@ -768,6 +774,7 @@ void Package::WriteInfoXmlFile(const std::string& xmlFilePath)
 
 void Package::Create(const std::string& filePath, Content content)
 {
+    CheckInterrupted();
     if (content != Content::none)
     {
         Streams streams = GetWriteStreams(filePath);

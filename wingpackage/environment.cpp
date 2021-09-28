@@ -342,6 +342,11 @@ void Environment::AddPathDirectory(PathDirectory* pathDirectory)
 
 void Environment::WriteIndex(BinaryStreamWriter& writer)
 {
+    Package* package = GetPackage();
+    if (package)
+    {
+        package->CheckInterrupted();
+    }
     Node::WriteIndex(writer);
     int32_t numVariables = variables.size();
     writer.Write(numVariables);
