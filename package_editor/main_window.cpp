@@ -936,6 +936,11 @@ void MainWindow::ResetConfigClick()
     try
     {
         ResetConfiguration();
+        Node* node = packageExplorer->SelectedNode();
+        if (node)
+        {
+            node->OpenAndExpand();
+        }
     }
     catch (const std::exception& ex)
     {
