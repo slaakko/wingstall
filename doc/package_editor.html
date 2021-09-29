@@ -9,14 +9,180 @@
 <body>
 	<h1>Wingstall Package Editor</h1>
 	
+	<h2>Table of contents</h2>
+	
+	<div class="toc">
+		1 <a href="#creating">Creating a new package</a><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;1.1 <a href="#properties">Setting package properties</a><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;1.2 <a href="#components">Adding components</a><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;1.3 <a href="#directories_and_files">Adding directories and files</a><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;1.4 <a href="#rules_and_content">Rules and content</a><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;1.5 <a href="#link_directories_and_shortcuts">Link directories and shortcuts</a><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;1.6 <a href="#engine_variables">Engine variables</a><br />
+		2 <a href="#building">Building the package</a><br />
+		3 <a href="#installing">Installing the application</a><br />
+		4 <a href="#uninstalling">Uninstalling the application</a><br />
+		5 <a href="#configuration">Configuration</a><br />
+	</div>
+
 	<p>
 		The main window of the package editor looks like this:
 	</p>
 	
 	<img src="image/package_editor.png"/>
 	
-	<h2>
-		Configuration
+	<h2 id="creating">1 Creating a new package</h2>
+	
+	<p>
+		New package can be created by selecting the File | New Package... menu item, and giving a name for the package.
+	</p>
+	
+	<img src="image/new_package.png"/>
+	
+	<p>
+		By default packages are created under the C:\wingstall\packages directory.
+	</p>
+	
+	<h3 id="properties">1.1 Setting package properties</h3>
+	
+	<p>
+		The first thing to do is to set up the source root directory, 
+		that is the directory that contains the directories and files included in the package:
+	</p>
+	
+	<img src="image/package_properties.png"/>
+	
+	<p>
+		The target root directory is the directory to which the directories and files contained in the package are installed by default.
+		It can be changed by the user at installation time. 
+		The installation time value of the target root directory can be retrieved from the '$TARGET_ROOT_DIRECTORY$' engine variable.
+	</p>
+	
+	<h3 id="components">1.2 Adding components</h3>
+	
+	<p>
+		The directories and files contained in the package are organized under one or more components.
+		We have created one component and given it a name 'main':
+	</p>
+
+	<img src="image/new_component.png"/>
+	
+	<h3 id="directories_and_files">1.3 Adding directories and files</h3>
+	
+	<p>
+		Next the directories and files are added to the component:
+	</p>
+	
+	<img src="image/add_directories_and_files.png"/>
+	
+	<p>
+		We have added the bin directory.
+	</p>
+	
+	<h3 id="rules_and_content">1.4 Rules and content</h3>
+	
+	<p>
+		By default all subdirectories and files contained by the component's directories are included in the package.
+	</p>
+	
+	<p>
+		To exclude a file or directory an 'Exclude' rule has to be added. 
+		A rule can be added by right-clicking Rules and selecting 'Add New Rule', or by right-clicking a path in the Content view
+		and selecting 'Exclude'.
+	</p>
+	
+	<p>
+		The rules are processed top-down for each file and subdirectory and the last matching rule stays in effect.
+	</p>
+	
+	<img src="image/content.png"/>
+
+	<p>
+		We have excluded the 'useless.txt' file.
+	</p>
+	
+	<p>
+		The Content view shows exluded files and directories in gray.
+	</p>
+
+	<h3 id="link_directories_and_shortcuts">1.5 Link directories and shortcuts</h3>
+	
+	<p>
+		To create a folder for the application to the start menu, a new link directory can be added:
+	</p>
+	
+	<img src="image/add_new_link_directory.png"/>
+	
+	<p>
+		To create a desktop shortcut for the application, a new shortcut can be added:
+	</p>
+	
+	<img src="image/shortcut.png"/>
+	
+	<p>
+		'Arguments' are the arguments that the target program takes and the 'Working Directory' 
+		is the working directory that the target program is started to. 
+	</p>
+	
+	<h3 id="engine_variables">1.6 Engine variables</h3>
+	
+	<p>
+		Engine variables view shows current example values of the engine variables. 
+		An engine variable can be used as path component by enclosing its name between two dollar signs:
+		$TARGET_ROOT_DIR$, for example:
+	</p>
+
+	<img src="image/engine_variables.png"/>
+	
+	<p>
+		The values of engine variables are not saved in the package. Their values are obtained at installation time.
+	</p>
+
+	<h2 id="building">
+		2 Building the package
+	</h2>
+	
+	<p>
+		The package can be built by selecting the 'Build | Build Package' menu item.
+	</p>
+	
+	<p>
+		The build command creates a binary package file, and embeds the binary package in a Visual C++ setup program as 
+		a Windows resource.
+		It then compiles the setup program using debug and release configurations.
+		Finally the setup executables are copied to the 'bin' directory under the package directory.
+	</p>
+
+	<p>
+		The setup programs can be renamed to any executable file name. The setup should work the same.
+	</p>
+	
+	<h2 id="installing">
+		3 Installing the application
+	</h2>
+	
+	<p>
+		The installer is started by running the setup.exe.
+	</p>
+	
+	<p>
+		Because the installer writes to the registry under HKEY_LOCAL_MACHINE it requires administrator privileges,
+		so Windows shows the UAC dialog. The installer window looks like this:
+	</p>
+	
+	<img src="image/example_installer.png"/>
+	
+	<h2 id="uninstalling">
+		4 Uninstalling the application
+	</h2>
+	
+	<p>
+		Uninstallation can be started from the Windows Control Panel | Add/Remove Programs section, or by starting the 
+		uninstall.exe from the application installation directory.
+	</p>
+	
+	<h2 id="configuration">
+		5 Configuration
 	</h2>
 	
 	<p>

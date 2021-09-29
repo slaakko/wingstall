@@ -86,7 +86,7 @@ AddDirectoriesAndFilesDialog::AddDirectoriesAndFilesDialog(wingstall::package_ed
     Size panelSize = panel->GetSize();
 
     Point labelLoc(24, 8);
-    std::unique_ptr<Label> sourceRootDirLabelPtr(new Label(LabelCreateParams().Location(labelLoc).Text(GetFullPath(component->GetPackage()->GetProperties()->SourceRootDir()))));
+    std::unique_ptr<Label> sourceRootDirLabelPtr(new Label(LabelCreateParams().SetAnchors(static_cast<Anchors>(Anchors::top | Anchors::left)).Location(labelLoc).Text(GetFullPath(component->GetPackage()->GetProperties()->SourceRootDir()))));
     panel->AddChild(sourceRootDirLabelPtr.release());
 
     int x = panelSize.Width - defaultButtonSize.Width - defaultControlSpacing.Width;
