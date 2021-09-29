@@ -30,10 +30,10 @@ ColumnWidth::ColumnWidth(View* view_, const std::string& name_) : view(view_), n
 
 void ColumnWidth::FromXml(sngxml::dom::Element* element)
 {
-    std::u32string valueAttr = element->GetAttribute(U"value");
-    if (!valueAttr.empty())
+    std::u32string widthAttr = element->GetAttribute(U"width");
+    if (!widthAttr.empty())
     {
-        value = boost::lexical_cast<int>(ToUtf8(valueAttr));
+        value = boost::lexical_cast<int>(ToUtf8(widthAttr));
     }
     std::u32string definedAttr = element->GetAttribute(U"defined");
     if (!definedAttr.empty())
@@ -53,7 +53,7 @@ sngxml::dom::Element* ColumnWidth::ToXml() const
 {
     sngxml::dom::Element* element = new sngxml::dom::Element(U"column");
     element->SetAttribute(U"name", ToUtf32(name)); 
-    element->SetAttribute(U"value", ToUtf32(std::to_string(value)));
+    element->SetAttribute(U"width", ToUtf32(std::to_string(value)));
     element->SetAttribute(U"defined", defined ? U"true" : U"false");
     return element;
 }
