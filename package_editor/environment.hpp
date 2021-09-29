@@ -22,6 +22,7 @@ public:
     TreeViewNode* ToTreeViewNode(TreeView* view);
     Control* CreateView(ImageList* imageList) override;
     std::string ImageName() const override { return "environment.bitmap"; }
+    std::string ViewName() const override { return "environment_view"; }
     void AddEnvironentVariable(EnvironmentVariable* environmentVariable);
     void AddPathDirectory(PathDirectory* pathDirectory);
     int Count() const override;

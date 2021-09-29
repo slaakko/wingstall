@@ -9,6 +9,7 @@
 #include <package_editor/action.hpp>
 #include <package_editor/main_window.hpp>
 #include <package_editor/path_bar.hpp>
+#include <package_editor/configuration.hpp>
 #include <soulng/util/Path.hpp>
 #include <soulng/util/TextUtils.hpp>
 #include <soulng/util/Unicode.hpp>
@@ -87,7 +88,7 @@ MainWindow* Node::GetMainWindow()
     Package* package = GetPackage();
     if (package)
     {
-        PackageContentView* view = package->View();
+        PackageContentView* view = package->ContentView();
         if (view)
         {
             return view->GetMainWindow();
@@ -171,7 +172,7 @@ void Node::ViewContent()
     Package* package = GetPackage();
     if (package)
     {
-        PackageContentView* view = package->View();
+        PackageContentView* view = package->ContentView();
         if (view)
         {
             view->ViewContent(this);
@@ -631,11 +632,27 @@ Control* Node::CreateContentView(ImageList* imageList)
     std::string directoryPath = DirectoryPath();
     std::unique_ptr<ListView> listViewPtr(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
     ListView* listView = listViewPtr.get();
+    listView->SetData(this);
     listView->SetFlag(ControlFlags::scrollSubject);
     listView->SetDoubleBuffered();
     listView->SetImageList(imageList);
-    listView->AddColumn("Name", 400);
     MainWindow* mainWindow = GetMainWindow();
+    if (mainWindow)
+    {
+        listView->ColumnWidthChanged().AddHandler(mainWindow, &MainWindow::ListViewColumnWidthChanged);
+    }
+    int nameColumnWidthValue = 400;
+    View& view = GetConfiguredViewSettings().GetView(ViewName());
+    ColumnWidth& nameColumnWidth = view.GetColumnWidth("Name");
+    if (nameColumnWidth.IsDefined())
+    {
+        nameColumnWidthValue = nameColumnWidth.Get();
+    }
+    else
+    {
+        nameColumnWidth.Set(nameColumnWidthValue);
+    }
+    listView->AddColumn("Name", nameColumnWidthValue);
     if (mainWindow)
     {
         mainWindow->AddListViewEventHandlers(listView);

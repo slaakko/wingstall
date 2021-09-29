@@ -5,6 +5,7 @@
 
 #include <package_editor/add_directories_and_files_dialog.hpp>
 #include <package_editor/main_window.hpp>
+#include <package_editor/configuration.hpp>
 #include <wing/Label.hpp>
 #include <wing/Metrics.hpp>
 #include <wing/Panel.hpp>
@@ -20,6 +21,10 @@ namespace wingstall { namespace package_editor {
 using namespace soulng::util;
 using namespace soulng::unicode;
 
+DirsAndFilesNode::DirsAndFilesNode() : Node(NodeKind::dirsAndFiles, std::string())
+{
+}
+
 Color DefaultAddDirectoriesAndFilesDialogListViewBorderColor()
 {
     return Color(204, 206, 219);
@@ -27,7 +32,7 @@ Color DefaultAddDirectoriesAndFilesDialogListViewBorderColor()
 
 AddDirectoriesAndFilesDialog::AddDirectoriesAndFilesDialog(wingstall::package_editor::Component* component_) : 
     Window(WindowCreateParams().Text("Add Directories and Files").SetSize(Size(ScreenMetrics::Get().MMToHorizontalPixels(160), ScreenMetrics::Get().MMToVerticalPixels(100)))),
-    component(component_)
+    component(component_), node()
 {
     if (component->GetPackage()->GetProperties()->SourceRootDir().empty())
     {
@@ -55,10 +60,23 @@ AddDirectoriesAndFilesDialog::AddDirectoriesAndFilesDialog(wingstall::package_ed
 
     std::unique_ptr<ListView> listViewPtr(new ListView(ListViewCreateParams().AllowMultiselect(true)));
     listView = listViewPtr.get();
+    listView->SetData(&node);
     listView->SetFlag(ControlFlags::scrollSubject);
     listView->SetDoubleBuffered();
     listView->SetImageList(mainWindow->GetImageList());
-    listView->AddColumn("Name", 400);
+    listView->ColumnWidthChanged().AddHandler(mainWindow, &MainWindow::ListViewColumnWidthChanged);
+    int nameColumnWidthValue = 400;
+    View& view = GetConfiguredViewSettings().GetView(node.ViewName());
+    ColumnWidth& nameColumnWidth = view.GetColumnWidth("Name");
+    if (nameColumnWidth.IsDefined())
+    {
+        nameColumnWidthValue = nameColumnWidth.Get();
+    }
+    else
+    {
+        nameColumnWidth.Set(nameColumnWidthValue);
+    }
+    listView->AddColumn("Name", nameColumnWidthValue);
     borderColor = DefaultAddDirectoriesAndFilesDialogListViewBorderColor();
     std::unique_ptr<PaddedControl> paddedListViewPtr(new PaddedControl(PaddedControlCreateParams(listViewPtr.release()).Defaults()));
     std::unique_ptr<ScrollableControl> scrollableListViewPtr(new ScrollableControl(ScrollableControlCreateParams(paddedListViewPtr.release()).Defaults()));

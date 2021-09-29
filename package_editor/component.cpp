@@ -9,6 +9,7 @@
 #include <package_editor/action.hpp>
 #include <package_editor/component_dialog.hpp>
 #include <package_editor/add_directories_and_files_dialog.hpp>
+#include <package_editor/configuration.hpp>
 #include <sngxml/xpath/XPathEvaluate.hpp>
 #include <soulng/util/Path.hpp>
 #include <soulng/util/Unicode.hpp>
@@ -77,14 +78,27 @@ TreeViewNode* Components::ToTreeViewNode(TreeView* view)
 Control* Components::CreateView(ImageList* imageList)
 {
     std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    listView->SetData(this);
     MainWindow* mainWindow = GetMainWindow();
     if (mainWindow)
     {
         mainWindow->AddListViewEventHandlers(listView.get());
+        listView->ColumnWidthChanged().AddHandler(mainWindow, &MainWindow::ListViewColumnWidthChanged);
     }
     listView->SetDoubleBuffered();
     listView->SetImageList(imageList);
-    listView->AddColumn("Name", 200);
+    int nameColumnWidthValue = 200;
+    View& view = GetConfiguredViewSettings().GetView(ViewName());
+    ColumnWidth& nameColumnWidth = view.GetColumnWidth("Name"); 
+    if (nameColumnWidth.IsDefined())
+    {
+        nameColumnWidthValue = nameColumnWidth.Get();
+    }
+    else
+    {
+        nameColumnWidth.Set(nameColumnWidthValue);
+    }
+    listView->AddColumn("Name", nameColumnWidthValue);
     for (const auto& component : components)
     {
         ListViewItem* item = listView->AddItem();
@@ -388,14 +402,27 @@ TreeViewNode* Component::ToTreeViewNode(TreeView* view)
 Control* Component::CreateView(ImageList* imageList)
 {
     std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    listView->SetData(this);
     MainWindow* mainWindow = GetMainWindow();
     if (mainWindow)
     {
         mainWindow->AddListViewEventHandlers(listView.get());
+        listView->ColumnWidthChanged().AddHandler(mainWindow, &MainWindow::ListViewColumnWidthChanged);
     }
     listView->SetDoubleBuffered();
     listView->SetImageList(imageList);
-    listView->AddColumn("Name", 400);
+    int nameColumnWidthValue = 400;
+    View& view = GetConfiguredViewSettings().GetView(ViewName());
+    ColumnWidth& nameColumnWidth = view.GetColumnWidth("Name");
+    if (nameColumnWidth.IsDefined())
+    {
+        nameColumnWidthValue = nameColumnWidth.Get();
+    }
+    else
+    {
+        nameColumnWidth.Set(nameColumnWidthValue);
+    }
+    listView->AddColumn("Name", nameColumnWidthValue);
     for (const auto& directory : directories)
     {
         ListViewItem* item = listView->AddItem();

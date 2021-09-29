@@ -9,6 +9,7 @@
 #include <package_editor/action.hpp>
 #include <package_editor/error.hpp>
 #include <package_editor/main_window.hpp>
+#include <package_editor/configuration.hpp>
 #include <wing/ImageList.hpp>
 #include <sngxml/xpath/XPathEvaluate.hpp>
 #include <soulng/util/Unicode.hpp>
@@ -98,14 +99,27 @@ TreeViewNode* Links::ToTreeViewNode(TreeView* view)
 Control* Links::CreateView(ImageList* imageList)
 {
     std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    listView->SetData(this);
     MainWindow* mainWindow = GetMainWindow();
     if (mainWindow)
     {
         mainWindow->AddListViewEventHandlers(listView.get());
+        listView->ColumnWidthChanged().AddHandler(mainWindow, &MainWindow::ListViewColumnWidthChanged);
     }
     listView->SetDoubleBuffered();
     listView->SetImageList(imageList);
-    listView->AddColumn("Name", 200);
+    int nameColumnWidthValue = 200; 
+    View& view = GetConfiguredViewSettings().GetView(ViewName());
+    ColumnWidth& nameColumnWidth = view.GetColumnWidth("Name");
+    if (nameColumnWidth.IsDefined())
+    {
+        nameColumnWidthValue = nameColumnWidth.Get();
+    }
+    else
+    {
+        nameColumnWidth.Set(nameColumnWidthValue);
+    }
+    listView->AddColumn("Name", nameColumnWidthValue);
     ListViewItem* linkDirectoriesItem = listView->AddItem();
     linkDirectories->SetData(linkDirectoriesItem, imageList);
     ListViewItem* shortcutsItem = listView->AddItem();
@@ -152,14 +166,28 @@ TreeViewNode* LinkDirectories::ToTreeViewNode(TreeView* view)
 Control* LinkDirectories::CreateView(ImageList* imageList)
 {
     std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    listView->SetData(this);
     MainWindow* mainWindow = GetMainWindow();
     if (mainWindow)
     {
         mainWindow->AddListViewEventHandlers(listView.get());
+        listView->ColumnWidthChanged().AddHandler(mainWindow, &MainWindow::ListViewColumnWidthChanged);
     }
     listView->SetDoubleBuffered();
     listView->SetImageList(imageList);
-    listView->AddColumn("Path", 400);
+
+    int pathColumnWidthValue = 400;
+    View& view = GetConfiguredViewSettings().GetView(ViewName());
+    ColumnWidth& pathColumnWidth = view.GetColumnWidth("Path");
+    if (pathColumnWidth.IsDefined())
+    {
+        pathColumnWidthValue = pathColumnWidth.Get();
+    }
+    else
+    {
+        pathColumnWidth.Set(pathColumnWidthValue);
+    }
+    listView->AddColumn("Path", pathColumnWidthValue);
     for (const auto& linkDirectory : linkDirectories)
     {
         ListViewItem* item = listView->AddItem();
@@ -416,15 +444,38 @@ TreeViewNode* Shortcuts::ToTreeViewNode(TreeView* view)
 Control* Shortcuts::CreateView(ImageList* imageList)
 {
     std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    listView->SetData(this);
     MainWindow* mainWindow = GetMainWindow();
     if (mainWindow)
     {
         mainWindow->AddListViewEventHandlers(listView.get());
+        listView->ColumnWidthChanged().AddHandler(mainWindow, &MainWindow::ListViewColumnWidthChanged);
     }
     listView->SetDoubleBuffered();
     listView->SetImageList(imageList);
-    listView->AddColumn("Link File Path", 400);
-    listView->AddColumn("Path", 400);
+    int linkFilePathColumnWidthValue = 400;
+    View& view = GetConfiguredViewSettings().GetView(ViewName());
+    ColumnWidth& linkFilePathColumnWidth = view.GetColumnWidth("Link File Path");
+    if (linkFilePathColumnWidth.IsDefined())
+    {
+        linkFilePathColumnWidthValue = linkFilePathColumnWidth.Get();
+    }
+    else
+    {
+        linkFilePathColumnWidth.Set(linkFilePathColumnWidthValue);
+    }
+    listView->AddColumn("Link File Path", linkFilePathColumnWidthValue);
+    int pathColumnWidthValue = 400;
+    ColumnWidth& pathColumnWidth = view.GetColumnWidth("Path");
+    if (pathColumnWidth.IsDefined())
+    {
+        pathColumnWidthValue = pathColumnWidth.Get();
+    }
+    else
+    {
+        pathColumnWidth.Set(pathColumnWidthValue);
+    }
+    listView->AddColumn("Path", pathColumnWidthValue);
     for (const auto& shortcut : shortcuts)
     {
         ListViewItem* item = listView->AddItem();

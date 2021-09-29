@@ -11,7 +11,9 @@
   </directory>
  </component>
  <component name="configuration">
-  <directory name="config"/>
+  <directory name="config">
+   <exclude file="package_editor.config.xml"/>
+  </directory>
  </component>
  <component name="documentation">
   <directory name="doc"/>

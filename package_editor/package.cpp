@@ -7,6 +7,7 @@
 #include <package_editor/error.hpp>
 #include <package_editor/main_window.hpp>
 #include <package_editor/properties_view.hpp>
+#include <package_editor/configuration.hpp>
 #include <wing/ImageList.hpp>
 #include <wing/ScrollableControl.hpp>
 #include <sngxml/dom/Document.hpp>
@@ -333,7 +334,6 @@ void Package::Save()
 bool Package::CanBuild() const
 {
     return true;
-    // todo
 }
 
 void Package::Build()
@@ -408,14 +408,27 @@ TreeViewNode* Package::ToTreeViewNode(TreeView* view)
 Control* Package::CreateView(ImageList* imageList)
 {
     std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    listView->SetData(this);
     MainWindow* mainWindow = GetMainWindow();
     if (mainWindow)
     {
         mainWindow->AddListViewEventHandlers(listView.get());
+        listView->ColumnWidthChanged().AddHandler(mainWindow, &MainWindow::ListViewColumnWidthChanged);
     }
     listView->SetDoubleBuffered();
     listView->SetImageList(imageList);
-    listView->AddColumn("Name", 200);
+    int nameColumnWidthValue = 200; 
+    View& view = GetConfiguredViewSettings().GetView(ViewName());
+    ColumnWidth& nameColumnWidth = view.GetColumnWidth("Name");
+    if (nameColumnWidth.IsDefined())
+    {
+        nameColumnWidthValue = nameColumnWidth.Get();
+    }
+    else
+    {
+        nameColumnWidth.Set(nameColumnWidthValue);
+    }
+    listView->AddColumn("Name", nameColumnWidthValue);
     ListViewItem* propertiesItem = listView->AddItem();
     properties->SetData(propertiesItem, imageList);
     ListViewItem* componentsItem = listView->AddItem();

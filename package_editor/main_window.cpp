@@ -8,6 +8,7 @@
 #include <package_editor/path_bar.hpp>
 #include <package_editor/about_dialog.hpp>
 #include <package_editor/edit_configuration_dialog.hpp>
+#include <package_editor/configuration.hpp>
 #include <wingstall_config/config.hpp>
 #include <wingstall_config/build.props.hpp>
 #include <wing/BorderedControl.hpp>
@@ -15,7 +16,6 @@
 #include <wing/LogView.hpp>
 #include <wing/PaddedControl.hpp>
 #include <wing/ScrollableControl.hpp>
-#include <wing/SplitContainer.hpp>
 #include <wing/MessageBox.hpp>
 #include <sngxml/dom/Parser.hpp>
 #include <soulng/util/Path.hpp>
@@ -44,7 +44,8 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
     packageContentView(nullptr),
     logView(nullptr),
     showingDialog(false),
-    canceled(false)
+    canceled(false),
+    setMaximizedSplitterDistance(false)
 {
     std::unique_ptr<MenuBar> menuBar(new MenuBar());
 
@@ -88,6 +89,11 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
     editConfigurationMenuItem = editConfigurationMenuItemPtr.get();
     editConfigurationMenuItem->Click().AddHandler(this, &MainWindow::EditConfigurationClick);
     editMenuItem->AddMenuItem(editConfigurationMenuItemPtr.release());
+
+    std::unique_ptr<MenuItem> resetMenuItemPtr(new MenuItem("&Reset UI values to defaults"));
+    resetMenuItem = resetMenuItemPtr.get();
+    resetMenuItem->Click().AddHandler(this, &MainWindow::ResetConfigClick);
+    editMenuItem->AddMenuItem(resetMenuItemPtr.release());
 
     menuBar->AddMenuItem(editMenuItem.release());
 
@@ -176,9 +182,11 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
         NormalSingleBorderColor(DefaultPathBarFrameColor())));
     AddChild(borderedPathBar.release());
 
-    std::unique_ptr<SplitContainer> verticalSplitContainer(new SplitContainer(SplitContainerCreateParams(SplitterOrientation::vertical).SetDock(Dock::fill)));
+    std::unique_ptr<SplitContainer> verticalSplitContainerPtr(new SplitContainer(SplitContainerCreateParams(SplitterOrientation::vertical).SetDock(Dock::fill)));
+    verticalSplitContainer = verticalSplitContainerPtr.get();
 
-    std::unique_ptr<SplitContainer> horizontalSplitContainer(new SplitContainer(SplitContainerCreateParams(SplitterOrientation::horizontal).SetDock(Dock::fill).SplitterDistance(500)));
+    std::unique_ptr<SplitContainer> horizontalSplitContainerPtr(new SplitContainer(SplitContainerCreateParams(SplitterOrientation::horizontal).SetDock(Dock::fill).SplitterDistance(500)));
+    horizontalSplitContainer = horizontalSplitContainerPtr.get();
     std::unique_ptr<PackageExplorer> packageExplorerPtr(new PackageExplorer(PackageExplorerCreateParams().SetDock(Dock::fill)));
     packageExplorer = packageExplorerPtr.get();
     packageExplorer->SetMainWindow(this);
@@ -193,7 +201,7 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
 
     packageExplorer->SetContentView(packageContentView);
     
-    verticalSplitContainer->Pane1Container()->AddChild(horizontalSplitContainer.release());
+    verticalSplitContainer->Pane1Container()->AddChild(horizontalSplitContainerPtr.release());
 
     std::unique_ptr<LogView> logViewPtr(new LogView(TextViewCreateParams().Defaults()));
     logView = logViewPtr.get();
@@ -204,7 +212,7 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
     Application::SetLogView(logView);
     verticalSplitContainer->Pane2Container()->AddChild(scrollableLogView.release());
 
-    AddChild(verticalSplitContainer.release());
+    AddChild(verticalSplitContainerPtr.release());
 
     imageList.AddImage("package.bitmap");
     imageList.AddImage("components.bitmap");
@@ -272,10 +280,18 @@ MainWindow::MainWindow() : Window(WindowCreateParams().Text("Wingstall Package E
     AddChild(statusBarPtr.release());
 
     SetCommandStatus();
+
+    LoadConfigurationSettings();
+
+    SetTimer(configurationSaveTimerId, configurationSavePeriod);
 }
 
 MainWindow::~MainWindow()
 {
+    if (IsConfigurationChanged())
+    {
+        SaveConfiguration();
+    }
     if (buildThread)
     {
         if (buildThread->joinable())
@@ -376,6 +392,18 @@ void MainWindow::EndBuild()
     SetCommandStatus();
 }
 
+void MainWindow::OnTimer(TimerEventArgs& args)
+{
+    if (args.timerId == configurationSaveTimerId)
+    {
+        SetWindowSettings();
+        if (IsConfigurationChanged())
+        {
+            SaveConfiguration();
+        }
+    }
+}
+
 void MainWindow::OnKeyDown(KeyEventArgs& args)
 {
     try
@@ -415,6 +443,39 @@ void MainWindow::MouseUpNotification(MouseEventArgs& args)
     catch (const std::exception& ex)
     {
         ShowErrorMessageBox(Handle(), ex.what());
+    }
+}
+
+void MainWindow::OnWindowStateChanged()
+{
+    Window::OnWindowStateChanged();
+    if (GetWindowState() == WindowState::normal)
+    {
+        if (IsNormalWindowSettingsDefined())
+        {
+            SetLocation(GetConfiguredWindowLocation());
+            SetSize(GetConfiguredWindowSize());
+            horizontalSplitContainer->SetSplitterDistance(GetConfiguredNormalHorizontalSplitterDistance());
+            verticalSplitContainer->SetSplitterDistance(GetConfiguredNormalVerticalSplitterDistance());
+        }
+    }
+    else if (GetWindowState() == WindowState::maximized)
+    {
+        setMaximizedSplitterDistance = true;
+    }
+}
+
+void MainWindow::OnSizeChanged()
+{
+    Window::OnSizeChanged();
+    if (GetWindowState() == WindowState::maximized && setMaximizedSplitterDistance)
+    {
+        setMaximizedSplitterDistance = false;
+        if (IsMaximizedWindowSettingsDefined())
+        {
+            horizontalSplitContainer->SetSplitterDistance(GetConfiguredMaximizedHorizontalSplitterDistance());
+            verticalSplitContainer->SetSplitterDistance(GetConfiguredMaximizedVerticalSplitterDistance());
+        }
     }
 }
 
@@ -534,6 +595,52 @@ void MainWindow::ParentPathSelectorClick()
     }
 }
 
+void MainWindow::LoadConfigurationSettings() 
+{
+    LoadConfiguration();
+    SetWindowState(GetConfiguredWindowState());
+    if (GetWindowState() == WindowState::normal)
+    {
+        if (IsNormalWindowSettingsDefined())
+        {
+            SetLocation(GetConfiguredWindowLocation());
+            SetSize(GetConfiguredWindowSize());
+            horizontalSplitContainer->SetSplitterDistance(GetConfiguredNormalHorizontalSplitterDistance());
+            verticalSplitContainer->SetSplitterDistance(GetConfiguredNormalVerticalSplitterDistance());
+        }
+    }
+    else if (GetWindowState() == WindowState::maximized)
+    {
+        setMaximizedSplitterDistance = true;
+    }
+}
+
+void MainWindow::SetWindowSettings()
+{
+    WindowState windowState = GetWindowState();
+    wingstall::package_editor::SetWindowState(windowState);
+    if (windowState == WindowState::normal)
+    {
+        Point location = Location();
+        SetWindowLocation(location);
+        Size size = GetSize();
+        SetWindowSize(size);
+        int horizontalSplitterDistance = horizontalSplitContainer->SplitterDistance();
+        SetNormalHorizontalSplitterDistance(horizontalSplitterDistance);
+        int verticalSplitterDistance = verticalSplitContainer->SplitterDistance();
+        SetNormalVerticalSplitterDistance(verticalSplitterDistance);
+        SetNormalWindowSettingsDefined();
+    }
+    else if (windowState == WindowState::maximized)
+    {
+        int horizontalSplitterDistance = horizontalSplitContainer->SplitterDistance();
+        SetMaximizedHorizontalSplitterDistance(horizontalSplitterDistance);
+        int verticalSplitterDistance = verticalSplitContainer->SplitterDistance();
+        SetMaximizedVerticalSplitterDistance(verticalSplitterDistance);
+        SetMaximizedWindowSettingsDefined();
+    }
+}
+
 void MainWindow::NewPackageClick()
 {
     try
@@ -558,7 +665,7 @@ void MainWindow::NewPackageClick()
             packageFilePathStatusBarItem->SetText(dialog.GetPackageFilePath());
             ShowPackageFilePathStatusItems();
             package->SetName(dialog.GetPackageName());
-            package->SetView(packageContentView);
+            package->SetContentView(packageContentView);
             package->SetExplorer(packageExplorer);
             packageExplorer->SetPackage(package.get());
             package->Open();
@@ -611,7 +718,7 @@ void MainWindow::OpenPackageClick()
             package.reset(new Package(packageXMLFilePath, packageDoc->DocumentElement()));
             packageFilePathStatusBarItem->SetText(packageXMLFilePath);
             ShowPackageFilePathStatusItems();
-            package->SetView(packageContentView);
+            package->SetContentView(packageContentView);
             package->SetExplorer(packageExplorer);
             packageExplorer->SetPackage(package.get());
             package->Open();
@@ -672,6 +779,23 @@ void MainWindow::SetBuildProgressPercent(int percent)
 {
     buildProgressBar->SetProgressPercent(percent);
     packageBuildProgressPerceStatusBarItem->SetText(std::to_string(percent) + "%");
+}
+
+void MainWindow::ListViewColumnWidthChanged(ListViewColumnEventArgs& args)
+{
+    ListView* listView = args.view;
+    void* data = listView->GetData();
+    if (data)
+    {
+        Node* node = static_cast<Node*>(data);
+        ListViewColumn* column = args.column;
+        if (column)
+        {
+            View& view = GetConfiguredViewSettings().GetView(node->ViewName());
+            ColumnWidth& columnWidth = view.GetColumnWidth(column->Name());
+            columnWidth.Set(column->Width());
+        }
+    }
 }
 
 void MainWindow::SavePackageClick()
@@ -759,7 +883,7 @@ void MainWindow::EditConfigurationClick()
             wingstall::config::SetVCVarsFilePath(configDoc.get(), vcVarsPath);
             wingstall::config::SaveConfiguration(configDoc.get());
             wingstall::config::MakeBuildPropsFile(boostIncludeDir, boostLibDir);
-            ShowMessageBox(Handle(), "Information", "Configuration saved");
+            ShowMessageBox(Handle(), "Information", "Configuration saved to '" + GetFullPath(wingstall::config::WingstallConfigDir()) + "' directory");
         }
     }
     catch (const std::exception& ex)
@@ -800,6 +924,18 @@ void MainWindow::AboutClick()
     {
         AboutDialog dialog;
         dialog.ShowDialog(*this);
+    }
+    catch (const std::exception& ex)
+    {
+        ShowErrorMessageBox(Handle(), ex.what());
+    }
+}
+
+void MainWindow::ResetConfigClick()
+{
+    try
+    {
+        ResetConfiguration();
     }
     catch (const std::exception& ex)
     {

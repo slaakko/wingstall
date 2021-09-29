@@ -17,6 +17,7 @@ class Content : public Node
 public:
     Content();
     std::string ImageName() const override { return "document.collection.bitmap"; }
+    std::string ViewName() const override { return "content_view"; }
     TreeViewNode* ToTreeViewNode(TreeView* view);
     Control* CreateView(ImageList* imageList) override;
     void AddContentDirectory(ContentDirectory* contentDirectory);
@@ -37,6 +38,7 @@ class ContentDirectory : public Node
 public:
     ContentDirectory(const std::string& name_);
     std::string ImageName() const override { return "folder.closed.bitmap"; }
+    std::string ViewName() const override { return "content_directory_view"; }
     std::string DirectoryPath() const override;
     void AddContentDirectory(ContentDirectory* contentDirectory);
     void AddContentFile(ContentFile* contentFile);

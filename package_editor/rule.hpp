@@ -23,6 +23,7 @@ public:
     void AddElements(sngxml::dom::Element* directoryElement);
     void AddRule(Rule* rule) override;
     std::string ImageName() const override { return "rules.bitmap"; }
+    std::string ViewName() const override { return "rules_view"; }
     TreeViewNode* ToTreeViewNode(TreeView* view);
     Control* CreateView(ImageList* imageList) override;
     int Count() const override;
@@ -59,6 +60,7 @@ public:
     Rule();
     Rule(const std::string& namePattern_, RuleKind ruleKind_, PathKind pathKind_);
     Rule(const std::string& packageXMLFilePath, sngxml::dom::Element* element);
+    std::string ViewName() const override { return "rule_view"; }
     sngxml::dom::Element* ToXml() const;
     std::string Text() const;
     TreeViewNode* ToTreeViewNode(TreeView* view);

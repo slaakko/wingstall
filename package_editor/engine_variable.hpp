@@ -19,6 +19,7 @@ public:
     TreeViewNode* ToTreeViewNode(TreeView* view);
     Control* CreateView(ImageList* imageList) override;
     std::string ImageName() const override { return "engine.variables.bitmap"; }
+    std::string ViewName() const override { return "engine_variables_view"; }
 private:
     std::vector<std::unique_ptr<EngineVariable>> engineVariables;
 };

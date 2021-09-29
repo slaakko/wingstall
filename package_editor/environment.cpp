@@ -9,6 +9,7 @@
 #include <package_editor/action.hpp>
 #include <package_editor/environment_variable_dialog.hpp>
 #include <package_editor/path_directory_dialog.hpp>
+#include <package_editor/configuration.hpp>
 #include <wing/ImageList.hpp>
 #include <sngxml/xpath/XPathEvaluate.hpp>
 #include <soulng/util/Unicode.hpp>
@@ -101,15 +102,38 @@ TreeViewNode* Environment::ToTreeViewNode(TreeView* view)
 Control* Environment::CreateView(ImageList* imageList)
 {
     std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    listView->SetData(this);
     MainWindow* mainWindow = GetMainWindow();
     if (mainWindow)
     {
         mainWindow->AddListViewEventHandlers(listView.get());
+        listView->ColumnWidthChanged().AddHandler(mainWindow, &MainWindow::ListViewColumnWidthChanged);
     }
     listView->SetDoubleBuffered();
     listView->SetImageList(imageList);
-    listView->AddColumn("Name", 400);
-    listView->AddColumn("Value", 400);
+    int nameColumnWidthValue = 400;
+    View& view = GetConfiguredViewSettings().GetView(ViewName());
+    ColumnWidth& nameColumnWidth = view.GetColumnWidth("Name");
+    if (nameColumnWidth.IsDefined())
+    {
+        nameColumnWidthValue = nameColumnWidth.Get();
+    }
+    else
+    {
+        nameColumnWidth.Set(nameColumnWidthValue);
+    }
+    listView->AddColumn("Name", nameColumnWidthValue); 
+    int valueColumnWidthValue = 400;
+    ColumnWidth& valueColumnWidth = view.GetColumnWidth("Value");
+    if (valueColumnWidth.IsDefined())
+    {
+        valueColumnWidthValue = valueColumnWidth.Get();
+    }
+    else
+    {
+        valueColumnWidth.Set(valueColumnWidthValue);
+    }
+    listView->AddColumn("Value", valueColumnWidthValue);
     for (const auto& environmentVariable : environmentVariables)
     {
         ListViewItem* item = listView->AddItem();

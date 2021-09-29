@@ -4,6 +4,7 @@
 // =================================
 
 #include <package_editor/main_window.hpp>
+#include <package_editor/configuration.hpp>
 #include <wing/Metrics.hpp>
 #include <soulng/util/Path.hpp>
 #include <soulng/util/Process.hpp>
@@ -20,9 +21,11 @@ struct InitDone
         soulng::util::Init();
         sngxml::xpath::Init();
         wing::Init(instance);
+        wingstall::package_editor::InitConfiguration();
     }
     ~InitDone()
     {
+        wingstall::package_editor::DoneConfiguration();
         wing::Done();
         sngxml::xpath::Done();
         soulng::util::Done();

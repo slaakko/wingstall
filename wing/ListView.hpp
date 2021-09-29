@@ -27,6 +27,8 @@ Padding DefaultListViewImagePadding();
 
 class ListView;
 class ListViewItem;
+class ListViewColumn;
+class ListViewColumnDivider;
 
 struct WING_API ListViewItemEventArgs
 {
@@ -37,11 +39,19 @@ struct WING_API ListViewItemEventArgs
     bool control;
 };
 
+struct WING_API ListViewColumnEventArgs
+{
+    ListViewColumnEventArgs(ListView* view_, ListViewColumn* column_) : view(view_), column(column_) {}
+    ListView* view;
+    ListViewColumn* column;
+};
+
 using ListViewItemClickEvent = EventWithArgs<ListViewItemEventArgs>;
 using ListViewItemDoubleClickEvent = EventWithArgs<ListViewItemEventArgs>;
 using ListViewItemEnterEvent = EventWithArgs<ListViewItemEventArgs>;
 using ListViewItemLeaveEvent = EventWithArgs<ListViewItemEventArgs>;
 using ListViewItemSelectedEvent = EventWithArgs<ListViewItemEventArgs>;
+using ListViewColumnWidthChangedEvent = EventWithArgs<ListViewColumnEventArgs>;
 
 struct WING_API ListViewCreateParams
 {
@@ -74,9 +84,6 @@ struct WING_API ListViewCreateParams
     Padding columnDividerPadding;
     Padding imagePadding;
 };
-
-class ListViewColumn;
-class ListViewColumnDivider;
 
 enum class ListViewFlags : int
 {
@@ -112,7 +119,7 @@ public:
     int ColumnCount() const { return columns.size(); }
     ListViewItem* AddItem();
     const ListViewItem& GetItem(int itemIndex) const;
-    ListViewItem& GetItem(int itemIndex) ;
+    ListViewItem& GetItem(int itemIndex);
     int ItemCount() const { return items.size(); }
     ImageList* GetImageList() const { return imageList; }
     void SetImageList(ImageList* imageList_) { imageList = imageList_; }
@@ -143,6 +150,10 @@ public:
     ListViewItemDoubleClickEvent& ItemDoubleClick() { return itemDoubleClick; }
     ListViewItemEnterEvent& ItemEnter() { return itemEnter; }
     ListViewItemLeaveEvent& ItemLeave() { return itemLeave; }
+    ListViewColumnWidthChangedEvent& ColumnWidthChanged() { return columnWidthChanged;}
+    void FireColumnWidthChanged(ListViewColumn* column);
+    void SetData(void* data_) { data = data_; }
+    void* GetData() const { return data; }
 protected:
     void OnSizeChanged() override;
     void OnPaint(PaintEventArgs& args) override;
@@ -154,6 +165,7 @@ protected:
     void OnMouseMove(MouseEventArgs& args) override;
     void SetCursor() override;
     void Measure(Graphics& graphics);
+    virtual void OnColumnWidthChanged(ListViewColumnEventArgs& args);
 private:
     void MeasureItems(Graphics& graphics, Size& contentSize);
     void DrawColumnHeader(Graphics& graphics, PointF& origin);
@@ -173,6 +185,7 @@ private:
     float charHeight;
     float columnDividerWidth;
     float ellipsisWidth;
+    void* data;
     Padding columnHeaderPadding;
     Padding itemPadding;
     Padding itemColumnPadding;
@@ -189,6 +202,7 @@ private:
     ListViewItemDoubleClickEvent itemDoubleClick;
     ListViewItemEnterEvent itemEnter;
     ListViewItemLeaveEvent itemLeave;
+    ListViewColumnWidthChangedEvent columnWidthChanged;
 };
 
 class WING_API ListViewColumn

@@ -74,6 +74,7 @@ public:
     void ResetBuilding();
     sngxml::dom::Element* ToXml() const;
     std::string PathComponentName() const override { return "Package"; }
+    std::string ViewName() const override { return "package_view"; }
     const std::string& FilePath() const { return filePath; }
     std::string BinDirectoryPath() const;
     Properties* GetProperties() const { return properties.get(); }
@@ -84,8 +85,8 @@ public:
     TreeViewNode* ToTreeViewNode(TreeView* view);
     Control* CreateView(ImageList* imageList)  override;
     Package* GetPackage() const override { return const_cast<Package*>(this); }
-    PackageContentView* View() const { return view; }
-    void SetView(PackageContentView* view_) { view = view_; }
+    PackageContentView* ContentView() const { return view; }
+    void SetContentView(PackageContentView* view_) { view = view_; }
     PackageExplorer* Explorer() const { return explorer; }
     void SetExplorer(PackageExplorer* explorer_) { explorer = explorer_; }
     soulng::rex::Context& GetContext() { return context; }

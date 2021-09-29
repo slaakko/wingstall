@@ -24,7 +24,7 @@ class Rule;
 enum class NodeKind : int
 {
     package, properties, components, component, directory, file, rules, rule, environment, environmentVariable, pathDirectory, links, linkDirectories, linkDirectory, shortcuts, shortcut,
-    engineVariables, engineVariable, content, contentDirectory, contentFile
+    engineVariables, engineVariable, content, contentDirectory, contentFile, dirsAndFiles
 };
 
 enum class MenuItemsKind : int
@@ -60,6 +60,7 @@ public:
     const std::string& Name() const { return name; }
     void SetName(const std::string& name_);
     virtual std::string PathComponentName() const { return Name(); }
+    virtual std::string ViewName() const { return Name(); }
     Node* Parent() const { return parent; }
     void SetParent(Node* parent_) { parent = parent_; }
     MainWindow* GetMainWindow();

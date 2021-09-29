@@ -6,6 +6,7 @@
 #include <package_editor/engine_variable.hpp>
 #include <package_editor/package.hpp>
 #include <package_editor/main_window.hpp>
+#include <package_editor/configuration.hpp>
 #include <wing/ImageList.hpp>
 #include <wing/Shell.hpp>
 #include <boost/uuid/uuid_io.hpp>
@@ -74,6 +75,7 @@ TreeViewNode* EngineVariables::ToTreeViewNode(TreeView* view)
 Control* EngineVariables::CreateView(ImageList* imageList)
 {
     std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    listView->SetData(this);
     MainWindow* mainWindow = GetMainWindow();
     if (mainWindow)
     {
@@ -81,8 +83,29 @@ Control* EngineVariables::CreateView(ImageList* imageList)
     }
     listView->SetDoubleBuffered();
     listView->SetImageList(imageList);
-    listView->AddColumn("Name", 400);
-    listView->AddColumn("Value", 400);
+    int nameColumnWidthValue = 400;
+    View& view = GetConfiguredViewSettings().GetView(ViewName());
+    ColumnWidth& nameColumnWidth = view.GetColumnWidth("Name");
+    if (nameColumnWidth.IsDefined())
+    {
+        nameColumnWidthValue = nameColumnWidth.Get();
+    }
+    else
+    {
+        nameColumnWidth.Set(nameColumnWidthValue);
+    }
+    listView->AddColumn("Name", nameColumnWidthValue);
+    int valueColumnWidthValue = 400;
+    ColumnWidth& valueColumnWidth = view.GetColumnWidth("Value");
+    if (valueColumnWidth.IsDefined())
+    {
+        valueColumnWidthValue = valueColumnWidth.Get();
+    }
+    else
+    {
+        valueColumnWidth.Set(valueColumnWidthValue);
+    }
+    listView->AddColumn("Value", valueColumnWidthValue);
     for (const auto& engineVariable : engineVariables)
     {
         ListViewItem* item = listView->AddItem();

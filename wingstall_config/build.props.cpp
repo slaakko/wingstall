@@ -19,7 +19,7 @@ using namespace soulng::unicode;
 
 void MakeBuildPropsFile(const std::string& boostIncludeDir, const std::string& boostLibDir)
 {
-    std::string configDir = WingstallConfigDir();
+    std::string configDir = GetFullPath(WingstallConfigDir());
     std::string buildPropsFilePath = Path::Combine(configDir, "build.props");
     sngxml::dom::Document buildPropsDoc;
     buildPropsDoc.SetXmlVersion(U"1.0");

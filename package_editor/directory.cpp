@@ -6,6 +6,7 @@
 #include <package_editor/directory.hpp>
 #include <package_editor/error.hpp>
 #include <package_editor/main_window.hpp>
+#include <package_editor/configuration.hpp>
 #include <wing/ImageList.hpp>
 #include <sngxml/xpath/XPathEvaluate.hpp>
 #include <soulng/util/Path.hpp>
@@ -87,14 +88,27 @@ TreeViewNode* Directory::ToTreeViewNode(TreeView* view)
 Control* Directory::CreateView(ImageList* imageList)
 {
     std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    listView->SetData(this);
     MainWindow* mainWindow = GetMainWindow();
     if (mainWindow)
     {
         mainWindow->AddListViewEventHandlers(listView.get());
+        listView->ColumnWidthChanged().AddHandler(mainWindow, &MainWindow::ListViewColumnWidthChanged);
     }
     listView->SetDoubleBuffered();
     listView->SetImageList(imageList);
-    listView->AddColumn("Name", 400);
+    int nameColumnWidthValue = 400;
+    View& view = GetConfiguredViewSettings().GetView(ViewName());
+    ColumnWidth& nameColumnWidth = view.GetColumnWidth("Name");
+    if (nameColumnWidth.IsDefined())
+    {
+        nameColumnWidthValue = nameColumnWidth.Get();
+    }
+    else
+    {
+        nameColumnWidth.Set(nameColumnWidthValue);
+    }
+    listView->AddColumn("Name", nameColumnWidthValue);
     ListViewItem* rulesItem = listView->AddItem();
     rules->SetData(rulesItem, imageList);
     ListViewItem* contentItem = listView->AddItem();

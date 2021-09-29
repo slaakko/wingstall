@@ -10,6 +10,8 @@
 #include <package_editor/package_content_view.hpp>
 #include <package_editor/tool_bar.hpp>
 #include <package_editor/build.hpp>
+#include <package_editor/configuration.hpp>
+#include <wing/SplitContainer.hpp>
 #include <wing/ImageList.hpp>
 #include <wing/Menu.hpp>
 #include <wing/Window.hpp>
@@ -53,9 +55,13 @@ public:
     Package* GetPackage() const { return package.get(); }
     LogView* GetLog() const { return logView; }
     void SetBuildProgressPercent(int percent);
+    void ListViewColumnWidthChanged(ListViewColumnEventArgs& args);
 protected:
+    void OnTimer(TimerEventArgs& args) override;
     void OnKeyDown(KeyEventArgs& args) override;
     void MouseUpNotification(MouseEventArgs& args) override;
+    void OnWindowStateChanged() override;
+    void OnSizeChanged() override;
     void OnWindowClosing(CancelArgs& args) override;
 private:
     void NewPackageClick();
@@ -68,6 +74,7 @@ private:
     void HomepageClick();
     void LocalDocumentationClick();
     void AboutClick();
+    void ResetConfigClick();
     void SetCommandStatus();
     void PackageExplorerSizeChanged();
     void PackageContentViewSizeChanged();
@@ -76,6 +83,10 @@ private:
     void ListViewItemRightClick(ListViewItemEventArgs& args);
     void ListViewItemDoubleClick(ListViewItemEventArgs& args);
     void ParentPathSelectorClick();
+    void LoadConfigurationSettings();
+    void SetWindowSettings();
+    SplitContainer* horizontalSplitContainer;
+    SplitContainer* verticalSplitContainer;
     ToolButton* saveToolButton;
     ToolButton* buildToolButton;
     ToolButton* cancelBuildToolButton;
@@ -92,6 +103,7 @@ private:
     MenuItem* homepageMenuItem;
     MenuItem* localDocumentationMenuItem;
     MenuItem* aboutMenuItem;
+    MenuItem* resetMenuItem;
     StatusBarTextItem* packageFilePathLabelStatusBarItem;
     StatusBarTextItem* packageFilePathStatusBarItem;
     StatusBarTextItem* packageBuildProgressLabelStatusBarItem;
@@ -108,6 +120,7 @@ private:
     bool showingDialog;
     std::vector<std::unique_ptr<ClickAction>> clickActions;
     bool canceled;
+    bool setMaximizedSplitterDistance;
     std::unique_ptr<BuildTask> buildTask;
     std::unique_ptr<std::thread> buildThread;
 };

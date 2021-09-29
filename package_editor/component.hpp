@@ -22,6 +22,7 @@ public:
     TreeViewNode* ToTreeViewNode(TreeView* view);
     Control* CreateView(ImageList* imageList) override;
     std::string ImageName() const override { return "components.bitmap"; }
+    std::string ViewName() const override { return "components_view"; }
     int Count() const override;
     int IndexOf(const Node* child) const override;
     Node* GetNode(int index) const override;
@@ -57,6 +58,7 @@ public:
     Control* CreateView(ImageList* imageList) override;
     void AddDirectory(Directory* directory);
     void AddFile(File* file);
+    std::string ViewName() const override { return "component_view"; }
     std::string ImageName() const override { return "component.bitmap"; }
     int Count() const override;
     int IndexOf(const Node* child) const override;

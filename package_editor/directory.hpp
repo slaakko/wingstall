@@ -16,6 +16,7 @@ public:
     Directory(const std::string& packageXMLFilePath, sngxml::dom::Element* element);
     sngxml::dom::Element* ToXml() const;
     std::string ImageName() const override { return "folder.closed.bitmap"; }
+    std::string ViewName() const override { return "directory_view"; }
     TreeViewNode* ToTreeViewNode(TreeView* view);
     Control* CreateView(ImageList* imageList) override;
     std::string DirectoryPath() const override;

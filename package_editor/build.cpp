@@ -210,12 +210,23 @@ void BuildTask::MakeCompileBatches(
         throw std::runtime_error("could not create directory '" + compileDirectory + "': " + PlatformStringToUtf8(ec.message()));
     }
 
-    std::u32string vcvarsAttribute = wingstall::config::ConfigurationDocument()->DocumentElement()->GetAttribute(U"vcVarsFilePath");
-    if (vcvarsAttribute.empty())
+    std::unique_ptr<sngxml::dom::Document> configDoc = wingstall::config::ConfigurationDocument();
+
+    std::string vcvars64BatFilePath = wingstall::config::VCVarsFilePath(configDoc.get());
+    if (!boost::filesystem::exists(vcvars64BatFilePath))
     {
-        throw std::runtime_error("'vcVarsFilePath' attribute not found from the root element of configuration file '" + wingstall::config::ConfigFilePath() + "'");
+        throw std::runtime_error("Visual C++ vcvars64.bat file '" + vcvars64BatFilePath + "' does not exist. Check the configuration.");
     }
-    std::string vcvars64BatFilePath = GetFullPath(ToUtf8(vcvarsAttribute));
+    std::string boostIncludeDir = wingstall::config::BoostIncludeDir(configDoc.get());
+    if (!boost::filesystem::exists(boostIncludeDir))
+    {
+        throw std::runtime_error("Boost include directory '" + boostIncludeDir + "' does not exist. Check the configuration.");
+    }
+    std::string boostLibDir = wingstall::config::BoostLibDir(configDoc.get());
+    if (!boost::filesystem::exists(boostLibDir))
+    {
+        throw std::runtime_error("Boost library directory '" + boostLibDir + "' does not exist. Check the configuration.");
+    }
 
     compileDebugFilePath = Path::Combine(compileDirectory, "compile_debug.bat");
     std::ofstream compileDebugFile(compileDebugFilePath);
@@ -247,10 +258,6 @@ void BuildTask::Compile(const std::string& compileBatFilePath, const std::string
     Process process(command, Process::Redirections::none);
     process.WaitForExit();
     int exitCode = process.ExitCode();
-    if (exitCode != 0)
-    {
-        throw std::runtime_error("compile command returned exit code " + std::to_string(exitCode));
-    }
     if (boost::filesystem::exists(stdOutFilePath))
     {
         std::string stdoutFileStr = ReadFile(stdOutFilePath);
@@ -266,6 +273,10 @@ void BuildTask::Compile(const std::string& compileBatFilePath, const std::string
         {
             log->WriteLine(stderrFileStr);
         }
+    }
+    if (exitCode != 0)
+    {
+        throw std::runtime_error("compile command returned exit code " + std::to_string(exitCode));
     }
     mainWindow->SetBuildProgressPercent(endPercent);
 }

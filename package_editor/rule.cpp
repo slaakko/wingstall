@@ -8,6 +8,7 @@
 #include <package_editor/main_window.hpp>
 #include <package_editor/action.hpp>
 #include <package_editor/rule_dialog.hpp>
+#include <package_editor/configuration.hpp>
 #include <wing/ImageList.hpp>
 #include <sngxml/xpath/XPathEvaluate.hpp>
 #include <soulng/rex/Match.hpp>
@@ -68,16 +69,50 @@ TreeViewNode* Rules::ToTreeViewNode(TreeView* view)
 Control* Rules::CreateView(ImageList* imageList)
 {
     std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    listView->SetData(this);
     MainWindow* mainWindow = GetMainWindow();
     if (mainWindow)
     {
         mainWindow->AddListViewEventHandlers(listView.get());
+        listView->ColumnWidthChanged().AddHandler(mainWindow, &MainWindow::ListViewColumnWidthChanged);
     }
     listView->SetDoubleBuffered();
     listView->SetImageList(imageList);
-    listView->AddColumn("Kind", 200);
-    listView->AddColumn("Name/Pattern", 200);
-    listView->AddColumn("Cascade", 200);
+
+    int kindColumnWidthValue = 200; 
+    View& view = GetConfiguredViewSettings().GetView(ViewName());
+    ColumnWidth& kindColumnWidth = view.GetColumnWidth("Kind");
+    if (kindColumnWidth.IsDefined())
+    {
+        kindColumnWidthValue = kindColumnWidth.Get();
+    }
+    else
+    {
+        kindColumnWidth.Set(kindColumnWidthValue);
+    }
+    listView->AddColumn("Kind", kindColumnWidthValue);
+    int nameColumnWidthValue = 200;
+    ColumnWidth& nameColumnWidth = view.GetColumnWidth("Name/Pattern");
+    if (nameColumnWidth.IsDefined())
+    {
+        nameColumnWidthValue = nameColumnWidth.Get();
+    }
+    else
+    {
+        nameColumnWidth.Set(nameColumnWidthValue);
+    }
+    listView->AddColumn("Name/Pattern", nameColumnWidthValue);
+    int cascadeColumnWidthValue = 200;
+    ColumnWidth& cascadeColumnWidth = view.GetColumnWidth("Cascade");
+    if (cascadeColumnWidth.IsDefined())
+    {
+        cascadeColumnWidthValue = cascadeColumnWidth.Get();
+    }
+    else
+    {
+        cascadeColumnWidth.Set(cascadeColumnWidthValue);
+    }
+    listView->AddColumn("Cascade", cascadeColumnWidthValue);
     for (const auto& rule : rules)
     {
         ListViewItem* item = listView->AddItem();
@@ -506,17 +541,51 @@ void Rule::SetData(ListViewItem* item, ImageList* imageList)
 Control* Rule::CreateView(ImageList* imageList)
 {
     std::unique_ptr<ListView> listView(new ListView(ListViewCreateParams().Defaults().SetDock(Dock::fill)));
+    listView->SetData(this);
     MainWindow* mainWindow = GetMainWindow();
     if (mainWindow)
     {
         mainWindow->AddListViewEventHandlers(listView.get());
+        listView->ColumnWidthChanged().AddHandler(mainWindow, &MainWindow::ListViewColumnWidthChanged);
     }
     listView->SetDoubleBuffered();
     listView->SetImageList(imageList);
-    listView->AddColumn("Kind", 200);
-    listView->AddColumn("Name/Pattern", 200);
-    listView->AddColumn("Cascade", 200);
-    for (const auto& rule : rules)
+    int kindColumnWidthValue = 200;
+    View& view = GetConfiguredViewSettings().GetView(ViewName());
+    ColumnWidth& kindColumnWidth = view.GetColumnWidth("Kind");
+    if (kindColumnWidth.IsDefined())
+    {
+        kindColumnWidthValue = kindColumnWidth.Get();
+    }
+    else
+    {
+        kindColumnWidth.Set(kindColumnWidthValue);
+    }
+    listView->AddColumn("Kind", kindColumnWidthValue);
+    int nameColumnWidthValue = 200;
+    ColumnWidth& nameColumnWidth = view.GetColumnWidth("Name/Pattern");
+    if (nameColumnWidth.IsDefined())
+    {
+        nameColumnWidthValue = nameColumnWidth.Get();
+    }
+    else
+    {
+        nameColumnWidth.Set(nameColumnWidthValue);
+    }
+    listView->AddColumn("Name/Pattern", nameColumnWidthValue);
+
+    int cascadeColumnWidthValue = 200;
+    ColumnWidth& cascadeColumnWidth = view.GetColumnWidth("Cascade");
+    if (cascadeColumnWidth.IsDefined())
+    {
+        cascadeColumnWidthValue = cascadeColumnWidth.Get();
+    }
+    else
+    {
+        cascadeColumnWidth.Set(cascadeColumnWidthValue);
+    }
+    listView->AddColumn("Cascade", cascadeColumnWidthValue);
+for (const auto& rule : rules)
     {
         ListViewItem* item = listView->AddItem();
         rule->SetData(item, imageList);

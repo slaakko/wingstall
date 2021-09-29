@@ -28,7 +28,7 @@ std::string defaultVCVarsFilePath = R"(C:\Program Files (x86)\Microsoft Visual S
 
 std::string ConfigFilePath()
 {
-    return Path::Combine(WingstallConfigDir(), "configuration.xml");
+    return Path::Combine(GetFullPath(WingstallConfigDir()), "configuration.xml");
 }
 
 std::string DefaultBoostIncludeDir()

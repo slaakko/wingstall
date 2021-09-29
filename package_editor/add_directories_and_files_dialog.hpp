@@ -27,6 +27,13 @@ struct DialogListViewItemData
     int index;
 };
 
+class DirsAndFilesNode : public Node
+{
+public:
+    DirsAndFilesNode();
+    std::string ViewName() const { return "dirs_and_files_view"; }
+};
+
 class AddDirectoriesAndFilesDialog : public Window
 {
 public:
@@ -44,6 +51,7 @@ private:
     ImageList* imageList;
     ListView* listView;
     Color borderColor;
+    DirsAndFilesNode node;
 };
 
 } } // wingstall::package_editor

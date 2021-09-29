@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Wingstall Package Editor</title>
+    <link href="style/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+	<h1>Wingstall Package Editor</h1>
+	
+	<p>
+		The main window of the package editor looks like this:
+	</p>
+	
+	<img src="image/package_editor.png"/>
+	
+	<h2>
+		Configuration
+	</h2>
+	
+	<p>
+		The configuration can be changed by selecting the Edit | Configuration... menu item.
+	</p>
+	
+	<p>
+		In order to successfully compile Wingstall-generated setup projects using Visual C++, the following parameters must be set:
+	</p>
+	
+	<ul>
+		<li>Boost include directory</li>
+		<li>Boost library directory</li>
+		<li>Visual C++ vcvars64.bat path</li>
+	</ul>
+	
+	<p>
+		The default values of these parameters are shown in the following picture:
+	</p>
+	
+	<img src="image/configuration.png"/>
+	
+	<p>
+		The location of the vcvars64.bat can be found as follows:
+	</p>
+	
+	<ul>
+		<li>Select Windows Start menu and click Visual Studio 2019 folder.</li>
+		<li>Right-click the 'x64 Native Tools Command Prompt for VS 2019'</li>
+		<li>Select More | Open file location</li>
+		<li>Right-click the 'x64 Native Tools Command Prompt for VS 2019' in the File Explorer</li>
+		<li>Select Properties</li>
+		<li>The 'Target' text box contains "%comspec% /k" followed by the vcvars64.bat path:</li>
+		<img src="image/x64nativeToolsProperties.png"/>
+		<li>My 'Target' text box contains the following value:</br>
+		%comspec% /k "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"</br>
+		So the path is C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat</li>
+	</ul>
+</body>

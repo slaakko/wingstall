@@ -198,6 +198,7 @@ ListView::ListView(ListViewCreateParams& createParams) :
     mouseEnterItem(nullptr), 
     selectedItem(nullptr),
     mouseDownColumnDivider(nullptr),
+    data(nullptr),
     arrowCursor(LoadStandardCursor(StandardCursorId::arrow)),
     columnSizeCursor(Application::GetResourceManager().GetCursor("column.size.wing.cursor"))
 {
@@ -333,6 +334,12 @@ ListViewColumnDivider* ListView::ColumnDividerAt(const Point& location) const
         }
     }
     return nullptr;
+}
+
+void ListView::FireColumnWidthChanged(ListViewColumn* column)
+{
+    ListViewColumnEventArgs args(this, column);
+    OnColumnWidthChanged(args);
 }
 
 void ListView::OnSizeChanged()
@@ -528,6 +535,11 @@ void ListView::OnMouseMove(MouseEventArgs& args)
     }
 }
 
+void ListView::OnColumnWidthChanged(ListViewColumnEventArgs& args)
+{
+    columnWidthChanged.Fire(args);
+}
+
 void ListView::SetCursor()
 {
     Point cursorPos = ScreenToClient(GetCursorPos());
@@ -613,6 +625,7 @@ void ListViewColumn::SetWidth(int width_)
     if (width != width_)
     {
         width = width_;
+        view->FireColumnWidthChanged(this);
         view->Invalidate();
     }
 }
