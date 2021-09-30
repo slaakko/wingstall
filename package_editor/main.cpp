@@ -36,6 +36,17 @@ using namespace soulng::util;
 
 int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR cmdLine, int cmdShow)
 {
+    std::string wingstallRoot;
+    const char* wingstallRootEnv = getenv("WINGSTALL_ROOT");
+    if (wingstallRootEnv && *wingstallRootEnv)
+    {
+        wingstallRoot = wingstallRootEnv;
+    }
+    if (wingstallRoot.empty())
+    {
+        ShowMessageBox(nullptr, "Package editor error", "please set 'WINGSTALL_ROOT' environment variable to contain /path/to/wingstall directory.");
+        return 1;
+    }
     InitDone initDone(instance);
     try
     {

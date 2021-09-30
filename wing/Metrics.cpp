@@ -27,10 +27,6 @@ std::string GetDefaultMetricsFilePath()
     {
         metricsFilePath = GetFullPath(Path::Combine(Path::Combine(wingstallRoot, "config"), "metrics.xml"));
     }
-    else
-    {
-        throw std::runtime_error("error: 'WINGSTALL_ROOT' environment variable not set, please set it to contain /path/to/wingstall directory");
-    }
     return metricsFilePath;
 }
 
@@ -165,7 +161,11 @@ Metrics ScreenMetrics::metrics;
 
 void ScreenMetrics::Load()
 {
-    metrics.LoadFromFile(GetDefaultMetricsFilePath());
+    std::string metricsFilePath = GetDefaultMetricsFilePath();
+    if (!metricsFilePath.empty())
+    {
+        metrics.LoadFromFile(metricsFilePath);
+    }
 }
 
 void ScreenMetrics::Save(bool setElementValues)

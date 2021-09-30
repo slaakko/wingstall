@@ -20,7 +20,7 @@ std::string WingstallRoot()
 {
     std::string wingstallRoot;
     const char* wingstallRootEnv = getenv("WINGSTALL_ROOT");
-    if (wingstallRootEnv)
+    if (wingstallRootEnv && *wingstallRootEnv)
     {
         wingstallRoot = wingstallRootEnv;
     }
