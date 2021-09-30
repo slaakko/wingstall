@@ -100,7 +100,8 @@ void BuildTask::Run()
         {
             throw wingstall::wingpackage::AbortException();
         }
-        log->WriteLine("Creating binary package " + packageBinFilePath + "...");
+        std::string compression = wingpackage::CompressionStr(mainWindow->GetPackage()->GetProperties()->GetCompression());
+        log->WriteLine("Creating binary package " + packageBinFilePath + ", compression=" + compression + "...");
         package->AddObserver(this);
         package->Create(packageBinFilePath, wingpackage::Content::all);
         package->RemoveObserver(this);

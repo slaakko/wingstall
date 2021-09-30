@@ -673,6 +673,7 @@ void MainWindow::NewPackageClick()
             package->GetProperties()->SetTargetRootDir("C:/" + dialog.GetPackageName());
             package->GetProperties()->SetAppName(dialog.GetPackageName());
             package->GetProperties()->SetVersion("1.0");
+            package->GetProperties()->SetCompression(wingstall::wingpackage::Compression::deflate);
             package->GetProperties()->SetId(boost::uuids::random_generator()());
             package->GetEngineVariables()->Fetch();
             package->SetDirty();

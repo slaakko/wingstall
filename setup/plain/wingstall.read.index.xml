@@ -1,0 +1,13 @@
+<packageIndex appName="" compression="none" iconFilePath="" id="00000000-0000-0000-0000-000000000000" includeUninstaller="false" name="" publisher="" sourceRootDir="" targetRootDir="" version="">
+ <variables>
+  <variable name="TARGET_ROOT_DIR" value=""/>
+  <variable name="PREINSTALL_DIR" value=""/>
+  <variable name="APP_NAME" value=""/>
+  <variable name="APP_VERSION" value=""/>
+  <variable name="PRODUCT_ID" value="00000000-0000-0000-0000-000000000000"/>
+  <variable name="PUBLISHER" value=""/>
+  <variable name="START_MENU_PROGRAMS_FOLDER" value="C:/ProgramData/Microsoft/Windows/Start Menu/Programs"/>
+  <variable name="DESKTOP_FOLDER" value="C:/Users/seppo/OneDrive/Työpöytä"/>
+  <variable name="PROGRAM_FILES_DIR" value="C:/Program Files"/>
+ </variables>
+</packageIndex>

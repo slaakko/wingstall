@@ -7,8 +7,8 @@
    <file hash="" name="make_package_idd.exe" size="136704" time="28.09.2021 15:11:41"/>
    <file hash="" name="make_wingstall_ucd.exe" size="503296" time="28.09.2021 13:56:35"/>
    <file hash="" name="make_wingstall_ucdd.exe" size="2759680" time="28.09.2021 15:12:04"/>
-   <file hash="" name="package_editor.exe" size="10718208" time="29.09.2021 20:30:53"/>
-   <file hash="" name="package_editord.exe" size="18641920" time="29.09.2021 20:30:40"/>
+   <file hash="" name="package_editor.exe" size="10718720" time="30.09.2021 08:49:49"/>
+   <file hash="" name="package_editord.exe" size="18641920" time="30.09.2021 08:49:33"/>
    <file hash="" name="uninstall.exe" size="5414912" time="29.09.2021 13:43:30"/>
    <file hash="" name="uninstalld.exe" size="16775680" time="29.09.2021 12:48:43"/>
    <file hash="" name="wingstall.exe" size="9982464" time="29.09.2021 13:43:28"/>
@@ -65,7 +65,7 @@
    <file hash="" name="build.props" size="864" time="28.09.2021 15:37:18"/>
    <file hash="" name="build.props.new" size="864" time="28.09.2021 15:37:18"/>
    <file hash="" name="build.props.org" size="958" time="28.09.2021 13:53:30"/>
-   <file hash="" name="configuration.xml" size="202" time="29.09.2021 20:14:39"/>
+   <file hash="" name="configuration.xml" size="202" time="30.09.2021 08:42:04"/>
    <file hash="" name="metrics.xml" size="409" time="19.09.2021 16:17:58"/>
    <file hash="" name="product_id.txt" size="38" time="23.09.2021 20:44:17"/>
   </directory>
@@ -110,9 +110,9 @@
     <file hash="" name="style.css" size="976" time="22.08.2021 20:06:08"/>
    </directory>
    <file hash="" name="footnotes.html" size="807" time="23.08.2021 19:48:21"/>
-   <file hash="" name="index.html" size="68264" time="29.09.2021 20:57:28"/>
+   <file hash="" name="index.html" size="68264" time="30.09.2021 08:15:59"/>
    <file hash="" name="LICENSE.txt" size="1076" time="02.08.2021 18:39:43"/>
-   <file hash="" name="package_editor.html" size="7202" time="29.09.2021 20:07:06"/>
+   <file hash="" name="package_editor.html" size="7295" time="30.09.2021 08:52:00"/>
    <file hash="" name="ucd.html" size="803" time="24.08.2021 19:09:23"/>
   </directory>
  </component>
@@ -581,14 +581,14 @@
    <file hash="" name="make_package_id.vcxproj.filters" size="212" time="23.08.2021 06:35:43"/>
    <file hash="" name="make_package_id.vcxproj.user" size="168" time="23.08.2021 06:31:17"/>
   </directory>
-  <directory name="package_editor" time="29.09.2021 20:30:30">
+  <directory name="package_editor" time="30.09.2021 08:49:28">
    <file hash="" name="about_dialog.cpp" size="2176" time="28.09.2021 11:38:02"/>
    <file hash="" name="about_dialog.hpp" size="576" time="28.09.2021 11:37:47"/>
    <file hash="" name="action.cpp" size="10837" time="27.09.2021 12:53:15"/>
    <file hash="" name="action.hpp" size="2890" time="27.09.2021 12:52:34"/>
    <file hash="" name="add_directories_and_files_dialog.cpp" size="9886" time="29.09.2021 20:30:30"/>
    <file hash="" name="add_directories_and_files_dialog.hpp" size="1869" time="29.09.2021 12:55:47"/>
-   <file hash="" name="build.cpp" size="13203" time="28.09.2021 15:16:44"/>
+   <file hash="" name="build.cpp" size="13361" time="30.09.2021 08:46:01"/>
    <file hash="" name="build.hpp" size="1716" time="27.09.2021 21:44:31"/>
    <file hash="" name="component.cpp" size="27023" time="29.09.2021 13:37:59"/>
    <file hash="" name="component.hpp" size="4330" time="29.09.2021 12:56:00"/>
@@ -617,7 +617,7 @@
    <file hash="" name="link_directory_dialog.cpp" size="4215" time="24.09.2021 14:11:43"/>
    <file hash="" name="link_directory_dialog.hpp" size="993" time="23.09.2021 22:18:09"/>
    <file hash="" name="main.cpp" size="1442" time="28.09.2021 19:01:53"/>
-   <file hash="" name="main_window.cpp" size="37179" time="29.09.2021 16:25:48"/>
+   <file hash="" name="main_window.cpp" size="37280" time="30.09.2021 08:49:28"/>
    <file hash="" name="main_window.hpp" size="4729" time="29.09.2021 13:50:20"/>
    <file hash="" name="new_package_dialog.cpp" size="7091" time="26.09.2021 16:22:29"/>
    <file hash="" name="new_package_dialog.hpp" size="866" time="22.09.2021 12:29:48"/>
@@ -1124,36 +1124,36 @@
   <directory name="setup" time="23.08.2021 09:19:09">
    <directory name="bzip2" time="27.09.2021 21:12:29">
     <directory name="compile" time="27.09.2021 21:12:22">
-     <file hash="" name="compile_debug.bat" size="339" time="29.09.2021 20:14:39"/>
-     <file hash="" name="compile_release.bat" size="345" time="29.09.2021 20:14:39"/>
-     <file hash="" name="debug_stderr.txt" size="0" time="29.09.2021 20:14:40"/>
-     <file hash="" name="debug_stdout.txt" size="259" time="29.09.2021 20:14:44"/>
-     <file hash="" name="release_stderr.txt" size="0" time="29.09.2021 20:14:44"/>
-     <file hash="" name="release_stdout.txt" size="446" time="29.09.2021 20:14:52"/>
+     <file hash="" name="compile_debug.bat" size="339" time="30.09.2021 08:22:04"/>
+     <file hash="" name="compile_release.bat" size="345" time="30.09.2021 08:22:04"/>
+     <file hash="" name="debug_stderr.txt" size="0" time="30.09.2021 08:22:05"/>
+     <file hash="" name="debug_stdout.txt" size="259" time="30.09.2021 08:22:09"/>
+     <file hash="" name="release_stderr.txt" size="0" time="30.09.2021 08:22:09"/>
+     <file hash="" name="release_stdout.txt" size="446" time="30.09.2021 08:22:17"/>
     </directory>
     <file hash="" name="wingstall.package.xml" size="3782" time="29.09.2021 16:01:23"/>
     <file hash="" name="wingstall.package.xml.000" size="3415" time="31.08.2021 13:16:12"/>
    </directory>
    <directory name="deflate" time="27.09.2021 21:09:51">
     <directory name="compile" time="27.09.2021 21:09:44">
-     <file hash="" name="compile_debug.bat" size="345" time="29.09.2021 20:12:55"/>
-     <file hash="" name="compile_release.bat" size="351" time="29.09.2021 20:12:55"/>
-     <file hash="" name="debug_stderr.txt" size="0" time="29.09.2021 20:12:56"/>
-     <file hash="" name="debug_stdout.txt" size="261" time="29.09.2021 20:13:00"/>
-     <file hash="" name="release_stderr.txt" size="0" time="29.09.2021 20:13:01"/>
-     <file hash="" name="release_stdout.txt" size="448" time="29.09.2021 20:13:08"/>
+     <file hash="" name="compile_debug.bat" size="345" time="30.09.2021 08:42:04"/>
+     <file hash="" name="compile_release.bat" size="351" time="30.09.2021 08:42:04"/>
+     <file hash="" name="debug_stderr.txt" size="0" time="30.09.2021 08:42:05"/>
+     <file hash="" name="debug_stdout.txt" size="261" time="30.09.2021 08:42:09"/>
+     <file hash="" name="release_stderr.txt" size="0" time="30.09.2021 08:42:09"/>
+     <file hash="" name="release_stdout.txt" size="448" time="30.09.2021 08:42:17"/>
     </directory>
     <file hash="" name="wingstall.package.xml" size="3785" time="29.09.2021 16:01:02"/>
     <file hash="" name="wingstall.package.xml.000" size="3417" time="31.08.2021 13:15:57"/>
    </directory>
    <directory name="plain" time="27.09.2021 21:08:20">
     <directory name="compile" time="27.09.2021 21:08:08">
-     <file hash="" name="compile_debug.bat" size="339" time="29.09.2021 20:11:33"/>
-     <file hash="" name="compile_release.bat" size="345" time="29.09.2021 20:11:33"/>
-     <file hash="" name="debug_stderr.txt" size="0" time="29.09.2021 20:11:34"/>
-     <file hash="" name="debug_stdout.txt" size="737" time="29.09.2021 20:11:50"/>
-     <file hash="" name="release_stderr.txt" size="0" time="29.09.2021 20:11:51"/>
-     <file hash="" name="release_stdout.txt" size="446" time="29.09.2021 20:12:03"/>
+     <file hash="" name="compile_debug.bat" size="339" time="30.09.2021 08:40:45"/>
+     <file hash="" name="compile_release.bat" size="345" time="30.09.2021 08:40:45"/>
+     <file hash="" name="debug_stderr.txt" size="0" time="30.09.2021 08:40:46"/>
+     <file hash="" name="debug_stdout.txt" size="737" time="30.09.2021 08:40:59"/>
+     <file hash="" name="release_stderr.txt" size="0" time="30.09.2021 08:40:59"/>
+     <file hash="" name="release_stdout.txt" size="446" time="30.09.2021 08:41:12"/>
     </directory>
     <file hash="" name="wingstall.package.xml" size="3782" time="29.09.2021 16:00:42"/>
     <file hash="" name="wingstall.package.xml.000" size="3414" time="31.08.2021 13:15:34"/>
