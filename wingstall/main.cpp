@@ -148,8 +148,23 @@ void PackageFileContentPositionObserver::FileContentPositionChanged(Package* pac
     }
 }
 
+bool CheckWingstallRootEnv()
+{
+    try
+    {
+        soulng::unicode::WingstallRoot();
+    }
+    catch (const std::exception& ex)
+    {
+        std::cerr << ex.what() << std::endl;
+        return false;
+    }
+    return true;
+}
+
 int main(int argc, const char** argv)
 {
+    if (!CheckWingstallRootEnv()) return 1;
     InitDone initDone;
     try
     {

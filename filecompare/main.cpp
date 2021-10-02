@@ -8,6 +8,7 @@
 #include <soulng/util/InitDone.hpp>
 #include <soulng/util/Path.hpp>
 #include <soulng/util/TextUtils.hpp>
+#include <soulng/util/Unicode.hpp>
 #include <boost/filesystem.hpp>
 #include <iostream>
 #include <stdexcept>
@@ -117,8 +118,23 @@ void CompareDirectories(const std::string& leftDir, const std::string& rightDir,
     }
 }
 
+bool CheckWingstallRootEnv()
+{
+    try
+    {
+        soulng::unicode::WingstallRoot();
+    }
+    catch (const std::exception& ex)
+    {
+        std::cerr << ex.what() << std::endl;
+        return false;
+    }
+    return true;
+}
+
 int main(int argc, const char** argv)
 {
+    if (!CheckWingstallRootEnv()) return 1;
     InitDone initDone;
     try
     {

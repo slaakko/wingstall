@@ -8,6 +8,7 @@
 #include <wing/Metrics.hpp>
 #include <soulng/util/Path.hpp>
 #include <soulng/util/Process.hpp>
+#include <soulng/util/Unicode.hpp>
 #include <wing/InitDone.hpp>
 #include <sngxml/xpath/InitDone.hpp>
 #include <soulng/util/InitDone.hpp>
@@ -34,19 +35,23 @@ struct InitDone
 
 using namespace soulng::util;
 
+bool CheckWingstallRootEnv()
+{
+    try
+    {
+        soulng::unicode::WingstallRoot();
+    }
+    catch (const std::exception& ex)
+    {
+        ShowErrorMessageBox(nullptr, ex.what());
+        return false;
+    }
+    return true;
+}
+
 int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR cmdLine, int cmdShow)
 {
-    std::string wingstallRoot;
-    const char* wingstallRootEnv = getenv("WINGSTALL_ROOT");
-    if (wingstallRootEnv && *wingstallRootEnv)
-    {
-        wingstallRoot = wingstallRootEnv;
-    }
-    if (wingstallRoot.empty())
-    {
-        ShowMessageBox(nullptr, "Package editor error", "please set 'WINGSTALL_ROOT' environment variable to contain /path/to/wingstall directory.");
-        return 1;
-    }
+    if (!CheckWingstallRootEnv()) return 1;
     InitDone initDone(instance);
     try
     {

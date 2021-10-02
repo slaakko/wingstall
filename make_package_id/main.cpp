@@ -3,24 +3,11 @@
 // Distributed under the MIT license
 // =================================
 
-#include <soulng/util/InitDone.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/uuid/random_generator.hpp>
 #include <boost/lexical_cast.hpp>
 #include <iostream>
 #include <stdexcept>
-
-struct InitDone
-{
-    InitDone()
-    {
-        soulng::util::Init();
-    }
-    ~InitDone()
-    {
-        soulng::util::Done();
-    }
-};
 
 int main()
 {
