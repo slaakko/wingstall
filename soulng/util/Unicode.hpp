@@ -18,6 +18,7 @@
 namespace soulng { namespace unicode {
 
 std::string WingstallRoot();
+std::string WingstallUcdFilePath();
 
 using namespace soulng::util;
 

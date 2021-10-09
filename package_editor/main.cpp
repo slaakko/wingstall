@@ -12,6 +12,7 @@
 #include <wing/InitDone.hpp>
 #include <sngxml/xpath/InitDone.hpp>
 #include <soulng/util/InitDone.hpp>
+#include <boost/filesystem.hpp>
 
 using namespace wing;
 
@@ -49,9 +50,20 @@ bool CheckWingstallRootEnv()
     return true;
 }
 
+bool CheckWingstallUcdeFilePath()
+{
+    if (!boost::filesystem::exists(soulng::unicode::WingstallUcdFilePath()))
+    {
+        ShowErrorMessageBox(nullptr, "Wingstall Unicode database '" + soulng::unicode::WingstallUcdFilePath() + "' does not exist. See documentation how to build it.");
+        return false;
+    }
+    return true;
+}
+
 int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR cmdLine, int cmdShow)
 {
     if (!CheckWingstallRootEnv()) return 1;
+    if (!CheckWingstallUcdeFilePath()) return 1;
     InitDone initDone(instance);
     try
     {
