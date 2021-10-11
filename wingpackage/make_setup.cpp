@@ -214,8 +214,6 @@ void MakeMainFile(const std::string& packageBinFilePath, bool verbose, Logger* l
     sourceFormatter.WriteLine("wing::Init(instance);");
     sourceFormatter.DecIndent();
     sourceFormatter.WriteLine("}");
-    sourceFormatter.DecIndent();
-    sourceFormatter.WriteLine("};");
     sourceFormatter.WriteLine();
     sourceFormatter.WriteLine("int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR cmdLine, int cmdShow)");
     sourceFormatter.WriteLine("{");

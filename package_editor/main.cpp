@@ -26,19 +26,8 @@ void InitApplication(HINSTANCE instance)
 
 using namespace soulng::util;
 
-bool CheckWingstallUcdeFilePath()
-{
-    if (!boost::filesystem::exists(soulng::unicode::WingstallUcdFilePath()))
-    {
-        ShowErrorMessageBox(nullptr, "Wingstall Unicode database '" + soulng::unicode::WingstallUcdFilePath() + "' does not exist. See documentation how to build it.");
-        return false;
-    }
-    return true;
-}
-
 int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR cmdLine, int cmdShow)
 {
-    if (!CheckWingstallUcdeFilePath()) return 1;
     try
     {
         InitApplication(instance);
