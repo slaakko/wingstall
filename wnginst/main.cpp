@@ -53,38 +53,17 @@ using namespace soulng::rex;
 using namespace soulng::util;
 using namespace soulng::unicode;
 
-struct InitDone
+void InitApplication()
 {
-    InitDone()
-    {
-        soulng::util::Init();
-    }
-    ~InitDone()
-    {
-        soulng::util::Done();
-    }
-};
-
-bool CheckWingstallRootEnv()
-{
-    try
-    {
-        soulng::unicode::WingstallRoot();
-    }
-    catch (const std::exception& ex)
-    {
-        std::cerr << ex.what() << std::endl;
-        return false;
-    }
-    return true;
+    soulng::util::Init();
 }
+
 
 int main(int argc, const char** argv)
 {
-    if (!CheckWingstallRootEnv()) return 1;
-    InitDone initDone;
     try
     {
+        InitApplication();
         bool verbose = false;
         bool force = false;
         bool makeDir = false;

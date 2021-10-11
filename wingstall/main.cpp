@@ -22,21 +22,12 @@
 #include <string>
 #include <thread>
 
-struct InitDone
+void InitApplication()
 {
-    InitDone()
-    {
-        soulng::util::Init();
-        sngxml::xpath::Init();
-        wing::Init(nullptr);
-    }
-    ~InitDone()
-    {
-        wing::Done();
-        sngxml::xpath::Done();
-        soulng::util::Done();
-    }
-};
+    soulng::util::Init();
+    sngxml::xpath::Init();
+    wing::Init(nullptr);
+}
 
 using namespace soulng::util;
 using namespace soulng::unicode;
@@ -148,26 +139,11 @@ void PackageFileContentPositionObserver::FileContentPositionChanged(Package* pac
     }
 }
 
-bool CheckWingstallRootEnv()
-{
-    try
-    {
-        soulng::unicode::WingstallRoot();
-    }
-    catch (const std::exception& ex)
-    {
-        std::cerr << ex.what() << std::endl;
-        return false;
-    }
-    return true;
-}
-
 int main(int argc, const char** argv)
 {
-    if (!CheckWingstallRootEnv()) return 1;
-    InitDone initDone;
     try
     {
+        InitApplication();
         Command command = Command::none;
         bool verbose = false;
         std::vector<std::string> packagesToCreate;

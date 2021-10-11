@@ -16,39 +16,15 @@
 
 using namespace wing;
 
-struct InitDone
+void InitApplication(HINSTANCE instance)
 {
-    InitDone(HINSTANCE instance)
-    {
-        soulng::util::Init();
-        sngxml::xpath::Init();
-        wing::Init(instance);
-        wingstall::package_editor::InitConfiguration();
-    }
-    ~InitDone()
-    {
-        wingstall::package_editor::DoneConfiguration();
-        wing::Done();
-        sngxml::xpath::Done();
-        soulng::util::Done();
-    }
-};
+    soulng::util::Init();
+    sngxml::xpath::Init();
+    wing::Init(instance);
+    wingstall::package_editor::InitConfiguration();
+}
 
 using namespace soulng::util;
-
-bool CheckWingstallRootEnv()
-{
-    try
-    {
-        soulng::unicode::WingstallRoot();
-    }
-    catch (const std::exception& ex)
-    {
-        ShowErrorMessageBox(nullptr, ex.what());
-        return false;
-    }
-    return true;
-}
 
 bool CheckWingstallUcdeFilePath()
 {
@@ -62,11 +38,10 @@ bool CheckWingstallUcdeFilePath()
 
 int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR cmdLine, int cmdShow)
 {
-    if (!CheckWingstallRootEnv()) return 1;
     if (!CheckWingstallUcdeFilePath()) return 1;
-    InitDone initDone(instance);
     try
     {
+        InitApplication(instance);
         wingstall::package_editor::MainWindow mainWindow;
         Icon& icon = Application::GetResourceManager().GetIcon("package.icon");
         mainWindow.SetIcon(icon);

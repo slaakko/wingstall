@@ -19,21 +19,12 @@
 
 using namespace wing;
 
-struct InitDone
+void InitApplication(HINSTANCE instance)
 {
-    InitDone(HINSTANCE instance)
-    {
-        soulng::util::Init();
-        sngxml::xpath::Init();
-        wing::Init(instance);
-    }
-    ~InitDone()
-    {
-        wing::Done();
-        sngxml::xpath::Done();
-        soulng::util::Done();
-    }
-};
+    soulng::util::Init();
+    sngxml::xpath::Init();
+    wing::Init(instance);
+}
 
 using namespace soulng::util;
 using namespace wingstall::wingpackage;
@@ -41,9 +32,9 @@ using namespace wingstall::winggui;
 
 int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR cmdLine, int cmdShow)
 {
-    InitDone initDone(instance);
     try
     {
+        InitApplication(instance);
         std::string currentExecutablePath = GetFullPath(GetPathToExecutable());
         std::string uninstallPackageFilePath = Path::Combine(Path::GetDirectoryName(currentExecutablePath), "uninstall.bin");
         std::string commandLine(cmdLine);

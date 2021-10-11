@@ -311,23 +311,16 @@ void UnicodeCharacterDatabaseContentHandler::EndElement(const std::u32string& na
     }
 }
 
-struct InitDone
+void InitApplication()
 {
-    InitDone()
-    {
-        soulng::util::Init();
-    }
-    ~InitDone()
-    {
-        soulng::util::Done();
-    }
-};
+    soulng::util::Init();
+}
 
 int main(int argc, const char** argv)
 {
     try
     {
-        InitDone initDone;
+        InitApplication();
         std::string wingstall_root;
         const char* wingstall_root_env = getenv("WINGSTALL_ROOT");
         if (wingstall_root_env)
