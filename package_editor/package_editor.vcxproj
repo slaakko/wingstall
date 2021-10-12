@@ -178,11 +178,13 @@
     <ClCompile Include="package_content_view.cpp" />
     <ClCompile Include="package_explorer.cpp" />
     <ClCompile Include="path_directory_dialog.cpp" />
+    <ClCompile Include="preinstall_component.cpp" />
     <ClCompile Include="properties_view.cpp" />
     <ClCompile Include="rule.cpp" />
     <ClCompile Include="rule_dialog.cpp" />
     <ClCompile Include="shortcut_dialog.cpp" />
     <ClCompile Include="tool_bar.cpp" />
+    <ClCompile Include="uninstall_component.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="about_dialog.hpp" />
@@ -209,12 +211,14 @@
     <ClInclude Include="package_content_view.hpp" />
     <ClInclude Include="package_explorer.hpp" />
     <ClInclude Include="path_directory_dialog.hpp" />
+    <ClInclude Include="preinstall_component.hpp" />
     <ClInclude Include="properties_view.hpp" />
     <ClInclude Include="rule.hpp" />
     <ClInclude Include="engine_variable.hpp" />
     <ClInclude Include="rule_dialog.hpp" />
     <ClInclude Include="shortcut_dialog.hpp" />
     <ClInclude Include="tool_bar.hpp" />
+    <ClInclude Include="uninstall_component.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

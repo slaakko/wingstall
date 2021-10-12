@@ -237,6 +237,28 @@ Package::Package(const std::string& packageXMLFilePath, sngxml::dom::Element* ro
     {
         properties->SetId(boost::uuids::random_generator()());
     }
+    std::unique_ptr<sngxml::xpath::XPathObject> preinstallObject = sngxml::xpath::Evaluate(U"preinstall", root);
+    if (preinstallObject)
+    {
+        if (preinstallObject->Type() == sngxml::xpath::XPathObjectType::nodeSet)
+        {
+            sngxml::xpath::XPathNodeSet* nodeSet = static_cast<sngxml::xpath::XPathNodeSet*>(preinstallObject.get());
+            int n = nodeSet->Length();
+            if (n == 1)
+            {
+                sngxml::dom::Node* node = (*nodeSet)[0];
+                if (node->GetNodeType() == sngxml::dom::NodeType::elementNode)
+                {
+                    sngxml::dom::Element* element = static_cast<sngxml::dom::Element*>(node);
+                    preinstallComponent.reset(new PreinstallComponent(packageXMLFilePath, element));
+                }
+            }
+            else if (n > 1)
+            {
+                throw PackageXMLException("'package' element should contain at most one 'preinstall' element", packageXMLFilePath, root);
+            }
+        }
+    }
     std::unique_ptr<sngxml::xpath::XPathObject> componentObject = sngxml::xpath::Evaluate(U"component", root);
     if (componentObject)
     {
@@ -303,6 +325,29 @@ Package::Package(const std::string& packageXMLFilePath, sngxml::dom::Element* ro
                 throw PackageXMLException("'package' element should contain at most one 'links' element", packageXMLFilePath, root);
             }
         }
+    }
+    std::unique_ptr<sngxml::xpath::XPathObject> uninstallObject = sngxml::xpath::Evaluate(U"uninstall", root);
+    if (uninstallObject)
+    {
+        if (uninstallObject->Type() == sngxml::xpath::XPathObjectType::nodeSet)
+        {
+            sngxml::xpath::XPathNodeSet* nodeSet = static_cast<sngxml::xpath::XPathNodeSet*>(uninstallObject.get());
+            int n = nodeSet->Length();
+            if (n == 1)
+            {
+                sngxml::dom::Node* node = (*nodeSet)[0];
+                if (node->GetNodeType() == sngxml::dom::NodeType::elementNode)
+                {
+                    sngxml::dom::Element* element = static_cast<sngxml::dom::Element*>(node);
+                    uninstallComponent.reset(new UninstallComponent(packageXMLFilePath, element));
+                }
+            }
+            else if (n > 1)
+            {
+                throw PackageXMLException("'package' element should contain at most one 'uninstall' element", packageXMLFilePath, root);
+            }
+        }
+
     }
     engineVariables.reset(new EngineVariables());
     engineVariables->SetParent(this);
@@ -375,9 +420,17 @@ sngxml::dom::Element* Package::ToXml() const
     sngxml::dom::Element* element = new sngxml::dom::Element(U"package");
     element->SetAttribute(U"name", ToUtf32(Name()));
     properties->SetAttributes(element);
+    if (preinstallComponent)
+    {
+        element->AppendChild(std::unique_ptr<sngxml::dom::Node>(preinstallComponent->ToXml()));
+    }
     components->AddElements(element);
     element->AppendChild(std::unique_ptr<sngxml::dom::Node>(environment->ToXml()));
     element->AppendChild(std::unique_ptr<sngxml::dom::Node>(links->ToXml()));
+    if (uninstallComponent)
+    {
+        element->AppendChild(std::unique_ptr<sngxml::dom::Node>(uninstallComponent->ToXml()));
+    }
     return element;
 }
 

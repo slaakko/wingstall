@@ -5,6 +5,8 @@
 
 #ifndef WINGSTALL_PACKAGE_EDITOR_PACKAGE_INCLUDED
 #define WINGSTALL_PACKAGE_EDITOR_PACKAGE_INCLUDED
+#include <package_editor/preinstall_component.hpp>
+#include <package_editor/uninstall_component.hpp>
 #include <package_editor/component.hpp>
 #include <package_editor/environment.hpp>
 #include <package_editor/links.hpp>
@@ -93,9 +95,11 @@ public:
 private:
     std::string filePath;
     std::unique_ptr<Properties> properties;
+    std::unique_ptr<PreinstallComponent> preinstallComponent;
     std::unique_ptr<Components> components;
     std::unique_ptr<Environment> environment;
     std::unique_ptr<Links> links;
+    std::unique_ptr<UninstallComponent> uninstallComponent;
     std::unique_ptr<EngineVariables> engineVariables;
     PackageContentView* view;
     PackageExplorer* explorer;
