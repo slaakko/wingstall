@@ -15,27 +15,18 @@ using namespace wing;
 using namespace wingstall::winggui;
 using namespace wingstall::wingpackage;
 
-struct InitDone
+void InitApplication(HINSTANCE instance)
 {
-    InitDone(HINSTANCE instance)
-    {
-        soulng::util::Init();
-        sngxml::xpath::Init();
-        wing::Init(instance);
-    }
-    ~InitDone()
-    {
-        wing::Done();
-        sngxml::xpath::Done();
-        soulng::util::Done();
-    }
-};
+    soulng::util::Init();
+    sngxml::xpath::Init();
+    wing::Init(instance);
+}
 
 int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR cmdLine, int cmdShow)
 {
-    InitDone initDone(instance);
     try
     {
+        InitApplication(instance);
         std::string currentExecutableName = Path::GetFileName(GetFullPath(GetPathToExecutable()));
         BinaryResourcePtr unicodeDBResource(currentExecutableName, setup::UnicodeDBResourceName());
         CharacterTable::Instance().SetDeflateData(unicodeDBResource.Data(), unicodeDBResource.Size(), setup::UncompressedUnicodeDBSize());

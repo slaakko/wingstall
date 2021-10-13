@@ -1,55 +1,94 @@
-<packageIndex appName="Wingstall" compression="deflate" iconFilePath="$TARGET_ROOT_DIR$/icon/package.ico" id="17e24c2e-5ddf-4b18-b4ee-1d66182ab193" includeUninstaller="true" name="wingstall" publisher="Seppo Laakko" sourceRootDir="C:/work/wingstall" targetRootDir="C:/wingstall" version="2.0.0">
+<packageIndex appName="Wingstall" compression="deflate" iconFilePath="$TARGET_ROOT_DIR$/icon/package.ico" id="17e24c2e-5ddf-4b18-b4ee-1d66182ab193" includeUninstaller="true" name="wingstall" publisher="Seppo Laakko" sourceRootDir="C:/work/wingstall" targetRootDir="C:/wingstall" version="2.1.0">
  <component name="binaries">
-  <directory name="bin" time="29.09.2021 21:16:23">
-   <file hash="" name="filecompare.exe" size="296960" time="30.09.2021 11:50:14"/>
-   <file hash="" name="filecompared.exe" size="1940480" time="30.09.2021 11:50:05"/>
-   <file hash="" name="make_package_id.exe" size="31744" time="30.09.2021 11:50:13"/>
-   <file hash="" name="make_package_idd.exe" size="136704" time="30.09.2021 11:50:04"/>
-   <file hash="" name="make_wingstall_ucd.exe" size="503808" time="30.09.2021 11:50:15"/>
-   <file hash="" name="make_wingstall_ucdd.exe" size="2759680" time="30.09.2021 11:50:05"/>
-   <file hash="" name="package_editor.exe" size="10719232" time="30.09.2021 11:50:19"/>
-   <file hash="" name="package_editord.exe" size="18641920" time="30.09.2021 11:50:05"/>
-   <file hash="" name="uninstall.exe" size="5414400" time="30.09.2021 11:50:17"/>
-   <file hash="" name="uninstalld.exe" size="16775680" time="30.09.2021 11:50:05"/>
-   <file hash="" name="wingstall.exe" size="9982976" time="30.09.2021 11:50:17"/>
-   <file hash="" name="wingstalld.exe" size="16462848" time="30.09.2021 11:50:05"/>
-   <file hash="" name="wnginst.exe" size="4809216" time="30.09.2021 11:50:17"/>
-   <file hash="" name="wnginstd.exe" size="7722496" time="30.09.2021 11:50:05"/>
+  <directory name="bin" time="13.10.2021 15:02:45">
+   <file hash="" name="filecompare.exe" size="295936" time="11.10.2021 18:10:27"/>
+   <file hash="" name="filecompare.pdb" size="5591040" time="11.10.2021 18:10:27"/>
+   <file hash="" name="filecompared.exe" size="1940480" time="11.10.2021 18:10:16"/>
+   <file hash="" name="filecompared.pdb" size="21336064" time="11.10.2021 18:10:16"/>
+   <file hash="" name="libbz2.pdb" size="110592" time="26.09.2021 11:33:57"/>
+   <file hash="" name="libbz2d.pdb" size="110592" time="28.09.2021 13:47:56"/>
+   <file hash="" name="make_package_id.exe" size="31744" time="02.10.2021 13:15:57"/>
+   <file hash="" name="make_package_id.pdb" size="1019904" time="02.10.2021 13:15:57"/>
+   <file hash="" name="make_package_idd.exe" size="136704" time="02.10.2021 14:08:04"/>
+   <file hash="" name="make_package_idd.pdb" size="2002944" time="02.10.2021 14:08:04"/>
+   <file hash="" name="make_wingstall_ucd.exe" size="502784" time="11.10.2021 18:10:29"/>
+   <file hash="" name="make_wingstall_ucd.pdb" size="7401472" time="11.10.2021 18:10:29"/>
+   <file hash="" name="make_wingstall_ucdd.exe" size="2759680" time="11.10.2021 18:10:16"/>
+   <file hash="" name="make_wingstall_ucdd.pdb" size="29306880" time="11.10.2021 18:10:16"/>
+   <file hash="" name="package_editor.exe" size="10723840" time="11.10.2021 19:37:35"/>
+   <file hash="" name="package_editor.pdb" size="27865088" time="11.10.2021 19:37:35"/>
+   <file hash="" name="package_editord.exe" size="18660352" time="11.10.2021 19:36:51"/>
+   <file hash="" name="package_editord.pdb" size="128069632" time="11.10.2021 19:36:51"/>
+   <file hash="" name="soulng_dom.pdb" size="2084864" time="06.10.2021 14:17:50"/>
+   <file hash="" name="soulng_domd.pdb" size="2125824" time="06.10.2021 14:16:02"/>
+   <file hash="" name="soulng_lexer.pdb" size="1970176" time="06.10.2021 14:17:42"/>
+   <file hash="" name="soulng_lexerd.pdb" size="1994752" time="06.10.2021 14:15:55"/>
+   <file hash="" name="soulng_parser.pdb" size="503808" time="26.09.2021 11:34:30"/>
+   <file hash="" name="soulng_parserd.pdb" size="520192" time="28.09.2021 15:11:43"/>
+   <file hash="" name="soulng_rex.pdb" size="2035712" time="06.10.2021 14:17:45"/>
+   <file hash="" name="soulng_rexd.pdb" size="2068480" time="06.10.2021 14:15:57"/>
+   <file hash="" name="soulng_util.pdb" size="10072064" time="06.10.2021 14:17:40"/>
+   <file hash="" name="soulng_utild.pdb" size="10252288" time="06.10.2021 14:15:53"/>
+   <file hash="" name="soulng_xml.pdb" size="2150400" time="06.10.2021 14:17:47"/>
+   <file hash="" name="soulng_xmld.pdb" size="2183168" time="06.10.2021 14:15:59"/>
+   <file hash="" name="soulng_xpath.pdb" size="2691072" time="06.10.2021 14:17:54"/>
+   <file hash="" name="soulng_xpathd.pdb" size="2732032" time="06.10.2021 14:16:06"/>
+   <file hash="" name="uninstall.exe" size="5412864" time="11.10.2021 18:38:13"/>
+   <file hash="" name="uninstall.pdb" size="20631552" time="11.10.2021 18:38:13"/>
+   <file hash="" name="uninstalld.exe" size="16776192" time="11.10.2021 18:38:20"/>
+   <file hash="" name="uninstalld.pdb" size="64294912" time="11.10.2021 18:38:20"/>
+   <file hash="" name="wing.pdb" size="5591040" time="06.10.2021 14:18:23"/>
+   <file hash="" name="wingd.pdb" size="5730304" time="06.10.2021 14:16:37"/>
+   <file hash="" name="winggui.pdb" size="3436544" time="06.10.2021 14:18:41"/>
+   <file hash="" name="wingguid.pdb" size="3461120" time="06.10.2021 14:16:56"/>
+   <file hash="" name="wingpackage.pdb" size="3600384" time="11.10.2021 18:38:07"/>
+   <file hash="" name="wingpackaged.pdb" size="3657728" time="11.10.2021 18:38:20"/>
+   <file hash="" name="wingstall.exe" size="9979392" time="11.10.2021 18:38:10"/>
+   <file hash="" name="wingstall.pdb" size="20754432" time="11.10.2021 18:38:10"/>
+   <file hash="" name="wingstalld.exe" size="16462848" time="11.10.2021 18:38:20"/>
+   <file hash="" name="wingstalld.pdb" size="63164416" time="11.10.2021 18:38:20"/>
+   <file hash="" name="wingstall_config.pdb" size="2101248" time="06.10.2021 14:17:56"/>
+   <file hash="" name="wingstall_configd.pdb" size="2134016" time="06.10.2021 14:16:09"/>
+   <file hash="" name="wnginst.exe" size="4807680" time="11.10.2021 18:10:28"/>
+   <file hash="" name="wnginst.pdb" size="6344704" time="11.10.2021 18:10:28"/>
+   <file hash="" name="wnginstd.exe" size="7723008" time="11.10.2021 18:10:16"/>
+   <file hash="" name="wnginstd.pdb" size="21811200" time="11.10.2021 18:10:16"/>
+   <file hash="" name="zlibstat.pdb" size="143360" time="26.09.2021 11:33:58"/>
   </directory>
  </component>
  <component name="libraries">
   <directory name="lib" time="21.09.2021 18:44:24">
    <file hash="" name="libbz2.lib" size="323812" time="26.09.2021 11:33:57"/>
    <file hash="" name="libbz2d.lib" size="271536" time="28.09.2021 13:47:56"/>
-   <file hash="" name="soulng_dom.lib" size="8873124" time="26.09.2021 11:34:40"/>
-   <file hash="" name="soulng_domd.lib" size="5200570" time="28.09.2021 15:11:54"/>
-   <file hash="" name="soulng_lexer.lib" size="7236820" time="26.09.2021 11:34:29"/>
-   <file hash="" name="soulng_lexerd.lib" size="3359842" time="28.09.2021 15:11:43"/>
+   <file hash="" name="soulng_dom.lib" size="8873124" time="06.10.2021 14:17:50"/>
+   <file hash="" name="soulng_domd.lib" size="5200570" time="06.10.2021 14:16:02"/>
+   <file hash="" name="soulng_lexer.lib" size="7236820" time="06.10.2021 14:17:44"/>
+   <file hash="" name="soulng_lexerd.lib" size="3359842" time="06.10.2021 14:15:56"/>
    <file hash="" name="soulng_parser.lib" size="1046206" time="26.09.2021 11:34:30"/>
    <file hash="" name="soulng_parserd.lib" size="44620" time="28.09.2021 15:11:43"/>
-   <file hash="" name="soulng_rex.lib" size="10875198" time="26.09.2021 11:34:33"/>
-   <file hash="" name="soulng_rexd.lib" size="8077248" time="28.09.2021 15:11:47"/>
-   <file hash="" name="soulng_util.lib" size="63117204" time="30.09.2021 11:50:13"/>
-   <file hash="" name="soulng_utild.lib" size="49061402" time="30.09.2021 11:50:04"/>
-   <file hash="" name="soulng_xml.lib" size="7005230" time="26.09.2021 11:34:36"/>
-   <file hash="" name="soulng_xmld.lib" size="5040450" time="28.09.2021 15:11:50"/>
-   <file hash="" name="soulng_xpath.lib" size="18889610" time="26.09.2021 11:34:46"/>
-   <file hash="" name="soulng_xpathd.lib" size="12115786" time="28.09.2021 15:12:01"/>
-   <file hash="" name="wing.lib" size="86402542" time="30.09.2021 10:22:58"/>
-   <file hash="" name="wingd.lib" size="38722322" time="30.09.2021 10:22:34"/>
-   <file hash="" name="winggui.lib" size="12094614" time="27.09.2021 18:33:57"/>
-   <file hash="" name="wingguid.lib" size="4603172" time="27.09.2021 11:50:55"/>
-   <file hash="" name="wingpackage.lib" size="39555194" time="28.09.2021 13:56:38"/>
-   <file hash="" name="wingpackaged.lib" size="20373882" time="28.09.2021 13:20:50"/>
-   <file hash="" name="wingstall_config.lib" size="4768548" time="28.09.2021 14:35:38"/>
-   <file hash="" name="wingstall_configd.lib" size="1965738" time="28.09.2021 15:12:04"/>
+   <file hash="" name="soulng_rex.lib" size="10875198" time="06.10.2021 14:17:45"/>
+   <file hash="" name="soulng_rexd.lib" size="8077248" time="06.10.2021 14:15:57"/>
+   <file hash="" name="soulng_util.lib" size="63117216" time="06.10.2021 14:17:40"/>
+   <file hash="" name="soulng_utild.lib" size="49061414" time="06.10.2021 14:15:54"/>
+   <file hash="" name="soulng_xml.lib" size="7005230" time="06.10.2021 14:17:47"/>
+   <file hash="" name="soulng_xmld.lib" size="5040446" time="06.10.2021 14:16:00"/>
+   <file hash="" name="soulng_xpath.lib" size="18889610" time="06.10.2021 14:17:54"/>
+   <file hash="" name="soulng_xpathd.lib" size="12115786" time="06.10.2021 14:16:07"/>
+   <file hash="" name="wing.lib" size="86402542" time="06.10.2021 14:18:24"/>
+   <file hash="" name="wingd.lib" size="38722314" time="06.10.2021 14:16:38"/>
+   <file hash="" name="winggui.lib" size="12094614" time="06.10.2021 14:18:41"/>
+   <file hash="" name="wingguid.lib" size="4603172" time="06.10.2021 14:16:56"/>
+   <file hash="" name="wingpackage.lib" size="39552114" time="11.10.2021 18:38:07"/>
+   <file hash="" name="wingpackaged.lib" size="20365314" time="11.10.2021 18:38:20"/>
+   <file hash="" name="wingstall_config.lib" size="4768548" time="06.10.2021 14:17:56"/>
+   <file hash="" name="wingstall_configd.lib" size="1965742" time="06.10.2021 14:16:09"/>
    <file hash="" name="zlibstat.lib" size="751308" time="26.09.2021 11:33:59"/>
    <file hash="" name="zlibstatd.lib" size="1028598" time="28.09.2021 13:47:58"/>
   </directory>
  </component>
  <component name="unicode">
-  <directory name="unicode" time="25.08.2021 15:04:16">
-   <file hash="" name="MakeUcdBin.cpp" size="13842" time="25.08.2021 15:04:16"/>
+  <directory name="unicode" time="11.10.2021 18:06:30">
+   <file hash="" name="MakeUcdBin.cpp" size="13752" time="11.10.2021 18:06:30"/>
    <file hash="" name="readme.md" size="755" time="24.08.2021 19:08:53"/>
    <file hash="" name="ucd.all.flat.xml" size="182226238" time="21.04.2019 14:54:08"/>
    <file hash="" name="ucd.all.flat.zip" size="7839841" time="02.08.2021 18:40:03"/>
@@ -65,7 +104,7 @@
    <file hash="" name="build.props" size="864" time="28.09.2021 15:37:18"/>
    <file hash="" name="build.props.new" size="864" time="28.09.2021 15:37:18"/>
    <file hash="" name="build.props.org" size="958" time="28.09.2021 13:53:30"/>
-   <file hash="" name="configuration.xml" size="202" time="30.09.2021 12:46:20"/>
+   <file hash="" name="configuration.xml" size="202" time="13.10.2021 15:32:03"/>
    <file hash="" name="metrics.xml" size="409" time="19.09.2021 16:17:58"/>
    <file hash="" name="product_id.txt" size="38" time="23.09.2021 20:44:17"/>
   </directory>
@@ -95,7 +134,7 @@
     <file hash="" name="uninstaller_abort_continue_dialog.png" size="3917" time="22.08.2021 19:23:04"/>
     <file hash="" name="x64nativeToolsProperties.png" size="16073" time="28.09.2021 18:05:39"/>
    </directory>
-   <directory name="rel" time="26.09.2021 12:26:26">
+   <directory name="rel" time="12.10.2021 12:32:41">
     <directory name="1.0.0" time="23.08.2021 20:53:27">
      <file hash="" name="release.notes.html" size="193" time="23.08.2021 20:53:27"/>
     </directory>
@@ -103,14 +142,17 @@
      <file hash="" name="release.notes.html" size="819" time="27.08.2021 13:23:45"/>
     </directory>
     <directory name="2.0.0" time="26.09.2021 12:26:26">
-     <file hash="" name="release.notes.html" size="374" time="26.09.2021 12:27:25"/>
+     <file hash="" name="release.notes.html" size="374" time="30.09.2021 13:05:56"/>
+    </directory>
+    <directory name="2.1.0" time="12.10.2021 12:32:41">
+     <file hash="" name="release.notes.html" size="670" time="12.10.2021 12:34:07"/>
     </directory>
    </directory>
    <directory name="style" time="19.08.2021 23:19:51">
     <file hash="" name="style.css" size="976" time="22.08.2021 20:06:08"/>
    </directory>
    <file hash="" name="footnotes.html" size="807" time="23.08.2021 19:48:21"/>
-   <file hash="" name="index.html" size="68264" time="30.09.2021 08:15:59"/>
+   <file hash="" name="index.html" size="68650" time="12.10.2021 19:50:04"/>
    <file hash="" name="LICENSE.txt" size="1076" time="02.08.2021 18:39:43"/>
    <file hash="" name="package_editor.html" size="7295" time="30.09.2021 08:52:00"/>
    <file hash="" name="ucd.html" size="803" time="24.08.2021 19:09:23"/>
@@ -569,20 +611,20 @@
    </directory>
    <file hash="" name="example.sln" size="2349" time="27.08.2021 00:29:17"/>
   </directory>
-  <directory name="filecompare" time="23.08.2021 06:35:39">
+  <directory name="filecompare" time="11.10.2021 18:04:56">
    <file hash="" name="filecompare.vcxproj" size="8053" time="21.08.2021 12:40:21"/>
    <file hash="" name="filecompare.vcxproj.filters" size="212" time="05.08.2021 18:29:39"/>
    <file hash="" name="filecompare.vcxproj.user" size="403" time="05.08.2021 20:35:04"/>
-   <file hash="" name="main.cpp" size="6584" time="23.08.2021 06:35:39"/>
+   <file hash="" name="main.cpp" size="6536" time="11.10.2021 18:04:56"/>
   </directory>
-  <directory name="make_package_id" time="23.08.2021 06:40:06">
-   <file hash="" name="main.cpp" size="777" time="23.08.2021 06:38:18"/>
+  <directory name="make_package_id" time="02.10.2021 13:14:01">
+   <file hash="" name="main.cpp" size="591" time="02.10.2021 13:14:01"/>
    <file hash="" name="make_package_id.vcxproj" size="7927" time="23.08.2021 06:40:10"/>
    <file hash="" name="make_package_id.vcxproj.filters" size="212" time="23.08.2021 06:35:43"/>
    <file hash="" name="make_package_id.vcxproj.user" size="168" time="23.08.2021 06:31:17"/>
   </directory>
-  <directory name="package_editor" time="30.09.2021 10:43:38">
-   <file hash="" name="about_dialog.cpp" size="2176" time="28.09.2021 11:38:02"/>
+  <directory name="package_editor" time="11.10.2021 19:36:17">
+   <file hash="" name="about_dialog.cpp" size="2176" time="06.10.2021 14:21:36"/>
    <file hash="" name="about_dialog.hpp" size="576" time="28.09.2021 11:37:47"/>
    <file hash="" name="action.cpp" size="10837" time="27.09.2021 12:53:15"/>
    <file hash="" name="action.hpp" size="2890" time="27.09.2021 12:52:34"/>
@@ -616,19 +658,19 @@
    <file hash="" name="links.hpp" size="5789" time="29.09.2021 12:59:12"/>
    <file hash="" name="link_directory_dialog.cpp" size="4215" time="24.09.2021 14:11:43"/>
    <file hash="" name="link_directory_dialog.hpp" size="993" time="23.09.2021 22:18:09"/>
-   <file hash="" name="main.cpp" size="1857" time="30.09.2021 10:43:38"/>
+   <file hash="" name="main.cpp" size="1299" time="11.10.2021 18:31:53"/>
    <file hash="" name="main_window.cpp" size="37280" time="30.09.2021 08:49:28"/>
    <file hash="" name="main_window.hpp" size="4729" time="29.09.2021 13:50:20"/>
    <file hash="" name="new_package_dialog.cpp" size="7091" time="26.09.2021 16:22:29"/>
    <file hash="" name="new_package_dialog.hpp" size="866" time="22.09.2021 12:29:48"/>
    <file hash="" name="node.cpp" size="20537" time="29.09.2021 13:40:30"/>
    <file hash="" name="node.hpp" size="5404" time="29.09.2021 12:52:25"/>
-   <file hash="" name="package.cpp" size="15188" time="29.09.2021 13:39:54"/>
-   <file hash="" name="package.hpp" size="4599" time="29.09.2021 13:24:14"/>
+   <file hash="" name="package.cpp" size="17550" time="11.10.2021 19:36:17"/>
+   <file hash="" name="package.hpp" size="4826" time="11.10.2021 19:35:39"/>
    <file hash="" name="package_content_view.cpp" size="5798" time="25.09.2021 10:33:37"/>
    <file hash="" name="package_content_view.hpp" size="2426" time="24.09.2021 21:38:39"/>
-   <file hash="" name="package_editor.vcxproj" size="11038" time="30.09.2021 10:44:45"/>
-   <file hash="" name="package_editor.vcxproj.filters" size="3121" time="28.09.2021 18:37:58"/>
+   <file hash="" name="package_editor.vcxproj" size="11252" time="11.10.2021 19:34:42"/>
+   <file hash="" name="package_editor.vcxproj.filters" size="3335" time="11.10.2021 19:34:42"/>
    <file hash="" name="package_editor.vcxproj.user" size="168" time="27.08.2021 19:27:22"/>
    <file hash="" name="package_explorer.cpp" size="8981" time="25.09.2021 20:06:14"/>
    <file hash="" name="package_explorer.hpp" size="2684" time="18.09.2021 21:04:11"/>
@@ -636,6 +678,8 @@
    <file hash="" name="path_bar.hpp" size="7387" time="26.09.2021 19:05:44"/>
    <file hash="" name="path_directory_dialog.cpp" size="4216" time="23.09.2021 22:17:27"/>
    <file hash="" name="path_directory_dialog.hpp" size="999" time="23.09.2021 20:36:54"/>
+   <file hash="" name="preinstall_component.cpp" size="3771" time="11.10.2021 19:21:44"/>
+   <file hash="" name="preinstall_component.hpp" size="755" time="11.10.2021 19:28:23"/>
    <file hash="" name="properties_view.cpp" size="25524" time="28.09.2021 12:11:07"/>
    <file hash="" name="properties_view.hpp" size="1752" time="25.09.2021 23:22:10"/>
    <file hash="" name="resource.aps" size="39076" time="25.09.2021 07:58:02"/>
@@ -648,6 +692,8 @@
    <file hash="" name="shortcut_dialog.hpp" size="1154" time="24.09.2021 16:02:43"/>
    <file hash="" name="tool_bar.cpp" size="1053" time="25.09.2021 07:43:43"/>
    <file hash="" name="tool_bar.hpp" size="723" time="25.09.2021 07:38:21"/>
+   <file hash="" name="uninstall_component.cpp" size="2211" time="11.10.2021 19:34:42"/>
+   <file hash="" name="uninstall_component.hpp" size="702" time="11.10.2021 19:29:31"/>
   </directory>
   <directory name="sngxml" time="12.08.2021 14:31:02">
    <directory name="dom" time="25.08.2021 15:00:10">
@@ -797,7 +843,7 @@
     <file hash="" name="TokenValueParsers.cpp" size="4251" time="02.08.2021 18:40:02"/>
     <file hash="" name="TokenValueParsers.hpp" size="550" time="02.08.2021 18:40:02"/>
    </directory>
-   <directory name="util" time="30.09.2021 11:49:59">
+   <directory name="util" time="06.10.2021 14:12:49">
     <file hash="" name="Ansi.cpp" size="25409" time="15.08.2021 14:59:00"/>
     <file hash="" name="Ansi.hpp" size="1957" time="02.08.2021 18:40:02"/>
     <file hash="" name="BinaryReader.cpp" size="5106" time="02.08.2021 18:40:02"/>
@@ -853,7 +899,7 @@
     <file hash="" name="Multiprecision.hpp" size="6347" time="02.08.2021 18:40:02"/>
     <file hash="" name="Mutex.cpp" size="1057" time="02.08.2021 18:40:02"/>
     <file hash="" name="Mutex.hpp" size="1216" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Path.cpp" size="12437" time="30.09.2021 11:49:59"/>
+    <file hash="" name="Path.cpp" size="12476" time="02.10.2021 14:07:37"/>
     <file hash="" name="Path.hpp" size="1876" time="18.08.2021 19:29:51"/>
     <file hash="" name="Prime.cpp" size="1029" time="02.08.2021 18:40:02"/>
     <file hash="" name="Prime.hpp" size="526" time="02.08.2021 18:40:02"/>
@@ -878,8 +924,8 @@
     <file hash="" name="TextUtils.hpp" size="3449" time="15.08.2021 15:20:43"/>
     <file hash="" name="Time.cpp" size="16525" time="05.08.2021 11:40:23"/>
     <file hash="" name="Time.hpp" size="5065" time="05.08.2021 11:36:39"/>
-    <file hash="" name="Unicode.cpp" size="108645" time="30.09.2021 10:41:01"/>
-    <file hash="" name="Unicode.hpp" size="44177" time="13.08.2021 14:02:20"/>
+    <file hash="" name="Unicode.cpp" size="108645" time="06.10.2021 14:12:40"/>
+    <file hash="" name="Unicode.hpp" size="44214" time="06.10.2021 14:12:49"/>
     <file hash="" name="Util.hpp" size="969" time="02.08.2021 18:40:02"/>
     <file hash="" name="util.vcxproj" size="11786" time="21.08.2021 12:44:17"/>
     <file hash="" name="util.vcxproj.filters" size="3980" time="12.08.2021 14:47:43"/>
@@ -891,8 +937,8 @@
     <file hash="" name="ZLibInterface.h" size="873" time="03.08.2021 17:43:16"/>
    </directory>
   </directory>
-  <directory name="uninstall" time="27.08.2021 19:36:20">
-   <file hash="" name="main.cpp" size="2251" time="27.08.2021 19:36:20"/>
+  <directory name="uninstall" time="11.10.2021 18:07:06">
+   <file hash="" name="main.cpp" size="2100" time="11.10.2021 18:07:06"/>
    <file hash="" name="resource.rc" size="37" time="14.08.2021 05:44:03"/>
    <file hash="" name="uninstall.vcxproj" size="8259" time="21.08.2021 12:45:20"/>
    <file hash="" name="uninstall.vcxproj.filters" size="290" time="14.08.2021 05:45:07"/>
@@ -1046,7 +1092,7 @@
    <file hash="" name="winggui.vcxproj.filters" size="724" time="19.08.2021 19:04:12"/>
    <file hash="" name="winggui.vcxproj.user" size="168" time="06.08.2021 11:44:26"/>
   </directory>
-  <directory name="wingpackage" time="27.09.2021 21:37:45">
+  <directory name="wingpackage" time="11.10.2021 18:38:01">
    <file hash="" name="api.hpp" size="453" time="06.08.2021 11:48:40"/>
    <file hash="" name="component.cpp" size="7913" time="27.09.2021 21:37:30"/>
    <file hash="" name="component.hpp" size="1838" time="28.08.2021 16:30:39"/>
@@ -1062,7 +1108,7 @@
    <file hash="" name="installation_component.hpp" size="847" time="23.08.2021 07:22:17"/>
    <file hash="" name="links.cpp" size="17058" time="27.09.2021 21:37:30"/>
    <file hash="" name="links.hpp" size="4069" time="13.08.2021 13:13:52"/>
-   <file hash="" name="make_setup.cpp" size="54322" time="27.09.2021 19:00:37"/>
+   <file hash="" name="make_setup.cpp" size="53785" time="11.10.2021 18:38:01"/>
    <file hash="" name="make_setup.hpp" size="775" time="27.09.2021 18:55:06"/>
    <file hash="" name="node.cpp" size="5759" time="18.09.2021 14:05:44"/>
    <file hash="" name="node.hpp" size="2280" time="18.09.2021 14:13:31"/>
@@ -1084,8 +1130,8 @@
    <file hash="" name="wingpackage.vcxproj.filters" size="1690" time="27.09.2021 18:47:55"/>
    <file hash="" name="wingpackage.vcxproj.user" size="168" time="07.08.2021 18:32:24"/>
   </directory>
-  <directory name="wingstall" time="28.09.2021 11:37:47">
-   <file hash="" name="main.cpp" size="14875" time="28.09.2021 11:37:47"/>
+  <directory name="wingstall" time="11.10.2021 18:09:22">
+   <file hash="" name="main.cpp" size="14726" time="11.10.2021 18:09:22"/>
    <file hash="" name="wingstall.vcxproj" size="8095" time="27.09.2021 18:49:00"/>
    <file hash="" name="wingstall.vcxproj.filters" size="212" time="27.09.2021 18:49:00"/>
    <file hash="" name="wingstall.vcxproj.user" size="719" time="26.08.2021 22:22:07"/>
@@ -1100,8 +1146,8 @@
    <file hash="" name="wingstall_config.vcxproj.filters" size="412" time="28.09.2021 13:20:10"/>
    <file hash="" name="wingstall_config.vcxproj.user" size="168" time="30.08.2021 14:23:57"/>
   </directory>
-  <directory name="wnginst" time="27.08.2021 01:05:28">
-   <file hash="" name="main.cpp" size="7084" time="27.08.2021 01:05:28"/>
+  <directory name="wnginst" time="11.10.2021 18:09:53">
+   <file hash="" name="main.cpp" size="7000" time="11.10.2021 18:09:53"/>
    <file hash="" name="wnginst.vcxproj" size="8041" time="21.08.2021 12:49:00"/>
    <file hash="" name="wnginst.vcxproj.filters" size="212" time="12.08.2021 16:04:11"/>
    <file hash="" name="wnginst.vcxproj.user" size="514" time="23.08.2021 11:04:45"/>
@@ -1116,49 +1162,50 @@
  </component>
  <component name="install">
   <directory name="inst" time="12.08.2021 16:07:04">
-   <file hash="" name="inst.bat" size="275" time="30.09.2021 12:38:56"/>
-   <file hash="" name="wnginst.exe" size="4809216" time="30.09.2021 11:50:17"/>
+   <file hash="" name="inst.bat" size="353" time="13.10.2021 15:02:24"/>
+   <file hash="" name="wnginst.exe" size="4807680" time="11.10.2021 18:10:28"/>
   </directory>
  </component>
  <component name="setup">
-  <directory name="setup" time="23.08.2021 09:19:09">
+  <directory name="setup" time="13.10.2021 15:21:15">
    <directory name="bzip2" time="27.09.2021 21:12:29">
     <directory name="compile" time="27.09.2021 21:12:22">
-     <file hash="" name="compile_debug.bat" size="339" time="30.09.2021 12:00:18"/>
-     <file hash="" name="compile_release.bat" size="345" time="30.09.2021 12:00:18"/>
-     <file hash="" name="debug_stderr.txt" size="0" time="30.09.2021 12:00:19"/>
-     <file hash="" name="debug_stdout.txt" size="259" time="30.09.2021 12:00:23"/>
-     <file hash="" name="release_stderr.txt" size="0" time="30.09.2021 12:00:23"/>
-     <file hash="" name="release_stdout.txt" size="446" time="30.09.2021 12:00:31"/>
+     <file hash="" name="compile_debug.bat" size="339" time="30.09.2021 12:49:22"/>
+     <file hash="" name="compile_release.bat" size="345" time="30.09.2021 12:49:22"/>
+     <file hash="" name="debug_stderr.txt" size="0" time="30.09.2021 12:49:23"/>
+     <file hash="" name="debug_stdout.txt" size="259" time="30.09.2021 12:49:27"/>
+     <file hash="" name="release_stderr.txt" size="0" time="30.09.2021 12:49:28"/>
+     <file hash="" name="release_stdout.txt" size="446" time="30.09.2021 12:49:36"/>
     </directory>
-    <file hash="" name="wingstall.package.xml" size="3782" time="29.09.2021 16:01:23"/>
+    <file hash="" name="wingstall.package.xml" size="3782" time="13.10.2021 15:22:44"/>
     <file hash="" name="wingstall.package.xml.000" size="3415" time="31.08.2021 13:16:12"/>
    </directory>
    <directory name="deflate" time="27.09.2021 21:09:51">
     <directory name="compile" time="27.09.2021 21:09:44">
-     <file hash="" name="compile_debug.bat" size="345" time="30.09.2021 11:58:34"/>
-     <file hash="" name="compile_release.bat" size="351" time="30.09.2021 11:58:34"/>
-     <file hash="" name="debug_stderr.txt" size="0" time="30.09.2021 11:58:35"/>
-     <file hash="" name="debug_stdout.txt" size="261" time="30.09.2021 11:58:39"/>
-     <file hash="" name="release_stderr.txt" size="0" time="30.09.2021 11:58:40"/>
-     <file hash="" name="release_stdout.txt" size="448" time="30.09.2021 11:58:47"/>
+     <file hash="" name="compile_debug.bat" size="345" time="30.09.2021 12:47:38"/>
+     <file hash="" name="compile_release.bat" size="351" time="30.09.2021 12:47:38"/>
+     <file hash="" name="debug_stderr.txt" size="0" time="30.09.2021 12:47:39"/>
+     <file hash="" name="debug_stdout.txt" size="261" time="30.09.2021 12:47:43"/>
+     <file hash="" name="release_stderr.txt" size="0" time="30.09.2021 12:47:44"/>
+     <file hash="" name="release_stdout.txt" size="448" time="30.09.2021 12:47:52"/>
     </directory>
-    <file hash="" name="wingstall.package.xml" size="3785" time="29.09.2021 16:01:02"/>
+    <file hash="" name="wingstall.package.xml" size="3785" time="13.10.2021 15:22:07"/>
     <file hash="" name="wingstall.package.xml.000" size="3417" time="31.08.2021 13:15:57"/>
    </directory>
    <directory name="plain" time="30.09.2021 09:13:09">
     <directory name="compile" time="27.09.2021 21:08:08">
-     <file hash="" name="compile_debug.bat" size="339" time="30.09.2021 12:46:20"/>
-     <file hash="" name="compile_release.bat" size="345" time="30.09.2021 12:46:20"/>
-     <file hash="" name="debug_stderr.txt" size="0" time="30.09.2021 12:46:20"/>
-     <file hash="" name="debug_stdout.txt" size="737" time="30.09.2021 12:46:34"/>
-     <file hash="" name="release_stderr.txt" size="0" time="30.09.2021 12:46:34"/>
-     <file hash="" name="release_stdout.txt" size="446" time="30.09.2021 12:46:47"/>
+     <file hash="" name="compile_debug.bat" size="339" time="13.10.2021 15:32:03"/>
+     <file hash="" name="compile_release.bat" size="345" time="13.10.2021 15:32:03"/>
+     <file hash="" name="debug_stderr.txt" size="0" time="13.10.2021 15:32:04"/>
+     <file hash="" name="debug_stdout.txt" size="737" time="13.10.2021 15:32:21"/>
+     <file hash="" name="release_stderr.txt" size="0" time="13.10.2021 15:32:21"/>
+     <file hash="" name="release_stdout.txt" size="1187" time="13.10.2021 15:32:44"/>
     </directory>
-    <file hash="" name="wingstall.package.xml" size="3782" time="29.09.2021 16:00:42"/>
+    <file hash="" name="wingstall.package.xml" size="3782" time="13.10.2021 15:21:43"/>
     <file hash="" name="wingstall.package.xml.000" size="3414" time="31.08.2021 13:15:34"/>
    </directory>
    <file hash="" name="Makefile" size="1609" time="29.08.2021 15:49:16"/>
+   <file hash="" name="product_id.txt" size="43" time="13.10.2021 15:21:22"/>
   </directory>
  </component>
  <component name="packages">
@@ -1172,12 +1219,12 @@
     </directory>
     <directory name="deflate" time="28.09.2021 11:41:01">
      <directory name="compile" time="28.09.2021 11:40:54">
-      <file hash="" name="compile_debug.bat" size="378" time="28.09.2021 15:37:22"/>
-      <file hash="" name="compile_release.bat" size="384" time="28.09.2021 15:37:22"/>
-      <file hash="" name="debug_stderr.txt" size="0" time="28.09.2021 15:37:22"/>
-      <file hash="" name="debug_stdout.txt" size="272" time="28.09.2021 15:37:26"/>
-      <file hash="" name="release_stderr.txt" size="0" time="28.09.2021 15:37:26"/>
-      <file hash="" name="release_stdout.txt" size="459" time="28.09.2021 15:37:33"/>
+      <file hash="" name="compile_debug.bat" size="378" time="11.10.2021 18:39:11"/>
+      <file hash="" name="compile_release.bat" size="384" time="11.10.2021 18:39:11"/>
+      <file hash="" name="debug_stderr.txt" size="0" time="11.10.2021 18:39:12"/>
+      <file hash="" name="debug_stdout.txt" size="272" time="11.10.2021 18:39:16"/>
+      <file hash="" name="release_stderr.txt" size="0" time="11.10.2021 18:39:17"/>
+      <file hash="" name="release_stdout.txt" size="459" time="11.10.2021 18:39:24"/>
      </directory>
      <file hash="" name="example.package.xml" size="1876" time="29.08.2021 21:08:16"/>
      <file hash="" name="example.package.xml.000" size="1876" time="29.08.2021 21:08:16"/>
@@ -1286,7 +1333,7 @@
   <variable name="TARGET_ROOT_DIR" value="C:/wingstall"/>
   <variable name="PREINSTALL_DIR" value=""/>
   <variable name="APP_NAME" value="Wingstall"/>
-  <variable name="APP_VERSION" value="2.0.0"/>
+  <variable name="APP_VERSION" value="2.1.0"/>
   <variable name="PRODUCT_ID" value="17e24c2e-5ddf-4b18-b4ee-1d66182ab193"/>
   <variable name="PUBLISHER" value="Seppo Laakko"/>
   <variable name="START_MENU_PROGRAMS_FOLDER" value="C:/ProgramData/Microsoft/Windows/Start Menu/Programs"/>

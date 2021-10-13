@@ -1,4 +1,4 @@
-<package appName="Wingstall" compression="bzip2" iconFilePath="$TARGET_ROOT_DIR$/icon/package.ico" id="17e24c2e-5ddf-4b18-b4ee-1d66182ab193" includeUninstaller="true" name="wingstall" publisher="Seppo Laakko" sourceRootDir="../.." targetRootDir="C:/wingstall" version="2.0.0">
+<package appName="Wingstall" compression="bzip2" iconFilePath="$TARGET_ROOT_DIR$/icon/package.ico" id="17e24c2e-5ddf-4b18-b4ee-1d66182ab193" includeUninstaller="true" name="wingstall" publisher="Seppo Laakko" sourceRootDir="../.." targetRootDir="C:/wingstall" version="2.1.0">
  <component name="binaries">
   <directory name="bin"/>
  </component>
