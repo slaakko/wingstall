@@ -16,7 +16,7 @@ std::string DefaultListViewFontFamilyName();
 float DefaultListViewFontSize();
 Color DefaultListViewColumnTextColor();
 Color DefaultListViewItemTextColor();
-Color DefaultListViewSelectedItemBackgroundColor();
+Color DefaultListViewDisabledItemTextColor();
 Color DefaultListViewColumnDividerColor();
 Color DefaultListViewItemSelectedColor();
 Padding DefaultListViewColumnHeaderPadding();

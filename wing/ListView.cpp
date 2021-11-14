@@ -41,11 +41,6 @@ Color DefaultListViewDisabledItemTextColor()
     return Color(201, 201, 201);
 }
 
-Color DefaultListViewSelectedItemBackgroundColor()
-{
-    return Color(204, 232, 255);
-}
-
 Color DefaultListViewColumnDividerColor()
 {
     return Color(229, 229, 229);
@@ -89,7 +84,6 @@ ListViewCreateParams::ListViewCreateParams() :
     listViewColumnTextColor(DefaultListViewColumnTextColor()),
     listViewItemTextColor(DefaultListViewItemTextColor()),
     listViewDisabledItemTextColor(DefaultListViewDisabledItemTextColor()),
-    listViewSelectedItemBackgroundColor(DefaultListViewSelectedItemBackgroundColor()),
     listViewColumnDividerColor(DefaultListViewColumnDividerColor()),
     listViewItemSelectedColor(DefaultListViewItemSelectedColor()),
     columnHeaderPadding(DefaultListViewColumnHeaderPadding()),
