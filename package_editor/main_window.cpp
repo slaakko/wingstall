@@ -1,5 +1,5 @@
 // =================================
-// Copyright (c) 2021 Seppo Laakko
+// Copyright (c) 2022 Seppo Laakko
 // Distributed under the MIT license
 // =================================
 
@@ -875,13 +875,15 @@ void MainWindow::EditConfigurationClick()
         std::string boostIncludeDir = MakeNativePath(wingstall::config::BoostIncludeDir(configDoc.get()));
         std::string boostLibDir = MakeNativePath(wingstall::config::BoostLibDir(configDoc.get()));
         std::string vcVarsPath = MakeNativePath(wingstall::config::VCVarsFilePath(configDoc.get()));
-        EditConfigurationDialog dialog(boostIncludeDir, boostLibDir, vcVarsPath);
+        std::string vcPlatformToolset = wingstall::config::VCPlatformToolset(configDoc.get());
+        EditConfigurationDialog dialog(boostIncludeDir, boostLibDir, vcVarsPath, vcPlatformToolset);
         if (dialog.ShowDialog(*this) == DialogResult::ok)
         {
-            dialog.GetData(boostIncludeDir, boostLibDir, vcVarsPath);
+            dialog.GetData(boostIncludeDir, boostLibDir, vcVarsPath, vcPlatformToolset);
             wingstall::config::SetBoostIncludeDir(configDoc.get(), boostIncludeDir);
             wingstall::config::SetBoostLibDir(configDoc.get(), boostLibDir);
             wingstall::config::SetVCVarsFilePath(configDoc.get(), vcVarsPath);
+            wingstall::config::SetVCPlatformToolset(configDoc.get(), vcPlatformToolset);
             wingstall::config::SaveConfiguration(configDoc.get());
             wingstall::config::MakeBuildPropsFile(boostIncludeDir, boostLibDir);
             ShowMessageBox(Handle(), "Information", "Configuration saved to '" + GetFullPath(wingstall::config::WingstallConfigDir()) + "' directory");

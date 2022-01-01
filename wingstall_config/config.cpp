@@ -1,5 +1,5 @@
 // =================================
-// Copyright (c) 2021 Seppo Laakko
+// Copyright (c) 2022 Seppo Laakko
 // Distributed under the MIT license
 // =================================
 
@@ -22,9 +22,10 @@ std::string WingstallConfigDir()
     return configDir;
 }
 
-std::string defaultBoostIncludeDir = "C:\\boost\\include\\boost-1_74";
+std::string defaultBoostIncludeDir = "C:\\boost\\include\\boost-1_77";
 std::string defaultBoostLibDir = "C:\\boost\\lib";
-std::string defaultVCVarsFilePath = R"(C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat)";
+std::string defaultVCVarsFilePath = R"(C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat)";
+std::string defaultVCPlatformToolset = "v143";
 
 std::string ConfigFilePath()
 {
@@ -46,6 +47,11 @@ std::string DefaultVCVarsFilePath()
     return defaultVCVarsFilePath;
 }
 
+std::string DefaultVCPlatformToolset()
+{
+    return defaultVCPlatformToolset;
+}
+
 std::unique_ptr<sngxml::dom::Document> ConfigurationDocument()
 {
     std::string operation;
@@ -61,6 +67,11 @@ std::unique_ptr<sngxml::dom::Document> ConfigurationDocument()
             {
                 configDoc->DocumentElement()->SetAttribute(U"vcVarsFilePath", ToUtf32(defaultVCVarsFilePath));
             }
+            std::u32string vcPlatformToolset = configDoc->DocumentElement()->GetAttribute(U"vcPlatformToolset");
+            if (vcPlatformToolset.empty())
+            {
+                configDoc->DocumentElement()->SetAttribute(U"vcPlatformToolset", ToUtf32(defaultVCPlatformToolset));
+            }
             std::ofstream configFile(ConfigFilePath());
             CodeFormatter formatter(configFile);
             configDoc->Write(formatter);
@@ -74,6 +85,7 @@ std::unique_ptr<sngxml::dom::Document> ConfigurationDocument()
             rootElement->SetAttribute(U"boostIncludeDir", ToUtf32(defaultBoostIncludeDir));
             rootElement->SetAttribute(U"boostLibDir", ToUtf32(defaultBoostLibDir));
             rootElement->SetAttribute(U"vcVarsFilePath", ToUtf32(defaultVCVarsFilePath));
+            rootElement->SetAttribute(U"vcPlatformToolset", ToUtf32(defaultVCPlatformToolset));
             std::ofstream configFile(ConfigFilePath());
             CodeFormatter formatter(configFile);
             configDoc->Write(formatter);
@@ -102,6 +114,11 @@ std::string VCVarsFilePath(sngxml::dom::Document* configDocument)
     return ToUtf8(configDocument->DocumentElement()->GetAttribute(U"vcVarsFilePath"));
 }
 
+std::string VCPlatformToolset(sngxml::dom::Document* configDocument)
+{
+    return ToUtf8(configDocument->DocumentElement()->GetAttribute(U"vcPlatformToolset"));
+}
+
 void SetBoostIncludeDir(sngxml::dom::Document* configDocument, const std::string& boostIncludeDir)
 {
     configDocument->DocumentElement()->SetAttribute(U"boostIncludeDir", ToUtf32(boostIncludeDir));
@@ -115,6 +132,11 @@ void SetBoostLibDir(sngxml::dom::Document* configDocument, const std::string& bo
 void SetVCVarsFilePath(sngxml::dom::Document* configDocument, const std::string& vcVarsFilePath)
 {
     configDocument->DocumentElement()->SetAttribute(U"vcVarsFilePath", ToUtf32(vcVarsFilePath));
+}
+
+void SetVCPlatformToolset(sngxml::dom::Document* configDocument, const std::string& vcPlatformToolset)
+{
+    configDocument->DocumentElement()->SetAttribute(U"vcPlatformToolset", ToUtf32(vcPlatformToolset));
 }
 
 void SaveConfiguration(sngxml::dom::Document* configDocument)

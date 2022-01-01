@@ -1,50 +1,50 @@
-<packageIndex appName="Wingstall" compression="deflate" iconFilePath="$TARGET_ROOT_DIR$/icon/package.ico" id="17e24c2e-5ddf-4b18-b4ee-1d66182ab193" includeUninstaller="true" name="wingstall" publisher="Seppo Laakko" sourceRootDir="C:/work/wingstall" targetRootDir="C:/wingstall" version="2.1.0">
+<packageIndex appName="Wingstall" compression="deflate" iconFilePath="$TARGET_ROOT_DIR$/icon/package.ico" id="17e24c2e-5ddf-4b18-b4ee-1d66182ab193" includeUninstaller="true" name="wingstall" publisher="Seppo Laakko" sourceRootDir="C:/work/wingstall" targetRootDir="C:/wingstall" version="2.2.0">
  <component name="binaries">
-  <directory name="bin" time="13.10.2021 17:19:32">
-   <file hash="" name="filecompare.exe" size="295936" time="11.10.2021 18:10:27"/>
-   <file hash="" name="filecompared.exe" size="1940480" time="11.10.2021 18:10:16"/>
-   <file hash="" name="make_package_id.exe" size="31744" time="02.10.2021 13:15:57"/>
-   <file hash="" name="make_package_idd.exe" size="136704" time="02.10.2021 14:08:04"/>
-   <file hash="" name="make_wingstall_ucd.exe" size="502784" time="11.10.2021 18:10:29"/>
-   <file hash="" name="make_wingstall_ucdd.exe" size="2759680" time="11.10.2021 18:10:16"/>
-   <file hash="" name="package_editor.exe" size="10723840" time="11.10.2021 19:37:35"/>
-   <file hash="" name="package_editord.exe" size="18660352" time="11.10.2021 19:36:51"/>
-   <file hash="" name="uninstall.exe" size="5412864" time="11.10.2021 18:38:13"/>
-   <file hash="" name="uninstalld.exe" size="16776192" time="11.10.2021 18:38:20"/>
-   <file hash="" name="wingstall.exe" size="9979392" time="11.10.2021 18:38:10"/>
-   <file hash="" name="wingstalld.exe" size="16462848" time="11.10.2021 18:38:20"/>
-   <file hash="" name="wnginst.exe" size="4807680" time="11.10.2021 18:10:28"/>
-   <file hash="" name="wnginstd.exe" size="7723008" time="11.10.2021 18:10:16"/>
+  <directory name="bin" time="16.10.2021 18:57:45">
+   <file hash="" name="filecompare.exe" size="293376" time="01.01.2022 19:26:31"/>
+   <file hash="" name="filecompared.exe" size="1992704" time="01.01.2022 19:22:47"/>
+   <file hash="" name="make_package_id.exe" size="31744" time="01.01.2022 19:26:30"/>
+   <file hash="" name="make_package_idd.exe" size="141824" time="01.01.2022 19:22:47"/>
+   <file hash="" name="make_wingstall_ucd.exe" size="484864" time="01.01.2022 19:27:13"/>
+   <file hash="" name="make_wingstall_ucdd.exe" size="2814976" time="01.01.2022 19:23:16"/>
+   <file hash="" name="package_editor.exe" size="10712064" time="01.01.2022 20:50:33"/>
+   <file hash="" name="package_editord.exe" size="18806784" time="01.01.2022 20:49:58"/>
+   <file hash="" name="uninstall.exe" size="5400064" time="01.01.2022 20:02:20"/>
+   <file hash="" name="uninstalld.exe" size="16873472" time="01.01.2022 20:02:00"/>
+   <file hash="" name="wingstall.exe" size="9966592" time="01.01.2022 20:06:50"/>
+   <file hash="" name="wingstalld.exe" size="16561152" time="01.01.2022 20:06:34"/>
+   <file hash="" name="wnginst.exe" size="4805120" time="01.01.2022 19:26:59"/>
+   <file hash="" name="wnginstd.exe" size="7777792" time="01.01.2022 19:23:16"/>
   </directory>
  </component>
  <component name="libraries">
   <directory name="lib" time="21.09.2021 18:44:24">
-   <file hash="" name="libbz2.lib" size="323812" time="26.09.2021 11:33:57"/>
-   <file hash="" name="libbz2d.lib" size="271536" time="28.09.2021 13:47:56"/>
-   <file hash="" name="soulng_dom.lib" size="8873124" time="06.10.2021 14:17:50"/>
-   <file hash="" name="soulng_domd.lib" size="5200570" time="06.10.2021 14:16:02"/>
-   <file hash="" name="soulng_lexer.lib" size="7236820" time="06.10.2021 14:17:44"/>
-   <file hash="" name="soulng_lexerd.lib" size="3359842" time="06.10.2021 14:15:56"/>
-   <file hash="" name="soulng_parser.lib" size="1046206" time="26.09.2021 11:34:30"/>
-   <file hash="" name="soulng_parserd.lib" size="44620" time="28.09.2021 15:11:43"/>
-   <file hash="" name="soulng_rex.lib" size="10875198" time="06.10.2021 14:17:45"/>
-   <file hash="" name="soulng_rexd.lib" size="8077248" time="06.10.2021 14:15:57"/>
-   <file hash="" name="soulng_util.lib" size="63117216" time="06.10.2021 14:17:40"/>
-   <file hash="" name="soulng_utild.lib" size="49061414" time="06.10.2021 14:15:54"/>
-   <file hash="" name="soulng_xml.lib" size="7005230" time="06.10.2021 14:17:47"/>
-   <file hash="" name="soulng_xmld.lib" size="5040446" time="06.10.2021 14:16:00"/>
-   <file hash="" name="soulng_xpath.lib" size="18889610" time="06.10.2021 14:17:54"/>
-   <file hash="" name="soulng_xpathd.lib" size="12115786" time="06.10.2021 14:16:07"/>
-   <file hash="" name="wing.lib" size="86402542" time="06.10.2021 14:18:24"/>
-   <file hash="" name="wingd.lib" size="38722314" time="06.10.2021 14:16:38"/>
-   <file hash="" name="winggui.lib" size="12094614" time="06.10.2021 14:18:41"/>
-   <file hash="" name="wingguid.lib" size="4603172" time="06.10.2021 14:16:56"/>
-   <file hash="" name="wingpackage.lib" size="39552114" time="11.10.2021 18:38:07"/>
-   <file hash="" name="wingpackaged.lib" size="20365314" time="11.10.2021 18:38:20"/>
-   <file hash="" name="wingstall_config.lib" size="4768548" time="06.10.2021 14:17:56"/>
-   <file hash="" name="wingstall_configd.lib" size="1965742" time="06.10.2021 14:16:09"/>
-   <file hash="" name="zlibstat.lib" size="751308" time="26.09.2021 11:33:59"/>
-   <file hash="" name="zlibstatd.lib" size="1028598" time="28.09.2021 13:47:58"/>
+   <file hash="" name="libbz2.lib" size="445880" time="01.01.2022 19:25:49"/>
+   <file hash="" name="libbz2d.lib" size="396028" time="01.01.2022 19:22:03"/>
+   <file hash="" name="soulng_dom.lib" size="10259524" time="01.01.2022 19:26:46"/>
+   <file hash="" name="soulng_domd.lib" size="5531338" time="01.01.2022 19:23:04"/>
+   <file hash="" name="soulng_lexer.lib" size="8644424" time="01.01.2022 19:26:32"/>
+   <file hash="" name="soulng_lexerd.lib" size="3639144" time="01.01.2022 19:22:50"/>
+   <file hash="" name="soulng_parser.lib" size="1236918" time="01.01.2022 19:26:33"/>
+   <file hash="" name="soulng_parserd.lib" size="67702" time="01.01.2022 19:22:50"/>
+   <file hash="" name="soulng_rex.lib" size="12001452" time="01.01.2022 19:26:38"/>
+   <file hash="" name="soulng_rexd.lib" size="8359864" time="01.01.2022 19:22:55"/>
+   <file hash="" name="soulng_util.lib" size="82180326" time="01.01.2022 19:26:28"/>
+   <file hash="" name="soulng_utild.lib" size="52421434" time="01.01.2022 19:22:45"/>
+   <file hash="" name="soulng_xml.lib" size="7932220" time="01.01.2022 19:26:41"/>
+   <file hash="" name="soulng_xmld.lib" size="5274560" time="01.01.2022 19:22:59"/>
+   <file hash="" name="soulng_xpath.lib" size="23148214" time="01.01.2022 19:26:55"/>
+   <file hash="" name="soulng_xpathd.lib" size="12667934" time="01.01.2022 19:23:14"/>
+   <file hash="" name="wing.lib" size="98325434" time="01.01.2022 19:27:50"/>
+   <file hash="" name="wingd.lib" size="42739740" time="01.01.2022 19:24:11"/>
+   <file hash="" name="winggui.lib" size="15139826" time="01.01.2022 19:28:18"/>
+   <file hash="" name="wingguid.lib" size="5119978" time="01.01.2022 19:24:41"/>
+   <file hash="" name="wingpackage.lib" size="43319906" time="01.01.2022 20:02:17"/>
+   <file hash="" name="wingpackaged.lib" size="22159954" time="01.01.2022 20:01:59"/>
+   <file hash="" name="wingstall_config.lib" size="4949132" time="01.01.2022 20:06:46"/>
+   <file hash="" name="wingstall_configd.lib" size="2188348" time="01.01.2022 20:06:34"/>
+   <file hash="" name="zlibstat.lib" size="1094696" time="01.01.2022 19:25:50"/>
+   <file hash="" name="zlibstatd.lib" size="1371046" time="01.01.2022 19:22:05"/>
   </directory>
  </component>
  <component name="unicode">
@@ -53,7 +53,7 @@
    <file hash="" name="readme.md" size="755" time="24.08.2021 19:08:53"/>
    <file hash="" name="ucd.all.flat.xml" size="182226238" time="21.04.2019 14:54:08"/>
    <file hash="" name="ucd.all.flat.zip" size="7839841" time="02.08.2021 18:40:03"/>
-   <file hash="" name="unicode.vcxproj" size="8204" time="24.08.2021 19:12:07"/>
+   <file hash="" name="unicode.vcxproj" size="8310" time="14.11.2021 20:31:38"/>
    <file hash="" name="unicode.vcxproj.filters" size="283" time="24.08.2021 19:12:07"/>
    <file hash="" name="unicode.vcxproj.user" size="168" time="12.08.2021 15:06:07"/>
    <file hash="" name="wingstall_ucd.bin" size="53233116" time="12.08.2021 15:28:52"/>
@@ -61,24 +61,25 @@
   </directory>
  </component>
  <component name="configuration">
-  <directory name="config" time="29.09.2021 20:32:23">
-   <file hash="" name="build.props" size="864" time="28.09.2021 15:37:18"/>
-   <file hash="" name="build.props.new" size="864" time="28.09.2021 15:37:18"/>
+  <directory name="config" time="01.01.2022 20:08:22">
+   <file hash="" name="build.props" size="864" time="01.01.2022 20:39:12"/>
+   <file hash="" name="build.props.new" size="864" time="01.01.2022 20:39:12"/>
    <file hash="" name="build.props.org" size="958" time="28.09.2021 13:53:30"/>
-   <file hash="" name="configuration.xml" size="202" time="13.10.2021 17:21:02"/>
+   <file hash="" name="configuration.xml" size="221" time="01.01.2022 21:13:53"/>
    <file hash="" name="metrics.xml" size="409" time="19.09.2021 16:17:58"/>
    <file hash="" name="product_id.txt" size="38" time="23.09.2021 20:44:17"/>
   </directory>
  </component>
  <component name="documentation">
   <directory name="doc" time="28.09.2021 17:09:49">
-   <directory name="image" time="29.09.2021 19:44:07">
+   <directory name="image" time="01.01.2022 21:00:55">
     <file hash="" name="abort_continue_dialog.png" size="3877" time="22.08.2021 11:54:17"/>
     <file hash="" name="add_directories_and_files.png" size="3766" time="29.09.2021 18:25:38"/>
     <file hash="" name="add_new_link_directory.png" size="4006" time="29.09.2021 18:55:43"/>
     <file hash="" name="add_remove.png" size="4600" time="25.08.2021 00:23:33"/>
     <file hash="" name="add_remove_programs.png" size="130074" time="22.08.2021 20:18:59"/>
-    <file hash="" name="configuration.png" size="7766" time="28.09.2021 17:16:29"/>
+    <file hash="" name="configuration.png" size="8411" time="01.01.2022 21:00:55"/>
+    <file hash="" name="configuration.png.old" size="7766" time="28.09.2021 17:16:29"/>
     <file hash="" name="content.png" size="19125" time="29.09.2021 18:36:03"/>
     <file hash="" name="engine_variables.png" size="11779" time="29.09.2021 19:17:09"/>
     <file hash="" name="example_installer.png" size="7035" time="29.09.2021 19:44:07"/>
@@ -93,9 +94,9 @@
     <file hash="" name="uninstallation_succeeded.png" size="11666" time="22.08.2021 19:05:09"/>
     <file hash="" name="uninstaller.png" size="4916" time="22.08.2021 19:08:24"/>
     <file hash="" name="uninstaller_abort_continue_dialog.png" size="3917" time="22.08.2021 19:23:04"/>
-    <file hash="" name="x64nativeToolsProperties.png" size="16073" time="28.09.2021 18:05:39"/>
+    <file hash="" name="x64nativeToolsProperties.png" size="16130" time="01.01.2022 21:10:45"/>
    </directory>
-   <directory name="rel" time="12.10.2021 12:32:41">
+   <directory name="rel" time="01.01.2022 20:56:13">
     <directory name="1.0.0" time="23.08.2021 20:53:27">
      <file hash="" name="release.notes.html" size="193" time="23.08.2021 20:53:27"/>
     </directory>
@@ -108,14 +109,17 @@
     <directory name="2.1.0" time="12.10.2021 12:32:41">
      <file hash="" name="release.notes.html" size="670" time="12.10.2021 12:34:07"/>
     </directory>
+    <directory name="2.2.0" time="01.01.2022 20:56:13">
+     <file hash="" name="release.notes.html" size="149" time="01.01.2022 20:56:13"/>
+    </directory>
    </directory>
    <directory name="style" time="19.08.2021 23:19:51">
     <file hash="" name="style.css" size="976" time="22.08.2021 20:06:08"/>
    </directory>
    <file hash="" name="footnotes.html" size="807" time="23.08.2021 19:48:21"/>
-   <file hash="" name="index.html" size="68651" time="13.10.2021 16:58:29"/>
+   <file hash="" name="index.html" size="68651" time="01.01.2022 20:58:00"/>
    <file hash="" name="LICENSE.txt" size="1076" time="02.08.2021 18:39:43"/>
-   <file hash="" name="package_editor.html" size="7295" time="30.09.2021 08:52:00"/>
+   <file hash="" name="package_editor.html" size="7323" time="01.01.2022 21:04:37"/>
    <file hash="" name="ucd.html" size="803" time="24.08.2021 19:09:23"/>
   </directory>
  </component>
@@ -155,7 +159,7 @@
     <file hash="" name="huffman.c" size="7196" time="02.08.2021 18:40:02"/>
     <file hash="" name="libbz2.def" size="517" time="02.08.2021 18:40:02"/>
     <file hash="" name="libbz2.dsp" size="4254" time="02.08.2021 18:40:02"/>
-    <file hash="" name="libbz2.vcxproj" size="21131" time="12.08.2021 16:58:30"/>
+    <file hash="" name="libbz2.vcxproj" size="21290" time="14.11.2021 20:31:37"/>
     <file hash="" name="libbz2.vcxproj.user" size="168" time="12.08.2021 13:14:59"/>
     <file hash="" name="LICENSE" size="1943" time="02.08.2021 18:40:02"/>
     <file hash="" name="Makefile" size="6519" time="02.08.2021 18:40:02"/>
@@ -382,7 +386,7 @@
        <file hash="" name="testzlib.vcxproj" size="27795" time="02.08.2021 18:40:02"/>
        <file hash="" name="testzlibdll.vcxproj" size="19294" time="02.08.2021 18:40:02"/>
        <file hash="" name="zlib.rc" size="957" time="02.08.2021 18:40:02"/>
-       <file hash="" name="zlibstat.vcxproj" size="29383" time="21.08.2021 11:59:32"/>
+       <file hash="" name="zlibstat.vcxproj" size="29921" time="14.11.2021 20:31:37"/>
        <file hash="" name="zlibstat.vcxproj.user" size="168" time="03.08.2021 16:04:05"/>
        <file hash="" name="zlibvc.def" size="7211" time="02.08.2021 18:40:02"/>
        <file hash="" name="zlibvc.sln" size="8616" time="02.08.2021 18:40:02"/>
@@ -572,340 +576,340 @@
    </directory>
    <file hash="" name="example.sln" size="2349" time="27.08.2021 00:29:17"/>
   </directory>
-  <directory name="filecompare" time="11.10.2021 18:04:56">
-   <file hash="" name="filecompare.vcxproj" size="8053" time="21.08.2021 12:40:21"/>
+  <directory name="filecompare" time="01.01.2022 19:21:15">
+   <file hash="" name="filecompare.vcxproj" size="8159" time="14.11.2021 20:31:37"/>
    <file hash="" name="filecompare.vcxproj.filters" size="212" time="05.08.2021 18:29:39"/>
    <file hash="" name="filecompare.vcxproj.user" size="403" time="05.08.2021 20:35:04"/>
-   <file hash="" name="main.cpp" size="6536" time="11.10.2021 18:04:56"/>
+   <file hash="" name="main.cpp" size="6536" time="01.01.2022 19:21:15"/>
   </directory>
-  <directory name="make_package_id" time="02.10.2021 13:14:01">
-   <file hash="" name="main.cpp" size="591" time="02.10.2021 13:14:01"/>
-   <file hash="" name="make_package_id.vcxproj" size="7927" time="23.08.2021 06:40:10"/>
+  <directory name="make_package_id" time="01.01.2022 19:21:15">
+   <file hash="" name="main.cpp" size="591" time="01.01.2022 19:21:15"/>
+   <file hash="" name="make_package_id.vcxproj" size="8033" time="14.11.2021 20:31:38"/>
    <file hash="" name="make_package_id.vcxproj.filters" size="212" time="23.08.2021 06:35:43"/>
    <file hash="" name="make_package_id.vcxproj.user" size="168" time="23.08.2021 06:31:17"/>
   </directory>
-  <directory name="package_editor" time="11.10.2021 19:36:17">
-   <file hash="" name="about_dialog.cpp" size="2176" time="06.10.2021 14:21:36"/>
-   <file hash="" name="about_dialog.hpp" size="576" time="28.09.2021 11:37:47"/>
-   <file hash="" name="action.cpp" size="10837" time="27.09.2021 12:53:15"/>
-   <file hash="" name="action.hpp" size="2890" time="27.09.2021 12:52:34"/>
-   <file hash="" name="add_directories_and_files_dialog.cpp" size="9886" time="29.09.2021 20:30:30"/>
-   <file hash="" name="add_directories_and_files_dialog.hpp" size="1869" time="29.09.2021 12:55:47"/>
-   <file hash="" name="build.cpp" size="13361" time="30.09.2021 08:46:01"/>
-   <file hash="" name="build.hpp" size="1716" time="27.09.2021 21:44:31"/>
-   <file hash="" name="component.cpp" size="27023" time="29.09.2021 13:37:59"/>
-   <file hash="" name="component.hpp" size="4330" time="29.09.2021 12:56:00"/>
-   <file hash="" name="component_dialog.cpp" size="4433" time="28.09.2021 11:58:28"/>
-   <file hash="" name="component_dialog.hpp" size="858" time="19.09.2021 12:54:56"/>
-   <file hash="" name="configuration.cpp" size="25605" time="29.09.2021 16:40:45"/>
-   <file hash="" name="configuration.hpp" size="3048" time="29.09.2021 15:43:51"/>
-   <file hash="" name="content.cpp" size="5948" time="27.09.2021 10:47:38"/>
-   <file hash="" name="content.hpp" size="3121" time="29.09.2021 13:00:43"/>
-   <file hash="" name="directory.cpp" size="4830" time="29.09.2021 13:38:20"/>
-   <file hash="" name="directory.hpp" size="1240" time="29.09.2021 12:55:33"/>
-   <file hash="" name="edit_configuration_dialog.cpp" size="10557" time="28.09.2021 13:06:39"/>
-   <file hash="" name="edit_configuration_dialog.hpp" size="1140" time="28.09.2021 13:04:56"/>
-   <file hash="" name="engine_variable.cpp" size="7545" time="29.09.2021 13:31:26"/>
-   <file hash="" name="engine_variable.hpp" size="2520" time="29.09.2021 12:56:57"/>
-   <file hash="" name="environment.cpp" size="20784" time="29.09.2021 13:38:38"/>
-   <file hash="" name="environment.hpp" size="3633" time="29.09.2021 12:57:36"/>
-   <file hash="" name="environment_variable_dialog.cpp" size="6025" time="23.09.2021 18:45:58"/>
-   <file hash="" name="environment_variable_dialog.hpp" size="1086" time="23.09.2021 18:59:58"/>
-   <file hash="" name="error.cpp" size="1046" time="28.08.2021 21:53:51"/>
-   <file hash="" name="error.hpp" size="947" time="28.08.2021 17:51:33"/>
-   <file hash="" name="file.cpp" size="1427" time="26.09.2021 16:51:43"/>
-   <file hash="" name="file.hpp" size="941" time="26.09.2021 16:51:44"/>
-   <file hash="" name="links.cpp" size="25325" time="29.09.2021 13:38:53"/>
-   <file hash="" name="links.hpp" size="5789" time="29.09.2021 12:59:12"/>
-   <file hash="" name="link_directory_dialog.cpp" size="4215" time="24.09.2021 14:11:43"/>
-   <file hash="" name="link_directory_dialog.hpp" size="993" time="23.09.2021 22:18:09"/>
-   <file hash="" name="main.cpp" size="1299" time="11.10.2021 18:31:53"/>
-   <file hash="" name="main_window.cpp" size="37280" time="30.09.2021 08:49:28"/>
-   <file hash="" name="main_window.hpp" size="4729" time="29.09.2021 13:50:20"/>
-   <file hash="" name="new_package_dialog.cpp" size="7091" time="26.09.2021 16:22:29"/>
-   <file hash="" name="new_package_dialog.hpp" size="866" time="22.09.2021 12:29:48"/>
-   <file hash="" name="node.cpp" size="20537" time="29.09.2021 13:40:30"/>
-   <file hash="" name="node.hpp" size="5404" time="29.09.2021 12:52:25"/>
-   <file hash="" name="package.cpp" size="17550" time="11.10.2021 19:36:17"/>
-   <file hash="" name="package.hpp" size="4826" time="11.10.2021 19:35:39"/>
-   <file hash="" name="package_content_view.cpp" size="5798" time="25.09.2021 10:33:37"/>
-   <file hash="" name="package_content_view.hpp" size="2426" time="24.09.2021 21:38:39"/>
-   <file hash="" name="package_editor.vcxproj" size="11252" time="11.10.2021 19:34:42"/>
+  <directory name="package_editor" time="01.01.2022 20:49:54">
+   <file hash="" name="about_dialog.cpp" size="2176" time="01.01.2022 20:49:54"/>
+   <file hash="" name="about_dialog.hpp" size="576" time="01.01.2022 19:21:17"/>
+   <file hash="" name="action.cpp" size="10837" time="01.01.2022 19:21:17"/>
+   <file hash="" name="action.hpp" size="2890" time="01.01.2022 19:21:17"/>
+   <file hash="" name="add_directories_and_files_dialog.cpp" size="9886" time="01.01.2022 19:21:17"/>
+   <file hash="" name="add_directories_and_files_dialog.hpp" size="1869" time="01.01.2022 19:21:17"/>
+   <file hash="" name="build.cpp" size="13361" time="01.01.2022 19:21:17"/>
+   <file hash="" name="build.hpp" size="1716" time="01.01.2022 19:21:17"/>
+   <file hash="" name="component.cpp" size="27023" time="01.01.2022 19:21:17"/>
+   <file hash="" name="component.hpp" size="4330" time="01.01.2022 19:21:17"/>
+   <file hash="" name="component_dialog.cpp" size="4433" time="01.01.2022 19:21:17"/>
+   <file hash="" name="component_dialog.hpp" size="858" time="01.01.2022 19:21:17"/>
+   <file hash="" name="configuration.cpp" size="25605" time="01.01.2022 19:21:17"/>
+   <file hash="" name="configuration.hpp" size="3048" time="01.01.2022 19:21:17"/>
+   <file hash="" name="content.cpp" size="5948" time="01.01.2022 19:21:17"/>
+   <file hash="" name="content.hpp" size="3121" time="01.01.2022 19:21:17"/>
+   <file hash="" name="directory.cpp" size="4830" time="01.01.2022 19:21:17"/>
+   <file hash="" name="directory.hpp" size="1240" time="01.01.2022 19:21:17"/>
+   <file hash="" name="edit_configuration_dialog.cpp" size="12361" time="01.01.2022 20:34:50"/>
+   <file hash="" name="edit_configuration_dialog.hpp" size="1250" time="01.01.2022 20:24:44"/>
+   <file hash="" name="engine_variable.cpp" size="7545" time="01.01.2022 19:21:17"/>
+   <file hash="" name="engine_variable.hpp" size="2520" time="01.01.2022 19:21:17"/>
+   <file hash="" name="environment.cpp" size="20784" time="01.01.2022 19:21:17"/>
+   <file hash="" name="environment.hpp" size="3633" time="01.01.2022 19:21:17"/>
+   <file hash="" name="environment_variable_dialog.cpp" size="6025" time="01.01.2022 19:21:17"/>
+   <file hash="" name="environment_variable_dialog.hpp" size="1086" time="01.01.2022 19:21:17"/>
+   <file hash="" name="error.cpp" size="1046" time="01.01.2022 19:21:17"/>
+   <file hash="" name="error.hpp" size="947" time="01.01.2022 19:21:17"/>
+   <file hash="" name="file.cpp" size="1427" time="01.01.2022 19:21:17"/>
+   <file hash="" name="file.hpp" size="941" time="01.01.2022 19:21:17"/>
+   <file hash="" name="links.cpp" size="25325" time="01.01.2022 19:21:17"/>
+   <file hash="" name="links.hpp" size="5789" time="01.01.2022 19:21:17"/>
+   <file hash="" name="link_directory_dialog.cpp" size="4215" time="01.01.2022 19:21:17"/>
+   <file hash="" name="link_directory_dialog.hpp" size="993" time="01.01.2022 19:21:17"/>
+   <file hash="" name="main.cpp" size="1299" time="01.01.2022 19:21:17"/>
+   <file hash="" name="main_window.cpp" size="37504" time="01.01.2022 20:26:57"/>
+   <file hash="" name="main_window.hpp" size="4729" time="01.01.2022 19:21:17"/>
+   <file hash="" name="new_package_dialog.cpp" size="7091" time="01.01.2022 19:21:17"/>
+   <file hash="" name="new_package_dialog.hpp" size="866" time="01.01.2022 19:21:17"/>
+   <file hash="" name="node.cpp" size="20537" time="01.01.2022 19:21:17"/>
+   <file hash="" name="node.hpp" size="5404" time="01.01.2022 19:21:17"/>
+   <file hash="" name="package.cpp" size="17550" time="01.01.2022 19:21:17"/>
+   <file hash="" name="package.hpp" size="4826" time="01.01.2022 19:21:17"/>
+   <file hash="" name="package_content_view.cpp" size="5798" time="01.01.2022 19:21:17"/>
+   <file hash="" name="package_content_view.hpp" size="2426" time="01.01.2022 19:21:17"/>
+   <file hash="" name="package_editor.vcxproj" size="11358" time="14.11.2021 20:31:39"/>
    <file hash="" name="package_editor.vcxproj.filters" size="3335" time="11.10.2021 19:34:42"/>
    <file hash="" name="package_editor.vcxproj.user" size="168" time="27.08.2021 19:27:22"/>
-   <file hash="" name="package_explorer.cpp" size="8981" time="25.09.2021 20:06:14"/>
-   <file hash="" name="package_explorer.hpp" size="2684" time="18.09.2021 21:04:11"/>
-   <file hash="" name="path_bar.cpp" size="18274" time="26.09.2021 19:05:44"/>
-   <file hash="" name="path_bar.hpp" size="7387" time="26.09.2021 19:05:44"/>
-   <file hash="" name="path_directory_dialog.cpp" size="4216" time="23.09.2021 22:17:27"/>
-   <file hash="" name="path_directory_dialog.hpp" size="999" time="23.09.2021 20:36:54"/>
-   <file hash="" name="preinstall_component.cpp" size="3771" time="11.10.2021 19:21:44"/>
-   <file hash="" name="preinstall_component.hpp" size="755" time="11.10.2021 19:28:23"/>
-   <file hash="" name="properties_view.cpp" size="25524" time="28.09.2021 12:11:07"/>
-   <file hash="" name="properties_view.hpp" size="1752" time="25.09.2021 23:22:10"/>
+   <file hash="" name="package_explorer.cpp" size="8981" time="01.01.2022 19:21:17"/>
+   <file hash="" name="package_explorer.hpp" size="2684" time="01.01.2022 19:21:17"/>
+   <file hash="" name="path_bar.cpp" size="18274" time="01.01.2022 19:21:17"/>
+   <file hash="" name="path_bar.hpp" size="7387" time="01.01.2022 19:21:17"/>
+   <file hash="" name="path_directory_dialog.cpp" size="4216" time="01.01.2022 19:21:17"/>
+   <file hash="" name="path_directory_dialog.hpp" size="999" time="01.01.2022 19:21:17"/>
+   <file hash="" name="preinstall_component.cpp" size="3771" time="01.01.2022 19:21:17"/>
+   <file hash="" name="preinstall_component.hpp" size="755" time="01.01.2022 19:21:17"/>
+   <file hash="" name="properties_view.cpp" size="25524" time="01.01.2022 19:21:17"/>
+   <file hash="" name="properties_view.hpp" size="1752" time="01.01.2022 19:21:17"/>
    <file hash="" name="resource.aps" size="39076" time="25.09.2021 07:58:02"/>
    <file hash="" name="resource.rc" size="2103" time="27.09.2021 21:21:46"/>
-   <file hash="" name="rule.cpp" size="21801" time="29.09.2021 13:40:07"/>
-   <file hash="" name="rule.hpp" size="4217" time="29.09.2021 13:02:29"/>
-   <file hash="" name="rule_dialog.cpp" size="7237" time="23.09.2021 17:36:53"/>
-   <file hash="" name="rule_dialog.hpp" size="979" time="22.09.2021 18:37:19"/>
-   <file hash="" name="shortcut_dialog.cpp" size="14338" time="24.09.2021 15:14:16"/>
-   <file hash="" name="shortcut_dialog.hpp" size="1154" time="24.09.2021 16:02:43"/>
-   <file hash="" name="tool_bar.cpp" size="1053" time="25.09.2021 07:43:43"/>
-   <file hash="" name="tool_bar.hpp" size="723" time="25.09.2021 07:38:21"/>
-   <file hash="" name="uninstall_component.cpp" size="2211" time="11.10.2021 19:34:42"/>
-   <file hash="" name="uninstall_component.hpp" size="702" time="11.10.2021 19:29:31"/>
+   <file hash="" name="rule.cpp" size="21801" time="01.01.2022 19:21:17"/>
+   <file hash="" name="rule.hpp" size="4217" time="01.01.2022 19:21:17"/>
+   <file hash="" name="rule_dialog.cpp" size="7237" time="01.01.2022 19:21:17"/>
+   <file hash="" name="rule_dialog.hpp" size="979" time="01.01.2022 19:21:17"/>
+   <file hash="" name="shortcut_dialog.cpp" size="14338" time="01.01.2022 19:21:17"/>
+   <file hash="" name="shortcut_dialog.hpp" size="1154" time="01.01.2022 19:21:17"/>
+   <file hash="" name="tool_bar.cpp" size="1053" time="01.01.2022 19:21:17"/>
+   <file hash="" name="tool_bar.hpp" size="723" time="01.01.2022 19:21:17"/>
+   <file hash="" name="uninstall_component.cpp" size="2211" time="01.01.2022 19:21:17"/>
+   <file hash="" name="uninstall_component.hpp" size="702" time="01.01.2022 19:21:17"/>
   </directory>
   <directory name="sngxml" time="12.08.2021 14:31:02">
-   <directory name="dom" time="25.08.2021 15:00:10">
-    <file hash="" name="CharacterData.cpp" size="4139" time="02.08.2021 18:40:02"/>
-    <file hash="" name="CharacterData.hpp" size="3960" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Document.cpp" size="4845" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Document.hpp" size="2050" time="02.08.2021 18:40:02"/>
-    <file hash="" name="DocumentFragment.cpp" size="717" time="02.08.2021 18:40:02"/>
-    <file hash="" name="DocumentFragment.hpp" size="799" time="02.08.2021 18:40:02"/>
-    <file hash="" name="dom.vcxproj" size="8650" time="21.08.2021 12:41:07"/>
+   <directory name="dom" time="01.01.2022 19:21:16">
+    <file hash="" name="CharacterData.cpp" size="4139" time="01.01.2022 19:21:16"/>
+    <file hash="" name="CharacterData.hpp" size="3960" time="01.01.2022 19:21:16"/>
+    <file hash="" name="Document.cpp" size="4845" time="01.01.2022 19:21:16"/>
+    <file hash="" name="Document.hpp" size="2050" time="01.01.2022 19:21:16"/>
+    <file hash="" name="DocumentFragment.cpp" size="717" time="01.01.2022 19:21:16"/>
+    <file hash="" name="DocumentFragment.hpp" size="799" time="01.01.2022 19:21:16"/>
+    <file hash="" name="dom.vcxproj" size="8756" time="14.11.2021 20:31:38"/>
     <file hash="" name="dom.vcxproj.filters" size="887" time="12.08.2021 14:29:59"/>
     <file hash="" name="dom.vcxproj.user" size="168" time="12.08.2021 14:26:30"/>
-    <file hash="" name="DomApi.cpp" size="246" time="02.08.2021 18:40:02"/>
-    <file hash="" name="DomApi.hpp" size="456" time="12.08.2021 14:29:41"/>
-    <file hash="" name="Element.cpp" size="7092" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Element.hpp" size="2369" time="25.08.2021 14:55:58"/>
-    <file hash="" name="Exception.cpp" size="355" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Exception.hpp" size="400" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Node.cpp" size="12624" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Node.hpp" size="5724" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Parser.cpp" size="7318" time="25.08.2021 15:00:10"/>
-    <file hash="" name="Parser.hpp" size="1464" time="02.08.2021 18:40:02"/>
+    <file hash="" name="DomApi.cpp" size="246" time="01.01.2022 19:21:16"/>
+    <file hash="" name="DomApi.hpp" size="456" time="01.01.2022 19:21:16"/>
+    <file hash="" name="Element.cpp" size="7092" time="01.01.2022 19:21:16"/>
+    <file hash="" name="Element.hpp" size="2369" time="01.01.2022 19:21:16"/>
+    <file hash="" name="Exception.cpp" size="355" time="01.01.2022 19:21:16"/>
+    <file hash="" name="Exception.hpp" size="400" time="01.01.2022 19:21:16"/>
+    <file hash="" name="Node.cpp" size="12624" time="01.01.2022 19:21:16"/>
+    <file hash="" name="Node.hpp" size="5724" time="01.01.2022 19:21:16"/>
+    <file hash="" name="Parser.cpp" size="7318" time="01.01.2022 19:21:16"/>
+    <file hash="" name="Parser.hpp" size="1464" time="01.01.2022 19:21:16"/>
    </directory>
-   <directory name="xml" time="25.08.2021 15:01:49">
+   <directory name="xml" time="01.01.2022 19:21:15">
     <file hash="" name="Rules.cpp" size="2039" time="25.08.2021 15:02:06"/>
     <file hash="" name="Rules.hpp" size="3009" time="25.08.2021 15:02:06"/>
-    <file hash="" name="xml.vcxproj" size="8620" time="24.08.2021 22:17:38"/>
+    <file hash="" name="xml.vcxproj" size="8726" time="14.11.2021 20:31:38"/>
     <file hash="" name="xml.vcxproj.filters" size="857" time="24.08.2021 22:17:38"/>
     <file hash="" name="xml.vcxproj.user" size="168" time="12.08.2021 14:21:02"/>
-    <file hash="" name="XmlApi.cpp" size="186" time="02.08.2021 18:40:02"/>
-    <file hash="" name="XmlApi.hpp" size="456" time="12.08.2021 14:23:17"/>
-    <file hash="" name="XmlContentHandler.cpp" size="1530" time="02.08.2021 18:40:02"/>
-    <file hash="" name="XmlContentHandler.hpp" size="3026" time="25.08.2021 14:58:27"/>
+    <file hash="" name="XmlApi.cpp" size="186" time="01.01.2022 19:21:15"/>
+    <file hash="" name="XmlApi.hpp" size="456" time="01.01.2022 19:21:15"/>
+    <file hash="" name="XmlContentHandler.cpp" size="1530" time="01.01.2022 19:21:15"/>
+    <file hash="" name="XmlContentHandler.hpp" size="3026" time="01.01.2022 19:21:15"/>
     <file hash="" name="XmlParser.cpp" size="420396" time="25.08.2021 15:02:06"/>
     <file hash="" name="XmlParser.hpp" size="7328" time="25.08.2021 15:02:06"/>
-    <file hash="" name="XmlParser.parser" size="13374" time="25.08.2021 15:01:49"/>
+    <file hash="" name="XmlParser.parser" size="13374" time="01.01.2022 19:21:15"/>
     <file hash="" name="XmlParser.parser.old" size="13294" time="02.08.2021 18:40:02"/>
     <file hash="" name="XmlParser.spg" size="64" time="24.08.2021 21:06:23"/>
     <file hash="" name="XmlParser.spg.old" size="48" time="02.08.2021 18:40:02"/>
-    <file hash="" name="XmlParserInterface.cpp" size="2168" time="25.08.2021 09:58:52"/>
-    <file hash="" name="XmlParserInterface.hpp" size="2875" time="02.08.2021 18:40:02"/>
-    <file hash="" name="XmlProcessor.cpp" size="8501" time="25.08.2021 14:57:49"/>
-    <file hash="" name="XmlProcessor.hpp" size="3748" time="25.08.2021 14:57:23"/>
+    <file hash="" name="XmlParserInterface.cpp" size="2168" time="01.01.2022 19:21:15"/>
+    <file hash="" name="XmlParserInterface.hpp" size="2875" time="01.01.2022 19:21:15"/>
+    <file hash="" name="XmlProcessor.cpp" size="8501" time="01.01.2022 19:21:15"/>
+    <file hash="" name="XmlProcessor.hpp" size="3748" time="01.01.2022 19:21:15"/>
    </directory>
-   <directory name="xpath" time="21.08.2021 11:04:14">
-    <file hash="" name="InitDone.cpp" size="467" time="02.08.2021 18:40:02"/>
-    <file hash="" name="InitDone.hpp" size="428" time="06.08.2021 19:36:48"/>
-    <file hash="" name="xpath.vcxproj" size="9413" time="21.08.2021 12:42:10"/>
+   <directory name="xpath" time="01.01.2022 19:21:16">
+    <file hash="" name="InitDone.cpp" size="467" time="01.01.2022 19:21:16"/>
+    <file hash="" name="InitDone.hpp" size="428" time="01.01.2022 19:21:16"/>
+    <file hash="" name="xpath.vcxproj" size="9519" time="14.11.2021 20:31:38"/>
     <file hash="" name="xpath.vcxproj.filters" size="1640" time="12.08.2021 14:34:34"/>
     <file hash="" name="xpath.vcxproj.user" size="168" time="12.08.2021 14:31:09"/>
-    <file hash="" name="XPathApi.cpp" size="264" time="02.08.2021 18:40:02"/>
-    <file hash="" name="XPathApi.hpp" size="472" time="12.08.2021 14:32:40"/>
+    <file hash="" name="XPathApi.cpp" size="264" time="01.01.2022 19:21:16"/>
+    <file hash="" name="XPathApi.hpp" size="472" time="01.01.2022 19:21:16"/>
     <file hash="" name="XPathClassMap.cpp" size="9976951" time="02.08.2021 18:40:02"/>
     <file hash="" name="XPathClassMap.hpp" size="344" time="02.08.2021 18:40:02"/>
-    <file hash="" name="XPathContext.cpp" size="404" time="02.08.2021 18:40:02"/>
-    <file hash="" name="XPathContext.hpp" size="748" time="02.08.2021 18:40:02"/>
-    <file hash="" name="XPathDebug.cpp" size="3016" time="02.08.2021 18:40:02"/>
-    <file hash="" name="XPathDebug.hpp" size="1130" time="02.08.2021 18:40:02"/>
-    <file hash="" name="XPathEvaluate.cpp" size="2017" time="02.08.2021 18:40:02"/>
-    <file hash="" name="XPathEvaluate.hpp" size="634" time="02.08.2021 18:40:02"/>
-    <file hash="" name="XPathExpr.cpp" size="62148" time="02.08.2021 18:40:02"/>
-    <file hash="" name="XPathExpr.hpp" size="11061" time="02.08.2021 18:40:02"/>
-    <file hash="" name="XPathFunction.cpp" size="12783" time="02.08.2021 18:40:02"/>
-    <file hash="" name="XPathFunction.hpp" size="1077" time="02.08.2021 18:40:02"/>
+    <file hash="" name="XPathContext.cpp" size="404" time="01.01.2022 19:21:16"/>
+    <file hash="" name="XPathContext.hpp" size="748" time="01.01.2022 19:21:16"/>
+    <file hash="" name="XPathDebug.cpp" size="3016" time="01.01.2022 19:21:16"/>
+    <file hash="" name="XPathDebug.hpp" size="1130" time="01.01.2022 19:21:16"/>
+    <file hash="" name="XPathEvaluate.cpp" size="2017" time="01.01.2022 19:21:16"/>
+    <file hash="" name="XPathEvaluate.hpp" size="634" time="01.01.2022 19:21:16"/>
+    <file hash="" name="XPathExpr.cpp" size="62148" time="01.01.2022 19:21:16"/>
+    <file hash="" name="XPathExpr.hpp" size="11061" time="01.01.2022 19:21:16"/>
+    <file hash="" name="XPathFunction.cpp" size="12783" time="01.01.2022 19:21:16"/>
+    <file hash="" name="XPathFunction.hpp" size="1077" time="01.01.2022 19:21:16"/>
     <file hash="" name="XPathKeywords.cpp" size="1261" time="02.08.2021 18:40:02"/>
     <file hash="" name="XPathKeywords.hpp" size="417" time="02.08.2021 18:40:02"/>
     <file hash="" name="XPathLexer.cpp" size="33351" time="02.08.2021 18:40:02"/>
     <file hash="" name="XPathLexer.hpp" size="677" time="02.08.2021 18:40:02"/>
     <file hash="" name="XPathLexer.lexer" size="3122" time="02.08.2021 18:40:02"/>
-    <file hash="" name="XPathObject.cpp" size="3921" time="02.08.2021 18:40:02"/>
-    <file hash="" name="XPathObject.hpp" size="1861" time="02.08.2021 18:40:02"/>
+    <file hash="" name="XPathObject.cpp" size="3921" time="01.01.2022 19:21:16"/>
+    <file hash="" name="XPathObject.hpp" size="1861" time="01.01.2022 19:21:16"/>
     <file hash="" name="XPathParser.cpp" size="220122" time="02.08.2021 18:40:02"/>
     <file hash="" name="XPathParser.hpp" size="3031" time="02.08.2021 18:40:02"/>
-    <file hash="" name="XPathParser.parser" size="17404" time="02.08.2021 18:40:02"/>
+    <file hash="" name="XPathParser.parser" size="17404" time="01.01.2022 19:21:16"/>
     <file hash="" name="XPathParser.spg" size="52" time="02.08.2021 18:40:02"/>
     <file hash="" name="XPathTokens.cpp" size="4758" time="02.08.2021 18:40:02"/>
     <file hash="" name="XPathTokens.hpp" size="1946" time="02.08.2021 18:40:02"/>
-    <file hash="" name="XPathTokenValueParsers.cpp" size="1573" time="02.08.2021 18:40:02"/>
-    <file hash="" name="XPathTokenValueParsers.hpp" size="673" time="02.08.2021 18:40:02"/>
+    <file hash="" name="XPathTokenValueParsers.cpp" size="1573" time="01.01.2022 19:21:16"/>
+    <file hash="" name="XPathTokenValueParsers.hpp" size="673" time="01.01.2022 19:21:16"/>
    </directory>
   </directory>
   <directory name="soulng" time="12.08.2021 14:08:33">
-   <directory name="lexer" time="21.08.2021 11:04:14">
-    <file hash="" name="Keyword.cpp" size="911" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Keyword.hpp" size="854" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Lexeme.cpp" size="188" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Lexeme.hpp" size="1460" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Lexer.cpp" size="22951" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Lexer.hpp" size="8524" time="02.08.2021 18:40:02"/>
-    <file hash="" name="lexer.vcxproj" size="8874" time="21.08.2021 12:42:43"/>
+   <directory name="lexer" time="01.01.2022 19:21:16">
+    <file hash="" name="Keyword.cpp" size="911" time="01.01.2022 19:21:15"/>
+    <file hash="" name="Keyword.hpp" size="854" time="01.01.2022 19:21:15"/>
+    <file hash="" name="Lexeme.cpp" size="188" time="01.01.2022 19:21:15"/>
+    <file hash="" name="Lexeme.hpp" size="1460" time="01.01.2022 19:21:15"/>
+    <file hash="" name="Lexer.cpp" size="22951" time="01.01.2022 19:21:15"/>
+    <file hash="" name="Lexer.hpp" size="8524" time="01.01.2022 19:21:15"/>
+    <file hash="" name="lexer.vcxproj" size="8980" time="14.11.2021 20:31:37"/>
     <file hash="" name="lexer.vcxproj.filters" size="1101" time="12.08.2021 13:54:17"/>
     <file hash="" name="lexer.vcxproj.user" size="168" time="12.08.2021 13:50:31"/>
-    <file hash="" name="LexerApi.hpp" size="472" time="12.08.2021 13:54:10"/>
-    <file hash="" name="ParsingException.cpp" size="790" time="02.08.2021 18:40:02"/>
-    <file hash="" name="ParsingException.hpp" size="1218" time="02.08.2021 18:40:02"/>
-    <file hash="" name="ParsingLog.cpp" size="513" time="02.08.2021 18:40:02"/>
-    <file hash="" name="ParsingLog.hpp" size="1035" time="02.08.2021 18:40:02"/>
-    <file hash="" name="SourcePos.cpp" size="577" time="02.08.2021 18:40:02"/>
-    <file hash="" name="SourcePos.hpp" size="1709" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Span.cpp" size="450" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Span.hpp" size="950" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Token.cpp" size="860" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Token.hpp" size="1149" time="02.08.2021 18:40:02"/>
-    <file hash="" name="TrivialLexer.cpp" size="899" time="02.08.2021 18:40:02"/>
-    <file hash="" name="TrivialLexer.hpp" size="737" time="02.08.2021 18:40:02"/>
-    <file hash="" name="XmlParsingLog.cpp" size="3227" time="02.08.2021 18:40:02"/>
-    <file hash="" name="XmlParsingLog.hpp" size="1385" time="02.08.2021 18:40:02"/>
+    <file hash="" name="LexerApi.hpp" size="472" time="01.01.2022 19:21:15"/>
+    <file hash="" name="ParsingException.cpp" size="790" time="01.01.2022 19:21:15"/>
+    <file hash="" name="ParsingException.hpp" size="1218" time="01.01.2022 19:21:15"/>
+    <file hash="" name="ParsingLog.cpp" size="513" time="01.01.2022 19:21:15"/>
+    <file hash="" name="ParsingLog.hpp" size="1035" time="01.01.2022 19:21:15"/>
+    <file hash="" name="SourcePos.cpp" size="577" time="01.01.2022 19:21:15"/>
+    <file hash="" name="SourcePos.hpp" size="1709" time="01.01.2022 19:21:15"/>
+    <file hash="" name="Span.cpp" size="450" time="01.01.2022 19:21:15"/>
+    <file hash="" name="Span.hpp" size="950" time="01.01.2022 19:21:15"/>
+    <file hash="" name="Token.cpp" size="860" time="01.01.2022 19:21:15"/>
+    <file hash="" name="Token.hpp" size="1149" time="01.01.2022 19:21:15"/>
+    <file hash="" name="TrivialLexer.cpp" size="899" time="01.01.2022 19:21:15"/>
+    <file hash="" name="TrivialLexer.hpp" size="737" time="01.01.2022 19:21:15"/>
+    <file hash="" name="XmlParsingLog.cpp" size="3227" time="01.01.2022 19:21:15"/>
+    <file hash="" name="XmlParsingLog.hpp" size="1385" time="01.01.2022 19:21:15"/>
    </directory>
-   <directory name="parser" time="21.08.2021 11:04:14">
-    <file hash="" name="Match.cpp" size="264" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Match.hpp" size="615" time="02.08.2021 18:40:02"/>
-    <file hash="" name="parser.vcxproj" size="8260" time="21.08.2021 12:43:15"/>
+   <directory name="parser" time="01.01.2022 19:21:15">
+    <file hash="" name="Match.cpp" size="264" time="01.01.2022 19:21:15"/>
+    <file hash="" name="Match.hpp" size="615" time="01.01.2022 19:21:15"/>
+    <file hash="" name="parser.vcxproj" size="8366" time="14.11.2021 20:31:38"/>
     <file hash="" name="parser.vcxproj.filters" size="482" time="12.08.2021 14:01:04"/>
     <file hash="" name="parser.vcxproj.user" size="168" time="12.08.2021 13:57:36"/>
-    <file hash="" name="ParserApi.hpp" size="543" time="12.08.2021 13:59:15"/>
-    <file hash="" name="Range.cpp" size="188" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Range.hpp" size="459" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Value.cpp" size="188" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Value.hpp" size="490" time="02.08.2021 18:40:02"/>
+    <file hash="" name="ParserApi.hpp" size="543" time="01.01.2022 19:21:15"/>
+    <file hash="" name="Range.cpp" size="188" time="01.01.2022 19:21:15"/>
+    <file hash="" name="Range.hpp" size="459" time="01.01.2022 19:21:15"/>
+    <file hash="" name="Value.cpp" size="188" time="01.01.2022 19:21:15"/>
+    <file hash="" name="Value.hpp" size="490" time="01.01.2022 19:21:15"/>
    </directory>
-   <directory name="rex" time="21.08.2021 11:09:14">
-    <file hash="" name="Algorithm.cpp" size="1960" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Algorithm.hpp" size="771" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Context.cpp" size="1578" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Context.hpp" size="927" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Match.cpp" size="1792" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Match.hpp" size="916" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Nfa.cpp" size="3618" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Nfa.hpp" size="1808" time="02.08.2021 18:40:02"/>
-    <file hash="" name="rex.vcxproj" size="9005" time="21.08.2021 12:43:45"/>
+   <directory name="rex" time="01.01.2022 19:21:16">
+    <file hash="" name="Algorithm.cpp" size="1960" time="01.01.2022 19:21:16"/>
+    <file hash="" name="Algorithm.hpp" size="771" time="01.01.2022 19:21:16"/>
+    <file hash="" name="Context.cpp" size="1578" time="01.01.2022 19:21:16"/>
+    <file hash="" name="Context.hpp" size="927" time="01.01.2022 19:21:16"/>
+    <file hash="" name="Match.cpp" size="1792" time="01.01.2022 19:21:16"/>
+    <file hash="" name="Match.hpp" size="916" time="01.01.2022 19:21:16"/>
+    <file hash="" name="Nfa.cpp" size="3618" time="01.01.2022 19:21:16"/>
+    <file hash="" name="Nfa.hpp" size="1808" time="01.01.2022 19:21:16"/>
+    <file hash="" name="rex.vcxproj" size="9111" time="14.11.2021 20:31:38"/>
     <file hash="" name="rex.vcxproj.filters" size="1242" time="12.08.2021 14:06:29"/>
     <file hash="" name="rex.vcxproj.user" size="168" time="12.08.2021 14:03:03"/>
-    <file hash="" name="RexApi.hpp" size="456" time="12.08.2021 14:04:18"/>
+    <file hash="" name="RexApi.hpp" size="456" time="01.01.2022 19:21:16"/>
     <file hash="" name="RexClassMap.cpp" size="10027416" time="02.08.2021 18:40:02"/>
     <file hash="" name="RexClassMap.hpp" size="328" time="02.08.2021 18:40:02"/>
     <file hash="" name="RexLexer.cpp" size="75385" time="02.08.2021 18:40:02"/>
     <file hash="" name="RexLexer.hpp" size="657" time="02.08.2021 18:40:02"/>
-    <file hash="" name="RexLexer.lexer" size="1310" time="02.08.2021 18:40:02"/>
+    <file hash="" name="RexLexer.lexer" size="1310" time="01.01.2022 19:21:16"/>
     <file hash="" name="RexParser.cpp" size="63921" time="02.08.2021 18:40:02"/>
     <file hash="" name="RexParser.hpp" size="1256" time="02.08.2021 18:40:02"/>
-    <file hash="" name="RexParser.parser" size="3633" time="02.08.2021 18:40:02"/>
+    <file hash="" name="RexParser.parser" size="3633" time="01.01.2022 19:21:16"/>
     <file hash="" name="RexParser.spg" size="48" time="02.08.2021 18:40:02"/>
     <file hash="" name="RexTokens.cpp" size="1954" time="02.08.2021 18:40:02"/>
     <file hash="" name="RexTokens.hpp" size="892" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Symbol.cpp" size="965" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Symbol.hpp" size="1749" time="02.08.2021 18:40:02"/>
-    <file hash="" name="TokenValueParsers.cpp" size="4251" time="02.08.2021 18:40:02"/>
-    <file hash="" name="TokenValueParsers.hpp" size="550" time="02.08.2021 18:40:02"/>
+    <file hash="" name="Symbol.cpp" size="965" time="01.01.2022 19:21:16"/>
+    <file hash="" name="Symbol.hpp" size="1749" time="01.01.2022 19:21:16"/>
+    <file hash="" name="TokenValueParsers.cpp" size="4251" time="01.01.2022 19:21:16"/>
+    <file hash="" name="TokenValueParsers.hpp" size="550" time="01.01.2022 19:21:16"/>
    </directory>
-   <directory name="util" time="06.10.2021 14:12:49">
-    <file hash="" name="Ansi.cpp" size="25409" time="15.08.2021 14:59:00"/>
-    <file hash="" name="Ansi.hpp" size="1957" time="02.08.2021 18:40:02"/>
-    <file hash="" name="BinaryReader.cpp" size="5106" time="02.08.2021 18:40:02"/>
-    <file hash="" name="BinaryReader.hpp" size="1533" time="02.08.2021 18:40:02"/>
-    <file hash="" name="BinaryStreamReader.cpp" size="4923" time="04.08.2021 13:20:14"/>
-    <file hash="" name="BinaryStreamReader.hpp" size="1364" time="11.08.2021 12:04:17"/>
-    <file hash="" name="BinaryStreamWriter.cpp" size="4744" time="04.08.2021 13:20:51"/>
-    <file hash="" name="BinaryStreamWriter.hpp" size="1503" time="11.08.2021 12:04:26"/>
-    <file hash="" name="BinaryWriter.cpp" size="5646" time="02.08.2021 18:40:02"/>
-    <file hash="" name="BinaryWriter.hpp" size="1736" time="02.08.2021 18:40:02"/>
-    <file hash="" name="BufferedStream.cpp" size="2394" time="25.08.2021 21:33:44"/>
-    <file hash="" name="BufferedStream.hpp" size="1139" time="03.08.2021 15:15:07"/>
-    <file hash="" name="BZ2Interface.c" size="3797" time="12.08.2021 16:55:46"/>
-    <file hash="" name="BZ2Interface.h" size="925" time="03.08.2021 17:37:59"/>
-    <file hash="" name="BZip2Stream.cpp" size="5373" time="15.08.2021 22:50:58"/>
-    <file hash="" name="BZip2Stream.hpp" size="1884" time="25.08.2021 21:33:55"/>
-    <file hash="" name="CodeFormatter.cpp" size="4209" time="02.08.2021 18:40:02"/>
-    <file hash="" name="CodeFormatter.hpp" size="2893" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Compression.cpp" size="2094" time="03.08.2021 17:36:40"/>
-    <file hash="" name="Compression.hpp" size="431" time="03.08.2021 16:07:20"/>
-    <file hash="" name="Defines.hpp" size="513" time="02.08.2021 18:40:02"/>
-    <file hash="" name="DeflateStream.cpp" size="5274" time="15.08.2021 22:50:48"/>
-    <file hash="" name="DeflateStream.hpp" size="1627" time="03.08.2021 19:06:18"/>
-    <file hash="" name="Error.hpp" size="571" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Fiber.cpp" size="2471" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Fiber.hpp" size="644" time="02.08.2021 18:40:02"/>
-    <file hash="" name="FileLocking.cpp" size="5033" time="02.08.2021 18:40:02"/>
-    <file hash="" name="FileLocking.hpp" size="691" time="02.08.2021 18:40:02"/>
-    <file hash="" name="FilePtr.cpp" size="1335" time="02.08.2021 18:40:02"/>
-    <file hash="" name="FilePtr.hpp" size="984" time="02.08.2021 18:40:02"/>
-    <file hash="" name="FileStream.cpp" size="5236" time="09.08.2021 21:08:46"/>
-    <file hash="" name="FileStream.hpp" size="1515" time="09.08.2021 21:09:00"/>
-    <file hash="" name="FileUtil.cpp" size="2971" time="27.09.2021 20:20:05"/>
-    <file hash="" name="FileUtil.hpp" size="994" time="27.09.2021 20:44:10"/>
-    <file hash="" name="Handle.hpp" size="1096" time="02.08.2021 18:40:02"/>
-    <file hash="" name="InitDone.cpp" size="822" time="12.08.2021 14:47:49"/>
-    <file hash="" name="InitDone.hpp" size="432" time="06.08.2021 19:36:41"/>
-    <file hash="" name="Json.cpp" size="7596" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Json.hpp" size="3101" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Log.cpp" size="3593" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Log.hpp" size="861" time="02.08.2021 18:40:02"/>
-    <file hash="" name="LogFileWriter.cpp" size="2355" time="02.08.2021 18:40:02"/>
-    <file hash="" name="LogFileWriter.hpp" size="1616" time="02.08.2021 18:40:02"/>
-    <file hash="" name="MappedInputFile.cpp" size="2358" time="02.08.2021 18:40:02"/>
-    <file hash="" name="MappedInputFile.hpp" size="799" time="02.08.2021 18:40:02"/>
-    <file hash="" name="MemoryReader.cpp" size="2282" time="02.08.2021 18:40:02"/>
-    <file hash="" name="MemoryReader.hpp" size="851" time="02.08.2021 18:40:02"/>
-    <file hash="" name="MemoryStream.cpp" size="2020" time="11.08.2021 10:07:06"/>
-    <file hash="" name="MemoryStream.hpp" size="1143" time="09.08.2021 21:15:13"/>
-    <file hash="" name="MemoryWriter.cpp" size="2140" time="02.08.2021 18:40:02"/>
-    <file hash="" name="MemoryWriter.hpp" size="878" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Multiprecision.cpp" size="18057" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Multiprecision.hpp" size="6347" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Mutex.cpp" size="1057" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Mutex.hpp" size="1216" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Path.cpp" size="12476" time="02.10.2021 14:07:37"/>
-    <file hash="" name="Path.hpp" size="1876" time="18.08.2021 19:29:51"/>
-    <file hash="" name="Prime.cpp" size="1029" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Prime.hpp" size="526" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Process.cpp" size="1416" time="12.08.2021 13:44:37"/>
-    <file hash="" name="Process.hpp" size="1452" time="02.08.2021 18:40:02"/>
-    <file hash="" name="ProcessImpl.cpp" size="7150" time="14.08.2021 06:13:50"/>
-    <file hash="" name="ProcessImpl.hpp" size="1436" time="02.08.2021 18:40:02"/>
+   <directory name="util" time="01.01.2022 19:21:17">
+    <file hash="" name="Ansi.cpp" size="25409" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Ansi.hpp" size="1957" time="01.01.2022 19:21:17"/>
+    <file hash="" name="BinaryReader.cpp" size="5106" time="01.01.2022 19:21:17"/>
+    <file hash="" name="BinaryReader.hpp" size="1533" time="01.01.2022 19:21:17"/>
+    <file hash="" name="BinaryStreamReader.cpp" size="4923" time="01.01.2022 19:21:17"/>
+    <file hash="" name="BinaryStreamReader.hpp" size="1364" time="01.01.2022 19:21:17"/>
+    <file hash="" name="BinaryStreamWriter.cpp" size="4744" time="01.01.2022 19:21:17"/>
+    <file hash="" name="BinaryStreamWriter.hpp" size="1503" time="01.01.2022 19:21:17"/>
+    <file hash="" name="BinaryWriter.cpp" size="5646" time="01.01.2022 19:21:17"/>
+    <file hash="" name="BinaryWriter.hpp" size="1736" time="01.01.2022 19:21:17"/>
+    <file hash="" name="BufferedStream.cpp" size="2394" time="01.01.2022 19:21:17"/>
+    <file hash="" name="BufferedStream.hpp" size="1139" time="01.01.2022 19:21:17"/>
+    <file hash="" name="BZ2Interface.c" size="3797" time="01.01.2022 19:21:17"/>
+    <file hash="" name="BZ2Interface.h" size="925" time="01.01.2022 19:21:17"/>
+    <file hash="" name="BZip2Stream.cpp" size="5373" time="01.01.2022 19:21:17"/>
+    <file hash="" name="BZip2Stream.hpp" size="1884" time="01.01.2022 19:21:17"/>
+    <file hash="" name="CodeFormatter.cpp" size="4209" time="01.01.2022 19:21:17"/>
+    <file hash="" name="CodeFormatter.hpp" size="2893" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Compression.cpp" size="2094" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Compression.hpp" size="431" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Defines.hpp" size="513" time="01.01.2022 19:21:17"/>
+    <file hash="" name="DeflateStream.cpp" size="5274" time="01.01.2022 19:21:17"/>
+    <file hash="" name="DeflateStream.hpp" size="1627" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Error.hpp" size="571" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Fiber.cpp" size="2471" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Fiber.hpp" size="644" time="01.01.2022 19:21:17"/>
+    <file hash="" name="FileLocking.cpp" size="5033" time="01.01.2022 19:21:17"/>
+    <file hash="" name="FileLocking.hpp" size="691" time="01.01.2022 19:21:17"/>
+    <file hash="" name="FilePtr.cpp" size="1335" time="01.01.2022 19:21:17"/>
+    <file hash="" name="FilePtr.hpp" size="984" time="01.01.2022 19:21:17"/>
+    <file hash="" name="FileStream.cpp" size="5236" time="01.01.2022 19:21:17"/>
+    <file hash="" name="FileStream.hpp" size="1515" time="01.01.2022 19:21:17"/>
+    <file hash="" name="FileUtil.cpp" size="2971" time="01.01.2022 19:21:17"/>
+    <file hash="" name="FileUtil.hpp" size="994" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Handle.hpp" size="1096" time="01.01.2022 19:21:17"/>
+    <file hash="" name="InitDone.cpp" size="822" time="01.01.2022 19:21:17"/>
+    <file hash="" name="InitDone.hpp" size="432" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Json.cpp" size="7596" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Json.hpp" size="3101" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Log.cpp" size="3593" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Log.hpp" size="861" time="01.01.2022 19:21:17"/>
+    <file hash="" name="LogFileWriter.cpp" size="2355" time="01.01.2022 19:21:17"/>
+    <file hash="" name="LogFileWriter.hpp" size="1616" time="01.01.2022 19:21:17"/>
+    <file hash="" name="MappedInputFile.cpp" size="2358" time="01.01.2022 19:21:17"/>
+    <file hash="" name="MappedInputFile.hpp" size="799" time="01.01.2022 19:21:17"/>
+    <file hash="" name="MemoryReader.cpp" size="2282" time="01.01.2022 19:21:17"/>
+    <file hash="" name="MemoryReader.hpp" size="851" time="01.01.2022 19:21:17"/>
+    <file hash="" name="MemoryStream.cpp" size="2020" time="01.01.2022 19:21:17"/>
+    <file hash="" name="MemoryStream.hpp" size="1143" time="01.01.2022 19:21:17"/>
+    <file hash="" name="MemoryWriter.cpp" size="2140" time="01.01.2022 19:21:17"/>
+    <file hash="" name="MemoryWriter.hpp" size="878" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Multiprecision.cpp" size="18057" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Multiprecision.hpp" size="6347" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Mutex.cpp" size="1057" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Mutex.hpp" size="1216" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Path.cpp" size="12476" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Path.hpp" size="1876" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Prime.cpp" size="1029" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Prime.hpp" size="526" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Process.cpp" size="1416" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Process.hpp" size="1452" time="01.01.2022 19:21:17"/>
+    <file hash="" name="ProcessImpl.cpp" size="7150" time="01.01.2022 19:21:17"/>
+    <file hash="" name="ProcessImpl.hpp" size="1458" time="01.01.2022 19:21:17"/>
     <file hash="" name="Random.cpp" size="3671" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Random.hpp" size="498" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Sha1.cpp" size="3661" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Sha1.hpp" size="1190" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Socket.cpp" size="11797" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Socket.hpp" size="2014" time="02.08.2021 18:40:02"/>
-    <file hash="" name="SocketFwd.cpp" size="190" time="02.08.2021 18:40:02"/>
-    <file hash="" name="SocketFwd.hpp" size="543" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Stream.cpp" size="2419" time="11.08.2021 20:30:11"/>
-    <file hash="" name="Stream.hpp" size="1968" time="11.08.2021 20:30:25"/>
-    <file hash="" name="String.hpp" size="2204" time="02.08.2021 18:40:02"/>
-    <file hash="" name="System.cpp" size="12340" time="02.08.2021 18:40:02"/>
-    <file hash="" name="System.hpp" size="1687" time="02.08.2021 18:40:02"/>
-    <file hash="" name="TextUtils.cpp" size="15769" time="15.08.2021 15:21:48"/>
-    <file hash="" name="TextUtils.hpp" size="3449" time="15.08.2021 15:20:43"/>
-    <file hash="" name="Time.cpp" size="16525" time="05.08.2021 11:40:23"/>
-    <file hash="" name="Time.hpp" size="5065" time="05.08.2021 11:36:39"/>
-    <file hash="" name="Unicode.cpp" size="108645" time="06.10.2021 14:12:40"/>
-    <file hash="" name="Unicode.hpp" size="44214" time="06.10.2021 14:12:49"/>
-    <file hash="" name="Util.hpp" size="969" time="02.08.2021 18:40:02"/>
-    <file hash="" name="util.vcxproj" size="11786" time="21.08.2021 12:44:17"/>
+    <file hash="" name="Random.hpp" size="498" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Sha1.cpp" size="3661" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Sha1.hpp" size="1190" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Socket.cpp" size="11797" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Socket.hpp" size="2014" time="01.01.2022 19:21:17"/>
+    <file hash="" name="SocketFwd.cpp" size="190" time="01.01.2022 19:21:17"/>
+    <file hash="" name="SocketFwd.hpp" size="543" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Stream.cpp" size="2419" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Stream.hpp" size="1968" time="01.01.2022 19:21:17"/>
+    <file hash="" name="String.hpp" size="2204" time="01.01.2022 19:21:17"/>
+    <file hash="" name="System.cpp" size="12340" time="01.01.2022 19:21:17"/>
+    <file hash="" name="System.hpp" size="1687" time="01.01.2022 19:21:17"/>
+    <file hash="" name="TextUtils.cpp" size="15769" time="01.01.2022 19:21:17"/>
+    <file hash="" name="TextUtils.hpp" size="3449" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Time.cpp" size="16525" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Time.hpp" size="5065" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Unicode.cpp" size="108645" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Unicode.hpp" size="44214" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Util.hpp" size="969" time="01.01.2022 19:21:17"/>
+    <file hash="" name="util.vcxproj" size="11892" time="14.11.2021 20:31:37"/>
     <file hash="" name="util.vcxproj.filters" size="3980" time="12.08.2021 14:47:43"/>
     <file hash="" name="util.vcxproj.user" size="168" time="13.08.2021 12:42:30"/>
-    <file hash="" name="UtilApi.hpp" size="457" time="12.08.2021 13:53:46"/>
-    <file hash="" name="Uuid.cpp" size="932" time="02.08.2021 18:40:02"/>
-    <file hash="" name="Uuid.hpp" size="594" time="02.08.2021 18:40:02"/>
+    <file hash="" name="UtilApi.hpp" size="457" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Uuid.cpp" size="932" time="01.01.2022 19:21:17"/>
+    <file hash="" name="Uuid.hpp" size="594" time="01.01.2022 19:21:17"/>
     <file hash="" name="ZLibInterface.c" size="3282" time="12.08.2021 16:56:20"/>
-    <file hash="" name="ZLibInterface.h" size="873" time="03.08.2021 17:43:16"/>
+    <file hash="" name="ZLibInterface.h" size="873" time="01.01.2022 19:21:17"/>
    </directory>
   </directory>
-  <directory name="uninstall" time="11.10.2021 18:07:06">
-   <file hash="" name="main.cpp" size="2100" time="11.10.2021 18:07:06"/>
+  <directory name="uninstall" time="01.01.2022 19:21:15">
+   <file hash="" name="main.cpp" size="2100" time="01.01.2022 19:21:15"/>
    <file hash="" name="resource.rc" size="37" time="14.08.2021 05:44:03"/>
-   <file hash="" name="uninstall.vcxproj" size="8259" time="21.08.2021 12:45:20"/>
+   <file hash="" name="uninstall.vcxproj" size="8365" time="14.11.2021 20:31:38"/>
    <file hash="" name="uninstall.vcxproj.filters" size="290" time="14.08.2021 05:45:07"/>
    <file hash="" name="uninstall.vcxproj.user" size="639" time="30.09.2021 10:30:53"/>
   </directory>
-  <directory name="wing" time="30.09.2021 10:22:27">
+  <directory name="wing" time="01.01.2022 19:21:17">
    <directory name="res" time="17.09.2021 20:26:40">
     <file hash="" name="arrow.wing.bmp" size="4150" time="02.08.2021 18:40:03"/>
     <file hash="" name="column.size.wing.cur" size="326" time="17.09.2021 20:26:40"/>
@@ -914,204 +918,204 @@
     <file hash="" name="wing.resource.rc" size="344" time="17.09.2021 19:40:12"/>
     <file hash="" name="wing.resource.xml" size="435" time="17.09.2021 19:27:35"/>
    </directory>
-   <file hash="" name="Ansi.cpp" size="17933" time="13.08.2021 11:52:28"/>
-   <file hash="" name="Ansi.hpp" size="1624" time="13.08.2021 11:52:28"/>
-   <file hash="" name="Application.cpp" size="2428" time="13.08.2021 11:52:28"/>
-   <file hash="" name="Application.hpp" size="2191" time="13.08.2021 11:52:28"/>
-   <file hash="" name="BinaryResourcePtr.cpp" size="1160" time="13.08.2021 11:52:28"/>
-   <file hash="" name="BinaryResourcePtr.hpp" size="765" time="13.08.2021 11:52:28"/>
-   <file hash="" name="BorderedControl.cpp" size="10988" time="19.09.2021 18:25:22"/>
-   <file hash="" name="BorderedControl.hpp" size="4588" time="19.09.2021 18:24:55"/>
-   <file hash="" name="Buffer.cpp" size="477" time="13.08.2021 11:52:28"/>
-   <file hash="" name="Buffer.hpp" size="651" time="13.08.2021 11:52:28"/>
+   <file hash="" name="Ansi.cpp" size="17933" time="01.01.2022 19:21:17"/>
+   <file hash="" name="Ansi.hpp" size="1624" time="01.01.2022 19:21:17"/>
+   <file hash="" name="Application.cpp" size="2428" time="01.01.2022 19:21:17"/>
+   <file hash="" name="Application.hpp" size="2191" time="01.01.2022 19:21:17"/>
+   <file hash="" name="BinaryResourcePtr.cpp" size="1160" time="01.01.2022 19:21:17"/>
+   <file hash="" name="BinaryResourcePtr.hpp" size="765" time="01.01.2022 19:21:16"/>
+   <file hash="" name="BorderedControl.cpp" size="10988" time="01.01.2022 19:21:16"/>
+   <file hash="" name="BorderedControl.hpp" size="4588" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Buffer.cpp" size="477" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Buffer.hpp" size="651" time="01.01.2022 19:21:16"/>
    <file hash="" name="Button.cpp" size="2839" time="13.08.2021 11:52:28"/>
-   <file hash="" name="Button.hpp" size="1136" time="13.08.2021 11:52:28"/>
-   <file hash="" name="CheckBox.cpp" size="5362" time="13.08.2021 11:52:28"/>
-   <file hash="" name="CheckBox.hpp" size="2407" time="13.08.2021 11:52:28"/>
-   <file hash="" name="Clipboard.cpp" size="5378" time="13.08.2021 11:52:28"/>
-   <file hash="" name="Clipboard.hpp" size="1871" time="13.08.2021 11:52:28"/>
-   <file hash="" name="Color.cpp" size="1287" time="13.08.2021 11:52:28"/>
-   <file hash="" name="Color.hpp" size="630" time="13.08.2021 11:52:28"/>
-   <file hash="" name="ComboBox.cpp" size="4575" time="19.09.2021 16:22:51"/>
-   <file hash="" name="ComboBox.hpp" size="1912" time="19.09.2021 16:22:04"/>
-   <file hash="" name="Component.cpp" size="346" time="13.08.2021 11:52:28"/>
-   <file hash="" name="Component.hpp" size="2691" time="27.09.2021 11:48:32"/>
-   <file hash="" name="Console.cpp" size="14564" time="13.08.2021 11:52:28"/>
-   <file hash="" name="Console.hpp" size="3845" time="13.08.2021 11:52:28"/>
-   <file hash="" name="Container.cpp" size="3550" time="31.08.2021 14:46:17"/>
-   <file hash="" name="Container.hpp" size="989" time="13.08.2021 11:52:28"/>
-   <file hash="" name="ContainerControl.cpp" size="9106" time="20.09.2021 20:07:54"/>
-   <file hash="" name="ContainerControl.hpp" size="1801" time="20.09.2021 20:06:32"/>
-   <file hash="" name="Control.cpp" size="44255" time="20.09.2021 20:11:17"/>
-   <file hash="" name="Control.hpp" size="24144" time="21.09.2021 18:38:58"/>
-   <file hash="" name="Cursor.cpp" size="1670" time="13.08.2021 11:52:28"/>
-   <file hash="" name="Cursor.hpp" size="1397" time="13.08.2021 11:52:28"/>
+   <file hash="" name="Button.hpp" size="1136" time="01.01.2022 19:21:16"/>
+   <file hash="" name="CheckBox.cpp" size="5362" time="01.01.2022 19:21:16"/>
+   <file hash="" name="CheckBox.hpp" size="2407" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Clipboard.cpp" size="5378" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Clipboard.hpp" size="1871" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Color.cpp" size="1287" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Color.hpp" size="630" time="01.01.2022 19:21:16"/>
+   <file hash="" name="ComboBox.cpp" size="4575" time="01.01.2022 19:21:16"/>
+   <file hash="" name="ComboBox.hpp" size="1912" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Component.cpp" size="346" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Component.hpp" size="2691" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Console.cpp" size="14564" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Console.hpp" size="3845" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Container.cpp" size="3550" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Container.hpp" size="989" time="01.01.2022 19:21:16"/>
+   <file hash="" name="ContainerControl.cpp" size="9106" time="01.01.2022 19:21:16"/>
+   <file hash="" name="ContainerControl.hpp" size="1801" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Control.cpp" size="44255" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Control.hpp" size="24144" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Cursor.cpp" size="1670" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Cursor.hpp" size="1397" time="01.01.2022 19:21:16"/>
    <file hash="" name="Dialog.cpp" size="4059" time="28.08.2021 21:02:02"/>
-   <file hash="" name="Dialog.hpp" size="769" time="13.08.2021 11:52:28"/>
-   <file hash="" name="EditCommand.cpp" size="4459" time="13.08.2021 11:52:28"/>
-   <file hash="" name="EditCommand.hpp" size="3502" time="13.08.2021 11:52:28"/>
-   <file hash="" name="EditCommandList.cpp" size="2959" time="13.08.2021 11:52:28"/>
-   <file hash="" name="EditCommandList.hpp" size="1945" time="13.08.2021 11:52:28"/>
-   <file hash="" name="Environment.cpp" size="4571" time="17.08.2021 19:58:25"/>
-   <file hash="" name="Environment.hpp" size="933" time="13.08.2021 11:52:28"/>
-   <file hash="" name="Event.cpp" size="907" time="13.08.2021 11:52:28"/>
-   <file hash="" name="Event.hpp" size="2787" time="13.08.2021 11:52:28"/>
-   <file hash="" name="FileUtil.cpp" size="1254" time="16.08.2021 17:45:48"/>
-   <file hash="" name="FileUtil.hpp" size="575" time="16.08.2021 17:44:03"/>
-   <file hash="" name="Graphics.cpp" size="6921" time="13.08.2021 11:52:27"/>
-   <file hash="" name="Graphics.hpp" size="4042" time="13.08.2021 11:52:27"/>
-   <file hash="" name="GroupBox.cpp" size="4492" time="13.08.2021 11:52:27"/>
-   <file hash="" name="GroupBox.hpp" size="1995" time="13.08.2021 11:52:28"/>
-   <file hash="" name="Icon.cpp" size="1291" time="13.08.2021 11:52:27"/>
-   <file hash="" name="Icon.hpp" size="946" time="13.08.2021 11:52:27"/>
-   <file hash="" name="IconListView.cpp" size="15697" time="13.08.2021 11:52:27"/>
-   <file hash="" name="IconListView.hpp" size="7290" time="13.08.2021 11:52:27"/>
-   <file hash="" name="ImageList.cpp" size="1894" time="30.08.2021 14:09:24"/>
-   <file hash="" name="ImageList.hpp" size="872" time="30.08.2021 14:09:27"/>
-   <file hash="" name="InitDone.cpp" size="534" time="13.08.2021 11:52:27"/>
-   <file hash="" name="InitDone.hpp" size="390" time="13.08.2021 11:52:27"/>
-   <file hash="" name="Installation.cpp" size="2193" time="17.08.2021 17:25:38"/>
-   <file hash="" name="Installation.hpp" size="571" time="16.08.2021 19:27:44"/>
-   <file hash="" name="Keys.cpp" size="3969" time="13.08.2021 11:52:27"/>
-   <file hash="" name="Keys.hpp" size="4469" time="13.08.2021 11:52:27"/>
-   <file hash="" name="Label.cpp" size="3565" time="13.08.2021 11:52:27"/>
-   <file hash="" name="Label.hpp" size="1828" time="13.08.2021 11:52:27"/>
-   <file hash="" name="ListBox.cpp" size="4898" time="13.08.2021 11:52:27"/>
-   <file hash="" name="ListBox.hpp" size="2003" time="13.08.2021 11:52:27"/>
-   <file hash="" name="ListView.cpp" size="25958" time="29.09.2021 12:47:38"/>
-   <file hash="" name="ListView.hpp" size="11988" time="29.09.2021 12:48:35"/>
-   <file hash="" name="LogView.cpp" size="1140" time="13.08.2021 11:52:27"/>
-   <file hash="" name="LogView.hpp" size="479" time="13.08.2021 11:52:27"/>
-   <file hash="" name="ManualResetEvent.cpp" size="756" time="13.08.2021 11:52:27"/>
-   <file hash="" name="ManualResetEvent.hpp" size="532" time="13.08.2021 11:52:27"/>
-   <file hash="" name="Menu.cpp" size="70540" time="21.09.2021 16:32:56"/>
-   <file hash="" name="Menu.hpp" size="14671" time="13.08.2021 11:52:27"/>
-   <file hash="" name="MessageBox.cpp" size="731" time="13.08.2021 11:52:27"/>
-   <file hash="" name="MessageBox.hpp" size="743" time="13.08.2021 11:52:27"/>
-   <file hash="" name="Metrics.cpp" size="7966" time="30.09.2021 10:22:27"/>
-   <file hash="" name="Metrics.hpp" size="4508" time="19.09.2021 16:05:53"/>
-   <file hash="" name="PaddedControl.cpp" size="5840" time="19.09.2021 18:27:25"/>
-   <file hash="" name="PaddedControl.hpp" size="2566" time="19.09.2021 18:27:00"/>
-   <file hash="" name="Panel.cpp" size="611" time="20.09.2021 18:22:34"/>
-   <file hash="" name="Panel.hpp" size="479" time="20.09.2021 19:04:26"/>
-   <file hash="" name="PathView.cpp" size="14093" time="25.09.2021 21:30:51"/>
-   <file hash="" name="PathView.hpp" size="5334" time="25.09.2021 21:01:42"/>
-   <file hash="" name="ProgressBar.cpp" size="9729" time="13.08.2021 11:52:27"/>
-   <file hash="" name="ProgressBar.hpp" size="4278" time="13.08.2021 11:52:27"/>
-   <file hash="" name="RadioButton.cpp" size="6342" time="13.08.2021 11:52:27"/>
-   <file hash="" name="RadioButton.hpp" size="2571" time="13.08.2021 11:52:27"/>
-   <file hash="" name="Registry.cpp" size="5773" time="17.08.2021 17:24:54"/>
-   <file hash="" name="Registry.hpp" size="1513" time="17.08.2021 17:24:58"/>
-   <file hash="" name="ResourceManager.cpp" size="2042" time="13.08.2021 11:52:27"/>
-   <file hash="" name="ResourceManager.hpp" size="1208" time="13.08.2021 11:52:27"/>
-   <file hash="" name="ScrollableControl.cpp" size="12633" time="26.09.2021 12:02:56"/>
-   <file hash="" name="ScrollableControl.hpp" size="3311" time="19.09.2021 18:28:26"/>
-   <file hash="" name="Shell.cpp" size="13308" time="13.08.2021 11:52:27"/>
-   <file hash="" name="Shell.hpp" size="1003" time="13.08.2021 11:52:27"/>
-   <file hash="" name="SourceCodeView.cpp" size="13181" time="13.08.2021 11:52:27"/>
-   <file hash="" name="SourceCodeView.hpp" size="5243" time="13.08.2021 11:52:27"/>
-   <file hash="" name="SplitContainer.cpp" size="19520" time="17.09.2021 20:05:30"/>
-   <file hash="" name="SplitContainer.hpp" size="7985" time="17.09.2021 20:05:39"/>
-   <file hash="" name="StatusBar.cpp" size="23643" time="27.09.2021 12:08:36"/>
-   <file hash="" name="StatusBar.hpp" size="10832" time="27.09.2021 12:07:17"/>
-   <file hash="" name="TabControl.cpp" size="29431" time="13.08.2021 11:52:27"/>
-   <file hash="" name="TabControl.hpp" size="8868" time="13.08.2021 11:52:27"/>
-   <file hash="" name="TextBox.cpp" size="3951" time="13.08.2021 11:52:27"/>
-   <file hash="" name="TextBox.hpp" size="2276" time="13.08.2021 11:52:27"/>
-   <file hash="" name="TextView.cpp" size="92444" time="17.09.2021 20:05:45"/>
-   <file hash="" name="TextView.hpp" size="17688" time="17.09.2021 20:05:53"/>
-   <file hash="" name="ToolBar.cpp" size="35722" time="13.08.2021 11:52:27"/>
-   <file hash="" name="ToolBar.hpp" size="13278" time="13.08.2021 11:52:27"/>
-   <file hash="" name="ToolTip.cpp" size="4891" time="13.08.2021 11:52:27"/>
-   <file hash="" name="ToolTip.hpp" size="2555" time="13.08.2021 11:52:27"/>
-   <file hash="" name="TreeView.cpp" size="41223" time="25.09.2021 11:51:54"/>
-   <file hash="" name="TreeView.hpp" size="15290" time="25.09.2021 11:49:05"/>
-   <file hash="" name="Window.cpp" size="21175" time="26.09.2021 11:23:28"/>
-   <file hash="" name="Window.hpp" size="5827" time="13.08.2021 11:52:27"/>
-   <file hash="" name="WindowManager.cpp" size="2373" time="19.09.2021 14:33:46"/>
-   <file hash="" name="WindowManager.hpp" size="1021" time="13.08.2021 11:52:27"/>
-   <file hash="" name="Wing.cpp" size="9476" time="21.09.2021 15:27:23"/>
-   <file hash="" name="Wing.hpp" size="4163" time="13.08.2021 11:52:27"/>
-   <file hash="" name="wing.vcxproj" size="13036" time="25.09.2021 16:40:44"/>
+   <file hash="" name="Dialog.hpp" size="769" time="01.01.2022 19:21:16"/>
+   <file hash="" name="EditCommand.cpp" size="4459" time="01.01.2022 19:21:16"/>
+   <file hash="" name="EditCommand.hpp" size="3502" time="01.01.2022 19:21:16"/>
+   <file hash="" name="EditCommandList.cpp" size="2959" time="01.01.2022 19:21:16"/>
+   <file hash="" name="EditCommandList.hpp" size="1945" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Environment.cpp" size="4571" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Environment.hpp" size="933" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Event.cpp" size="907" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Event.hpp" size="2787" time="01.01.2022 19:21:16"/>
+   <file hash="" name="FileUtil.cpp" size="1254" time="01.01.2022 19:21:16"/>
+   <file hash="" name="FileUtil.hpp" size="575" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Graphics.cpp" size="6921" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Graphics.hpp" size="4042" time="01.01.2022 19:21:16"/>
+   <file hash="" name="GroupBox.cpp" size="4492" time="01.01.2022 19:21:16"/>
+   <file hash="" name="GroupBox.hpp" size="1995" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Icon.cpp" size="1291" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Icon.hpp" size="946" time="01.01.2022 19:21:16"/>
+   <file hash="" name="IconListView.cpp" size="15697" time="01.01.2022 19:21:16"/>
+   <file hash="" name="IconListView.hpp" size="7290" time="01.01.2022 19:21:16"/>
+   <file hash="" name="ImageList.cpp" size="1894" time="01.01.2022 19:21:16"/>
+   <file hash="" name="ImageList.hpp" size="872" time="01.01.2022 19:21:16"/>
+   <file hash="" name="InitDone.cpp" size="534" time="01.01.2022 19:21:16"/>
+   <file hash="" name="InitDone.hpp" size="390" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Installation.cpp" size="2193" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Installation.hpp" size="571" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Keys.cpp" size="3969" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Keys.hpp" size="4469" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Label.cpp" size="3565" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Label.hpp" size="1828" time="01.01.2022 19:21:16"/>
+   <file hash="" name="ListBox.cpp" size="4898" time="01.01.2022 19:21:16"/>
+   <file hash="" name="ListBox.hpp" size="2003" time="01.01.2022 19:21:16"/>
+   <file hash="" name="ListView.cpp" size="25776" time="01.01.2022 19:21:16"/>
+   <file hash="" name="ListView.hpp" size="11982" time="01.01.2022 19:21:16"/>
+   <file hash="" name="LogView.cpp" size="1140" time="01.01.2022 19:21:16"/>
+   <file hash="" name="LogView.hpp" size="479" time="01.01.2022 19:21:16"/>
+   <file hash="" name="ManualResetEvent.cpp" size="756" time="01.01.2022 19:21:16"/>
+   <file hash="" name="ManualResetEvent.hpp" size="532" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Menu.cpp" size="70540" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Menu.hpp" size="14671" time="01.01.2022 19:21:16"/>
+   <file hash="" name="MessageBox.cpp" size="731" time="01.01.2022 19:21:16"/>
+   <file hash="" name="MessageBox.hpp" size="743" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Metrics.cpp" size="7966" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Metrics.hpp" size="4508" time="01.01.2022 19:21:16"/>
+   <file hash="" name="PaddedControl.cpp" size="5840" time="01.01.2022 19:21:16"/>
+   <file hash="" name="PaddedControl.hpp" size="2566" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Panel.cpp" size="611" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Panel.hpp" size="479" time="01.01.2022 19:21:16"/>
+   <file hash="" name="PathView.cpp" size="14093" time="01.01.2022 19:21:16"/>
+   <file hash="" name="PathView.hpp" size="5334" time="01.01.2022 19:21:16"/>
+   <file hash="" name="ProgressBar.cpp" size="9729" time="01.01.2022 19:21:16"/>
+   <file hash="" name="ProgressBar.hpp" size="4278" time="01.01.2022 19:21:16"/>
+   <file hash="" name="RadioButton.cpp" size="6342" time="01.01.2022 19:21:16"/>
+   <file hash="" name="RadioButton.hpp" size="2571" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Registry.cpp" size="5773" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Registry.hpp" size="1513" time="01.01.2022 19:21:16"/>
+   <file hash="" name="ResourceManager.cpp" size="2042" time="01.01.2022 19:21:16"/>
+   <file hash="" name="ResourceManager.hpp" size="1208" time="01.01.2022 19:21:16"/>
+   <file hash="" name="ScrollableControl.cpp" size="12633" time="01.01.2022 19:21:16"/>
+   <file hash="" name="ScrollableControl.hpp" size="3311" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Shell.cpp" size="13308" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Shell.hpp" size="1003" time="01.01.2022 19:21:16"/>
+   <file hash="" name="SourceCodeView.cpp" size="13181" time="01.01.2022 19:21:16"/>
+   <file hash="" name="SourceCodeView.hpp" size="5243" time="01.01.2022 19:21:16"/>
+   <file hash="" name="SplitContainer.cpp" size="19520" time="01.01.2022 19:21:16"/>
+   <file hash="" name="SplitContainer.hpp" size="7985" time="01.01.2022 19:21:16"/>
+   <file hash="" name="StatusBar.cpp" size="23643" time="01.01.2022 19:21:16"/>
+   <file hash="" name="StatusBar.hpp" size="10832" time="01.01.2022 19:21:16"/>
+   <file hash="" name="TabControl.cpp" size="29431" time="01.01.2022 19:21:16"/>
+   <file hash="" name="TabControl.hpp" size="8868" time="01.01.2022 19:21:16"/>
+   <file hash="" name="TextBox.cpp" size="3951" time="01.01.2022 19:21:16"/>
+   <file hash="" name="TextBox.hpp" size="2276" time="01.01.2022 19:21:16"/>
+   <file hash="" name="TextView.cpp" size="92444" time="01.01.2022 19:21:16"/>
+   <file hash="" name="TextView.hpp" size="17688" time="01.01.2022 19:21:16"/>
+   <file hash="" name="ToolBar.cpp" size="35722" time="01.01.2022 19:21:16"/>
+   <file hash="" name="ToolBar.hpp" size="13278" time="01.01.2022 19:21:16"/>
+   <file hash="" name="ToolTip.cpp" size="4891" time="01.01.2022 19:21:16"/>
+   <file hash="" name="ToolTip.hpp" size="2555" time="01.01.2022 19:21:16"/>
+   <file hash="" name="TreeView.cpp" size="41223" time="01.01.2022 19:21:16"/>
+   <file hash="" name="TreeView.hpp" size="15290" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Window.cpp" size="21175" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Window.hpp" size="5827" time="01.01.2022 19:21:16"/>
+   <file hash="" name="WindowManager.cpp" size="2373" time="01.01.2022 19:21:16"/>
+   <file hash="" name="WindowManager.hpp" size="1021" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Wing.cpp" size="9476" time="01.01.2022 19:21:16"/>
+   <file hash="" name="Wing.hpp" size="4163" time="01.01.2022 19:21:16"/>
+   <file hash="" name="wing.vcxproj" size="13142" time="14.11.2021 20:31:38"/>
    <file hash="" name="wing.vcxproj.filters" size="5314" time="25.09.2021 16:40:44"/>
    <file hash="" name="wing.vcxproj.user" size="168" time="12.08.2021 14:36:27"/>
-   <file hash="" name="WingApi.hpp" size="408" time="12.08.2021 14:40:35"/>
+   <file hash="" name="WingApi.hpp" size="408" time="01.01.2022 19:21:16"/>
   </directory>
-  <directory name="winggui" time="26.09.2021 12:18:07">
-   <file hash="" name="action_dialog.cpp" size="3232" time="22.08.2021 19:16:39"/>
-   <file hash="" name="action_dialog.hpp" size="770" time="22.08.2021 19:15:09"/>
-   <file hash="" name="api.hpp" size="431" time="06.08.2021 11:50:16"/>
-   <file hash="" name="install_window.cpp" size="24689" time="26.09.2021 12:18:07"/>
-   <file hash="" name="install_window.hpp" size="3392" time="25.08.2021 21:12:10"/>
-   <file hash="" name="message_dialog.cpp" size="2178" time="09.08.2021 16:02:58"/>
-   <file hash="" name="message_dialog.hpp" size="743" time="13.08.2021 11:56:06"/>
-   <file hash="" name="status_message.cpp" size="1924" time="14.08.2021 16:26:52"/>
-   <file hash="" name="status_message.hpp" size="2734" time="14.08.2021 16:26:02"/>
-   <file hash="" name="uninstall_window.cpp" size="15751" time="19.09.2021 18:47:34"/>
-   <file hash="" name="uninstall_window.hpp" size="2528" time="25.08.2021 21:48:22"/>
-   <file hash="" name="winggui.vcxproj" size="8411" time="21.08.2021 12:46:39"/>
+  <directory name="winggui" time="01.01.2022 19:21:16">
+   <file hash="" name="action_dialog.cpp" size="3232" time="01.01.2022 19:21:16"/>
+   <file hash="" name="action_dialog.hpp" size="770" time="01.01.2022 19:21:16"/>
+   <file hash="" name="api.hpp" size="431" time="01.01.2022 19:21:16"/>
+   <file hash="" name="install_window.cpp" size="24689" time="01.01.2022 19:21:16"/>
+   <file hash="" name="install_window.hpp" size="3392" time="01.01.2022 19:21:16"/>
+   <file hash="" name="message_dialog.cpp" size="2178" time="01.01.2022 19:21:16"/>
+   <file hash="" name="message_dialog.hpp" size="743" time="01.01.2022 19:21:16"/>
+   <file hash="" name="status_message.cpp" size="1924" time="01.01.2022 19:21:16"/>
+   <file hash="" name="status_message.hpp" size="2734" time="01.01.2022 19:21:16"/>
+   <file hash="" name="uninstall_window.cpp" size="15751" time="01.01.2022 19:21:16"/>
+   <file hash="" name="uninstall_window.hpp" size="2528" time="01.01.2022 19:21:16"/>
+   <file hash="" name="winggui.vcxproj" size="8517" time="14.11.2021 20:31:37"/>
    <file hash="" name="winggui.vcxproj.filters" size="724" time="19.08.2021 19:04:12"/>
    <file hash="" name="winggui.vcxproj.user" size="168" time="06.08.2021 11:44:26"/>
   </directory>
-  <directory name="wingpackage" time="11.10.2021 18:38:01">
-   <file hash="" name="api.hpp" size="453" time="06.08.2021 11:48:40"/>
-   <file hash="" name="component.cpp" size="7913" time="27.09.2021 21:37:30"/>
-   <file hash="" name="component.hpp" size="1838" time="28.08.2021 16:30:39"/>
-   <file hash="" name="directory.cpp" size="9266" time="27.09.2021 21:37:30"/>
-   <file hash="" name="directory.hpp" size="2306" time="18.09.2021 14:01:41"/>
-   <file hash="" name="environment.cpp" size="14115" time="27.09.2021 21:37:30"/>
-   <file hash="" name="environment.hpp" size="4182" time="13.08.2021 13:13:01"/>
-   <file hash="" name="file.cpp" size="6616" time="27.09.2021 21:37:45"/>
-   <file hash="" name="file.hpp" size="2080" time="13.08.2021 14:13:32"/>
-   <file hash="" name="info.cpp" size="1021" time="06.08.2021 18:00:13"/>
-   <file hash="" name="info.hpp" size="1378" time="13.08.2021 12:27:39"/>
-   <file hash="" name="installation_component.cpp" size="4061" time="18.08.2021 14:38:22"/>
-   <file hash="" name="installation_component.hpp" size="847" time="23.08.2021 07:22:17"/>
-   <file hash="" name="links.cpp" size="17058" time="27.09.2021 21:37:30"/>
-   <file hash="" name="links.hpp" size="4069" time="13.08.2021 13:13:52"/>
-   <file hash="" name="make_setup.cpp" size="53785" time="11.10.2021 18:38:01"/>
-   <file hash="" name="make_setup.hpp" size="775" time="27.09.2021 18:55:06"/>
-   <file hash="" name="node.cpp" size="5759" time="18.09.2021 14:05:44"/>
-   <file hash="" name="node.hpp" size="2280" time="18.09.2021 14:13:31"/>
-   <file hash="" name="package.cpp" size="39589" time="27.09.2021 21:37:30"/>
-   <file hash="" name="package.hpp" size="8501" time="24.09.2021 19:35:48"/>
-   <file hash="" name="path_matcher.cpp" size="15814" time="25.08.2021 15:24:05"/>
-   <file hash="" name="path_matcher.hpp" size="3565" time="23.08.2021 12:52:00"/>
-   <file hash="" name="preinstall_component.cpp" size="9612" time="25.08.2021 15:17:56"/>
-   <file hash="" name="preinstall_component.hpp" size="1347" time="23.08.2021 07:22:27"/>
-   <file hash="" name="uninstall_bin_file.cpp" size="1681" time="25.08.2021 22:03:21"/>
-   <file hash="" name="uninstall_bin_file.hpp" size="833" time="16.08.2021 15:25:46"/>
-   <file hash="" name="uninstall_component.cpp" size="3070" time="16.08.2021 15:49:55"/>
-   <file hash="" name="uninstall_component.hpp" size="972" time="16.08.2021 15:48:03"/>
-   <file hash="" name="uninstall_exe_file.cpp" size="4515" time="18.08.2021 19:55:26"/>
-   <file hash="" name="uninstall_exe_file.hpp" size="887" time="16.08.2021 17:49:53"/>
-   <file hash="" name="variable.cpp" size="6649" time="22.09.2021 16:18:15"/>
-   <file hash="" name="variable.hpp" size="2284" time="22.09.2021 16:17:38"/>
-   <file hash="" name="wingpackage.vcxproj" size="9598" time="27.09.2021 18:47:55"/>
+  <directory name="wingpackage" time="01.01.2022 20:01:55">
+   <file hash="" name="api.hpp" size="453" time="01.01.2022 19:21:16"/>
+   <file hash="" name="component.cpp" size="7913" time="01.01.2022 19:21:16"/>
+   <file hash="" name="component.hpp" size="1838" time="01.01.2022 19:21:16"/>
+   <file hash="" name="directory.cpp" size="9266" time="01.01.2022 19:21:16"/>
+   <file hash="" name="directory.hpp" size="2306" time="01.01.2022 19:21:16"/>
+   <file hash="" name="environment.cpp" size="14115" time="01.01.2022 19:21:16"/>
+   <file hash="" name="environment.hpp" size="4182" time="01.01.2022 19:21:16"/>
+   <file hash="" name="file.cpp" size="6616" time="01.01.2022 19:21:16"/>
+   <file hash="" name="file.hpp" size="2080" time="01.01.2022 19:21:16"/>
+   <file hash="" name="info.cpp" size="1021" time="01.01.2022 19:21:16"/>
+   <file hash="" name="info.hpp" size="1378" time="01.01.2022 19:21:16"/>
+   <file hash="" name="installation_component.cpp" size="4061" time="01.01.2022 19:21:16"/>
+   <file hash="" name="installation_component.hpp" size="847" time="01.01.2022 19:21:16"/>
+   <file hash="" name="links.cpp" size="17058" time="01.01.2022 19:21:16"/>
+   <file hash="" name="links.hpp" size="4069" time="01.01.2022 19:21:16"/>
+   <file hash="" name="make_setup.cpp" size="54703" time="01.01.2022 20:01:55"/>
+   <file hash="" name="make_setup.hpp" size="775" time="01.01.2022 19:21:16"/>
+   <file hash="" name="node.cpp" size="5759" time="01.01.2022 19:21:16"/>
+   <file hash="" name="node.hpp" size="2280" time="01.01.2022 19:21:16"/>
+   <file hash="" name="package.cpp" size="39589" time="01.01.2022 19:21:16"/>
+   <file hash="" name="package.hpp" size="8501" time="01.01.2022 19:21:16"/>
+   <file hash="" name="path_matcher.cpp" size="15814" time="01.01.2022 19:21:16"/>
+   <file hash="" name="path_matcher.hpp" size="3565" time="01.01.2022 19:21:16"/>
+   <file hash="" name="preinstall_component.cpp" size="9612" time="01.01.2022 19:21:16"/>
+   <file hash="" name="preinstall_component.hpp" size="1347" time="01.01.2022 19:21:16"/>
+   <file hash="" name="uninstall_bin_file.cpp" size="1681" time="01.01.2022 19:21:16"/>
+   <file hash="" name="uninstall_bin_file.hpp" size="833" time="01.01.2022 19:21:16"/>
+   <file hash="" name="uninstall_component.cpp" size="3070" time="01.01.2022 19:21:16"/>
+   <file hash="" name="uninstall_component.hpp" size="972" time="01.01.2022 19:21:16"/>
+   <file hash="" name="uninstall_exe_file.cpp" size="4515" time="01.01.2022 19:21:16"/>
+   <file hash="" name="uninstall_exe_file.hpp" size="887" time="01.01.2022 19:21:16"/>
+   <file hash="" name="variable.cpp" size="6649" time="01.01.2022 19:21:16"/>
+   <file hash="" name="variable.hpp" size="2284" time="01.01.2022 19:21:16"/>
+   <file hash="" name="wingpackage.vcxproj" size="9704" time="14.11.2021 20:31:37"/>
    <file hash="" name="wingpackage.vcxproj.filters" size="1690" time="27.09.2021 18:47:55"/>
    <file hash="" name="wingpackage.vcxproj.user" size="168" time="07.08.2021 18:32:24"/>
   </directory>
-  <directory name="wingstall" time="11.10.2021 18:09:22">
-   <file hash="" name="main.cpp" size="14726" time="11.10.2021 18:09:22"/>
-   <file hash="" name="wingstall.vcxproj" size="8095" time="27.09.2021 18:49:00"/>
+  <directory name="wingstall" time="01.01.2022 19:21:15">
+   <file hash="" name="main.cpp" size="14726" time="01.01.2022 19:21:15"/>
+   <file hash="" name="wingstall.vcxproj" size="8201" time="14.11.2021 20:31:37"/>
    <file hash="" name="wingstall.vcxproj.filters" size="212" time="27.09.2021 18:49:00"/>
    <file hash="" name="wingstall.vcxproj.user" size="719" time="26.08.2021 22:22:07"/>
   </directory>
-  <directory name="wingstall_config" time="28.09.2021 14:35:20">
-   <file hash="" name="api.hpp" size="494" time="30.08.2021 14:47:36"/>
-   <file hash="" name="build.props.cpp" size="6490" time="28.09.2021 14:35:07"/>
-   <file hash="" name="build.props.hpp" size="531" time="28.09.2021 13:13:49"/>
-   <file hash="" name="config.cpp" size="4406" time="28.09.2021 14:35:20"/>
-   <file hash="" name="config.hpp" size="1241" time="28.09.2021 13:15:20"/>
-   <file hash="" name="wingstall_config.vcxproj" size="8123" time="28.09.2021 13:20:10"/>
+  <directory name="wingstall_config" time="01.01.2022 20:04:10">
+   <file hash="" name="api.hpp" size="494" time="01.01.2022 19:21:16"/>
+   <file hash="" name="build.props.cpp" size="6490" time="01.01.2022 19:21:16"/>
+   <file hash="" name="build.props.hpp" size="531" time="01.01.2022 19:21:16"/>
+   <file hash="" name="config.cpp" size="5322" time="01.01.2022 20:04:10"/>
+   <file hash="" name="config.hpp" size="1458" time="01.01.2022 19:52:01"/>
+   <file hash="" name="wingstall_config.vcxproj" size="8229" time="14.11.2021 20:31:39"/>
    <file hash="" name="wingstall_config.vcxproj.filters" size="412" time="28.09.2021 13:20:10"/>
    <file hash="" name="wingstall_config.vcxproj.user" size="168" time="30.08.2021 14:23:57"/>
   </directory>
   <directory name="wnginst" time="11.10.2021 18:09:53">
    <file hash="" name="main.cpp" size="7000" time="11.10.2021 18:09:53"/>
-   <file hash="" name="wnginst.vcxproj" size="8041" time="21.08.2021 12:49:00"/>
+   <file hash="" name="wnginst.vcxproj" size="8147" time="14.11.2021 20:31:38"/>
    <file hash="" name="wnginst.vcxproj.filters" size="212" time="12.08.2021 16:04:11"/>
-   <file hash="" name="wnginst.vcxproj.user" size="514" time="23.08.2021 11:04:45"/>
+   <file hash="" name="wnginst.vcxproj.user" size="489" time="26.10.2021 11:39:08"/>
   </directory>
   <file hash="" name="wingstall.sln" size="51183" time="28.09.2021 14:49:13"/>
  </component>
@@ -1122,47 +1126,47 @@
   </directory>
  </component>
  <component name="install">
-  <directory name="inst" time="12.08.2021 16:07:04">
-   <file hash="" name="inst.bat" size="275" time="13.10.2021 17:19:16"/>
-   <file hash="" name="wnginst.exe" size="4807680" time="11.10.2021 18:10:28"/>
+  <directory name="inst" time="26.10.2021 11:49:20">
+   <file hash="" name="inst.bat" size="275" time="26.10.2021 11:35:43"/>
+   <file hash="" name="wnginst.exe" size="4805120" time="01.01.2022 19:26:59"/>
   </directory>
  </component>
  <component name="setup">
   <directory name="setup" time="13.10.2021 15:21:15">
    <directory name="bzip2" time="27.09.2021 21:12:29">
     <directory name="compile" time="27.09.2021 21:12:22">
-     <file hash="" name="compile_debug.bat" size="339" time="13.10.2021 17:09:01"/>
-     <file hash="" name="compile_release.bat" size="345" time="13.10.2021 17:09:01"/>
-     <file hash="" name="debug_stderr.txt" size="0" time="13.10.2021 17:09:02"/>
-     <file hash="" name="debug_stdout.txt" size="259" time="13.10.2021 17:09:06"/>
-     <file hash="" name="release_stderr.txt" size="0" time="13.10.2021 17:09:07"/>
-     <file hash="" name="release_stdout.txt" size="446" time="13.10.2021 17:09:15"/>
+     <file hash="" name="compile_debug.bat" size="333" time="01.01.2022 20:54:25"/>
+     <file hash="" name="compile_release.bat" size="339" time="01.01.2022 20:54:25"/>
+     <file hash="" name="debug_stderr.txt" size="0" time="01.01.2022 20:54:26"/>
+     <file hash="" name="debug_stdout.txt" size="258" time="01.01.2022 20:54:29"/>
+     <file hash="" name="release_stderr.txt" size="0" time="01.01.2022 20:54:30"/>
+     <file hash="" name="release_stdout.txt" size="445" time="01.01.2022 20:54:38"/>
     </directory>
-    <file hash="" name="wingstall.package.xml" size="3782" time="13.10.2021 15:22:44"/>
+    <file hash="" name="wingstall.package.xml" size="3782" time="01.01.2022 20:47:41"/>
     <file hash="" name="wingstall.package.xml.000" size="3415" time="31.08.2021 13:16:12"/>
    </directory>
    <directory name="deflate" time="27.09.2021 21:09:51">
     <directory name="compile" time="27.09.2021 21:09:44">
-     <file hash="" name="compile_debug.bat" size="345" time="13.10.2021 17:06:36"/>
-     <file hash="" name="compile_release.bat" size="351" time="13.10.2021 17:06:36"/>
-     <file hash="" name="debug_stderr.txt" size="0" time="13.10.2021 17:06:37"/>
-     <file hash="" name="debug_stdout.txt" size="261" time="13.10.2021 17:06:41"/>
-     <file hash="" name="release_stderr.txt" size="0" time="13.10.2021 17:06:42"/>
-     <file hash="" name="release_stdout.txt" size="448" time="13.10.2021 17:06:50"/>
+     <file hash="" name="compile_debug.bat" size="339" time="01.01.2022 20:52:32"/>
+     <file hash="" name="compile_release.bat" size="345" time="01.01.2022 20:52:32"/>
+     <file hash="" name="debug_stderr.txt" size="0" time="01.01.2022 20:52:33"/>
+     <file hash="" name="debug_stdout.txt" size="260" time="01.01.2022 20:52:36"/>
+     <file hash="" name="release_stderr.txt" size="0" time="01.01.2022 20:52:37"/>
+     <file hash="" name="release_stdout.txt" size="447" time="01.01.2022 20:52:44"/>
     </directory>
-    <file hash="" name="wingstall.package.xml" size="3785" time="13.10.2021 15:22:07"/>
+    <file hash="" name="wingstall.package.xml" size="3785" time="01.01.2022 20:46:35"/>
     <file hash="" name="wingstall.package.xml.000" size="3417" time="31.08.2021 13:15:57"/>
    </directory>
    <directory name="plain" time="30.09.2021 09:13:09">
     <directory name="compile" time="27.09.2021 21:08:08">
-     <file hash="" name="compile_debug.bat" size="339" time="13.10.2021 17:21:02"/>
-     <file hash="" name="compile_release.bat" size="345" time="13.10.2021 17:21:02"/>
-     <file hash="" name="debug_stderr.txt" size="0" time="13.10.2021 17:21:02"/>
-     <file hash="" name="debug_stdout.txt" size="737" time="13.10.2021 17:21:16"/>
-     <file hash="" name="release_stderr.txt" size="0" time="13.10.2021 17:21:17"/>
-     <file hash="" name="release_stdout.txt" size="446" time="13.10.2021 17:21:29"/>
+     <file hash="" name="compile_debug.bat" size="333" time="01.01.2022 21:13:53"/>
+     <file hash="" name="compile_release.bat" size="339" time="01.01.2022 21:13:53"/>
+     <file hash="" name="debug_stderr.txt" size="0" time="01.01.2022 21:13:54"/>
+     <file hash="" name="debug_stdout.txt" size="258" time="01.01.2022 21:14:01"/>
+     <file hash="" name="release_stderr.txt" size="0" time="01.01.2022 21:14:02"/>
+     <file hash="" name="release_stdout.txt" size="445" time="01.01.2022 21:14:14"/>
     </directory>
-    <file hash="" name="wingstall.package.xml" size="3782" time="13.10.2021 15:21:43"/>
+    <file hash="" name="wingstall.package.xml" size="3782" time="01.01.2022 20:45:09"/>
     <file hash="" name="wingstall.package.xml.000" size="3414" time="31.08.2021 13:15:34"/>
    </directory>
    <file hash="" name="Makefile" size="1609" time="29.08.2021 15:49:16"/>
@@ -1172,7 +1176,15 @@
  <component name="packages">
   <directory name="packages" time="30.09.2021 12:45:27">
    <directory name="example" time="28.08.2021 21:18:45">
-    <directory name="bzip2" time="26.09.2021 16:23:53">
+    <directory name="bzip2" time="01.01.2022 20:40:13">
+     <directory name="compile" time="01.01.2022 20:40:06">
+      <file hash="" name="compile_debug.bat" size="366" time="01.01.2022 20:40:01"/>
+      <file hash="" name="compile_release.bat" size="372" time="01.01.2022 20:40:01"/>
+      <file hash="" name="debug_stderr.txt" size="0" time="01.01.2022 20:40:02"/>
+      <file hash="" name="debug_stdout.txt" size="269" time="01.01.2022 20:40:05"/>
+      <file hash="" name="release_stderr.txt" size="0" time="01.01.2022 20:40:06"/>
+      <file hash="" name="release_stdout.txt" size="456" time="01.01.2022 20:40:13"/>
+     </directory>
      <file hash="" name="example.package.xml" size="1874" time="29.08.2021 21:08:34"/>
      <file hash="" name="example.package.xml.000" size="1874" time="29.08.2021 21:08:34"/>
      <file hash="" name="make_package.bat" size="62" time="28.08.2021 21:22:36"/>
@@ -1180,19 +1192,27 @@
     </directory>
     <directory name="deflate" time="28.09.2021 11:41:01">
      <directory name="compile" time="28.09.2021 11:40:54">
-      <file hash="" name="compile_debug.bat" size="378" time="11.10.2021 18:39:11"/>
-      <file hash="" name="compile_release.bat" size="384" time="11.10.2021 18:39:11"/>
-      <file hash="" name="debug_stderr.txt" size="0" time="11.10.2021 18:39:12"/>
-      <file hash="" name="debug_stdout.txt" size="272" time="11.10.2021 18:39:16"/>
-      <file hash="" name="release_stderr.txt" size="0" time="11.10.2021 18:39:17"/>
-      <file hash="" name="release_stdout.txt" size="459" time="11.10.2021 18:39:24"/>
+      <file hash="" name="compile_debug.bat" size="372" time="01.01.2022 20:39:23"/>
+      <file hash="" name="compile_release.bat" size="378" time="01.01.2022 20:39:23"/>
+      <file hash="" name="debug_stderr.txt" size="0" time="01.01.2022 20:39:24"/>
+      <file hash="" name="debug_stdout.txt" size="271" time="01.01.2022 20:39:27"/>
+      <file hash="" name="release_stderr.txt" size="0" time="01.01.2022 20:39:28"/>
+      <file hash="" name="release_stdout.txt" size="458" time="01.01.2022 20:39:35"/>
      </directory>
      <file hash="" name="example.package.xml" size="1876" time="29.08.2021 21:08:16"/>
      <file hash="" name="example.package.xml.000" size="1876" time="29.08.2021 21:08:16"/>
      <file hash="" name="make_package.bat" size="62" time="28.08.2021 21:21:46"/>
      <file hash="" name="make_setup.bat" size="58" time="28.08.2021 21:21:57"/>
     </directory>
-    <directory name="plain" time="26.09.2021 16:23:38">
+    <directory name="plain" time="01.01.2022 20:09:12">
+     <directory name="compile" time="01.01.2022 19:30:44">
+      <file hash="" name="compile_debug.bat" size="366" time="01.01.2022 20:09:00"/>
+      <file hash="" name="compile_release.bat" size="372" time="01.01.2022 20:09:00"/>
+      <file hash="" name="debug_stderr.txt" size="0" time="01.01.2022 20:09:01"/>
+      <file hash="" name="debug_stdout.txt" size="269" time="01.01.2022 20:09:04"/>
+      <file hash="" name="release_stderr.txt" size="0" time="01.01.2022 20:09:05"/>
+      <file hash="" name="release_stdout.txt" size="456" time="01.01.2022 20:09:12"/>
+     </directory>
      <file hash="" name="example.package.xml" size="1774" time="26.09.2021 18:10:12"/>
      <file hash="" name="example.package.xml.000" size="1873" time="29.08.2021 21:06:23"/>
      <file hash="" name="make_package.bat" size="62" time="29.08.2021 15:34:21"/>
@@ -1294,7 +1314,7 @@
   <variable name="TARGET_ROOT_DIR" value="C:/wingstall"/>
   <variable name="PREINSTALL_DIR" value=""/>
   <variable name="APP_NAME" value="Wingstall"/>
-  <variable name="APP_VERSION" value="2.1.0"/>
+  <variable name="APP_VERSION" value="2.2.0"/>
   <variable name="PRODUCT_ID" value="17e24c2e-5ddf-4b18-b4ee-1d66182ab193"/>
   <variable name="PUBLISHER" value="Seppo Laakko"/>
   <variable name="START_MENU_PROGRAMS_FOLDER" value="C:/ProgramData/Microsoft/Windows/Start Menu/Programs"/>

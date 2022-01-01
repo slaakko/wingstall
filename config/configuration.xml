@@ -1,1 +1,1 @@
-<configuration boostIncludeDir="C:\boost\include\boost-1_77" boostLibDir="C:\boost\lib" vcVarsFilePath="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"/>
+<configuration boostIncludeDir="C:\boost\include\boost-1_77" boostLibDir="C:\boost\lib" vcPlatformToolset="v143" vcVarsFilePath="C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"/>

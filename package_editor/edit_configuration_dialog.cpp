@@ -1,5 +1,5 @@
 // =================================
-// Copyright (c) 2021 Seppo Laakko
+// Copyright (c) 2022 Seppo Laakko
 // Distributed under the MIT license
 // =================================
 
@@ -15,7 +15,8 @@ namespace wingstall { namespace package_editor {
 
 using namespace soulng::util;
 
-EditConfigurationDialog::EditConfigurationDialog(const std::string& boostIncludeDir, const std::string& boostLibDir, const std::string& vcVarsPath) :
+EditConfigurationDialog::EditConfigurationDialog(const std::string& boostIncludeDir, const std::string& boostLibDir, const std::string& vcVarsPath, 
+    const std::string& vcPlatformToolset) :
     Window(WindowCreateParams().Text("Edit Configuration").WindowClassName("wingstall.package_editor.edit_configuration_dialog").
     WindowStyle(DialogWindowStyle()).WindowClassBackgroundColor(DefaultControlWindowClassBackgroundColor()).BackgroundColor(DefaultControlBackgroundColor()).
     Location(DefaultLocation()).SetSize(Size(ScreenMetrics::Get().MMToHorizontalPixels(180), ScreenMetrics::Get().MMToVerticalPixels(100)))),
@@ -89,6 +90,20 @@ EditConfigurationDialog::EditConfigurationDialog(const std::string& boostInclude
     selectVCVarsPathButton->Click().AddHandler(this, &EditConfigurationDialog::SelectVCVarsPath);
     AddChild(selectVCVarsPathButton.release());
 
+    Point vcPlatformToolsetLabelLoc(16, 16 + 16 + 16 + 16 + 16 + 24 + 24 + 24 + 24 + 24);
+    std::unique_ptr<Label> vcPlatformToolsetLabelPtr(new Label(LabelCreateParams().Text("Visual C++ Platform Toolset:").Location(vcPlatformToolsetLabelLoc).SetAnchors(static_cast<Anchors>(Anchors::top | Anchors::left))));
+    AddChild(vcPlatformToolsetLabelPtr.release());
+
+    Point vcPlatformToolsetTextBoxLoc(16, 16 + 16 + 16 + 16 + 16 + 24 + 24 + 24 + 24 + 24 + 24);
+    std::unique_ptr<TextBox> vcPlatformToolsetTextBoxPtr(new TextBox(TextBoxCreateParams().Text(vcPlatformToolset).Location(vcPlatformToolsetTextBoxLoc).SetSize(textBoxSize).SetAnchors(static_cast<Anchors>(Anchors::top | Anchors::left))));
+    vcPlatformToolsetTextBox = vcPlatformToolsetTextBoxPtr.get();
+    vcPlatformToolsetTextBox->TextChanged().AddHandler(this, &EditConfigurationDialog::CheckInput);
+    std::unique_ptr<PaddedControl> paddedVCPlatformToolsetTextBoxPtr(new PaddedControl(PaddedControlCreateParams(vcPlatformToolsetTextBoxPtr.release()).Location(vcPlatformToolsetTextBoxLoc).SetSize(PaddedSize(textBoxSize, DefaultPadding())).
+        SetAnchors(static_cast<Anchors>(Anchors::top | Anchors::left))));
+    std::unique_ptr<BorderedControl> borderedVCPlatformToolsetTextBoxPtr(new BorderedControl(BorderedControlCreateParams(paddedVCPlatformToolsetTextBoxPtr.release()).Location(vcPlatformToolsetTextBoxLoc).
+        SetSize(BorderedSize(PaddedSize(textBoxSize, DefaultPadding()), BorderStyle::single)).SetAnchors(static_cast<Anchors>(Anchors::top | Anchors::left))));
+    AddChild(borderedVCPlatformToolsetTextBoxPtr.release());
+
     int x = s.Width - defaultButtonSize.Width - defaultControlSpacing.Width;
     int y = s.Height - defaultButtonSize.Height - defaultControlSpacing.Height;
     std::unique_ptr<Button> cancelButtonPtr(new Button(ControlCreateParams().Location(Point(x, y)).SetSize(defaultButtonSize).Text("Cancel").SetAnchors(Anchors::right | Anchors::bottom)));
@@ -110,16 +125,17 @@ EditConfigurationDialog::EditConfigurationDialog(const std::string& boostInclude
     CheckInput();
 }
 
-void EditConfigurationDialog::GetData(std::string& boostIncludeDir, std::string& boostLibDir, std::string& vcVarsPath)
+void EditConfigurationDialog::GetData(std::string& boostIncludeDir, std::string& boostLibDir, std::string& vcVarsPath, std::string& vcPlatformToolset)
 {
     boostIncludeDir = MakeNativePath(boostIncludeDirTextBox->Text());
     boostLibDir = MakeNativePath(boostLibDirTextBox->Text());
     vcVarsPath = MakeNativePath(vcVarsPathTextBox->Text());
+    vcPlatformToolset = vcPlatformToolsetTextBox->Text();
 }
 
 void EditConfigurationDialog::CheckInput()
 {
-    if (!boostIncludeDirTextBox->Text().empty() && !boostLibDirTextBox->Text().empty() && !vcVarsPathTextBox->Text().empty())
+    if (!boostIncludeDirTextBox->Text().empty() && !boostLibDirTextBox->Text().empty() && !vcVarsPathTextBox->Text().empty() && !vcPlatformToolsetTextBox->Text().empty())
     {
         okButton->Enable();
     }

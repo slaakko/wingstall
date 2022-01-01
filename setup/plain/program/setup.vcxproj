@@ -13,7 +13,7 @@
     <PropertyGroup Label="Globals">
         <VCProjectVersion>16.0</VCProjectVersion>
         <Keyword>Win32Proj</Keyword>
-        <ProjectGuid>{e2d92325-139c-4061-b6fa-c2947f169b89}</ProjectGuid>
+        <ProjectGuid>{3c4f0846-f237-409f-b1e3-a49ab3be73b7}</ProjectGuid>
         <RootNamespace>setup</RootNamespace>
         <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     </PropertyGroup>
@@ -21,13 +21,13 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
         <ConfigurationType>Application</ConfigurationType>
         <UseDebugLibraries>true</UseDebugLibraries>
-        <PlatformToolset>v142</PlatformToolset>
+        <PlatformToolset>v143</PlatformToolset>
         <CharacterSet>Unicode</CharacterSet>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
         <ConfigurationType>Application</ConfigurationType>
         <UseDebugLibraries>false</UseDebugLibraries>
-        <PlatformToolset>v142</PlatformToolset>
+        <PlatformToolset>v143</PlatformToolset>
         <WholeProgramOptimization>true</WholeProgramOptimization>
         <CharacterSet>Unicode</CharacterSet>
     </PropertyGroup>
@@ -55,7 +55,7 @@
             <SDLCheck>true</SDLCheck>
             <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
             <ConformanceMode>true</ConformanceMode>
-            <AdditionalIncludeDirectories>..;C:\work\wingstall;C:\boost\include\boost-1_74</AdditionalIncludeDirectories>
+            <AdditionalIncludeDirectories>..;C:\work\wingstall;C:\boost\include\boost-1_77</AdditionalIncludeDirectories>
             <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
             <DisableSpecificWarnings>4251;4275;4244;4267</DisableSpecificWarnings>
         </ClCompile>
@@ -74,7 +74,7 @@
             <SDLCheck>true</SDLCheck>
             <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
             <ConformanceMode>true</ConformanceMode>
-            <AdditionalIncludeDirectories>..;C:\work\wingstall;C:\boost\include\boost-1_74</AdditionalIncludeDirectories>
+            <AdditionalIncludeDirectories>..;C:\work\wingstall;C:\boost\include\boost-1_77</AdditionalIncludeDirectories>
             <DisableSpecificWarnings>4251;4275;4244;4267</DisableSpecificWarnings>
         </ClCompile>
         <Link>

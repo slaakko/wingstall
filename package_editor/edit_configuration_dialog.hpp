@@ -1,5 +1,5 @@
 // =================================
-// Copyright (c) 2021 Seppo Laakko
+// Copyright (c) 2022 Seppo Laakko
 // Distributed under the MIT license
 // =================================
 
@@ -16,8 +16,8 @@ using namespace wing;
 class EditConfigurationDialog : public Window
 {
 public:
-    EditConfigurationDialog(const std::string& boostIncludeDir, const std::string& boostLibDir, const std::string& vcVarsPath);
-    void GetData(std::string& boostIncludeDir, std::string& boostLibDir, std::string& vcVarsPath);
+    EditConfigurationDialog(const std::string& boostIncludeDir, const std::string& boostLibDir, const std::string& vcVarsPath, const std::string& vcPlatformToolset);
+    void GetData(std::string& boostIncludeDir, std::string& boostLibDir, std::string& vcVarsPath, std::string& vcPlatformToolset);
 private:
     void CheckInput();
     void SelectBoostIncludeDir();
@@ -28,6 +28,7 @@ private:
     TextBox* boostIncludeDirTextBox;
     TextBox* boostLibDirTextBox;
     TextBox* vcVarsPathTextBox;
+    TextBox* vcPlatformToolsetTextBox;
 };
 
 } } // wingstall::package_editor

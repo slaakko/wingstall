@@ -1,5 +1,5 @@
 // =================================
-// Copyright (c) 2021 Seppo Laakko
+// Copyright (c) 2022 Seppo Laakko
 // Distributed under the MIT license
 // =================================
 
@@ -12,7 +12,7 @@ namespace wingstall { namespace package_editor {
 
 std::string WingstallVersionStr()
 {
-    return "2.1.0";
+    return "2.2.0";
 }
 
 AboutDialog::AboutDialog() :
@@ -28,7 +28,7 @@ AboutDialog::AboutDialog() :
 
     std::u16string fontFamilyName = u"Segoe UI"; // todo
     Font font(FontFamily((const WCHAR*)fontFamilyName.c_str()), 14.0f, FontStyle::FontStyleRegular, Unit::UnitPoint);
-    std::unique_ptr<Label> label(new Label(LabelCreateParams().Text("Wingstall version " + std::string(WingstallVersionStr()) + "\nCopyright (c) 2021 Seppo Laakko").Location(Point(16, 16)).SetSize(defaultLabelSize).
+    std::unique_ptr<Label> label(new Label(LabelCreateParams().Text("Wingstall version " + std::string(WingstallVersionStr()) + "\nCopyright (c) 2022 Seppo Laakko").Location(Point(16, 16)).SetSize(defaultLabelSize).
         SetAnchors(Anchors::left | Anchors::top)));
     label->SetFont(std::move(font));
     AddChild(label.release());

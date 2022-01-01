@@ -1,5 +1,5 @@
 // =================================
-// Copyright (c) 2021 Seppo Laakko
+// Copyright (c) 2022 Seppo Laakko
 // Distributed under the MIT license
 // =================================
 
@@ -80,6 +80,29 @@ std::string BoostLibDir()
         std::cerr << "could not access configuration document '" + wingstall::config::ConfigFilePath() + "': " + ex.what() << std::endl;
     }
     return wingstall::config::DefaultBoostLibDir();
+}
+
+std::string VCPlatformToolset()
+{
+    try
+    {
+        std::unique_ptr<sngxml::dom::Document> configDoc = wingstall::config::ConfigurationDocument();
+        if (configDoc)
+        {
+            sngxml::dom::Element* rootElement = configDoc->DocumentElement();
+            std::u32string vcPlatformToolsetAttr = rootElement->GetAttribute(U"vcPlatformToolset");
+            if (!vcPlatformToolsetAttr.empty())
+            {
+                return ToUtf8(vcPlatformToolsetAttr);
+            }
+            throw std::runtime_error("'vcPlatformToolset' attribute is empty or does not exist");
+        }
+    }
+    catch (const std::exception& ex)
+    {
+        std::cerr << "could not access configuration document '" + wingstall::config::ConfigFilePath() + "': " + ex.what() << std::endl;
+    }
+    return wingstall::config::DefaultVCPlatformToolset();
 }
 
 std::string SetupIconResourceName()
@@ -521,7 +544,7 @@ void MakeProjectFile(const std::string& packageBinFilePath, bool verbose, Logger
 
     sngxml::dom::Element* debugX64ConfigPlatformToolsetElement = new sngxml::dom::Element(U"PlatformToolset");
     debugX64ConfigPropertyGroup->AppendChild(std::unique_ptr<sngxml::dom::Node>(debugX64ConfigPlatformToolsetElement));
-    sngxml::dom::Text* debugX64ConfigPlatformToolsetText = new sngxml::dom::Text(U"v142");
+    sngxml::dom::Text* debugX64ConfigPlatformToolsetText = new sngxml::dom::Text(ToUtf32(VCPlatformToolset()));
     debugX64ConfigPlatformToolsetElement->AppendChild(std::unique_ptr<sngxml::dom::Node>(debugX64ConfigPlatformToolsetText));
 
     sngxml::dom::Element* debugX64ConfigCharacterSetElement = new sngxml::dom::Element(U"CharacterSet");
@@ -547,7 +570,7 @@ void MakeProjectFile(const std::string& packageBinFilePath, bool verbose, Logger
 
     sngxml::dom::Element* releaseX64ConfigPlatformToolsetElement = new sngxml::dom::Element(U"PlatformToolset");
     releaseX64ConfigPropertyGroup->AppendChild(std::unique_ptr<sngxml::dom::Node>(releaseX64ConfigPlatformToolsetElement));
-    sngxml::dom::Text* releaseX64ConfigPlatformToolsetText = new sngxml::dom::Text(U"v142");
+    sngxml::dom::Text* releaseX64ConfigPlatformToolsetText = new sngxml::dom::Text(ToUtf32(VCPlatformToolset()));
     releaseX64ConfigPlatformToolsetElement->AppendChild(std::unique_ptr<sngxml::dom::Node>(releaseX64ConfigPlatformToolsetText));
 
     sngxml::dom::Element* releaseX64ConfigWholeProgramOptimizationElement = new sngxml::dom::Element(U"WholeProgramOptimization");

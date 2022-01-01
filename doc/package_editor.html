@@ -200,6 +200,7 @@
 		<li>Boost include directory</li>
 		<li>Boost library directory</li>
 		<li>Visual C++ vcvars64.bat path</li>
+		<li>Visual C++ Platform Toolset</li>
 	</ul>
 	
 	<p>
@@ -213,15 +214,15 @@
 	</p>
 	
 	<ul>
-		<li>Select Windows Start menu and click Visual Studio 2019 folder.</li>
-		<li>Right-click the 'x64 Native Tools Command Prompt for VS 2019'</li>
+		<li>Select Windows Start menu and click Visual Studio 2022 folder.</li>
+		<li>Right-click the 'x64 Native Tools Command Prompt for VS 2022'</li>
 		<li>Select More | Open file location</li>
-		<li>Right-click the 'x64 Native Tools Command Prompt for VS 2019' in the File Explorer</li>
+		<li>Right-click the 'x64 Native Tools Command Prompt for VS 2022' in the File Explorer</li>
 		<li>Select Properties</li>
 		<li>The 'Target' text box contains "%comspec% /k" followed by the vcvars64.bat path:</li>
 		<img src="image/x64nativeToolsProperties.png"/>
 		<li>My 'Target' text box contains the following value:</br>
-		%comspec% /k "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"</br>
-		So the path is C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat</li>
+		%comspec% /k "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"</br>
+		So the path is C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat</li>
 	</ul>
 </body>
