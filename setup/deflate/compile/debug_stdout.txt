@@ -1,4 +1,4 @@
-Microsoft (R) Build Engine version 17.0.0+c9eb9dd64 for .NET Framework
+Microsoft (R) Build Engine version 17.2.1+52cd2da31 for .NET Framework
 Copyright (C) Microsoft Corporation. All rights reserved.
 
   data.cpp
